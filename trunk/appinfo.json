@@ -1,0 +1,10 @@
+{
+	"id": "com.mycompany.ampachemobile",
+	"version": "0.0.1",
+	"vendor": "My Company",
+	"type": "web",
+	"main": "index.html",
+	"title": "Ampache Mobile",
+	"icon": "icon.png",
+	"theme": "palm-dark"
+}
