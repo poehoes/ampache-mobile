@@ -13,19 +13,19 @@ SongsAssistant.prototype.setup = function(){
 	Mojo.Log.info("--> SongsAssistant.prototype.setup");
 	
 	
-	
+	$(coverArt).src = "images/shuffle-32.png";
 	
 	//Mojo.Log.info("Setting up albums for:", this.ArtistInfo.name);
 	//this.SongsList.sort(sortfunction);
 	
-	if((this.art !=null) && AmpacheMobile.settingsManager.settings.ExtraCoverArt)
+	/*if((this.art !=null) && AmpacheMobile.settingsManager.settings.ExtraCoverArt)
 	{
 		$(coverArt).src = this.art;
 	}
 	else
 	{
-		$(coverArt).src = "images/shuffle-big.png";
-	}
+		$(coverArt).src = "images/shuffle-32.png";
+	}*/
 	
 	/*
 	this.spinnerLAttrs = {

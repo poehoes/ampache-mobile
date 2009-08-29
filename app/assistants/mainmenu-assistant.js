@@ -101,65 +101,50 @@ MainmenuAssistant.prototype.listTapHandler = function(event){
         this.getPending = true;
         
         switch (event.item.scene) {
-            case "artists":
-                //this.TurnOnSpinner("Getting Artists");
-                if (this.ArtistList == null) {
-					//AmpacheMobile.ampacheServer.GetAllArtists(this.FinishedGettingArtists.bind(this));
-					
-					this.controller.stageController.pushScene("artists",
-					{
-						ExpectedArtists:parseInt(AmpacheMobile.ampacheServer.artists),
+			case "artists":
+				
+				var numArtists = parseInt(AmpacheMobile.ampacheServer.artists);
+				if (numArtists != 0) {
+					this.controller.stageController.pushScene("artists", {
+						ExpectedArtists: numArtists,
 					});
-					this.getPending = false;
-					
 				}
-				else {
-				//this.FinishedGettingArtists(this.ArtistList);
-				}
+				this.getPending = false;
+				//this.TurnOffSpinner("Getting Artists");
 				break;
             case "albums":
 				Mojo.Log.info("Pushing Albums");
-				//this.TurnOnSpinner("Getting Albums");
-				    this.controller.stageController.pushScene('albums', {
-        				SceneTitle: "Albums",
-        				DisplayArtistInfo:true,
-						ExepectedAlbums: parseInt(AmpacheMobile.ampacheServer.albums),
-        				//AlbumsList: _albumsList,
-    				});
-		
-				this.getPending = false;
-				/*
-				if (this.AlbumsList == null) {
-					AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null);
+				var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums);
+				if (numAlbums != 0) {
+					this.controller.stageController.pushScene('albums', {
+						SceneTitle: "Albums",
+						DisplayArtistInfo: true,
+						ExepectedAlbums: numAlbums,
+					//AlbumsList: _albumsList,
+					});
 				}
-				else
-				{
-					this.FinishedGettingAlbums(this.AlbumsList);
-				}*/
+				this.getPending = false;
+			
 				
-				this.TurnOffSpinner("Getting Albums");
+				//this.TurnOffSpinner("Getting Albums");
 				break;
 			
 			case "playlists":
 			
-					Mojo.Log.info("Pushing Playlists");
+				var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists);
 			
-				    this.controller.stageController.pushScene('playlists', {
-        				SceneTitle: "Playlists",
-						ExpectedPlaylists: parseInt(AmpacheMobile.ampacheServer.playlists),
-        			});
-		
-				this.getPending = false;
-				/*
-				if (this.AlbumsList == null) {
-					AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null);
+				if (numPlaylists != 0) {
+					Mojo.Log.info("Pushing Playlists");
+					
+					this.controller.stageController.pushScene('playlists', {
+						SceneTitle: "Playlists",
+						ExpectedPlaylists: numPlaylists,
+					});
+					
 				}
-				else
-				{
-					this.FinishedGettingAlbums(this.AlbumsList);
-				}*/
+				this.getPending = false;
 				
-				this.TurnOffSpinner("Getting Albums");
+				//this.TurnOffSpinner("Getting Albums");
 			
 				break;
 			

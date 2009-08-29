@@ -108,7 +108,7 @@ ArtistsAssistant.prototype.GotArtists = function (_artistList)
 	artistFilterList.mojo.noticeUpdatedItems(0,this.ArtistList);
 	//this.FilterArtistList("", artistFilterList, 0, 50);
 		
-	if(progress==1)
+	if(progress>=1)
 	{
 		//this.FilterArtistList("", artistFilterList, 0, 50);
 	}
