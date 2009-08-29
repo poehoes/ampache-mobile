@@ -124,4 +124,5 @@ Account = Class.create({
 Settings = Class.create({
 	Accounts:null,
 	CurrentAccountIndex:null,
+	ExtraCoverArt:false,
 });

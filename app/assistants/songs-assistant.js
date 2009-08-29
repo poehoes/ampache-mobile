@@ -4,6 +4,7 @@ function SongsAssistant(params){
 	this.DisplayAlbumInfo = params.DisplayAlbumInfo;
 	this.SongsList = params.SongsList;
 	this.thisIsAnAlbum = params.thisIsAnAlbum;
+	this.art = params.art;
 	Mojo.Log.info("<-- SongsAssistant.prototype.constructor");
 }
 
@@ -11,13 +12,20 @@ SongsAssistant.prototype.setup = function(){
 
 	Mojo.Log.info("--> SongsAssistant.prototype.setup");
 	
-	this.controller.get('title').update(this.SceneTitle);
+	
 	
 	
 	//Mojo.Log.info("Setting up albums for:", this.ArtistInfo.name);
 	//this.SongsList.sort(sortfunction);
 	
-	
+	if((this.art !=null) && AmpacheMobile.settingsManager.settings.ExtraCoverArt)
+	{
+		$(coverArt).src = this.art;
+	}
+	else
+	{
+		$(coverArt).src = "images/shuffle-big.png";
+	}
 	
 	/*
 	this.spinnerLAttrs = {
@@ -31,12 +39,20 @@ SongsAssistant.prototype.setup = function(){
 	this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
 	*/
 	
-	
-	var attributes = {
-		itemTemplate: 'songs/listitem',
+	if (this.DisplayAlbumInfo == true) {
+		var attributes = {
+			itemTemplate: 'songs/listitem_w_artist',
 		//dividerTemplate: 'artist-albums/divider',
 		//dividerFunction: this.dividerFunc.bind(this),
-	};
+		};
+	}
+	else {
+		var attributes = {
+			itemTemplate: 'songs/listitem',
+		//dividerTemplate: 'artist-albums/divider',
+		//dividerFunction: this.dividerFunc.bind(this),
+		};
+	}
 	this.listModel = {
 		disabled: false,
 		items: this.SongsList,
@@ -50,6 +66,9 @@ SongsAssistant.prototype.setup = function(){
 	Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
 	this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
 	
+	
+	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
+	
 	Mojo.Log.info("<-- SongsAssistant.prototype.setup");
 	
 }
@@ -59,7 +78,7 @@ SongsAssistant.prototype.handleShuffleAll = function(event)
 	 this.controller.stageController.pushScene('now-playing', 
 	{
 		playList:this.SongsList,
-		startIndex:-1,
+		startIndex:0,
 		shuffle:true,
 	});
 	
@@ -153,7 +172,7 @@ SongsAssistant.prototype.activate = function(event){
 
     Mojo.Log.info("--> SongsAssistant.prototype.activate");
 
-	
+	this.controller.get('title').update(this.SceneTitle);
     
     Mojo.Log.info("<-- SongsAssistant.prototype.activate");
 }

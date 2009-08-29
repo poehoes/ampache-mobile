@@ -57,13 +57,15 @@ MainmenuAssistant.prototype.setup = function(){
         scene: $L("songs"),
         description: $L(AmpacheMobile.ampacheServer.songs.toString())
     }, 
+	*/
 	{
         category: $L("bottom"),
         directory: $L("playlists"),
         name: $L("Playlists"),
         scene: $L("playlists"),
         description: $L(AmpacheMobile.ampacheServer.playlists.toString())
-    }, 
+    },
+	/* 
 	{
         category: $L("bottom"),
         directory: $L("genre"),
@@ -119,7 +121,7 @@ MainmenuAssistant.prototype.listTapHandler = function(event){
 				Mojo.Log.info("Pushing Albums");
 				//this.TurnOnSpinner("Getting Albums");
 				    this.controller.stageController.pushScene('albums', {
-        				SceneTitle: "All Albums",
+        				SceneTitle: "Albums",
         				DisplayArtistInfo:true,
 						ExepectedAlbums: parseInt(AmpacheMobile.ampacheServer.albums),
         				//AlbumsList: _albumsList,
@@ -137,6 +139,30 @@ MainmenuAssistant.prototype.listTapHandler = function(event){
 				
 				this.TurnOffSpinner("Getting Albums");
 				break;
+			
+			case "playlists":
+			
+					Mojo.Log.info("Pushing Playlists");
+			
+				    this.controller.stageController.pushScene('playlists', {
+        				SceneTitle: "Playlists",
+						ExpectedPlaylists: parseInt(AmpacheMobile.ampacheServer.playlists),
+        			});
+		
+				this.getPending = false;
+				/*
+				if (this.AlbumsList == null) {
+					AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null);
+				}
+				else
+				{
+					this.FinishedGettingAlbums(this.AlbumsList);
+				}*/
+				
+				this.TurnOffSpinner("Getting Albums");
+			
+				break;
+			
 			case "songs":
 				var megaBytes = Math.round((AmpacheMobile.ampacheServer.songs*223)/(1024*1024)*100)/100
 				if (megaBytes < 1.3) {

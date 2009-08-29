@@ -694,7 +694,7 @@ root>
 		 	var filter = [];
 		 	filter[0] = "filter";
 		 	filter[1] = _PlayListID;
-			path = this.BuildActionString("playlist_songs", filer);
+			path = this.BuildActionString("playlist_songs", filter);
 			
 		 }
 		 
@@ -785,6 +785,96 @@ root>
 		this.GetSongsCallback(SongsList);
 		this.GetSongsCallback = null;
 		Mojo.Log.info("<-- AmpacheServer.prototype.GotSongsCallbackInternal");
+	},
+	
+	
+	//********************************************************************************************
+	// Playlists
+	
+	GetPlaylistsCallback:null, 
+	
+	GetPlaylists: function(_GetPlaylistsCallback, _offset, _limit)
+	{
+		
+		Mojo.Log.info("--> AmpacheServer.prototype.GetPlaylists");
+		
+		 this.GetPlaylistsCallback = _GetPlaylistsCallback;
+		 
+		 if (typeof this.GetPlaylistsCallback != "function") 
+            this.GetPlaylistsCallback = new Function(func)
+		 
+		 if ((_offset != null) && (_limit != null)) {
+				var offset = [];
+				offset[0] = "offset";
+				offset[1] = _offset;
+				
+				
+				offset[2] = "limit";
+				offset[3] = _limit;
+				
+				var path = this.BuildActionString("playlists", offset);
+			}
+			else {
+				var path = this.BuildActionString("playlists");
+			}
+		 
+		 var request = new Ajax.Request(path, {
+            method: 'get',
+            evalJSON: false, //to enforce parsing JSON if there is JSON response
+            onCreate: function(){
+                console.info('******* onCreate happened')
+            },
+            onLoading: function(){
+                console.info('******* onLoading happened')
+            },
+            onLoaded: function(){
+                console.info('******* onLodaed happened')
+            },
+            onSuccess: this.GotPlaylistsCallback.bind(this),
+            onComplete: function(){
+                console.info('******* onComplete happened')
+            },
+            onFailure: this.GotPlaylistsCallback.bind(this)
+        });
+		
+		Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
+	}, 
+	
+	GotPlaylistsCallback: function(transport)
+	{
+		Mojo.Log.info(transport.responseText);
+
+
+		var PlaylistsList = null
+		
+		if(transport.responseXML!=null)
+		{
+			PlaylistsList = new Array();
+			
+			var PlaylistsListXML = transport.responseXML.getElementsByTagName("playlist"); 
+			
+			//Mojo.Log.info("Artist lenth: " + artistListXML.length);
+	
+			
+			for (var i = 0; i < PlaylistsListXML.length; i++) {
+				
+				
+				var _id = PlaylistsListXML[i].getAttribute("id")
+				var _name = PlaylistsListXML[i].getElementsByTagName("name")[0].firstChild.data;
+				var _owner = PlaylistsListXML[i].getElementsByTagName("owner")[0].firstChild.data;
+				var _items = PlaylistsListXML[i].getElementsByTagName("items")[0].firstChild.data;
+				var _type = PlaylistsListXML[i].getElementsByTagName("type")[0].firstChild.data;
+				
+				var newPlaylist = new PlaylistModel(_id, _name, _owner, _items, _type);
+				
+				PlaylistsList[i] = newPlaylist;
+			}
+			
+			
+		}
+		
+		this.GetPlaylistsCallback(PlaylistsList)
+		//return ArtistList;
 	},
 	
 	
@@ -1063,6 +1153,41 @@ SongModel = Class.create({
     },*/
 
 });
+
+
+/*
+ * <playlist id="1234">
+        <name>The Good Stuff</name>
+        <owner>Karl Vollmer</owner>
+        <items>50</items>
+        <tag id="2481" count="2">Rock & Roll</tag>
+        <tag id="2482" count="2">Rock</tag>
+        <tag id="2483" count="1">Roll</tag>
+        <type>Public</type>
+</playlist>
+
+ */
+
+
+PlaylistModel = Class.create({
+
+    initialize: function(_id, _name, _owner, _items, _type)
+	{
+		this.id = _id; 
+		this.name = _name;
+		this.owner = _owner;
+		this.items = _items;
+		this.type = _type;
+	},
+	
+	id: null, 
+	name: null,
+	owner: null,
+	items: null,
+	type: null,
+	
+});
+	
 
 
 

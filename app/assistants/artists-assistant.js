@@ -74,6 +74,7 @@ ArtistsAssistant.prototype.setup = function(){
 	
 	
 
+	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 	
 	AmpacheMobile.ampacheServer.GetArtists(this.GotArtists.bind(this), this.listModel.items.length, this.ARTIST_LIMIT)
 	
@@ -225,8 +226,9 @@ ArtistsAssistant.prototype.activate = function(event){
 
     Mojo.Log.info("--> ArtistsAssistant.prototype.activate");
 	
-	//$("artistList").show();
-	//$("artistFilterList").hide();
+	//Appears to be a bug in progress pill resetup upon activating
+	this.controller.setupWidget('artistProgressbar', this.PPattr, this.artistLoadModel);
+
 	
     Mojo.Log.info("<-- ArtistsAssistant.prototype.activate");
 }

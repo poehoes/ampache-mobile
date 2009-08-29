@@ -13,7 +13,7 @@
     </div>
   </div>    
 
-  
+<div x-mojo-element="Spinner" id="large-activity-spinner" class='centerSpinner'  ></div>  
 <div class='customBackground'></div>
 
   <div id="shuffleAll" class="shuffle-all-list-item palm-row single" x-mojo-tap-highlight="momentary" style="margin-top:52px">
@@ -36,10 +36,19 @@
       <div class="count-pill-container">
       	<div class="count-pill-wrapper" id="shuffle-count"></div>
       </div> 
-	  -->     
+	  -->    
+
+	  <div class="shuffleLeft"> 
       <div class="title">
-        <div class="truncating-text shuffle-text" x-mojo-loc=''>Shuffle All</div>     
-      </div>                      
+      	
+        	<div class="truncating-text shuffle-text" x-mojo-loc=''>Shuffle All</div>     
+       </div> 	
+		</div>
+			  <div class="shuffleRight">
+			<img width="45px" height="45px" id="coverArt"></img>
+	</div>
+
+	                      
     </div>
   </div>
 
@@ -48,5 +57,4 @@
   <div id="thick-border" class="thick-bottom-border" style="display:block;"></div>
 
 <div id="songsList" x-mojo-element="List" ></div>
-<div id="songsFilterList" x-mojo-element="FilterList" ></div>
-<div x-mojo-element="Spinner" id="large-activity-spinner" class='centerSpinner'  ></div>
+
