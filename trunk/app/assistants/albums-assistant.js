@@ -49,7 +49,7 @@ AlbumsAssistant.prototype.FinishedGettingAlbums = function(_albumsList){
 		var albumsList = this.controller.get('albumsFilterList');
 		albumsList.mojo.noticeUpdatedItems(0,this.AlbumList);
 		
-	if(progress==1)
+	if(progress>=1)
 	{
 		
 	}
@@ -71,7 +71,7 @@ AlbumsAssistant.prototype.setup = function(){
 	Mojo.Log.info("--> AlbumsAssistant.prototype.setup");
 	
 	
-	
+	$(coverArt).src = "images/shuffle-32.png";
 	
 
 	

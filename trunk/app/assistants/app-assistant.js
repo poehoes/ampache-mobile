@@ -24,9 +24,6 @@ AmpacheMobile.MenuModel = {
 
 
 
-
-
-
 function AppAssistant(appController) {
 	Mojo.Log.info("--> AppAssistant Constructor");
 	

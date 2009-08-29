@@ -17,7 +17,6 @@ ConnectionAssistant.prototype.setup = function(){
 
 	AmpacheMobile.settingsManager = new SettingsManager("AmpacheMobileData");
     this.settingsManager = AmpacheMobile.settingsManager;
-	this.settingsManager.GetSettings(this.GotSettings.bind(this));
 	
 	this.Accounts = new Array();
 	
@@ -60,6 +59,7 @@ ConnectionAssistant.prototype.setup = function(){
 	/* add event handlers to listen to events from widgets */
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 	
+	this.settingsManager.GetSettings(this.GotSettings.bind(this));
 	
 	Mojo.Log.info("<-- ConnectionAssistant.prototype.setup");
 }
@@ -167,23 +167,63 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
 		//Mojo.Log.info("Current Context", typeof this);
 		
 		//var currentScene = this.controller.activeScene();
+	
+		DisplayMessage = connectResult;
+		if(connectResult.toLowerCase() == "acl error")
+		{
+			DisplayMessage = "Error: " + connectResult+"<br><br>" + AmpacheMobile.AclErrorHelp
+		}
+		
+		if(connectResult.toLowerCase() == "error: empty response")
+		{
+			DisplayMessage = connectResult+"<br><br>" + AmpacheMobile.EmptyResponseErrorHelp
+		
+		}
+		
+		
+
 		
 		Mojo.Log.info("Display Alert");
 		this.controller.showAlertDialog({
-			onChoose: function(value){
-			},
-			title: $L("Connected?"),
-			message: connectResult,
-			choices: [{
-				label: $L('OK'),
-				value: 'ok',
-				type: 'color'
-			}]
+			onChoose: this.AlertOption.bind(this),			
+			title: $L("Connection Error"),
+			message: DisplayMessage,
+			choices: [
+				 {label:$L('Retry'), value:"retry", type:'affirmative'},  
+				 {label:$L('Preferences'), value:"preferences", type:'affirmative'},  
+				 
+
+			], 
+			 allowHTMLMessage:true,
+			
 		});
 	}
 	
 	Mojo.Log.info("<-- ConnectionAssistant.prototype.ConnectionCallback")
 }
+
+ConnectionAssistant.prototype.AlertOption = function(value)
+{
+	Mojo.Log.info("--> ConnectionAssistant.prototype.AlertOption value: " + value)
+	switch(value)
+	{
+		case "retry":
+			this.LoadMainMenu(AmpacheMobile.Account);
+			break;
+		case "preferences":
+			var params = {
+				
+					settingsManager: AmpacheMobile.settingsManager,
+				}
+				this.controller.stageController.pushScene("preferences", params);
+			break;
+	}
+	
+	
+	Mojo.Log.info("<-- ConnectionAssistant.prototype.AlertOption")
+},
+
+
 
 
 

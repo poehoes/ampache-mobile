@@ -18,6 +18,25 @@ AmpacheMobile.settingsManager=null;
 AmpacheMobile.loadingPreferences = false;
 
 
+
+AmpacheMobile.AclErrorHelp = "You are so close! You likely need to configure an ACL rule to allow Remote Program Control (RPC).  "
+			+ "You can do this thru the Ampache web interface"
+		
+AmpacheMobile.EmptyResponseErrorHelp ="Phone not connecting to Ampache." +
+			"<br>"+
+			"<ul>"+
+			"<li>Can you connect to Ampache with a PC?</li>"+
+			"<li>Server URL (Must include http://)</li>"+
+			"<li>Firewall Port Forwarding</li>"+
+			"<li>DNS or IP Address (192.168.x.x will not work on EVDO)</li>" +
+			"<li>Does your ISP  block port 80?</li>" +
+			"</ul>";
+		
+
+
+
+
+
 function StageAssistant(stageController) {
 	
 	//AmpacheMobile.stageController = stageController;

@@ -1178,6 +1178,7 @@ PlaylistModel = Class.create({
 		this.owner = _owner;
 		this.items = _items;
 		this.type = _type;
+		this.desc = "Songs: " + this.items + " Owner: " + this.owner;
 	},
 	
 	id: null, 
@@ -1185,6 +1186,7 @@ PlaylistModel = Class.create({
 	owner: null,
 	items: null,
 	type: null,
+	desc: null,
 	
 });
 	

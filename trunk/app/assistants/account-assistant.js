@@ -65,9 +65,76 @@ AccountAssistant.prototype.setup = function() {
     this.controller.listen("passwordField", Mojo.Event.propertyChange, this.changePassword.bindAsEventListener(this));
     this.controller.listen("userNameField", Mojo.Event.propertyChange, this.changeUserName.bindAsEventListener(this));
 
-	
+
 	
 }
+
+
+AccountAssistant.prototype.ValidSettings=function(account)
+{
+	var retVal = true;
+	this.FailureReason = "Unknown Failure";
+	if((account.AccountName==null) || (account.AccountName==""))
+	{
+		this.FailureReason =  "No acccount name entered "
+		retVal=false;
+	}
+	if((account.ServerURL==null) || (account.ServerURL==""))
+	{
+		this.FailureReason =  "No Server URL entered "
+		retVal=false;
+	}
+	else
+	{
+		var startOfURL = account.ServerURL.toLowerCase().substring(0,8);
+		if( (!startOfURL.match("http://")) && (!startOfURL.match("https://") ) )
+		{
+			this.FailureReason =  "Server URL requires http://"
+			retVal=false;
+		}
+	}
+	
+	
+	
+	if((account.UserName==null) || (account.UserName==""))
+	{
+		this.FailureReason =  "No user name entered "
+		retVal=false;
+	}
+	
+	
+	
+	
+	return retVal;
+}
+
+AccountAssistant.prototype.handleCommand = function(event) {
+   //test for Mojo.Event.back, not Mojo.Event.command..
+    if (event.type == Mojo.Event.back) {
+		
+		
+		
+		if (!this.ValidSettings(this.Account)) {
+			event.preventDefault();
+			event.stopPropagation();
+			
+			this.controller.showAlertDialog({
+				onChoose: function(value){
+				},
+				title: $L("Account Incomplete"),
+				message: this.FailureReason,
+				choices: [{
+					label: $L('OK'),
+					value: 'ok',
+					type: 'color'
+				}]
+			});
+			
+		}
+	}
+};
+
+
 
 AccountAssistant.prototype.callStartTest = function() {
 	//console.log("*** ")
@@ -88,7 +155,7 @@ AccountAssistant.prototype.callStartTest = function() {
 	}
 }
 
-AccountAssistant.prototype.TestCallback = function(result)
+AccountAssistant.prototype.TestCallback = function(connectResult)
 {
 	
 	this.buttonWidget = this.controller.get('btnTestConnection');
@@ -97,16 +164,30 @@ AccountAssistant.prototype.TestCallback = function(result)
 
 	window.clearInterval(this.timeoutInterval);
 
+		var DisplayMessage = connectResult;
+		if(connectResult.toLowerCase() == "acl error")
+		{
+			DisplayMessage = "Error: " + connectResult + "<br><br>" + AmpacheMobile.AclErrorHelp;
+		}
+		
+		if(connectResult.toLowerCase() == "error: empty response")
+		{
+			DisplayMessage = connectResult + "<br><br>" + AmpacheMobile.EmptyResponseErrorHelp
+		
+		}
+
+
 	Mojo.Log.info("Display Alert");	
 	this.controller.showAlertDialog({
             onChoose: function(value){},
             title: $L("Connection Test"),
-            message: result,
+            message: DisplayMessage,
             choices: [{
                 label: $L('OK'),
                 value: 'ok',
                 type: 'color'
-            }]
+            }],
+			 allowHTMLMessage:true,
         });
 	
 }
@@ -185,6 +266,17 @@ AccountAssistant.prototype.activate = function(event) {
 AccountAssistant.prototype.deactivate = function(event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
+	this.controller.showAlertDialog({
+            onChoose: function(value){},
+            title: $L("Connection Test"),
+            message: "Timed out while attempting test",
+            choices: [{
+                label: $L('OK'),
+                value: 'ok',
+                type: 'color'
+            }]
+        });
+	
 	
 	Mojo.Event.stopListening(this.controller.get('btnTestConnection'),Mojo.Event.tap, this.callStartTest);  
 	

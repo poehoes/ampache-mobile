@@ -114,13 +114,13 @@ PlaylistsAssistant.prototype.FinishedGettingPlaylists = function(_playlistList){
 	var albumsList = this.controller.get('playlistFilterList');
 	albumsList.mojo.noticeUpdatedItems(0,this.PlaylistList);
 		
-	if(progress==1)
+	if(progress>=1)
 	{
 		
 	}
 	else
 	{
-		AmpacheMobile.ampacheServer.GetPlaylists(this.FinishedGettingPlaylists.bind(this), this.listModel.items.length, this.ALBUM_LIMIT);
+		AmpacheMobile.ampacheServer.GetPlaylists(this.FinishedGettingPlaylists.bind(this), this.listModel.items.length, this.PLAYLIST_LIMIT);
 
 	}
 	
@@ -284,7 +284,7 @@ PlaylistsAssistant.prototype.cleanup = function(event){
     Mojo.Log.info("--> PlaylistsAssistant.prototype.cleanup");
 
 	
-	Mojo.Event.stopListening(this.controller.get('albumsFilterList'),Mojo.Event.listTap, this.listTapHandler); 
+	Mojo.Event.stopListening(this.controller.get('playlistFilterList'),Mojo.Event.listTap, this.listTapHandler); 
     
     Mojo.Log.info("<-- PlaylistsAssistant.prototype.cleanup");
   

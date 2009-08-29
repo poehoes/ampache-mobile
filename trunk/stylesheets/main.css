@@ -47,10 +47,41 @@ height: 100%;
 }
 
 
+.ampacheMobileTitle
+{
+	color: white;
+	padding: 5px 15px 5px 15px;
+}
+
+.ampacheMobileDesc {
+	color: white;
+	margin-top: -10px;
+	padding: 0 15px 10px 15px;
+	font-size:small;
+}
+
+.shuffleRow{
+	/*
+	border:solid;
+	border-width:thin;
+	border-color:white;*/
+}
 .shuffleLeft
 {
-	float:left;
+	float:left;	
 }
+.shuffleAllText
+{
+	vertical-align:bottom;
+	margin:15px 0px 0px 15px
+}
+.shuffleAllIcon
+{
+	
+	margin:10px 0px 0px 10px
+}
+
+
 .shuffleRight
 {
 	float:right;
@@ -62,7 +93,7 @@ height: 100%;
 }
 .shuffleIcon
 {
-	{ background-image: url(../images/big-shuffle.png); }
+	 background-image: url(../images/big-shuffle.png); 
 }
 
 
