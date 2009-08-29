@@ -47,6 +47,46 @@ height: 100%;
 }
 
 
+.shuffleLeft
+{
+	float:left;
+}
+.shuffleRight
+{
+	float:right;
+	margin-right:20px;
+}
+.shuffleClear
+{
+	float:none;
+}
+.shuffleIcon
+{
+	{ background-image: url(../images/big-shuffle.png); }
+}
+
+
+.albumLeft
+{
+	float:left;
+	width:85%;
+}
+.albumRight
+{
+	float:right;
+	width:15%;
+}
+
+.albumClear
+{
+	float:none;
+}
+
+.listArt
+{
+	margin: 3px 10px 3px 3px
+}
+
 .centerSpinner{
 	position: absolute;
 	left: 98px;
@@ -107,6 +147,13 @@ height: 100%;
 	padding: 5px 15px 5px 15px;
 
 }
+.songDesc {
+	color: white;
+	margin-top: -10px;
+	padding: 0 15px 10px 15px;
+	font-size:small;
+}
+
 
 
 #albumsFilterList .artistAlbumTitle
@@ -239,6 +286,8 @@ padding: 0px 5px 5px 5px;
 .stream-buffer-bar {
   width: 200px;
 }
+
+
 
 .palm-menu-icon.music-shuffle { background-image: url(../images/shuffle.png); }
 
@@ -538,12 +587,10 @@ img.art-thumbnail {
 */
 .thick-bottom-border {
 	height: 7px;
-	background: url(../images/thick-border.png) repeat-x;
+	background: url(../images/thick-border.png) repeat-x bottom;
 }
 
-.music-songs .thick-bottom-border {
-	padding-bottom: 20px;
-}
+
 /*
 .music-landing .icon { width: 65px;}
 .icon.artists { background: url(../images/artists-icon.png) center center no-repeat;}

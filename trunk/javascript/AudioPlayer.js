@@ -31,20 +31,20 @@ AudioPlayer = Class.create({
 			this.AudioPlayers = new Array()
 			
 		}
-		Mojo.Log.info("<-- AudioPlayer.prototype.initialize %j", this.audioObj);
+		Mojo.Log.error("<-- AudioPlayer.prototype.initialize %j", this.audioObj);
 		
     },
     
   
     
     createAudioObj: function(_controller){
-        Mojo.Log.info("--> AudioPlayer.prototype.createAudioObj");
+        Mojo.Log.error("--> AudioPlayer.prototype.createAudioObj");
         
         if (this.audioObj == null) {
 		
 			// use Safari's HTML5 implementation if we are runing on palm host
 			if (Mojo.Host.current === Mojo.Host.browser) {
-				Mojo.Log.info("Setting up audio for safari");
+				Mojo.Log.error("Setting up audio for safari");
 				this.inPalmHost = true;
 				this.PlayerReady = true;
 				this.player = new Audio();
@@ -53,7 +53,7 @@ AudioPlayer = Class.create({
 			}
 			else {
 			
-				Mojo.Log.info("Setting up audio for palm");
+				Mojo.Log.error("Setting up audio for palm");
 				this.inPalmHost = false;
 				this.PlayerReady = false;
 				
@@ -101,7 +101,7 @@ AudioPlayer = Class.create({
 			
 			
 		}
-        Mojo.Log.info("<-- AudioPlayer.prototype.createAudioObj");
+        Mojo.Log.error("<-- AudioPlayer.prototype.createAudioObj");
     },
     
 	getStreamInfo: function(){
@@ -130,7 +130,7 @@ AudioPlayer = Class.create({
 	},
 	
     addPlayList: function(newPlayList, _shuffleOn, _startIndex){
-        Mojo.Log.info("--> AudioPlayer.prototype.addPlayList");
+        Mojo.Log.error("--> AudioPlayer.prototype.addPlayList");
         this.playList = newPlayList;
 		this.markPlayListUnplayed();
 		this.playOrderList = this.createOrderList();
@@ -155,9 +155,9 @@ AudioPlayer = Class.create({
     },
     
     setCurrentTrack: function(index){
-        Mojo.Log.error("--> AudioPlayer.prototype.setCurrentTrack", index);
+        Mojo.Log.info("--> AudioPlayer.prototype.setCurrentTrack", index);
         //this.currentTrackIndex = parseInt(index);
-        Mojo.Log.error("<-- AudioPlayer.prototype.setCurrentTrack");
+        Mojo.Log.info("<-- AudioPlayer.prototype.setCurrentTrack");
     },
     
 	//**********************************************************************************************************************
@@ -189,9 +189,9 @@ AudioPlayer = Class.create({
 	
 	printPlayOrderList:function()
 	{
-		Mojo.Log.error("printPlayOrderList: %j", this.playOrderList);
-		Mojo.Log.error("currentPlayingTrack: " + this.currentPlayingTrack);
-		Mojo.Log.error("currentPlayingIndex: " + this.currentPlayingIndex);
+		Mojo.Log.info("printPlayOrderList: %j", this.playOrderList);
+		Mojo.Log.info("currentPlayingTrack: " + this.currentPlayingTrack);
+		Mojo.Log.info("currentPlayingIndex: " + this.currentPlayingIndex);
 	
 	},
 	
@@ -251,7 +251,7 @@ AudioPlayer = Class.create({
 	//                        Playback Controls
 	//**********************************************************************************************************************
     play: function(){
-        Mojo.Log.error("--> AudioPlayer.prototype.play");
+        Mojo.Log.info("--> AudioPlayer.prototype.play");
         if (this.PlayerReady == true) { 
             this.internal_play();
         }
@@ -261,7 +261,7 @@ AudioPlayer = Class.create({
 		}
         
         
-        Mojo.Log.error("<-- AudioPlayer.prototype.play");
+        Mojo.Log.info("<-- AudioPlayer.prototype.play");
         
     },
     
@@ -278,7 +278,7 @@ AudioPlayer = Class.create({
     },
     
     play_next: function(){
-        Mojo.Log.error("--> AudioPlayer.prototype.play_next");
+        Mojo.Log.info("--> AudioPlayer.prototype.play_next");
         this.printPlayOrderList();
 		
 		//this.playList[this.currentPlayingTrack].played = true;
@@ -288,12 +288,12 @@ AudioPlayer = Class.create({
 			stop();
             this.internal_play();
         }
-        Mojo.Log.error("<-- AudioPlayer.prototype.play_next");
+        Mojo.Log.info("<-- AudioPlayer.prototype.play_next");
     },
     
     
     play_prev: function(){
-        Mojo.Log.error("--> AudioPlayer.prototype.play_prev");
+        Mojo.Log.info("--> AudioPlayer.prototype.play_prev");
         this.printPlayOrderList();
         //this.playList[this.currentPlayingTrack].played = true;
         this.currentPlayingTrack = this.getPrevTrack();
@@ -302,7 +302,7 @@ AudioPlayer = Class.create({
 			stop();
             this.internal_play();
         }
-        Mojo.Log.error("<-- AudioPlayer.prototype.play_prev");
+        Mojo.Log.info("<-- AudioPlayer.prototype.play_prev");
     },
     
     play_previous: function(){
@@ -312,14 +312,14 @@ AudioPlayer = Class.create({
     
     internal_play: function(){
     
-        Mojo.Log.error("--> AudioPlayer.prototype.internal_play");
+        Mojo.Log.info("--> AudioPlayer.prototype.internal_play");
         
 		if (this.Paused == true) {
 			this.player.play()
 		}
 		else {
 		
-			Mojo.Log.error("Starting play of " +
+			Mojo.Log.info("Starting play of " +
 			this.playList[this.currentPlayingTrack].artist +
 			" - " +
 			this.playList[this.currentPlayingTrack].album +
@@ -328,7 +328,7 @@ AudioPlayer = Class.create({
 			" - " +
 			this.playList[this.currentPlayingTrack].title);
 			
-			Mojo.Log.error("URL play of " +
+			Mojo.Log.info("URL play of " +
 			this.playList[this.currentPlayingTrack].url);
 			
 			this.UpdateNowPlayingBuffering(0, 0);
@@ -339,22 +339,22 @@ AudioPlayer = Class.create({
 		}
 		this.Paused = false;
 		
-        //Mojo.Log.error("Audio() URL play of " + 
+        //Mojo.Log.info("Audio() URL play of " + 
         //this.player.src);
         
         //this.player.play();
         
         
-        Mojo.Log.error("<-- AudioPlayer.prototype.internal_play");
+        Mojo.Log.info("<-- AudioPlayer.prototype.internal_play");
         
     },
     
     
     handleAudioEvents: function(event){
-		Mojo.Log.error("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
+		Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
         
-        //Mojo.Log.error("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
-		//Mojo.Log.error("handeAudioEvent: " + event.type);
+        //Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
+		//Mojo.Log.info("handeAudioEvent: " + event.type);
         
         switch (event.type) {
             
@@ -408,7 +408,7 @@ AudioPlayer = Class.create({
 				this.NowPlayingStopPlaybackTimer();
                 break;
         }
-        Mojo.Log.error("<------ AudioPlayer.prototype.handleAudioEvents AudioEvent:",event.type);
+        Mojo.Log.info("<------ AudioPlayer.prototype.handleAudioEvents AudioEvent:",event.type);
     },
     
     
@@ -418,29 +418,29 @@ AudioPlayer = Class.create({
 	// Now Playing updaters
 	UpdateNowPlayingTime: function()
 	{
-		//Mojo.Log.error("--> AudioPlayer.prototype.UpdateNowPlayingTime");
+		//Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingTime");
 		if (this.NowPlaying != null) {
 			var currentTime = this.player.currentTime;
 			var duration = (this.player.duration.toString()=="NaN") ? 0 : this.player.duration;
 			this.NowPlaying.updateTime(currentTime,duration);
 		}
-		//Mojo.Log.error("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
+		//Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
 	},
 	
 	ClearNowPlayingTime: function()
 	{
-		Mojo.Log.error("--> AudioPlayer.prototype.ClearNowPlayingTime");
+		Mojo.Log.info("--> AudioPlayer.prototype.ClearNowPlayingTime");
 		if (this.NowPlaying != null) {
 			this.NowPlaying.updateTime(0,0);
 		}
-		Mojo.Log.error("<-- AudioPlayer.prototype.ClearNowPlayingTime");
+		Mojo.Log.info("<-- AudioPlayer.prototype.ClearNowPlayingTime");
 	},
 
 	UpdateNowPlayingBuffering: function(loaded, total)
 	{
-		//Mojo.Log.error("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
+		//Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
 		if(this.NowPlaying!=null) this.NowPlaying.updateBuffering(0, total);		
-		//Mojo.Log.error("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
+		//Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
 	},
 	
 	UpdateNowPlayingShowSpinner:function(_spinnerOn)
@@ -471,26 +471,26 @@ AudioPlayer = Class.create({
 	
 	NowPlayingStartPlaybackTimer: function()
 	{
-		Mojo.Log.error("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer")
+		Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer")
 		if (this.NowPlaying != null && this.timeInterval==null) {
 			this.timeInterval = this.NowPlaying.controller.window.setInterval(this.UpdateNowPlayingTime.bind(this), 450);
 		}
 		else
 		{
-			Mojo.Log.error("***********************************************************")
+			Mojo.Log.info("***********************************************************")
 		}
-		Mojo.Log.error("<-- AudioPlayer.prototype.NowPlayingStartPlaybackTimer")
+		Mojo.Log.info("<-- AudioPlayer.prototype.NowPlayingStartPlaybackTimer")
 	},
 	
 	NowPlayingStopPlaybackTimer: function()
 	{
-		Mojo.Log.error("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer")
+		Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer")
 		if ((this.NowPlaying != null)&&  (this.timeInterval!=null))
 		{
 			 this.NowPlaying.controller.window.clearInterval(this.timeInterval);
 			 this.timeInterval =null;
 		}
-		Mojo.Log.error("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer")
+		Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer")
 	},
 	
 	NowPlayingUpdateSongInfo: function()
@@ -505,21 +505,21 @@ AudioPlayer = Class.create({
 	
 	
 	_updateBuffering: function(){
-		//Mojo.Log.error("--> AudioPlayer.prototype._updateBuffering")
+		//Mojo.Log.info("--> AudioPlayer.prototype._updateBuffering")
 		if (this.player.buffered && this.player.buffered.length > 0) {
 			var startPercentage = (this.player.buffered.start(0) / this.player.duration);
 			var endPercentage = (this.player.buffered.end(0) / this.player.duration);
 			
 			this.UpdateNowPlayingBuffering(startPercentage, endPercentage);
 		}
-		//Mojo.Log.error("<-- AudioPlayer.prototype._updateBuffering")
+		//Mojo.Log.info("<-- AudioPlayer.prototype._updateBuffering")
 	},
 
 	 setNowPlaying: function(NowPlayingPointer){
-     	Mojo.Log.error("<-- AudioPlayer.prototype.setNowPlaying loaded");
+     	Mojo.Log.info("<-- AudioPlayer.prototype.setNowPlaying loaded");
 	    this.NowPlaying = NowPlayingPointer; 
 		
-		Mojo.Log.error("--> AudioPlayer.prototype.setNowPlaying loaded");
+		Mojo.Log.info("--> AudioPlayer.prototype.setNowPlaying loaded");
     },
     
 	clearNowPlaying: function(){
