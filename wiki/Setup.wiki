@@ -1,4 +1,3 @@
-==Setup==
 *WARNING: Setting up an Ampache is not a hard task but it's also not trivial, If you are a beginner be sure to read the linked documentation carefully*
   # Setup instructions of the Ampache Music Server can be found at 
     * [http://ampache.org/wiki/ Ampache Wiki]
