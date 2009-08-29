@@ -1,7 +1,7 @@
 {
-	"id": "com.mycompany.ampachemobile",
+	"id": "com.ampache.ampachemobile",
 	"version": "0.0.1",
-	"vendor": "My Company",
+	"vendor": "Ampache",
 	"type": "web",
 	"main": "index.html",
 	"title": "Ampache Mobile",
