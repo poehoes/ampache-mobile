@@ -1,5 +1,7 @@
 #summary This is a quick guide for installing Ampache on windows.
 
+*This documentation is incomplete work is underway to improve it*
+
 = Introduction =
 
 If you've never installed a web server before doing so can be a bit tricky, especially on Windows.  This guide is intended to make doing so a bit easier.  
