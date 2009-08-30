@@ -1,7 +1,6 @@
 #summary Main Sidebar for Wiki
 
-[MainPage MainPage]
-
+* [MainPage Home]
 * [AmpacheServerSetup Ampache Setup] 
  * [WindowsAmpacheServer Windows Setup]
 * [ExternalAccessHelp EVDO Help]
