@@ -741,7 +741,6 @@ root>
 		{
 			SongsList = new Array();
 			
-			
 	/*
 	 <root>
 <song id="3180">
@@ -764,7 +763,6 @@ root>
 			var songsListXML = transport.responseXML.getElementsByTagName("song"); 
 			
 			for (var i = 0; i < songsListXML.length; i++) {
-					
 				var _id = songsListXML[i].getAttribute("id")
 				var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
 				var _artist = songsListXML[i].getElementsByTagName("artist")[0].firstChild.data;
@@ -773,7 +771,23 @@ root>
 				var _time = songsListXML[i].getElementsByTagName("time")[0].firstChild.data;
 				var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
 				var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
-				var _art = songsListXML[i].getElementsByTagName("art")[0].firstChild.data;
+				
+				
+				var artXML = songsListXML[i].getElementsByTagName("art")
+				
+				if( (artXML == null ) || (artXML.length==0))
+				{
+					var _art = "";
+				}
+				else
+				{
+					if (artXML[0].firstChild != null) {
+						var _art = artXML[0].firstChild.data;
+					}
+					else var _art = "";
+						
+						
+				}
 							
 				
 				var newSong  = new SongModel(_id, _title, _artist, _album, _track, _time, _url, _size, _art);

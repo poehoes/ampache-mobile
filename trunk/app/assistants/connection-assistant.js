@@ -167,8 +167,8 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
 		else // Incorrect API
 		{
 			var html = true;
-			var	DisplayMessage = "Error: You are connecting to an incompatible version of Ampache<br><br> Server Version: " + AmpacheMobile.ampacheServer.api
-			 + "<br><br>Ampache Mobile requires version 3.5.x of the server"
+			var	DisplayMessage = "Error: You are connecting to an incompatible version of Ampache<br><br> You are using API Version: " + AmpacheMobile.ampacheServer.api
+			 + "<br><br>Ampache Mobile requires at least version 3.5.x of the server"
 			
 			this.controller.showAlertDialog({
 				onChoose: this.AlertOption.bind(this),
