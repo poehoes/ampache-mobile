@@ -3,7 +3,7 @@
 = Introduction =
 
 If you've never installed a web server before doing so can be a bit tricky, especially on Windows.  This guide is intended to make doing so a bit easier.  
-<a href="http://www.google.com">Google</a>
+
 Note: This is a living document and will be updated in areas where its been found to be lacking.
 
 = Required Downloads (All Free)=
