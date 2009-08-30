@@ -3,5 +3,5 @@
  * [MainPage MainPage]
   * [AmpacheServerSetup Ampache Setup]
    * [WindowsAmpacheServer Windows Setup]
-   * []
+   * [ExternalAccessHelp EVDO Help]
      *[FirewallPortForwardingDNS Firewall/PortForwarding/DNS]
