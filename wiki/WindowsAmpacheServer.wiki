@@ -1,6 +1,10 @@
 #summary This is a quick guide for installing Ampache on windows.
 
 *This documentation is incomplete work is underway to improve it*
+The best documentation available so far goes to fain creator AmpachPre
+The guide was written for Windows Vista XP should be very similar:
+[http://nucleardecay.net/pre/Ampache-how-to-vista32bit.pdf Fains Windows Guide]
+
 
 = Introduction =
 
