@@ -94,6 +94,7 @@ NowPlayingAssistant.prototype.setup = function(){
     slider.observe(Mojo.Event.sliderDragStart, this.progressBarDragStart.bind(this));
     slider.observe(Mojo.Event.sliderDragEnd, this.progressBarDragEnd.bind(this));
     
+	this.controller.get('playback-display').observe(Mojo.Event.dragStart, this.noDrag.bindAsEventListener(this));	
     
     this.updateBuffering(0, 0);
     
@@ -109,6 +110,12 @@ NowPlayingAssistant.prototype.setup = function(){
 	
     Mojo.Log.info("<-- NowPlayingAssistant.prototype.setup");
 }
+
+
+NowPlayingAssistant.prototype.noDrag = function(event) {
+	event.stop();
+}
+		
 
 
 NowPlayingAssistant.prototype.activate = function(event){
@@ -295,10 +302,13 @@ NowPlayingAssistant.prototype.NowPlayingDisplaySongInfo = function(playList, cur
 	
 	
 	
-	
-	//this.controller.get('tutorial').scr =  song.art;
-	if($('coverArt').src !=  song.art) $('coverArt').src =  song.art;
-	 
+	if ((song.art == null) || (song.art == "")) {
+		$('coverArt').src = "images/blankalbum.jpg"
+	}
+	else {
+		if ($('coverArt').src != song.art) 
+			$('coverArt').src = song.art;
+	}
 	var xofy =(currentIndex+1) + "/" + playList.length;
 	this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
 	
