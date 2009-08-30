@@ -2,15 +2,42 @@
 
 = Introduction =
 
-If you've never installed a webserver before doing so can be a bit tricky.  This is a living document and will be updated in areas where its been found to be lacking.
+If you've never installed a webserver before doing so can be a bit tricky, especially on Windows.  This guide is intended to make doing so a bit easier.  
 
-= Required Downloads =
-  # A Webserver [http://www.apachefriends.org/en/xampp-windows.html#646 XAMPP Lite] (Full version will work too)
-  # Latest Ampache []
+Note: This is a living document and will be updated in areas where its been found to be lacking.
+
+= Required Downloads (All Free)=
+  # A Webserver: [http://www.apachefriends.org/en/xampp-windows.html#646 XAMPP Lite] (Full version will work too)
+  # Latest Ampache: [http://ampache.org/download.php Ampache 3.5.1] (At the time of this guide this is the most recent version of Ampache)
+  # Something to unzip Ampache: 7-zip [http://www.7-zip.org/]
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  # Download and install xampp.
+  * xampp has a fairly decent installer which guide you through the process of installing your webserver.
+  * The installer will default to installing xmapplite to the C:\ drive.  The resulting location of all the installed files would be C:\xampplite\.  You can change it to C:\Program Files if you like.   For the purposes of this tutorial we will use the default setting of C:\
+  * Once the installer copies all the files it needs to your system it will bring up a cmd prompt to aske you a few questions.
+ # {{{
+Should I add shortcuts to the startmenu/desktop? (y/n):
+}}}
+ This one is up to you.
+ # If you installed to a directory other than C: 
+{{{
+Current directory does not match configured directory.
+I must relocate the XAMPP paths correctly.
+Should I proceed? (y/x=exit setup): y
+}}} 
+ Enter: y
+ # {{{
+Should I make a portable XAMPP without drive letters
+NOTE: - You should use drive letters, if you want use services.
+- With USB sticks you must not use drive letters.
+Your choice? (y/n): n
+}}}
+
+
+{{{
+Current directory does not match configured directory.
+I must relocate the XAMPP paths correctly.
+Should I proceed? (y/x=exit setup): y
+}}} 
