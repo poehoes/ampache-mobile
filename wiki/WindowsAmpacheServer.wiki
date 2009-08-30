@@ -2,7 +2,7 @@
 
 = Introduction =
 
-If you've never installed a webserver before doing so can be a bit tricky, especially on Windows.  This guide is intended to make doing so a bit easier.  
+If you've never installed a web server before doing so can be a bit tricky, especially on Windows.  This guide is intended to make doing so a bit easier.  
 <a href="http://www.google.com">Google</a>
 Note: This is a living document and will be updated in areas where its been found to be lacking.
 
@@ -14,7 +14,7 @@ Note: This is a living document and will be updated in areas where its been foun
 = Details =
 
   # Download and install xampp.
-  * xampp has a fairly decent installer which guide you through the process of installing your webserver.
+  * xampp has a fairly decent installer to guide you through the process of installing a web server.
   * The installer will default to installing xmapplite to the *C:\* drive.  The resulting location of all the installed files would be *C:\xampplite\*.  You can change it to C:\Program Files if you like.   
    * NOTE: For the purposes of this tutorial we will use the default setting of C:\
   * Once the installer copies all the files it needs to your system it will bring up a command prompt to ask you a few questions.
