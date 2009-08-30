@@ -8,3 +8,5 @@ Welcome to the main wiki page for Ampache Mobile this is intended to be the plac
 = Details =
 
 [AmpacheServerSetup Ampache Server Setup Help (This is in by no means complete yet)]
+[EVDOSetup Setup for use via EVDO]
+[FirewallPortForwardingDNS Firewall/PortForwarding/DNS]
