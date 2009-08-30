@@ -3,7 +3,7 @@
 = Introduction =
 
 If you've never installed a webserver before doing so can be a bit tricky, especially on Windows.  This guide is intended to make doing so a bit easier.  
-
+<a href="http://www.google.com">Google</a>
 Note: This is a living document and will be updated in areas where its been found to be lacking.
 
 = Required Downloads (All Free)=
@@ -15,29 +15,40 @@ Note: This is a living document and will be updated in areas where its been foun
 
   # Download and install xampp.
   * xampp has a fairly decent installer which guide you through the process of installing your webserver.
-  * The installer will default to installing xmapplite to the C:\ drive.  The resulting location of all the installed files would be C:\xampplite\.  You can change it to C:\Program Files if you like.   For the purposes of this tutorial we will use the default setting of C:\
-  * Once the installer copies all the files it needs to your system it will bring up a cmd prompt to aske you a few questions.
- # {{{
+  * The installer will default to installing xmapplite to the *C:\* drive.  The resulting location of all the installed files would be *C:\xampplite\*.  You can change it to C:\Program Files if you like.   
+   * NOTE: For the purposes of this tutorial we will use the default setting of C:\
+  * Once the installer copies all the files it needs to your system it will bring up a command prompt to ask you a few questions.
+   # Shortcuts
+{{{
 Should I add shortcuts to the startmenu/desktop? (y/n):
 }}}
- This one is up to you.
- # If you installed to a directory other than C: 
+     This one is up to you.
+   # If you installed to a directory other than C:
 {{{
 Current directory does not match configured directory.
 I must relocate the XAMPP paths correctly.
 Should I proceed? (y/x=exit setup): y
 }}} 
- Enter: y
- # {{{
+     Enter: y
+   # Portable XAMPP
+{{{
 Should I make a portable XAMPP without drive letters
 NOTE: - You should use drive letters, if you want use services.
 - With USB sticks you must not use drive letters.
 Your choice? (y/n): n
 }}}
-
-
+     Enter: n
+   # At this point it will go and do some work.  Hit enter until you see this
 {{{
-Current directory does not match configured directory.
-I must relocate the XAMPP paths correctly.
-Should I proceed? (y/x=exit setup): y
-}}} 
+ 1. start XAMPP Control Panel
+ 2. relocate XAMPP
+    (current path: C:\Program Files\xampplite)
+ 3. disable HTTPS (SSL)
+ 4. disable Server Side Includes (SSI)
+ 5. enable IPv4 only (current: IPv4/6 (auto))
+
+ x  Exit
+
+ Please choose (1-5/x):
+}}}
+     Enter: 1 to bring up the control panel.  Also you can close the command window at this point.
