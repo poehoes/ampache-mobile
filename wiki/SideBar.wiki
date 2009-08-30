@@ -1,11 +1,5 @@
 #summary Main Sidebar for Wiki
 
-* [MainPage Home]
-* [AmpacheServerSetup Ampache Setup] 
- * [WindowsAmpacheServer Windows Setup]
-* [ExternalAccessHelp EVDO Help]
- * [FirewallPortForwardingDNS Firewall PortForwarding DNS]
-
  * [Articles HOWTO articles]
     * [ArticlesXSS Web security]
     * [ArticlesDom DOM manipulation]
