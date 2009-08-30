@@ -775,19 +775,13 @@ root>
 				
 				var artXML = songsListXML[i].getElementsByTagName("art")
 				
-				if( (artXML == null ) || (artXML.length==0))
-				{
-					var _art = "";
+		
+				if (artXML[0].firstChild != null) {
+					var _art = artXML[0].firstChild.data;
 				}
-				else
-				{
-					if (artXML[0].firstChild != null) {
-						var _art = artXML[0].firstChild.data;
-					}
-					else var _art = "";
-						
-						
-				}
+				else var _art = "";
+				
+		
 							
 				
 				var newSong  = new SongModel(_id, _title, _artist, _album, _track, _time, _url, _size, _art);
