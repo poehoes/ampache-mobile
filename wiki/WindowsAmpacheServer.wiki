@@ -1,0 +1,16 @@
+#summary This is a quick guide for installing Ampache on windows.
+
+= Introduction =
+
+If you've never installed a webserver before doing so can be a bit tricky.  This is a living document and will be updated in areas where its been found to be lacking.
+
+= Required Downloads =
+  # A Webserver [http://www.apachefriends.org/en/xampp-windows.html#646 XAMPP Lite] (Full version will work too)
+  # Latest Ampache []
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
