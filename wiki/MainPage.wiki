@@ -7,5 +7,5 @@ Welcome to the main wiki page for Ampache Mobile this is intended to be the plac
 
 = Details =
 
-[AmpacheServerSetup Ampache Server Setup Help (This is in by no means complete yet)]
-[ExternalAccess How to access your server from EVDO]
+ * [AmpacheServerSetup Ampache Server Setup Help (This is in by no means complete yet)]
+ * [ExternalAccess How to access your server from EVDO]
