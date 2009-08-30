@@ -3,3 +3,5 @@
  * [MainPage MainPage]
   * [AmpacheServerSetup Ampache Setup]
    * [WindowsAmpacheServer Windows Setup]
+   * []
+     *[FirewallPortForwardingDNS Firewall/PortForwarding/DNS]
