@@ -10,4 +10,4 @@ Welcome to the main wiki page for Ampache Mobile this is intended to be the plac
 == Setup Help ==
  *  [WindowsAmpacheServer Windows Installation Guide]
  *  [MacintoshOSXAmpacheServerGuide Mac Installation Guide]
- *  [http://ampache.org/wiki/install Other Operating Systems (linux, bsd) 
+ *  [http://ampache.org/wiki/install Other Operating Systems (linux, bsd)] 
