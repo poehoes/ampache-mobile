@@ -1,0 +1,9 @@
+#summary Some pointers for common issues encountered while setting up ampache
+=Common Issues=
+
+=== Works on WiFi but not EVDO ===
+  * Are you connecting to a 192.168.x.x IP Address?  Most WiFi routers have an internal IP pool and one External IP.  
+    * 192.168.x.x is Internal and not accessable via EVDO
+    * To find your external address try this link [http://www.whatismyip.com/]
+  * Once you determine your internal address and external IP address you need to setup port forwarding on your router.
+    * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most webservers default to running on port 80. 
