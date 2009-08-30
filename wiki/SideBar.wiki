@@ -1,4 +1,4 @@
 #summary Main Sidebar for Wiki
 [MainPage MainPage]
- Ampache Server Setup
+ *Ampache Server Setup*
  [WindowsAmpacheServer Windows Setup]
