@@ -24,8 +24,8 @@ SettingsManager = Class.create({
 	},
 
 	dbFailure: function(transaction, result){
-		console.log("***** depot failure: " + result.message);
-		Mojo.Controller.errorDialog("This is not good!.  Settings database failed to load.  Error Message: " + result.message);
+		console.log("***** depot failure: ");
+		Mojo.Controller.errorDialog("This is not good!.  Settings database failed to load.  Error Message: ");
 	},
 	
 	

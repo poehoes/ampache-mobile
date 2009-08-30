@@ -120,7 +120,7 @@ height: 100%;
 
 .centerSpinner{
 	position: absolute;
-	left: 98px;
+	left: 96px;
 	top: 120px;
 	z-index: 10;
 }
