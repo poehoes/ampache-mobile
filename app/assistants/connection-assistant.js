@@ -151,15 +151,41 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
 	
 	if (connectResult == "connected") {
 	
+		//Check ampache Version	
+		var apiVersion = parseInt(AmpacheMobile.ampacheServer.api)
+		if (apiVersion >= 350001) {
 		
 		
-		Mojo.Log.info("Pushing Main Menu", connectResult);
-		if (this.controller.stageController != null) {
-			this.controller.stageController.pushScene("mainmenu");
+			Mojo.Log.info("Pushing Main Menu", connectResult);
+			if (this.controller.stageController != null) {
+				this.controller.stageController.pushScene("mainmenu");
+			}
+			else {
+				this.controller.pushScene("mainmenu");
+			}
 		}
-		else
+		else // Incorrect API
 		{
-			this.controller.pushScene("mainmenu");
+			var html = true;
+			var	DisplayMessage = "Error: You are connecting to an incompatible version of Ampache<br><br> Server Version: " + AmpacheMobile.ampacheServer.api
+			 + "<br><br>Ampache Mobile requires version 3.5.x of the server"
+			
+			this.controller.showAlertDialog({
+				onChoose: this.AlertOption.bind(this),
+				title: $L("Connection Error"),
+				message: DisplayMessage,
+				choices: [{
+					label: $L('Retry'),
+					value: "retry",
+					type: 'affirmative'
+				}, {
+					label: $L('Preferences'),
+					value: "preferences",
+					type: 'affirmative'
+				}, ],
+				allowHTMLMessage: html,
+			
+			});
 		}
 	}
 	else {
@@ -167,16 +193,18 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
 		//Mojo.Log.info("Current Context", typeof this);
 		
 		//var currentScene = this.controller.activeScene();
-	
+		var html = false;
 		DisplayMessage = connectResult;
 		if(connectResult.toLowerCase() == "acl error")
 		{
 			DisplayMessage = "Error: " + connectResult+"<br><br>" + AmpacheMobile.AclErrorHelp
+			html=true;
 		}
 		
 		if(connectResult.toLowerCase() == "error: empty response")
 		{
-			DisplayMessage = connectResult+"<br><br>" + AmpacheMobile.EmptyResponseErrorHelp
+			DisplayMessage = connectResult+"<br><br>" + AmpacheMobile.EmptyResponseErrorHelp;
+			html=true;
 		
 		}
 		
@@ -194,7 +222,7 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
 				 
 
 			], 
-			 allowHTMLMessage:true,
+			 allowHTMLMessage:html,
 			
 		});
 	}
@@ -260,7 +288,7 @@ ConnectionAssistant.prototype.activate = function(event){
 		this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts);
 	}
 
-	if(AmpacheMobile.ampacheServer.pingTimer != null)
+	if((AmpacheMobile.ampacheServer != null) && (AmpacheMobile.ampacheServer.pingTimer != null))
 	{
 		AmpacheMobile.ampacheServer.disconnect();
 	}

@@ -163,16 +163,19 @@ AccountAssistant.prototype.TestCallback = function(connectResult)
 	this.spinning = false;
 
 	window.clearInterval(this.timeoutInterval);
+	var html = false;
 
 		var DisplayMessage = connectResult;
 		if(connectResult.toLowerCase() == "acl error")
 		{
 			DisplayMessage = "Error: " + connectResult + "<br><br>" + AmpacheMobile.AclErrorHelp;
+			 html = true;
 		}
 		
 		if(connectResult.toLowerCase() == "error: empty response")
 		{
 			DisplayMessage = connectResult + "<br><br>" + AmpacheMobile.EmptyResponseErrorHelp
+			html = true;
 		
 		}
 
@@ -187,7 +190,7 @@ AccountAssistant.prototype.TestCallback = function(connectResult)
                 value: 'ok',
                 type: 'color'
             }],
-			 allowHTMLMessage:true,
+			 allowHTMLMessage:html,
         });
 	
 }
