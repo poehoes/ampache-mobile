@@ -266,6 +266,7 @@ AudioPlayer = Class.create({
     },
     
     stop: function(){
+        this.NowPlayingStopPlaybackTimer();
         this.player.pause();
         this.player.src = null;
         //this.player = null;
@@ -418,13 +419,13 @@ AudioPlayer = Class.create({
 	// Now Playing updaters
 	UpdateNowPlayingTime: function()
 	{
-		//Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingTime");
+		Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingTime");
 		if (this.NowPlaying != null) {
 			var currentTime = this.player.currentTime;
 			var duration = (this.player.duration.toString()=="NaN") ? 0 : this.player.duration;
 			this.NowPlaying.updateTime(currentTime,duration);
 		}
-		//Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
+		Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
 	},
 	
 	ClearNowPlayingTime: function()

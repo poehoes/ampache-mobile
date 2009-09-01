@@ -25,7 +25,9 @@ AmpacheServer = Class.create({
 	 playlists:"",
 	 videos:"",
 	 
-    			    
+     XMLFormattingIssue:"The data returned from your server has formatting issues, please look thru your server for any strange characters as these will break Ampache Mobile",
+	
+				    
         /*'<?xml version="1.0" encoding="UTF-8" ?> 
         	<root>
 			<auth><![CDATA[41990ad6edb665ded1a9878726650567]]></auth>
@@ -360,6 +362,10 @@ AmpacheServer = Class.create({
 			
 			
 		}
+		else
+		{
+		   Mojo.Controller.errorDialog("Get Artists failed: " + this.XMLFormattingIssue);	
+		}
 		
 		this.GetArtistsCallback(ArtistList)
 		//return ArtistList;
@@ -568,6 +574,10 @@ AmpacheServer = Class.create({
 			
 			
 		}
+		else
+		{
+		   Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);	
+		}
 		
 		
 		Mojo.Log.info("Processed " + AlbumList.length + " albums");
@@ -641,6 +651,10 @@ root>
 			}
 			
 			
+		}
+		else
+		{
+		   Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);	
 		}
 		
 		
@@ -789,6 +803,11 @@ root>
 				SongsList[i] = newSong;
 			}
 		}
+		else
+		{
+		   Mojo.Controller.errorDialog("Get songs failed: " + this.XMLFormattingIssue);	
+		}
+		
 		Mojo.Log.info("Calling callback");
 		this.GetSongsCallback(SongsList);
 		this.GetSongsCallback = null;
@@ -879,6 +898,10 @@ root>
 			}
 			
 			
+		}
+		else
+		{
+		   Mojo.Controller.errorDialog("Get Playlists failed: " + this.XMLFormattingIssue);	
 		}
 		
 		this.GetPlaylistsCallback(PlaylistsList)

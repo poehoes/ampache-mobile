@@ -198,7 +198,12 @@ ArtistsAssistant.prototype.dividerFunc = function(itemModel){
     
     if (itemModel.name.charAt(0).toLowerCase() == "t") {
 		if (itemModel.name.substring(0, 4).toLowerCase() == "the ") {
-			return itemModel.name.charAt(4).toUpperCase();
+			
+			
+			var regExp = /\s+/g;
+			var name = itemModel.name.toLowerCase().replace(regExp,''); 
+			
+			return name[3].toUpperCase();
 		}
 		else {
 			return "T";
@@ -206,7 +211,9 @@ ArtistsAssistant.prototype.dividerFunc = function(itemModel){
 	}
 	else if (itemModel.name.charAt(0).toLowerCase() == "a") {
 		if (itemModel.name.substring(0, 2).toLowerCase() == "a ") {
-            return itemModel.name.charAt(2).toUpperCase();
+            var regExp = /\s+/g;
+			var name = itemModel.name.toLowerCase().replace(regExp,''); 
+			return name[1].toUpperCase();
         }
         else {
             return "A";
