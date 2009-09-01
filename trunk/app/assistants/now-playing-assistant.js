@@ -95,7 +95,10 @@ NowPlayingAssistant.prototype.setup = function(){
     slider.observe(Mojo.Event.sliderDragEnd, this.progressBarDragEnd.bind(this));
     
 	this.controller.get('playback-display').observe(Mojo.Event.dragStart, this.noDrag.bindAsEventListener(this));	
-    
+    this.controller.get('playback-display').observe(Mojo.Event.flick, this.handleFlick.bindAsEventListener(this));						
+    this.controller.get('playback-display').observe(Mojo.Event.tap, this.togglePausePlay.bindAsEventListener(this));	
+	
+	
     this.updateBuffering(0, 0);
     
 	
@@ -117,6 +120,28 @@ NowPlayingAssistant.prototype.noDrag = function(event) {
 }
 		
 
+NowPlayingAssistant.prototype.handleFlick = function(event){
+	event.stop();
+	
+	if (event.velocity.x < 0) 
+		AmpacheMobile.audioPlayer.play_next();
+	else 
+		AmpacheMobile.audioPlayer.play_prev();
+}
+
+
+NowPlayingAssistant.prototype.togglePausePlay = function(){
+	if (!AmpacheMobile.audioPlayer.player.paused) {
+		this.showPlayButton();
+		AmpacheMobile.audioPlayer.pause();
+	}
+	else {
+		this.showPauseButton();
+		AmpacheMobile.audioPlayer.play();
+	}
+}
+
+
 
 NowPlayingAssistant.prototype.activate = function(event){
     Mojo.Log.info("--> NowPlayingAssistant.prototype.activate");
@@ -132,8 +157,8 @@ NowPlayingAssistant.prototype.activate = function(event){
 
 NowPlayingAssistant.prototype.deactivate = function(event){
     Mojo.Log.info("<-- NowPlayingAssistant.prototype.activate");
-    AmpacheMobile.audioPlayer.clearNowPlaying();
-	AmpacheMobile.audioPlayer.stop();
+    AmpacheMobile.audioPlayer.stop();
+	AmpacheMobile.audioPlayer.clearNowPlaying();
     Mojo.Log.info("--> NowPlayingAssistant.prototype.activate");
 }
 
