@@ -349,7 +349,35 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<-- AudioPlayer.prototype.internal_play");
         
     },
-    
+    MEDIA_ERR_ABORTED : 1,
+	MEDIA_ERR_NETWORK : 2,
+	MEDIA_ERR_DECODE : 3,
+	MEDIA_ERR_SRC_NOT_SUPPORTED :4,
+	
+	streamErrorCodeLookup: function(errorCode)
+	{//refrence: http://dev.w3.org/html5/spec/Overview.html#dom-mediaerror-media_err_network
+		var errorString="Unknown Error type"
+		switch(errorCode)
+		{
+			case this.MEDIA_ERR_ABORTED:
+				errorString = "MEDIA_ERR_ABORTED: The streaming process was aborted by the palm audio service.";
+				break;
+			case this.MEDIA_ERR_NETWORK:
+				errorString = "MEDIA_ERR_NETWORK: A network error has occured";
+				break;
+			case this.MEDIA_ERR_DECODE:
+				errorString = "MEDIA_ERR_DECODE: An error has occurred while decoding the file";
+				break;
+			case this.MEDIA_ERR_SRC_NOT_SUPPORTED:
+				errorString = "MEDIA_ERR_SRC_NOT_SUPPORTED: The file is not suitable for streaming";
+				break;
+			
+		}
+		
+		return errorString;
+	},
+	
+	
     
     handleAudioEvents: function(event){
 		Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
@@ -392,16 +420,23 @@ AudioPlayer = Class.create({
 				this.ClearNowPlayingTime();
 				break;
 			
+			case "x-palm-disconnect":
+				this.NowPlayingDisplayError("Palm Audio Service failed");
+				break;
+			
 			case "error":
-			this.Controller.showAlertDialog({
+			/*this.Controller.showAlertDialog({
 			    //onChoose: this.onErrorDialogDismiss.bind(this),
 			    title: $L("Error"),
 			    message: "Audio Player Recieved an Error",
 			    choices:[
 		        {label:$L('Cancel'), value:"cancel", type:'dismiss'}
 			    ]
-			  });
+			  });*/
 				//this.Controller.errorDialog();
+				 var errorString = this.streamErrorCodeLookup(event.error);
+				this.NowPlayingDisplayError("Audio Player Recieved an Error<br><br>"+errorString);
+				
 				break;
 			
 			case "ended":
@@ -502,6 +537,13 @@ AudioPlayer = Class.create({
 		}
 	},
 	
+	NowPlayingDisplayError:function(message)
+	{
+		if (this.NowPlaying != null) {
+			var song = this.playList[this.currentPlayingTrack];
+			this.NowPlaying.streamingError(message, song)
+		}
+	},
 	
 	
 	
