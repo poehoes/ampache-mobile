@@ -349,24 +349,27 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<-- AudioPlayer.prototype.internal_play");
         
     },
-    MEDIA_ERR_ABORTED : 1,
-	MEDIA_ERR_NETWORK : 2,
-	MEDIA_ERR_DECODE : 3,
+    
 	MEDIA_ERR_SRC_NOT_SUPPORTED :4,
 	
 	streamErrorCodeLookup: function(errorCode)
-	{//refrence: http://dev.w3.org/html5/spec/Overview.html#dom-mediaerror-media_err_network
+	{
+		//refrence: http://dev.w3.org/html5/spec/Overview.html#dom-mediaerror-media_err_network
+	 // http://developer.palm.com/index.php?option=com_content&view=article&id=1539
 		var errorString="Unknown Error type"
 		switch(errorCode)
 		{
-			case this.MEDIA_ERR_ABORTED:
+			case MediaError.MEDIA_ERR_ABORTED:
 				errorString = "MEDIA_ERR_ABORTED: The streaming process was aborted by the palm audio service.";
+				errorString += this.moreErrorInfo();
 				break;
-			case this.MEDIA_ERR_NETWORK:
+			case MediaError.MEDIA_ERR_NETWORK:
 				errorString = "MEDIA_ERR_NETWORK: A network error has occured";
+				errorString += this.moreErrorInfo();
 				break;
-			case this.MEDIA_ERR_DECODE:
+			case MediaError.MEDIA_ERR_DECODE:
 				errorString = "MEDIA_ERR_DECODE: An error has occurred while decoding the file";
+				errorString += this.moreErrorInfo();
 				break;
 			case this.MEDIA_ERR_SRC_NOT_SUPPORTED:
 				errorString = "MEDIA_ERR_SRC_NOT_SUPPORTED: The file is not suitable for streaming";
@@ -377,6 +380,73 @@ AudioPlayer = Class.create({
 		return errorString;
 	},
 	
+	
+	moreErrorInfo:function()
+	{
+		var moreInfo = "";
+		if(this.player.palm != null && this.player.palm.errorDetails != null  && this.player.palm.errorDetails.errorCode != null)
+		{
+			var errorDetails = this.player.palm.errorDetails;
+			Mojo.Log.error("Error Details: %j", errorDetails);
+			
+			
+			var errorClassString = "Unknown: (0x" + errorDetails.errorClass.toString(16).toUpperCase() + ")"
+			var errorCodeString = "Unknown: (0x" + errorDetails.errorCode.toString(16).toUpperCase() + ")"
+			
+			
+			
+			
+			switch (errorDetails.errorClass) {
+				case 0x50501:
+				errorClassString = "DecodeError(0x50501)";
+				break;
+				case 0x50502:
+				errorClassString = "NetworkError(0x50502)";
+				break;
+			}		
+				
+			switch (errorDetails.errorCode) {
+			
+				case 1:
+					errorCodeString = "DecodeErrorFileNotFound(1)"
+					break;
+				case 2:
+					errorCodeString = "DecodeErrorBadParam(2)"
+					break;
+				case 3:
+					errorCodeString = "DecodeErrorPipeline(3)"
+					break;
+				case 4:
+					errorCodeString = "DecodeErrorUnsupported(4)"
+					break;
+				case 5:
+					errorCodeString = "DecodeErrorNoMemory(5)"
+					break;
+				case 6:
+					errorCodeString = "NetworkErrorHttp(6)"
+					break;
+				case 7:
+					errorCodeString = "NetworkErrorRtsp(7)"
+					break;
+				case 8:
+					errorCodeString = "NetworkErrorMobi(8)"
+					break;
+				case 9:
+					errorCodeString = "NetworkErrorOther(9)"
+					break;
+				case 12:
+					errorCodeString = "NetworkErrorPowerDown(12)"
+					break;
+			}
+			 
+			
+			moreInfo = "<br><br><font style='{font-size:smaller;}'>Debug Info: <br>"
+			moreInfo += "Class: " + errorClassString + "<br>";
+			moreInfo += "Code: " + errorCodeString + "<br>";
+			moreInfo += "Value: 0x" + errorDetails.errorValue.toString(16).toUpperCase() + "</font>";
+		}
+		return moreInfo;
+	},
 	
     
     handleAudioEvents: function(event){
