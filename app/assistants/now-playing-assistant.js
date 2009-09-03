@@ -501,12 +501,10 @@ NowPlayingAssistant.prototype.onStreamingErrorDismiss = function(value){
             break;
         case "palm-attempt":
             this.controller.serviceRequest('palm://com.palm.applicationManager', {
-                method: 'launch',
+                method: 'open',
                 parameters: {
-					id:"com.palm.app.streamingmusicplayer",
-                    params: {
 						target: this.errorSong.url
-					}
+					
 				},
             /*
              onSuccess: function(status){
@@ -543,12 +541,12 @@ NowPlayingAssistant.prototype.streamingError = function(errorText, song){
 					label: 'OK',
 					value: "retry",
 					type: 'primary'
-				}, {
+				}, /*{
 					label: 'Let Palm Try',
 					value: "palm-attempt",
 					type: 'secondary'
 				
-				}],
+				}*/],
 		allowHTMLMessage:true,
 	});
 }
