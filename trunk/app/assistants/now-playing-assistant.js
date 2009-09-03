@@ -115,22 +115,32 @@ NowPlayingAssistant.prototype.setup = function(){
 }
 
 
+//****************************************************************************************************************
+// Gestures and animation
+//****************************************************************************************************************
+
 NowPlayingAssistant.prototype.noDrag = function(event) {
 	event.stop();
 }
 		
 
 NowPlayingAssistant.prototype.handleFlick = function(event){
+	Mojo.Log.info("--> NowPlayingAssistant.prototype.handleFlick: %j", event);
+	
 	event.stop();
 	
-	if (event.velocity.x < 0) 
+	if (event.velocity.x < -1500) {
 		AmpacheMobile.audioPlayer.play_next();
-	else 
-		AmpacheMobile.audioPlayer.play_prev();
+		//this.moveArt();
+	}
+	if (event.velocity.x > 1500) AmpacheMobile.audioPlayer.play_prev();
+		
+	Mojo.Log.info("<-- NowPlayingAssistant.prototype.handleFlick");
 }
 
 
 NowPlayingAssistant.prototype.togglePausePlay = function(){
+	Mojo.Log.info("--> NowPlayingAssistant.prototype.togglePausePlay");
 	if (!AmpacheMobile.audioPlayer.player.paused) {
 		this.showPlayButton();
 		AmpacheMobile.audioPlayer.pause();
@@ -139,6 +149,94 @@ NowPlayingAssistant.prototype.togglePausePlay = function(){
 		this.showPauseButton();
 		AmpacheMobile.audioPlayer.play();
 	}
+	Mojo.Log.info("--> NowPlayingAssistant.prototype.togglePausePlay");
+}
+
+
+
+		// hardcoded position for the album art divs
+NowPlayingAssistant.prototype.ANIMATION_FAR_LEFT_LEFT = -400
+		
+NowPlayingAssistant.prototype.ANIMATION_PREV_LEFT = -140
+NowPlayingAssistant.prototype.ANIMATION_PREV_HEIGHT = 200
+NowPlayingAssistant.prototype.ANIMATION_PREV_BOTTOM = 200
+		
+		NowPlayingAssistant.prototype.ANIMATION_CURRENT_LEFT = 70
+		NowPlayingAssistant.prototype.ANIMATION_CURRENT_HEIGHT = 220
+		NowPlayingAssistant.prototype.ANIMATION_CURRENT_BOTTOM = 100
+		
+		NowPlayingAssistant.prototype.ANIMATION_NEXT_LEFT = 280
+		NowPlayingAssistant.prototype.ANIMATION_NEXT_HEIGHT =200
+		NowPlayingAssistant.prototype.ANIMATION_NEXT_BOTTOM = 95
+		
+		NowPlayingAssistant.prototype.ANIMATION_FAR_RIGHT_LEFT = 400
+
+
+NowPlayingAssistant.prototype.moveArt = function(){
+
+	this.currentPicDiv = this.controller.get('loaded-display');
+	
+	var oldInfo = {};
+	oldInfo.left = 200;
+	oldInfo.bottom = this.ANIMATION_CURRENT_BOTTOM;
+	
+	var newInfo = {};
+	newInfo.left = 280;
+	newInfo.bottom = this.ANIMATION_CURRENT_BOTTOM;
+	
+	
+	Mojo.Animation.animateStyle(this.currentPicDiv, 'left', 'bezier', {
+		from: 0,
+		to: 100,
+		duration: 0.2,
+		curve: 'over-easy',
+		reverse: false,
+		onComplete: function(){
+			Mojo.Log.info("Animation Complete")
+		}
+	});
+	
+	
+	
+}
+
+
+NowPlayingAssistant.prototype._getDims = function (divPos){
+			
+			var dims = {};
+			
+			switch (divPos){
+				case 0:
+					dims.left = this.ANIMATION_FAR_LEFT_LEFT;
+					dims.div = this.farLeftPicDiv;
+					break;
+				case 1:
+					dims.left = this.ANIMATION_PREV_LEFT;
+					dims.height = this.ANIMATION_PREV_HEIGHT;
+					dims.bottom = this.ANIMATION_PREV_BOTTOM;
+					dims.div = this.prevPicDiv;
+					break;
+				case 2:
+					dims.left = this.ANIMATION_CURRENT_LEFT;					
+					dims.height = this.ANIMATION_CURRENT_HEIGHT;
+					dims.bottom = this.ANIMATION_CURRENT_BOTTOM;
+					dims.div = this.currentPicDiv;
+					break;
+				case 3:
+					dims.left = this.ANIMATION_NEXT_LEFT;
+					dims.height = this.ANIMATION_NEXT_HEIGHT;
+					dims.bottom = this.ANIMATION_NEXT_BOTTOM;
+					dims.div = this.nextPicDiv;
+					break;
+				case 4:
+					dims.left = this.ANIMATION_FAR_RIGHT_LEFT;
+					dims.div = this.farRightPicDiv;
+					break;
+				
+			}
+
+			return dims;
+			
 }
 
 
@@ -291,7 +389,6 @@ NowPlayingAssistant.prototype.hideSpinner = function(){
     Mojo.Log.info("<-- NowPlayingAssistant.prototype.hideSpinner");
 }
 
-
 		/*
 NowPlayingAssistant.prototype.getShuffleItem: function(){
 			var icon;
@@ -396,6 +493,65 @@ NowPlayingAssistant.prototype.setMenuControls = function(){
     //setTimeout(this._registerCmdMenuOnClicks.bind(this), 0);
 }
 
+NowPlayingAssistant.prototype.onStreamingErrorDismiss = function(value){
+    Mojo.Log.info("--> NowPlayingAssistant.prototype.onErrorDialogDismiss value: " + value);
+    
+    switch (value) {
+        case "retry":
+            break;
+        case "palm-attempt":
+            this.controller.serviceRequest('palm://com.palm.applicationManager', {
+                method: 'launch',
+                parameters: {
+					id:"com.palm.app.streamingmusicplayer",
+                    params: {
+						target: this.errorSong.url
+					}
+				},
+            /*
+             onSuccess: function(status){
+             $('area-to-update').update(Object.toJSON(status));
+             },
+             onFailure: function(status){
+             $('area-to-update').update(Object.toJSON(status));
+             },
+             onComplete: function(){
+             this.getButton = myassistant.controller.get('LaunchAudioButton');
+             this.getButton.mojo.deactivate();
+             }*/
+            });
+            break;
+    }
+    
+    
+    this.errorSong = null;
+    Mojo.Log.info("<-- NowPlayingAssistant.prototype.onErrorDialogDismiss");
+}
+
+
+
+
+NowPlayingAssistant.prototype.streamingError = function(errorText, song){
+	this.errorSong = song;
+	
+	this.controller.showAlertDialog({
+		onChoose: this.onStreamingErrorDismiss.bind(this),
+		title: $L("Streaming Error"),
+		message: errorText,
+		choices: [{
+			
+					label: 'OK',
+					value: "retry",
+					type: 'primary'
+				}, {
+					label: 'Let Palm Try',
+					value: "palm-attempt",
+					type: 'secondary'
+				
+				}],
+		allowHTMLMessage:true,
+	});
+}
 
 
 NowPlayingAssistant.prototype.showError = function(errorText){
@@ -448,6 +604,7 @@ NowPlayingAssistant.prototype.handleCommand = function(event){
 			//case "shuffle-off":
 			//	this.turnOffShuffle();
 			//	break;	
+			
 			case "toggleShuffle":
 				this.toggleShuffle();
 				break;
