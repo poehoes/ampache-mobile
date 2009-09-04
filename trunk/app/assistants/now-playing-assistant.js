@@ -117,7 +117,7 @@ NowPlayingAssistant.prototype.setup = function(){
     
 	this.controller.get('playback-display').observe(Mojo.Event.dragStart, this.noDrag.bindAsEventListener(this));	
     this.controller.get('playback-display').observe(Mojo.Event.flick, this.handleFlick.bindAsEventListener(this));						
-    this.controller.get('playback-display').observe(Mojo.Event.tap, this.togglePausePlay.bindAsEventListener(this));	
+    this.controller.get('playback-display').observe(Mojo.Event.tap, this.doubleClick.bindAsEventListener(this));	
 	
 	
     this.updateBuffering(0, 0);
@@ -160,6 +160,27 @@ NowPlayingAssistant.prototype.handleFlick = function(event){
 }
 
 
+
+// All this for double clicking
+NowPlayingAssistant.prototype.doubleClick = function() {
+	Mojo.Log.info("--> NowPlayingAssistant.prototype.doubleClick");
+	if (this.click == 1) {
+		this.togglePausePlay();
+	}
+	else {
+		this.click = 1
+		this.clickInterval = this.controller.window.setInterval(this.killlClick.bind(this), 450);
+	}	
+}
+
+NowPlayingAssistant.prototype.killlClick = function() {
+	Mojo.Log.info("--> NowPlayingAssistant.prototype.killlClick");
+    
+	this.click = 0;
+	this.controller.window.clearInterval(this.clickInterval);
+	this.clickInterval = null;
+}
+
 NowPlayingAssistant.prototype.togglePausePlay = function(){
 	Mojo.Log.info("--> NowPlayingAssistant.prototype.togglePausePlay");
 	if (!AmpacheMobile.audioPlayer.player.paused) {
@@ -173,7 +194,7 @@ NowPlayingAssistant.prototype.togglePausePlay = function(){
 	Mojo.Log.info("--> NowPlayingAssistant.prototype.togglePausePlay");
 }
 
-
+/*
 
 		// hardcoded position for the album art divs
 NowPlayingAssistant.prototype.ANIMATION_FAR_LEFT_LEFT = -400
@@ -259,7 +280,7 @@ NowPlayingAssistant.prototype._getDims = function (divPos){
 			return dims;
 			
 }
-
+*/
 
 
 NowPlayingAssistant.prototype.activate = function(event){
@@ -410,26 +431,11 @@ NowPlayingAssistant.prototype.hideSpinner = function(){
     Mojo.Log.info("<-- NowPlayingAssistant.prototype.hideSpinner");
 }
 
-		/*
-NowPlayingAssistant.prototype.getShuffleItem: function(){
-			var icon;
-			var toggleCmd;
-			
-			if (this.musicPlayer.getShuffleMode() == this.musicPlayer.playlist.SHUFFLE_MODE_ON){
-				icon = "music-shuffle";
-				toggleCmd = 'toggleShuffle';
-			} else{
-				icon = "music-shuffle";
-			}
-			
-			return {toggleCmd: toggleCmd, items:[
-										{ command:'toggleShuffle', icon:icon}
-										]};
-			
-			//return {toggleCmd:'toggle-stuff', icon: icon, command:'toggleShuffle'};
-		}*/
 
 
+//*********************************************************************************************************************************
+//  Now Playing Song Info
+//*********************************************************************************************************************************
 
 NowPlayingAssistant.prototype.NowPlayingDisplaySongInfo = function(playList, currentIndex)
 {
