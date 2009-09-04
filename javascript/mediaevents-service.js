@@ -1,4 +1,4 @@
-/* Copyright 2009 Palm, Inc.  All rights reserved. */
+
 
 
 var MediaEventsService = Class.create(
