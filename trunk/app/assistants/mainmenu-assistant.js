@@ -61,14 +61,16 @@ MainmenuAssistant.prototype.setup = function(){
         directory: $L("artists"),
         name: $L("Artists"),
         scene: $L("artists"),
-        description: $L(AmpacheMobile.ampacheServer.artists.toString())
+        description: $L(AmpacheMobile.ampacheServer.artists.toString()),
+		icon: "images/artists.png"
     }, 
 	{
         category: $L("bottom"),
         directory: $L("albums"),
         name: $L("Albums"),
         scene: $L("albums"),
-        description: $L(AmpacheMobile.ampacheServer.albums.toString())
+        description: $L(AmpacheMobile.ampacheServer.albums.toString()),
+		icon: "images/albums.png"
     }, 
 	/*
 	{
@@ -84,7 +86,8 @@ MainmenuAssistant.prototype.setup = function(){
         directory: $L("playlists"),
         name: $L("Playlists"),
         scene: $L("playlists"),
-        description: $L(AmpacheMobile.ampacheServer.playlists.toString())
+        description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
+		icon: "images/playlists.png"
     },
 	/* 
 	{
