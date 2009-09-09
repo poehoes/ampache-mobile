@@ -462,7 +462,7 @@ NowPlayingAssistant.prototype.NowPlayingDisplaySongInfo = function(playList, cur
 	
 	
 	if ((song.art == null) || (song.art == "")) {
-		$('coverArt').src = "images/blankalbum.jpg"
+		$('coverArt').src = "images/blankalbum.png"
 	}
 	else {
 		if ($('coverArt').src != song.art) 
