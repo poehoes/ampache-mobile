@@ -35,6 +35,7 @@ AudioPlayer = Class.create({
     playList: null,
     shuffleOn:false,
 	
+	debug: false,
 	
 	
 	AudioPlayers:null,
@@ -376,34 +377,49 @@ AudioPlayer = Class.create({
 	{
 		//refrence: http://dev.w3.org/html5/spec/Overview.html#dom-mediaerror-media_err_network
 	 // http://developer.palm.com/index.php?option=com_content&view=article&id=1539
-		var errorString="Unknown Error type"
+		var errorString="Unknown Error"
 		switch(errorCode)
 		{
 			case MediaError.MEDIA_ERR_ABORTED:
-				errorString = "MEDIA_ERR_ABORTED: The streaming process was aborted by the palm audio service.";
-				errorString += this.moreErrorInfo();
+				errorString = "The audio stream was aborted by WebOS.  Most often this happens when you do not have a fast enough connection to support an audio stream.";
+				if (this.debug) {
+					errorString += this.moreErrorInfo("MEDIA_ERR_ABORTED");
+				}
 				break;
 			case MediaError.MEDIA_ERR_NETWORK:
-				errorString = "MEDIA_ERR_NETWORK: A network error has occured";
-				errorString += this.moreErrorInfo();
+				errorString = "A network error has occured.  The network cannot support an audio stream at this time.";
+				if (this.debug) {
+					errorString += this.moreErrorInfo("MEDIA_ERR_NETWORK");
+				}
 				break;
 			case MediaError.MEDIA_ERR_DECODE:
-				errorString = "MEDIA_ERR_DECODE: An error has occurred while decoding the file";
-				errorString += this.moreErrorInfo();
+				errorString = "An error has occurred while attempting to play the file. The file is either corrupt or an unsupported format (ex: m4p, ogg, flac).  Transcoding may be required to play this file.";
+				if (this.debug) {
+					errorString += this.moreErrorInfo("MEDIA_ERR_DECODE");
+				}
 				break;
 			case this.MEDIA_ERR_SRC_NOT_SUPPORTED:
-				errorString = "MEDIA_ERR_SRC_NOT_SUPPORTED: The file is not suitable for streaming";
+				errorString = "The file is not suitable for streaming";
+				if (this.debug) {
+					errorString += "Error Type: MEDIA_ERR_SRC_NOT_SUPPORTED"
+					
+				}
 				break;
 			
 		}
+		
+		
+		
 		
 		return errorString;
 	},
 	
 	
-	moreErrorInfo:function()
+	moreErrorInfo:function(type)
 	{
-		var moreInfo = "";
+		var moreInfo = "<br><br><font style='{font-size:smaller;}'><b>Debug Info:</b>"
+		moreInfo += "<br>Error Type: " + type;
+		
 		if(this.player.palm != null && this.player.palm.errorDetails != null  && this.player.palm.errorDetails.errorCode != null)
 		{
 			var errorDetails = this.player.palm.errorDetails;
@@ -460,11 +476,14 @@ AudioPlayer = Class.create({
 			}
 			 
 			
-			moreInfo = "<br><br><font style='{font-size:smaller;}'>Debug Info: <br>"
-			moreInfo += "Class: " + errorClassString + "<br>";
-			moreInfo += "Code: " + errorCodeString + "<br>";
-			moreInfo += "Value: 0x" + errorDetails.errorValue.toString(16).toUpperCase() + "</font>";
+			moreInfo += "<br>Class: " + errorClassString;
+			moreInfo += "<br>Code: " + errorCodeString;
+			moreInfo += "<br>Value: 0x" + errorDetails.errorValue.toString(16).toUpperCase()
 		}
+		
+		moreInfo += "<br>Mime: " + this.playList[this.currentPlayingTrack].mime;
+		moreInfo += "<br>URL: <a href=" + this.playList[this.currentPlayingTrack].url + ">Stream Link</a></font>";
+		
 		return moreInfo;
 	},
 	
@@ -475,6 +494,8 @@ AudioPlayer = Class.create({
         //Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
 		//Mojo.Log.info("handeAudioEvent: " + event.type);
         
+		this.NowPlayingStreamDebug(event.type);
+		
         switch (event.type) {
             
 			
@@ -524,8 +545,9 @@ AudioPlayer = Class.create({
 			    ]
 			  });*/
 				//this.Controller.errorDialog();
-				 var errorString = this.streamErrorCodeLookup(event.error);
-				this.NowPlayingDisplayError("Audio Player Recieved an Error<br><br>"+errorString);
+				var errorString = this.streamErrorCodeLookup(event.error);
+				
+				this.NowPlayingDisplayError(errorString);
 				
 				break;
 			
@@ -537,7 +559,7 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<------ AudioPlayer.prototype.handleAudioEvents AudioEvent:",event.type);
     },
     
-    
+   
 
 
 	//******************************************************************************************************************
@@ -595,6 +617,13 @@ AudioPlayer = Class.create({
 		}
 	},
 	
+	NowPlayingStreamDebug:function(eventText)
+	{
+		if (this.NowPlaying != null && this.debug) {
+			this.NowPlaying.streamDebug(eventText);
+		}
+	},
+	
 	NowPlayingStartPlaybackTimer: function()
 	{
 		Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer")
@@ -644,6 +673,8 @@ AudioPlayer = Class.create({
 			var endPercentage = (this.player.buffered.end(0) / this.player.duration);
 			
 			this.UpdateNowPlayingBuffering(startPercentage, endPercentage);
+			
+			this.NowPlayingStreamDebug("Downloading " + (Math.round(endPercentage*10000)/100) + "%");
 		}
 		//Mojo.Log.info("<-- AudioPlayer.prototype._updateBuffering")
 	},

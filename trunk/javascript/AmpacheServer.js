@@ -806,19 +806,21 @@ root>
 				var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
 				var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
 				
+				var mimeXML = songsListXML[i].getElementsByTagName("mime")
+				if (mimeXML[0].firstChild != null) {
+					var _mime = mimeXML[0].firstChild.data;
+				}
+				else var _mime = "";
+				
 				
 				var artXML = songsListXML[i].getElementsByTagName("art")
-				
-		
 				if (artXML[0].firstChild != null) {
 					var _art = artXML[0].firstChild.data;
 				}
 				else var _art = "";
 				
-		
-							
 				
-				var newSong  = new SongModel(_id, _title, _artist, _album, _track, _time, _url, _size, _art);
+				var newSong  = new SongModel(_id, _title, _artist, _album, _track, _time, _url, _size, _art, _mime);
 				
 				SongsList[i] = newSong;
 			}
@@ -1158,7 +1160,7 @@ AlbumModel = Class.create({
 	
 SongModel = Class.create({
 
-    initialize: function(_id, _title, _artist, _album, _track, _time, _url, _size, _art){
+    initialize: function(_id, _title, _artist, _album, _track, _time, _url, _size, _art, _mime){
         //Mojo.Log.info("--> SongModel constructor " + _title);
         
 		this.id = _id; 
@@ -1170,6 +1172,7 @@ SongModel = Class.create({
 		this.url =_url;
 		this.size = _size;
 		this.art = _art;
+		this.mime = _mime;
 		this.played = false;
 		
     	//Mojo.Log.info("<-- SongModel constructor " + _title);
@@ -1184,6 +1187,7 @@ SongModel = Class.create({
 	url: null,
 	size: null,
 	art: null,
+	mime: null,
 	
 	//used when put into a song array to create a playlist
 	//played:null,
