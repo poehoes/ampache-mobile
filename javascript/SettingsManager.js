@@ -145,4 +145,5 @@ Settings = Class.create({
 	Accounts:null,
 	CurrentAccountIndex:null,
 	ExtraCoverArt:false,
+	StreamDebug:false,
 });

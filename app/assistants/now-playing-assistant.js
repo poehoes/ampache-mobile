@@ -194,6 +194,9 @@ NowPlayingAssistant.prototype.togglePausePlay = function(){
 	Mojo.Log.info("--> NowPlayingAssistant.prototype.togglePausePlay");
 }
 
+
+
+
 /*
 
 		// hardcoded position for the album art divs
@@ -286,11 +289,15 @@ NowPlayingAssistant.prototype._getDims = function (divPos){
 NowPlayingAssistant.prototype.activate = function(event){
     Mojo.Log.info("--> NowPlayingAssistant.prototype.activate");
     
+	
+	
     AmpacheMobile.audioPlayer.play();
     AmpacheMobile.audioPlayer.setNowPlaying(this);
     
     this.showPlayButton();
     
+	AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
+	
     Mojo.Log.info("<-- NowPlayingAssistant.prototype.activate");
 }
 
@@ -299,6 +306,9 @@ NowPlayingAssistant.prototype.deactivate = function(event){
     Mojo.Log.info("<-- NowPlayingAssistant.prototype.activate");
     AmpacheMobile.audioPlayer.stop();
 	AmpacheMobile.audioPlayer.clearNowPlaying();
+	
+	
+	
     Mojo.Log.info("--> NowPlayingAssistant.prototype.activate");
 }
 
@@ -468,6 +478,39 @@ NowPlayingAssistant.prototype.NowPlayingDisplaySongInfo = function(playList, cur
 	Mojo.Log.info("<-- NowPlayingAssistant.prototype.NowPlayingDisplaySongInfo");
 	
 	
+}
+
+NowPlayingAssistant.prototype.streamDebug = function(state)
+{
+	var display = "";
+	switch(state)
+	{
+		case "loadstart":
+			display = "Starting Stream"
+			break;
+		
+		case "canplaythrough":
+			display = "Can Play Through";
+			break;
+			
+		case "progress":
+			display = "Downloading";
+			break;
+	 
+	    case "stalled":
+	 		display = "Downloading Stalled";
+			break;
+			
+		case "load":
+			display = "Fully Loaded";
+			break;
+			
+		default:
+			display = state;
+			break;
+	}
+	
+	this.controller.get('stream-debug').innerHTML = display;
 }
 
 

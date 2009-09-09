@@ -104,9 +104,41 @@ PreferencesAssistant.prototype.setup = function(){
 		Mojo.Event.listen(this.controller.get('art-toggle'),Mojo.Event.propertyChange,this.togglePressed);
 	
 	
+		//Setup Stream Debug Toggle
+			// Setup toggle widget and an observer for when it is changed
+		this.debugAttr = {
+  			trueLabel:  'On' ,//if the state is true, what to label the toggleButton; default is 'On'
+  			trueValue:  true ,//if the state is true, what to set the model[property] to; default if not specified is true
+ 			falseLabel:  'Off', //if the state is false, what to label the toggleButton; default is Off
+  			falseValue: false, //if the state is false, , what to set the model[property] to; default if not specific is false],
+  			fieldName:  'toggle' //name of the field; optional
+  		}
+		this.debugModel = {
+			value : this.settingsManager.settings.StreamDebug,   // Current value of widget, from choices array.
+ 			disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
+			
+		}
+		
+		this.controller.setupWidget('stream-debug-toggle', this.debugAttr,this.debugModel );
+		this.debug_pressed = this.debugPressed.bindAsEventListener(this);
+		Mojo.Event.listen(this.controller.get('stream-debug-toggle'),Mojo.Event.propertyChange,this.debug_pressed);
+	
 	
 	
 }
+
+PreferencesAssistant.prototype.debugPressed = function(event){
+	//Display the value of the toggle
+	if (event.value == true) {
+		this.settingsManager.settings.StreamDebug = true;
+	}
+	else
+	{
+		this.settingsManager.settings.StreamDebug = false;
+	}
+	this.settingsManager.SaveSettings();
+}
+
 
 
 PreferencesAssistant.prototype.togglePressed = function(event){
@@ -246,5 +278,8 @@ PreferencesAssistant.prototype.cleanup = function(event){
 	Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listAdd, this.listAddHandler);	
 	Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteHandler);
 	Mojo.Event.stopListening(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
+	
+	Mojo.Event.stopListening(this.controller.get('art-toggle'),Mojo.Event.propertyChange,this.togglePressed);
+	Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'),Mojo.Event.propertyChange,this.debug_pressed);
 	Mojo.Log.info("<-- PreferencesAssistant.prototype.cleanup");
 }
