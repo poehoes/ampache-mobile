@@ -61,6 +61,7 @@ function StageAssistant(stageController) {
 	
 	//AmpacheMobile.stageController = stageController;
 	//AmpacheMobile.audioPlayer = new AudioPlayer(stageController);
+	AmpacheMobile.mediaEventsService = new MediaEventsService();
 	
 }
 

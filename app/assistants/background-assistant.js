@@ -7,14 +7,15 @@ BackgroundAssistant = Class.create({
     
     setup: function(){
     
-		this.CurrentSolid = AmpacheMobile.settingsManager.settings.BackgroundSolid;
-    	this.CurrentColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
+        this.CurrentSolid = AmpacheMobile.settingsManager.settings.BackgroundSolid;
+        this.CurrentColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
         this.CurrentImage = AmpacheMobile.settingsManager.settings.BackgroundImage;
         this.CurrentOverlay = AmpacheMobile.settingsManager.settings.BackgroundOverlay;
-    	this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
-		
-		if(this.CurrentMode ==null) this.CurrentMode=0;
-    
+        this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
+        
+        if (this.CurrentMode == null) 
+            this.CurrentMode = 0;
+        
         this.wallpaperTypeModel = {
             value: this.CurrentMode,
             disabled: false
@@ -42,8 +43,8 @@ BackgroundAssistant = Class.create({
         //***************************************************************
         // Included Photo picker
         
-        var photoAttributes = {            //noExtractFS : true	//optional, turn off using extractfs to speed up renders.
-        };
+        var photoAttributes = { //noExtractFS : true	//optional, turn off using extractfs to speed up renders.
+};
         this.photoModel = {
             //backgroundImage : 'images/glacier.png',
             //background: 'black',		//You can set an image or a color
@@ -66,19 +67,19 @@ BackgroundAssistant = Class.create({
         this.solidImages[2] = {
             source: 'images/backgrounds/solids/background3.png',
         }
-		  this.solidImages[3] = {
+        this.solidImages[3] = {
             source: 'images/backgrounds/solids/background4.png',
         }
-		 this.solidImages[4] = {
-           source: 'images/backgrounds/solids/background5.png',
+        this.solidImages[4] = {
+            source: 'images/backgrounds/solids/background5.png',
         }
-		 this.solidImages[5] = {
+        this.solidImages[5] = {
             source: 'images/backgrounds/solids/background6.png',
         }
-		
-		
-		
-		
+        
+        
+        
+        
         this.solidIndex = 0;
         
         //***************************************************************
@@ -133,9 +134,9 @@ BackgroundAssistant = Class.create({
         this.controller.get('body_wallpaper').style.backgroundColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
         
         
-       
-		
-		
+        
+        
+        
         this.ColorSelector = new ColorPicker(this.controller, this.CurrentColor, this.ColorChangedCallback.bind(this));
         this.ColorSelector.makeColorSelectors();
         
@@ -147,10 +148,10 @@ BackgroundAssistant = Class.create({
         /* Do something when the image view changes */
         //this.showDialogBox("Image View Changed", "Flick image left and/or right to see other images.");
     
-		//this.CurrentMode = 1;
+        //this.CurrentMode = 1;
         //this.CurrentImage = event.url;
         //this.UpdateScreen();
-	},
+    },
     
     
     // This function will popup a dialog, displaying the message passed in.
@@ -173,8 +174,8 @@ BackgroundAssistant = Class.create({
         if (this.solidIndex == -1) 
             this.solidIndex = this.solidImages.length - 1;
         this.redoSolidImages(this.solidIndex);
-		
-		this.CurrentMode = 1;
+        
+        this.CurrentMode = 1;
         this.CurrentSolid = this.solidImages[this.solidIndex].source;
         this.UpdateScreen();
     },
@@ -186,10 +187,10 @@ BackgroundAssistant = Class.create({
         this.solidIndex = (this.solidIndex + 1) % this.solidImages.length;
         this.redoSolidImages(this.solidIndex);
         
-		this.CurrentMode = 1;
+        this.CurrentMode = 1;
         this.CurrentSolid = this.solidImages[this.solidIndex].source;
         this.UpdateScreen();
-		
+        
         //this.showDialogBox("Image View Changed", "Flicked left to see right picture.");
     },
     
@@ -221,18 +222,15 @@ BackgroundAssistant = Class.create({
     },
     
     UpdateScreen: function(){
-		if(this.CurrentMode==0)
-		{
-			this.controller.get('body_wallpaper').style.background = "url('" + this.CurrentOverlay + "')";
-        	this.controller.get('body_wallpaper').style.backgroundColor = this.CurrentColor;
-		}   
-		else
-		{
-			this.controller.get('body_wallpaper').style.background = "url('" + this.CurrentSolid + "')";
-        	this.controller.get('body_wallpaper').style.backgroundColor = this.CurrentColor;
-		}    
-	   
-
+        if (this.CurrentMode == 0) {
+            this.CurrentImage = this.CurrentOverlay;
+        }
+        else {
+            this.CurrentImage = this.CurrentSolid;
+        }
+        
+        this.controller.get('body_wallpaper').style.background = "url('" + this.CurrentImage + "')";
+        this.controller.get('body_wallpaper').style.backgroundColor = this.CurrentColor;
     },
     
     
@@ -255,22 +253,22 @@ BackgroundAssistant = Class.create({
         
             this.controller.get('image-container').style.display = 'none';
             this.controller.get('color-container').style.display = 'block';
-			
-			if(this.needToSelectOverlay()){
-				this.CurrentMode = 0;
-				this.selectorsModel.currentOverlay = this.CurrentOverlay;
-				this.controller.modelChanged(this.selectorsModel, this);
-			
-			} 
+            
+            if (this.needToSelectOverlay()) {
+                this.CurrentMode = 0;
+                this.selectorsModel.currentOverlay = this.CurrentOverlay;
+                this.controller.modelChanged(this.selectorsModel, this);
+                
+            }
         }
         
         // Image
         else {
             if (this.wallpaperTypeModel.value == 1) {
+            
+                this.CurrentMode = 1;
                 
-				this.CurrentMode = 1;
-				
-				
+                
                 this.controller.get('color-container').style.display = 'none';
                 this.controller.get('image-container').style.display = 'block';
             }
@@ -279,17 +277,17 @@ BackgroundAssistant = Class.create({
     },
     
     
-    needToSelectOverlay:function()
-	{
-		var retVal=true;
-		for (var i=0; i<this.Overlays.length; i++) {
-			if(this.Overlays[i].value == this.CurrentImage) retVal = false;
-	
-		};
-		return retVal;
-	},
-	
-	
+    needToSelectOverlay: function(){
+        var retVal = true;
+        for (var i = 0; i < this.Overlays.length; i++) {
+            if (this.Overlays[i].value == this.CurrentImage) 
+                retVal = false;
+            
+        };
+        return retVal;
+    },
+    
+    
     photoSelected: function(results){
     
         this.CurrentMode = 1;
@@ -303,17 +301,17 @@ BackgroundAssistant = Class.create({
     
     
     activate: function(){
-    	this.redoSolidImages(this.solidIndex);
-                this.myPhotoDivElement.mojo.manualSize('320', '200');
-    
+        this.redoSolidImages(this.solidIndex);
+        this.myPhotoDivElement.mojo.manualSize('320', '200');
+        
     },
     
     saveSettings: function(value){
         if (value == "yes") {
-			AmpacheMobile.settingsManager.settings.BackgroundSolid = this.CurrentSolid;
-			AmpacheMobile.settingsManager.settings.BackgroundOverlay = this.CurrentOverlay;
+            AmpacheMobile.settingsManager.settings.BackgroundSolid = this.CurrentSolid;
+            AmpacheMobile.settingsManager.settings.BackgroundOverlay = this.CurrentOverlay;
             AmpacheMobile.settingsManager.settings.BackgroundColor = this.CurrentColor;
-            AmpacheMobile.settingsManager.settings.BackgroundImage = this.CurrentMode==0? this.CurrentOverlay : this.CurrentSolid;
+            AmpacheMobile.settingsManager.settings.BackgroundImage = this.CurrentImage;
             AmpacheMobile.settingsManager.settings.BackgroundMode = this.CurrentMode;
             AmpacheMobile.settingsManager.SaveSettings();
         }
@@ -350,7 +348,7 @@ BackgroundAssistant = Class.create({
     
     anyChanges: function(){
         var retVal = false;
-        if (AmpacheMobile.settingsManager.settings.BackgroundColor != this.controller.get('body_wallpaper').style.backgroundColor || AmpacheMobile.settingsManager.settings.BackgroundImage != this.controller.get('body_wallpaper').style.background) {
+        if (AmpacheMobile.settingsManager.settings.BackgroundColor != this.CurrentColor || AmpacheMobile.settingsManager.settings.BackgroundImage != this.CurrentImage) {
             retVal = true;
         }
         return retVal;
@@ -361,8 +359,8 @@ BackgroundAssistant = Class.create({
     deactivate: function(){
         this.controller.get('body_wallpaper').style.background = null;
         this.controller.get('body_wallpaper').style.backgroundColor = "white";
-		
-		Mojo.Event.stopListening(this.controller.get('myPhotoDiv'),Mojo.Event.imageViewChanged,this.imageViewChanged);
+        
+        Mojo.Event.stopListening(this.controller.get('myPhotoDiv'), Mojo.Event.imageViewChanged, this.imageViewChanged);
         
     }
     

@@ -51,8 +51,9 @@ function AppAssistant(appController) {
 	Mojo.Log.info("--> AppAssistant Constructor");
 	
 	//Creating Audio Player
-	AmpacheMobile.AppController = appController;
-	AppAssistant.audioPlayer = new AudioPlayer(appController);
+	//AmpacheMobile.AppController = appController;
+	//AppAssistant.audioPlayer = new AudioPlayer(appController);
+	
 	
 	
 	
