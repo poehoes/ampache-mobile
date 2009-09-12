@@ -21,6 +21,7 @@
 
 function PreferencesAssistant(params) {
 	this.settingsManager = params.settingsManager;
+
 	//this.settingsManager = AppAssistant.settingsManager;
 	
 	/* this is the creator function for your scene assistant object. It will be passed all the 
@@ -131,14 +132,14 @@ PreferencesAssistant.prototype.setup = function(){
 		//********************************************************************************************************
 		// Background button setup
 		this.button1Attributes = {
-		disabledProperty: 'disabled',
-		type: 'default'
+		//disabledProperty: 'disabled',
+		//type: 'default'
 		}
 		
 		this.button1Model = {
-		buttonLabel : "Primary Button",
+		buttonLabel : "Background Options",
 		buttonClass: 'primary',
-		disabled: this.disabled
+		//disabled: this.disabled
 		}
 		
 		this.controller.setupWidget('backgroundBtn', this.button1Attributes, this.button1Model);
@@ -243,6 +244,8 @@ PreferencesAssistant.prototype.listTapHandler = function(event){
 	{
 		this.newAccount = event.item;
 		this.controller.stageController.pushScene("account", {
+			Type:"Edit",
+			SettingsManager:this.settingsManager,
 			Account: event.item
 	});
 	}
@@ -255,10 +258,12 @@ PreferencesAssistant.prototype.listAddHandler = function(event) {
 		event.model.items.push({data:$L('New Item') });
 		this.controller.modelChanged(event.model, this);
 
-*/	this.newAccount = this.settingsManager.CreateEmptyAccount();
+*/	this.newAccount = new Account();
 	
 	this.controller.stageController.pushScene("account", {
-		Account: this.newAccount
+		Type:"Add",
+		SettingsManager:this.settingsManager,
+		Account: this.newAccount,
 	});
 
 }

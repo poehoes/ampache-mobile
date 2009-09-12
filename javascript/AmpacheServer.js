@@ -45,7 +45,7 @@ AmpacheServer = Class.create({
 	 playlists:"",
 	 videos:"",
 	 
-     XMLFormattingIssue:"The data returned from your server has formatting issues, please look thru your server for any strange characters as these will break Ampache Mobile",
+     XMLFormattingIssue:"Error requesting data from Ampache.",
 	
 				    
         /*'<?xml version="1.0" encoding="UTF-8" ?> 

@@ -73,6 +73,11 @@ SettingsManager = Class.create({
 		}
 	},
 	
+	AppendAccount:function(account)
+	{
+		var index = this.settings.Accounts.length;
+		return this.settings.Accounts[index] = account;
+	},
 	
 	AddAccount:function(AccountName, username, password, url)
 	{
@@ -154,7 +159,7 @@ SettingsManager = Class.create({
 	},
 	
 	DEFAULT_COLOR:"#384438",
-	DEFAULT_IMAGE:"images/background_alpha.png",
+	DEFAULT_IMAGE:"images/backgrounds/solids/background1.png",
 	
 	
 })
@@ -175,8 +180,10 @@ Settings = Class.create({
 	ExtraCoverArt:false,
 	StreamDebug:false,
 	BackgroundColor:"#384438",
-	BackgroundImage:"images/background_alpha.png",
+	BackgroundImage:"images/backgrounds/solids/background1.png",
+	BackgroundSolid:"images/backgrounds/solids/background1.png",
 	BackgroundMode:this.CUSTOM_COLOR,
+	BackgroundOverlay:"images/backgrounds/overlay/overlay1.png",
 
 	CUSTOM_COLOR:0,
 	CUSTOM_IMAGE:1,
