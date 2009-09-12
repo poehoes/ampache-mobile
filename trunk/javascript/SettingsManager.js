@@ -105,9 +105,33 @@ SettingsManager = Class.create({
 	{
 			console.log("***************Success Get Happened")
 			this.settings = settings;
+			this.FindMissingSettings();
 			if(GetSettingsSuccessCallback!=null) GetSettingsSuccessCallback(this.settings);
 		GetSettingsSuccessCallback=null;
 	},
+	
+	FindMissingSettings: function(){
+		if (this.settings != null) {
+			if (this.settings.BackgroundColor == null) {
+				this.settings.BackgroundColor = this.DEFAULT_COLOR;
+			}
+			if (this.settings.BackgroundImage == null) {
+				this.settings.BackgroundImage = this.DEFAULT_IMAGE;
+			}
+			if (this.settings.StreamDebug == null) {
+				this.settings.StreamDebug = false;
+			}
+			
+			if (this.settings.BackgroundMode == null) {
+				this.settings.BackgroundMode = 0;
+			}
+			
+			this.SaveSettings(null, null);
+		}
+	},
+	
+	
+	
 	
 	GetSettingsFailureCallback:null,
 	GetSettingsFailure: function(){
@@ -121,13 +145,16 @@ SettingsManager = Class.create({
 	SaveSettings: function(OnSuccess, OnFailure){
 		this.depot.add("AppSettings", this.settings, 
 		function(){
-			console.log("***************Success Add Happened")
+			console.log("***************Success SaveSettings Happened")
 			if(OnSuccess!=null) OnSuccess();
 		}, function(){
-			console.log("***************Failure Add Happened")
+			console.log("***************Failure SaveSettings Happened")
 			if(OnFailure!=null) OnFailure();
 		})
 	},
+	
+	DEFAULT_COLOR:"#384438",
+	DEFAULT_IMAGE:"images/background_alpha.png",
 	
 	
 })
@@ -141,9 +168,17 @@ Account = Class.create({
 	ServerURL:null,
 })
 
+
 Settings = Class.create({
 	Accounts:null,
 	CurrentAccountIndex:null,
 	ExtraCoverArt:false,
 	StreamDebug:false,
+	BackgroundColor:"#384438",
+	BackgroundImage:"images/background_alpha.png",
+	BackgroundMode:this.CUSTOM_COLOR,
+
+	CUSTOM_COLOR:0,
+	CUSTOM_IMAGE:1,
+	
 });

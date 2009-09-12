@@ -34,7 +34,10 @@ PreferencesAssistant.prototype.stylesheet = null;
 
 PreferencesAssistant.prototype.setup = function(){
 
-	Mojo.loadStylesheet(this.controller.document, "stylesheets/preferences.css");
+	//Mojo.loadStylesheet(this.controller.document, "stylesheets/preferences.css");
+	this.controller.get('body_wallpaper').style.background = null;
+	this.controller.get('body_wallpaper').style.backgroundColor = "white";
+	
 	
 	this.accountsModel = {
 		listTitle: $L('Accounts'),
@@ -53,6 +56,8 @@ PreferencesAssistant.prototype.setup = function(){
 	this.controller.listen('innerList', Mojo.Event.listTap, this.listTapHandler.bindAsEventListener(this));
 	this.controller.listen('innerList', Mojo.Event.listAdd, this.listAddHandler.bindAsEventListener(this));
 	this.controller.listen('innerList', Mojo.Event.listDelete, this.listDeleteHandler.bindAsEventListener(this));
+	
+	
 	
 	
 	
@@ -123,7 +128,30 @@ PreferencesAssistant.prototype.setup = function(){
 		this.debug_pressed = this.debugPressed.bindAsEventListener(this);
 		Mojo.Event.listen(this.controller.get('stream-debug-toggle'),Mojo.Event.propertyChange,this.debug_pressed);
 	
+		//********************************************************************************************************
+		// Background button setup
+		this.button1Attributes = {
+		disabledProperty: 'disabled',
+		type: 'default'
+		}
+		
+		this.button1Model = {
+		buttonLabel : "Primary Button",
+		buttonClass: 'primary',
+		disabled: this.disabled
+		}
+		
+		this.controller.setupWidget('backgroundBtn', this.button1Attributes, this.button1Model);
 	
+	
+		Mojo.Event.listen(this.controller.get('backgroundBtn'),Mojo.Event.tap, this.PushBackground.bind(this));
+	
+}
+
+
+PreferencesAssistant.prototype.PushBackground = function()
+{
+	this.controller.stageController.pushScene("background");
 	
 }
 
@@ -252,7 +280,7 @@ PreferencesAssistant.prototype.activate = function(event) {
 	 	this.newAccount =null;
 	 }
 	  
-	  
+
 }
 
 PreferencesAssistant.prototype.UpdateSelector=function()
@@ -281,5 +309,7 @@ PreferencesAssistant.prototype.cleanup = function(event){
 	
 	Mojo.Event.stopListening(this.controller.get('art-toggle'),Mojo.Event.propertyChange,this.togglePressed);
 	Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'),Mojo.Event.propertyChange,this.debug_pressed);
+	
+	Mojo.Event.stopListening(this.controller.get('backgroundBtn'),Mojo.Event.tap, this.PushBackground);
 	Mojo.Log.info("<-- PreferencesAssistant.prototype.cleanup");
 }

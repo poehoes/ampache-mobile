@@ -138,6 +138,10 @@ ConnectionAssistant.prototype.GotSettings = function(settings){
 			
 		}
 	}
+	
+	
+	this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
+	
 	Mojo.Log.info("<-- StageAssistant.prototype.GotSettings")
 }
 
@@ -197,11 +201,11 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
 				choices: [{
 					label: $L('Retry'),
 					value: "retry",
-					type: 'affirmative'
+					type: 'primary'
 				}, {
 					label: $L('Preferences'),
 					value: "preferences",
-					type: 'affirmative'
+					type: 'secondary'
 				}, ],
 				allowHTMLMessage: html,
 			
@@ -306,6 +310,8 @@ ConnectionAssistant.prototype.activate = function(event){
 	if(AmpacheMobile.settingsManager.settings!=null)
 	{
 		this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts);
+		this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
+
 	}
 
 	if((AmpacheMobile.ampacheServer != null) && (AmpacheMobile.ampacheServer.pingTimer != null))
@@ -313,11 +319,19 @@ ConnectionAssistant.prototype.activate = function(event){
 		AmpacheMobile.ampacheServer.disconnect();
 	}
 	
+	
+	
+	
+	
     Mojo.Log.info("<-- ConnectionAssistant.prototype.activate");
     
 }
 
-
+ConnectionAssistant.prototype.SetBackground=function(image, color)
+{
+	this.controller.get('body_wallpaper').style.background = "url("+ image +")";
+	this.controller.get('body_wallpaper').style.backgroundColor = color;
+}
 
 
 ConnectionAssistant.prototype.deactivate = function(event){

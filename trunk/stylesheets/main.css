@@ -25,6 +25,23 @@ margin: 0;
 padding: 0;
 }
 
+.count-pill-container {
+	height: 26px;
+	border-width: 0px 11px;
+	-webkit-border-image: url(../images/count-pill-9tile.png) 0 11 0 11 repeat repeat;
+	-webkit-box-sizing: border-box;
+	position: absolute;
+	z-index: 5;
+	right: 65px;
+	text-align: center;
+	margin-top: 3px;
+}              
+
+.count-pill-wrapper {
+	font-size: 14px;
+	font-weight:500;
+	margin: 1px -2px 0px -2px;
+}
 
 
 .ProgressPillHeader
@@ -54,8 +71,31 @@ padding: 0;
 	z-index:-1;	
 }
 
+/*
 .customBackground{
-background: url(../images/background.png) top left repeat;
+background: url(../images/background-alpha.png) top left repeat;
+background-size: 100%;
+z-index: -1;
+position: fixed;
+top: 0px;
+left: 0px;
+width: 100%;
+height: 100%;
+}*/
+
+.customBackgroundSolid{
+background-size: 100%;
+z-index: -1;
+opacity:0.5;
+position: fixed;
+top: 0px;
+left: 0px;
+width: 320px;
+height: 480px;
+}
+
+.customBackgroundImage{
+background: url(../images/background_alpha.png) top left repeat;
 background-size: 100%;
 z-index: -1;
 position: fixed;
@@ -64,6 +104,8 @@ left: 0px;
 width: 100%;
 height: 100%;
 }
+
+
 
 
 .ampacheMobileTitle
@@ -170,6 +212,11 @@ height: 100%;
 	z-index: 10;
 }
 
+#overlaySelector
+{
+	color:white;
+}
+
 
 #AccountList .AccountName {
 	color: white;
@@ -188,14 +235,15 @@ height: 100%;
 
 #mainMenuList .mainMenuDesc {
 	color: white;
-	margin-top: -10px;
+	/*margin-top: -10px;*/
 	padding: 0 15px 10px 15px;
 	font-size:small;
 }
 
 #mainMenuList .mainMenuTitle {
 	color: white;
-	padding: 0 15px 10px 15px;
+	margin-top: 10px;
+	padding: 0px 15px 10px 15px;
 }
 
 
@@ -260,7 +308,7 @@ Copyright 2009 Palm, Inc.  All rights reserved.
 
 body.wallpaper,
 body.palm-default {
-  background: url(../images/background.png) 0 0 fixed no-repeat; 
+  /*background: url(../images/background.png) 0 0 fixed no-repeat; */
   background-size: 100%;
 }
 
@@ -310,6 +358,15 @@ body.palm-default {
 {
 	color: white;
 	font-size:small;
+}
+
+.music-streaming .stream-debug {
+		margin: -10px 5px 5px 5px;
+		color: white;
+		font-size:small;
+		font-weight:bold;
+		width:100%;
+		text-align:center;
 }
 
 

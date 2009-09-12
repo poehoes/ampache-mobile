@@ -673,8 +673,12 @@ AudioPlayer = Class.create({
 			var endPercentage = (this.player.buffered.end(0) / this.player.duration);
 			
 			this.UpdateNowPlayingBuffering(startPercentage, endPercentage);
-			
-			this.NowPlayingStreamDebug("Downloading " + (Math.round(endPercentage*10000)/100) + "%");
+			if (this.debug) {
+				var percentage = (Math.round(endPercentage * 10000) / 100)
+				if ( this.player.duration == null) 
+					precentage = 0;
+				this.NowPlayingStreamDebug("Downloading " + percentage + "%");
+			}
 		}
 		//Mojo.Log.info("<-- AudioPlayer.prototype._updateBuffering")
 	},

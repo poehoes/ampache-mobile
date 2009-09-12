@@ -10,6 +10,9 @@
     {"source": "javascript\/AmpacheServer.js"},
     {"source": "javascript\/AudioPlayer.js"},
     {"source": "javascript\/mediaevents-service.js"},
+	{"source": "javascript\/ColorPicker.js"},
+	
+	
     {
         "source": "app\/assistants\/connection-assistant.js",
         "scenes": "connection"
@@ -42,5 +45,9 @@
     {
         "source": "app\/assistants\/playlists-assistant.js",
         "scenes": "playlists"
+    },
+	{
+        "source": "app\/assistants\/background-assistant.js",
+        "scenes": "background"
     }
 ]
