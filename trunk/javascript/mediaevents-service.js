@@ -1,81 +1,27 @@
+function MediaEventsService() {
+}
 
+MediaEventsService.prototype.URI = "palm://com.palm.mediaevents/";
 
+MediaEventsService.prototype._serviceRequest = function(sceneController, uri, params) {
+    if (sceneController) {
+        return sceneController.serviceRequest(uri, params);
+    } else {
+        var obj = new Mojo.Service.Request(uri, params);
+        return obj;
+    }
+};
 
-var MediaEventsService = Class.create(
-{
-	parsePlaylist: function(playlistFilename, callback)
-	{
-		var parameters = {};
-		parameters.filename = playlistFilename;
+MediaEventsService.prototype.registerForMediaEvents = function(sceneController, callback) {
+    return this._serviceRequest(sceneController, this.URI, {
+        method: "mediaEvents",
+        onSuccess: callback,
+        parameters: {"appName": Mojo.appName, "subscribe": true}});
+};
 
-		return new Mojo.Service.Request(
-				MediaEventsService.identifier,
-				{
-					method: 'parsePlaylist',
-					onSuccess: callback,
-					parameters: parameters
-
-				}
-			);
-	},
-	
-
-	registerForMediaEvents: function(callback)
-	{
-		var parameters = {};
-		parameters.appName = Mojo.appName;
-		parameters.subscribe = "true";
-
-		return new Mojo.Service.Request(
-				MediaEventsService.identifier,
-				{
-					method: 'mediaEvents',
-					onSuccess: callback,
-					parameters: parameters
-
-				}, true
-			);
-	},
-	
-	
-	/**
-	 * 
-	 * Fetch the music store on the current rom
-	 * 
-	 * @param {Object} callback (response), populates response.name and id
-	 */
-	getMusicStore: function(callback)
-	{
-		return new Mojo.Service.Request(
-				MediaEventsService.identifier,
-				{
-					method: 'getCurrentMusicStore',
-					onSuccess: callback,
-					onFailure: callback
-				}
-			);
-	},
-	
-	markAppForeground: function(callback)
-	{
-		
-		var parameters = {};
-		parameters.subscribe = true;
-		parameters.foregroundApp = true;
-		
-		return new Mojo.Service.Request(
-				"palm://com.palm.audio/media",
-				{
-					method: 'lockVolumeKeys',					
-					onSuccess: callback,
-					parameters: parameters
-				}
-			);
-	},
-	
-
-
-});
-
-MediaEventsService.identifier = 'palm://com.palm.mediaevents';
-
+MediaEventsService.prototype.markAppForeground = function(sceneController, callback) {
+    return this._serviceRequest(sceneController, "palm://com.palm.audio/media", {
+        method: "lockVolumeKeys",
+        onSuccess: callback,
+        parameters: {"foregroundApp": true, "subscribe": true}});
+};

@@ -41,6 +41,8 @@ AudioPlayer = Class.create({
 	AudioPlayers:null,
 	nPlayers:2,
 	
+	mediaEvents:null,
+	
     initialize: function(_controller){
         Mojo.Log.info("--> AudioPlayer.prototype.initialize", _controller);
         
@@ -49,7 +51,9 @@ AudioPlayer = Class.create({
 			this.OneTimeInit = true;
 			this.createAudioObj(_controller);
 			this.Controller = _controller;
-			this.AudioPlayers = new Array()
+			this.AudioPlayers = new Array();
+			
+			this.mediaEvents = this.registerForMediaEvents(this.mediaEventsCallbacks.bind(this));
 			
 		}
 		Mojo.Log.error("<-- AudioPlayer.prototype.initialize %j", this.audioObj);
@@ -88,6 +92,8 @@ AudioPlayer = Class.create({
 				this.player.addEventListener("x-palm-success", this.handleAudioEvents.bind(this));
 				this.player.addEventListener("x-palm-watchdog", this.handleAudioEvents.bind(this));
 				
+				
+				
 			}
 			
 			//Mojo.Log.error("audioObj: %j", this.player);
@@ -125,6 +131,75 @@ AudioPlayer = Class.create({
         Mojo.Log.error("<-- AudioPlayer.prototype.createAudioObj");
     },
     
+	
+
+    
+    mediaEventsCallbacks: function(event){
+      
+
+       switch (event.key) {
+            
+            case "next":
+                this.play_next();
+                break;
+                
+            case "prev":
+                this.play_prev();
+                break;
+                
+            case "pause":
+			     this.Paused = true;
+                this.pause();
+			    break;
+                
+            case "stop":
+                this.pause();
+            	break;
+                
+            case "play":
+                this.play();
+			    break;
+                
+            case "togglePausePlay":
+                if (this.player.isPlaying) {
+					this.Paused = true;
+					this.pause();
+				}
+				else {
+					this.play();
+				}
+				break;
+        }
+    
+
+    },
+	
+	
+	
+	
+	registerForMediaEvents: function(callback)
+    {
+        Mojo.Log.error("--> AudioPlayer.prototype.registerForMediaEvents");
+		
+		var parameters = {};
+        parameters.appName = Mojo.appName;
+        parameters.subscribe = "true";
+
+        return new Mojo.Service.Request(
+                MediaEventsService.identifier = 'palm://com.palm.mediaevents',
+                {
+                    method: 'mediaEvents',
+                    onSuccess: callback,
+                    parameters: parameters
+
+                }, true
+            );
+			
+			
+	    Mojo.Log.error("<-- AudioPlayer.prototype.registerForMediaEvents");
+    },
+	
+	
 	getStreamInfo: function(){
 		Mojo.Log.error("--> AudioPlayer.prototype.getStreamInfo");
 		var info = "Info Unavailable"
@@ -307,7 +382,7 @@ AudioPlayer = Class.create({
         this.currentPlayingTrack = this.getNextTrack();
         if (this.currentPlayingTrack  > -1) {
             this.Paused=false;
-			stop();
+			this.stop();
             this.internal_play();
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.play_next");
@@ -321,7 +396,7 @@ AudioPlayer = Class.create({
         this.currentPlayingTrack = this.getPrevTrack();
         if (this.currentPlayingTrack  > -1) {
             this.Paused=false;
-			stop();
+			this.stop();
             this.internal_play();
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.play_prev");
@@ -337,6 +412,7 @@ AudioPlayer = Class.create({
         Mojo.Log.info("--> AudioPlayer.prototype.internal_play");
         
 		if (this.Paused == true) {
+			
 			this.player.play()
 		}
 		else {
@@ -382,28 +458,28 @@ AudioPlayer = Class.create({
 		{
 			case MediaError.MEDIA_ERR_ABORTED:
 				errorString = "The audio stream was aborted by WebOS.  Most often this happens when you do not have a fast enough connection to support an audio stream.";
-				if (this.debug) {
+				//if (this.debug) {
 					errorString += this.moreErrorInfo("MEDIA_ERR_ABORTED");
-				}
+				//}
 				break;
 			case MediaError.MEDIA_ERR_NETWORK:
 				errorString = "A network error has occured.  The network cannot support an audio stream at this time.";
-				if (this.debug) {
+				//if (this.debug) {
 					errorString += this.moreErrorInfo("MEDIA_ERR_NETWORK");
-				}
+				//}
 				break;
 			case MediaError.MEDIA_ERR_DECODE:
 				errorString = "An error has occurred while attempting to play the file. The file is either corrupt or an unsupported format (ex: m4p, ogg, flac).  Transcoding may be required to play this file.";
-				if (this.debug) {
+				//if (this.debug) {
 					errorString += this.moreErrorInfo("MEDIA_ERR_DECODE");
-				}
+				//}
 				break;
 			case this.MEDIA_ERR_SRC_NOT_SUPPORTED:
 				errorString = "The file is not suitable for streaming";
-				if (this.debug) {
+				//if (this.debug) {
 					errorString += "Error Type: MEDIA_ERR_SRC_NOT_SUPPORTED"
 					
-				}
+				//}
 				break;
 			
 		}
@@ -527,6 +603,12 @@ AudioPlayer = Class.create({
 				this.NowPlayingShowPause();   
                 break;
             
+			case "pause":
+			     this.Paused = true;
+			     this.NowPlayingShowPlay();   
+				 break;
+			
+			
 			case "abort":
 				this.ClearNowPlayingTime();
 				break;
