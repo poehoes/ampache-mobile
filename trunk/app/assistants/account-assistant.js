@@ -22,6 +22,9 @@
 
 function AccountAssistant(params) {
 	this.Account = params.Account;
+	this.Type = params.Type;
+	this.SettingsManager = params.SettingsManager;
+	//this.Callback = params.Callback;
 }
 
 AccountAssistant.prototype.setup = function() {
@@ -127,29 +130,70 @@ AccountAssistant.prototype.ValidSettings=function(account)
 	return retVal;
 }
 
+
+AccountAssistant.prototype.accountQuestions = function(value)
+{
+	if(value=="delete")
+	{
+		this.popAccount(null);
+	}
+	
+	
+}
+
+AccountAssistant.prototype.popAccount = function(account)
+{
+		var params = 
+		{
+			type:this.Type,
+			account:account,
+		}
+	
+		this.controller.stageController.popScene(null)
+	
+}
+
+
 AccountAssistant.prototype.handleCommand = function(event) {
    //test for Mojo.Event.back, not Mojo.Event.command..
-    if (event.type == Mojo.Event.back) {
+    
+	event.preventDefault();
+	event.stopPropagation();	
+	
+	
+	if (event.type == Mojo.Event.back) {
 		
-		
+
 		
 		if (!this.ValidSettings(this.Account)) {
-			event.preventDefault();
-			event.stopPropagation();
+		
 			
 			this.controller.showAlertDialog({
-				onChoose: function(value){
-				},
+				onChoose: this.accountQuestions,
 				title: $L("Account Incomplete"),
 				message: this.FailureReason,
 				choices: [{
 					label: $L('OK'),
 					value: 'ok',
-					type: 'color'
+					type: 'primary'
+				},
+				{
+					label: $L('Delete Account'),
+					value: 'delete',
+					type: 'negative'
 				}]
 			});
 			
 		}
+		else
+		{
+			if(this.Type=="Add") this.SettingsManager.AppendAccount(this.Account);
+			this.popAccount(this.Account);
+		}
+	}
+	else
+	{
+		this.popAccount(this.Account);
 	}
 };
 

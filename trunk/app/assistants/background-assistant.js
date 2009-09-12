@@ -7,11 +7,16 @@ BackgroundAssistant = Class.create({
     
     setup: function(){
     
-    
-    
+		this.CurrentSolid = AmpacheMobile.settingsManager.settings.BackgroundSolid;
+    	this.CurrentColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
+        this.CurrentImage = AmpacheMobile.settingsManager.settings.BackgroundImage;
+        this.CurrentOverlay = AmpacheMobile.settingsManager.settings.BackgroundOverlay;
+    	this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
+		
+		if(this.CurrentMode ==null) this.CurrentMode=0;
     
         this.wallpaperTypeModel = {
-            value: AmpacheMobile.settingsManager.settings.BackgroundMode,
+            value: this.CurrentMode,
             disabled: false
         };
         
@@ -113,7 +118,7 @@ BackgroundAssistant = Class.create({
         }
         
         this.selectorsModel = {
-            currentOverlay: AmpacheMobile.settingsManager.settings.BackgroundImage,
+            currentOverlay: this.CurrentOverlay,
             choices: this.Overlays
         }
         
@@ -127,10 +132,10 @@ BackgroundAssistant = Class.create({
         this.controller.get('body_wallpaper').style.background = "url('" + AmpacheMobile.settingsManager.settings.BackgroundImage + "')";
         this.controller.get('body_wallpaper').style.backgroundColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
         
-        this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
-        this.CurrentColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
-        this.CurrentImage = AmpacheMobile.settingsManager.settings.BackgroundImage;
         
+       
+		
+		
         this.ColorSelector = new ColorPicker(this.controller, this.CurrentColor, this.ColorChangedCallback.bind(this));
         this.ColorSelector.makeColorSelectors();
         
@@ -170,7 +175,7 @@ BackgroundAssistant = Class.create({
         this.redoSolidImages(this.solidIndex);
 		
 		this.CurrentMode = 1;
-        this.CurrentImage = this.solidImages[this.solidIndex].source;
+        this.CurrentSolid = this.solidImages[this.solidIndex].source;
         this.UpdateScreen();
     },
     
@@ -182,7 +187,7 @@ BackgroundAssistant = Class.create({
         this.redoSolidImages(this.solidIndex);
         
 		this.CurrentMode = 1;
-        this.CurrentImage = this.solidImages[this.solidIndex].source;
+        this.CurrentSolid = this.solidImages[this.solidIndex].source;
         this.UpdateScreen();
 		
         //this.showDialogBox("Image View Changed", "Flicked left to see right picture.");
@@ -211,13 +216,23 @@ BackgroundAssistant = Class.create({
     
     overlaySelectorChanged: function(event){
         this.CurrentMode = 0;
-        this.CurrentImage = event.value;
+        this.CurrentOverlay = event.value;
         this.UpdateScreen();
     },
     
     UpdateScreen: function(){
-        this.controller.get('body_wallpaper').style.background = "url('" + this.CurrentImage + "')";
-        this.controller.get('body_wallpaper').style.backgroundColor = this.CurrentColor;
+		if(this.CurrentMode==0)
+		{
+			this.controller.get('body_wallpaper').style.background = "url('" + this.CurrentOverlay + "')";
+        	this.controller.get('body_wallpaper').style.backgroundColor = this.CurrentColor;
+		}   
+		else
+		{
+			this.controller.get('body_wallpaper').style.background = "url('" + this.CurrentSolid + "')";
+        	this.controller.get('body_wallpaper').style.backgroundColor = this.CurrentColor;
+		}    
+	   
+
     },
     
     
@@ -240,13 +255,22 @@ BackgroundAssistant = Class.create({
         
             this.controller.get('image-container').style.display = 'none';
             this.controller.get('color-container').style.display = 'block';
+			
+			if(this.needToSelectOverlay()){
+				this.CurrentMode = 0;
+				this.selectorsModel.currentOverlay = this.CurrentOverlay;
+				this.controller.modelChanged(this.selectorsModel, this);
+			
+			} 
         }
         
         // Image
         else {
             if (this.wallpaperTypeModel.value == 1) {
                 
-                
+				this.CurrentMode = 1;
+				
+				
                 this.controller.get('color-container').style.display = 'none';
                 this.controller.get('image-container').style.display = 'block';
             }
@@ -255,11 +279,21 @@ BackgroundAssistant = Class.create({
     },
     
     
-    
+    needToSelectOverlay:function()
+	{
+		var retVal=true;
+		for (var i=0; i<this.Overlays.length; i++) {
+			if(this.Overlays[i].value == this.CurrentImage) retVal = false;
+	
+		};
+		return retVal;
+	},
+	
+	
     photoSelected: function(results){
     
         this.CurrentMode = 1;
-        this.CurrentImage = results.fullPath;
+        this.CurrentSolid = results.fullPath;
         this.UpdateScreen();
         
         
@@ -276,8 +310,10 @@ BackgroundAssistant = Class.create({
     
     saveSettings: function(value){
         if (value == "yes") {
+			AmpacheMobile.settingsManager.settings.BackgroundSolid = this.CurrentSolid;
+			AmpacheMobile.settingsManager.settings.BackgroundOverlay = this.CurrentOverlay;
             AmpacheMobile.settingsManager.settings.BackgroundColor = this.CurrentColor;
-            AmpacheMobile.settingsManager.settings.BackgroundImage = this.CurrentImage;
+            AmpacheMobile.settingsManager.settings.BackgroundImage = this.CurrentMode==0? this.CurrentOverlay : this.CurrentSolid;
             AmpacheMobile.settingsManager.settings.BackgroundMode = this.CurrentMode;
             AmpacheMobile.settingsManager.SaveSettings();
         }
@@ -314,7 +350,7 @@ BackgroundAssistant = Class.create({
     
     anyChanges: function(){
         var retVal = false;
-        if (AmpacheMobile.settingsManager.settings.BackgroundColor != this.CurrentColor || AmpacheMobile.settingsManager.settings.BackgroundImage != this.CurrentImage) {
+        if (AmpacheMobile.settingsManager.settings.BackgroundColor != this.controller.get('body_wallpaper').style.backgroundColor || AmpacheMobile.settingsManager.settings.BackgroundImage != this.controller.get('body_wallpaper').style.background) {
             retVal = true;
         }
         return retVal;

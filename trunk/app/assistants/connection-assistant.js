@@ -18,7 +18,7 @@
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function ConnectionAssistant(test){
+function ConnectionAssistant(params){
     Mojo.Log.info("--> ConnectionAssistant Constructor");
     
 	
@@ -109,6 +109,15 @@ ConnectionAssistant.prototype.listTapHandler = function(event){
 	
 }
 
+ConnectionAssistant.prototype.pushPreferences = function(settingsManager)
+{
+	var params = {
+		
+			settingsManager: AmpacheMobile.settingsManager,
+		}
+	this.controller.stageController.pushScene("preferences",  params);
+}
+
 
 ConnectionAssistant.prototype.GotSettings = function(settings){
 	Mojo.Log.info("--> ConnectionAssistant.prototype.GotSettings")
@@ -118,11 +127,7 @@ ConnectionAssistant.prototype.GotSettings = function(settings){
 	if (settings == null) {
 		Mojo.Log.info("No Settings Case")
 		AmpacheMobile.settingsManager.CreateSettings();
-		var params = {
-		
-			settingsManager: AmpacheMobile.settingsManager,
-		}
-		this.controller.stageController.pushScene("preferences", params);
+		this.pushPreferences(AmpacheMobile.settingsManager);
 	}
 	else {
 		
@@ -130,7 +135,14 @@ ConnectionAssistant.prototype.GotSettings = function(settings){
 		
 		if (AmpacheMobile.Account == null) {
 			Mojo.Log.info("Updating Accounts List")
-			this.PopulateAccountsList(settings.Accounts);
+			if(AmpacheMobile.settingsManager.settings.Accounts.length==0)
+			{
+				this.pushPreferences(AmpacheMobile.settingsManager);
+			}
+			else
+			{
+				this.PopulateAccountsList(settings.Accounts);
+			}
 		}
 		else {
 			this.TurnOnSpinner();
@@ -145,14 +157,16 @@ ConnectionAssistant.prototype.GotSettings = function(settings){
 	Mojo.Log.info("<-- StageAssistant.prototype.GotSettings")
 }
 
-ConnectionAssistant.prototype.PopulateAccountsList = function(Accounts){
+ConnectionAssistant.prototype.PopulateAccountsList = function(Accounts, invalidate){
 
 	Mojo.Log.info("--> ConnectionAssistant.prototype.PopulateAccountsList");
 	
-	Mojo.Log.info("Updating Accounts List")
-	this.Accounts = Accounts;
 	var accountsList = this.controller.get('selectorList');
-	accountsList.mojo.noticeUpdatedItems(0, this.Accounts);
+	this.Accounts = Accounts;
+	this.accountsModel.items = Accounts
+	accountsList.mojo.setLength(Accounts.length);
+	accountsList.mojo.noticeUpdatedItems(0, this.accountsModel.items);
+	
 	Mojo.Log.info("<-- ConnectionAssistant.prototype.PopulateAccountsList");
 }
 
@@ -309,7 +323,7 @@ ConnectionAssistant.prototype.activate = function(event){
 	
 	if(AmpacheMobile.settingsManager.settings!=null)
 	{
-		this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts);
+		this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts, true);
 		this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
 
 	}
