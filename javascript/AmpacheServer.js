@@ -39,7 +39,7 @@ AmpacheServer = Class.create({
     playlists: "",
     videos: "",
     
-    XMLFormattingIssue: "Error requesting data from Ampache.",
+    XMLFormattingIssue: "Error requesting data from Ampache.  Possible Reasons: Songs with Unicode information.",
     
     
     /*'<?xml version="1.0" encoding="UTF-8" ?> 
