@@ -89,7 +89,7 @@ AudioPlayer = Class.create({
 				this.player.addEventListener("x-palm-connect", this.ConnectedToServer.bind(this));
 				this.player.addEventListener("x-palm-disconnect", this.handleAudioEvents.bind(this));
 				this.player.addEventListener("x-palm-render-mode", this.handleAudioEvents.bind(this));
-				this.player.addEventListener("x-palm-success", this.handleAudioEvents.bind(this));
+				//this.player.addEventListener("x-palm-success", this.handleAudioEvents.bind(this));
 				this.player.addEventListener("x-palm-watchdog", this.handleAudioEvents.bind(this));
 				
 				
@@ -756,9 +756,7 @@ AudioPlayer = Class.create({
 			
 			this.UpdateNowPlayingBuffering(startPercentage, endPercentage);
 			if (this.debug) {
-				var percentage = (Math.round(endPercentage * 10000) / 100)
-				if ( this.player.duration == null) 
-					precentage = 0;
+				var percentage = (Math.round(endPercentage * 10000) / 100)	
 				this.NowPlayingStreamDebug("Downloading " + percentage + "%");
 			}
 		}

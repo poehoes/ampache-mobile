@@ -485,6 +485,15 @@ NowPlayingAssistant.prototype.streamDebug = function(state)
 	var display = "";
 	switch(state)
 	{
+		
+		case "Downloading NaN%":
+		  display = "Download Starting";
+		  break;
+		  
+		case "Downloading 100%":
+		    display = "Downloading Finished";
+            break;
+		
 		case "loadstart":
 			display = "Starting Stream"
 			break;
@@ -498,7 +507,7 @@ NowPlayingAssistant.prototype.streamDebug = function(state)
 			break;
 	 
 	    case "stalled":
-	 		display = "Downloading Stalled";
+	 		display = "Stream loading stalled";
 			break;
 			
 		case "load":
