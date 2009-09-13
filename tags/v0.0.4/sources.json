@@ -1,0 +1,53 @@
+[
+    {"source": "\/usr\/palm\/frameworks\/media\/media.js"},
+    {"source": "\/usr\/palm\/frameworks\/media\/Audio.js"},
+    {"source": "app\/assistants\/stage-assistant.js"},
+    {
+        "source": "app\/assistants\/preferences-assistant.js",
+        "scenes": "preferences"
+    },
+    {"source": "javascript\/sha256.js"},
+    {"source": "javascript\/AmpacheServer.js"},
+    {"source": "javascript\/AudioPlayer.js"},
+    {"source": "javascript\/mediaevents-service.js"},
+	{"source": "javascript\/ColorPicker.js"},
+	
+	
+    {
+        "source": "app\/assistants\/connection-assistant.js",
+        "scenes": "connection"
+    },
+    {
+        "source": "app\/assistants\/mainmenu-assistant.js",
+        "scenes": "mainmenu"
+    },
+    {
+        "source": "app\/assistants\/artists-assistant.js",
+        "scenes": "artists"
+    },
+    {
+        "source": "app\/assistants\/songs-assistant.js",
+        "scenes": "songs"
+    },
+    {
+        "source": "app\/assistants\/albums-assistant.js",
+        "scenes": "albums"
+    },
+    {
+        "source": "app\/assistants\/now-playing-assistant.js",
+        "scenes": "now-playing"
+    },
+    {"source": "javascript\/SettingsManager.js"},
+    {
+        "source": "app\/assistants\/account-assistant.js",
+        "scenes": "account"
+    },
+    {
+        "source": "app\/assistants\/playlists-assistant.js",
+        "scenes": "playlists"
+    },
+	{
+        "source": "app\/assistants\/background-assistant.js",
+        "scenes": "background"
+    }
+]
