@@ -133,10 +133,10 @@ AudioPlayer = Class.create({
     
 	
 
-    
+    //Handles Bluetooth Commands
     mediaEventsCallbacks: function(event){
       
-
+       Mojo.Log.error("--> AudioPlayer.prototype.mediaEventsCallbacks: "+ event.key);
        switch (event.key) {
             
             case "next":
@@ -161,7 +161,7 @@ AudioPlayer = Class.create({
 			    break;
                 
             case "togglePausePlay":
-                if (this.player.isPlaying) {
+                if (!this.Paused) {
 					this.Paused = true;
 					this.pause();
 				}
@@ -567,7 +567,7 @@ AudioPlayer = Class.create({
     handleAudioEvents: function(event){
 		Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
         
-        //Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
+        Mojo.Log.error("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
 		//Mojo.Log.info("handeAudioEvent: " + event.type);
         
 		this.NowPlayingStreamDebug(event.type);
@@ -598,7 +598,7 @@ AudioPlayer = Class.create({
 				break;
 			
 			case "play":
-				this.time
+				this.Paused = false;
 				this.NowPlayingStartPlaybackTimer();
 				this.NowPlayingShowPause();   
                 break;
