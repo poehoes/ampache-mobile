@@ -23,8 +23,11 @@ function ArtistsAssistant(params){
 	
 	this.ExpectedArtists = params.ExpectedArtists;
 	
-	this.ARTIST_LIMIT = 200;
+	this.ARTIST_LIMIT = AmpacheMobile.settingsManager.settings.FetchSize;
 	this.artistOffset = 0;
+	
+	this.Visible = true;
+	this.LoadingFinished=false;
 	
 }
 
@@ -47,7 +50,7 @@ ArtistsAssistant.prototype.setup = function(){
 	
 	this.PPattr = {
 			title: "Artists",
-			//image: 'stuff'
+			image: 'images/artists.png'
 		};
 		this.artistLoadModel = {
 			//iconPath: "action-icon",
@@ -97,9 +100,17 @@ ArtistsAssistant.prototype.setup = function(){
 
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 	
-	AmpacheMobile.ampacheServer.GetArtists(this.GotArtists.bind(this), this.listModel.items.length, this.ARTIST_LIMIT)
 	
 }
+
+ArtistsAssistant.prototype.GetMoreArtists = function(){
+    if ((this.Visible == true) && (this.LoadingFinished==false)) {
+            AmpacheMobile.ampacheServer.GetArtists(this.GotArtists.bind(this), this.ArtistList.length, this.ARTIST_LIMIT)
+    }
+}
+
+
+
 
 
 ArtistsAssistant.prototype.GotArtists = function (_artistList)
@@ -116,27 +127,37 @@ ArtistsAssistant.prototype.GotArtists = function (_artistList)
 		this.ArtistList.push(newItem);
 	
 	}
+	
+	//Update Progress
 	var progress = this.listModel.items.length / this.ExpectedArtists;
 	this.artistLoadModel.value = progress;
 	this.controller.modelChanged(this.artistLoadModel);
 	
-	//var artistList = this.controller.get('artistList');
-	//artistList.mojo.noticeUpdatedItems(0,this.ArtistList);
-		
+	
+	
+	//Add to list	
 	var artistFilterList = this.controller.get('artistFilterList');
-	//artistFilterList.mojo.noticeUpdatedItems(this.listModel.items.length, _artistList);
-	//artistFilterList.mojo.setLength(this.ArtistList.Length);
-	artistFilterList.mojo.noticeUpdatedItems(0,this.ArtistList);
-	//this.FilterArtistList("", artistFilterList, 0, 50);
-		
-	if(progress>=1)
+	if ((this.filterString == "") ||(this.filterString == null)) {
+		artistFilterList.mojo.noticeUpdatedItems(0, this.ArtistList);
+	}
+	else //list currently has a filter
 	{
-		//this.FilterArtistList("", artistFilterList, 0, 50);
+		var matches = this.GetAllMatches(this.filterString);
+		artistFilterList.mojo.noticeUpdatedItems(0, matches);
+	    artistFilterList.mojo.setLength(matches.length);
+        artistFilterList.mojo.setCount(matches.length);
+	}
+		
+	if(_artistList.length!=this.ARTIST_LIMIT)
+	{
+	    //Loading Fully Completed
+		this.artistLoadModel.value = 1;
+        this.controller.modelChanged(this.artistLoadModel);
+		
 	}
 	else
 	{
-		AmpacheMobile.ampacheServer.GetArtists(this.GotArtists.bind(this), this.listModel.items.length, this.ARTIST_LIMIT)
-
+        this.GetMoreArtists();
 	}
 	
 	
@@ -254,9 +275,8 @@ ArtistsAssistant.prototype.activate = function(event){
 
     Mojo.Log.info("--> ArtistsAssistant.prototype.activate");
 	
-	//Appears to be a bug in progress pill resetup upon activating
-	this.controller.setupWidget('artistProgressbar', this.PPattr, this.artistLoadModel);
-
+	this.Visible = true;
+    this.GetMoreArtists();
 	
     Mojo.Log.info("<-- ArtistsAssistant.prototype.activate");
 }
@@ -267,6 +287,7 @@ ArtistsAssistant.prototype.activate = function(event){
 ArtistsAssistant.prototype.deactivate = function(event){
 	Mojo.Log.info("--> ArtistsAssistant.prototype.deactivate");
 	this.TurnOffArtistsSpinner();
+	this.Visible = false;
 	Mojo.Log.info("<-- ArtistsAssistant.prototype.deactivate");
 }
 
@@ -309,12 +330,14 @@ ArtistsAssistant.prototype.GetAllMatches = function(filterString){
 	var subset = [];
 	
 	if (filterString == "") {
+		
 		for (var i = 0; i < this.ArtistList.length; i++) {
 		
 			subset.push(this.ArtistList[i]);
 		}
 	}
 	else {
+		
 		for (var i = 0; i < this.ArtistList.length; i++) {
 			if (this.ArtistList[i].name.toLowerCase().include(filterString.toLowerCase())) {
 			
@@ -326,6 +349,10 @@ ArtistsAssistant.prototype.GetAllMatches = function(filterString){
 }
 
 
+ArtistsAssistant.prototype.filterString = null;
+ArtistsAssistant.prototype.Matches = null;
+ArtistsAssistant.prototype.LastFilterLength = null;
+
 ArtistsAssistant.prototype.FilterArtistList = function(filterString, listWidget, offset, count){
 	Mojo.Log.info("--> ArtistsAssistant.prototype.FilterArtistList filterString:", filterString, "offset:", offset, "count:", count);
 	var subset = [];
@@ -334,9 +361,15 @@ ArtistsAssistant.prototype.FilterArtistList = function(filterString, listWidget,
 
 	if (this.ArtistList.length != 0) {
 	
-		Mojo.Log.info("Filtering: " + filterString);
-		
-		var Matches = this.GetAllMatches(filterString);
+    	 if ( (filterString != this.filterString) || (this.LastFilterLength != this.ArtistList.length) ) {
+		 	this.LastFilterLength = this.ArtistList.length;
+            this.Matches = this.GetAllMatches(filterString);
+            this.filterString = filterString;
+        }
+        
+        Mojo.Log.info("Filtering: " + filterString);
+        
+        var Matches = this.Matches;
 		
 		for (var i = 0; i < count; i++) {
 			if ((i + offset) < Matches.length) {

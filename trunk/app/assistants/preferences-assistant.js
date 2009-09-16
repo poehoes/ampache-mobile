@@ -15,17 +15,7 @@
  */
 function PreferencesAssistant(params){
     this.settingsManager = params.settingsManager;
-    
-    //this.settingsManager = AppAssistant.settingsManager;
-
-    /* this is the creator function for your scene assistant object. It will be passed all the 
-    
-     additional parameters (after the scene name) that were passed to pushScene. The reference
-    
-     to the scene controller (this.controller) has not be established yet, so any initialization
-    
-     that needs the scene controller should be done in the setup function below. */
-    
+        
 }
 
 PreferencesAssistant.prototype.stylesheet = null;
@@ -143,9 +133,36 @@ PreferencesAssistant.prototype.setup = function(){
     
     this.controller.setupWidget('backgroundBtn', this.button1Attributes, this.button1Model);
     
-    
     Mojo.Event.listen(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.PushBackground.bind(this));
     
+	
+	
+	//*****************************************************************************
+	// Fetch Size Setup
+	   this.attributes = {
+        modelProperty:  'value',
+        minValue:      1,
+        maxValue:      1000,
+        round:         true,
+        updateInterval: 0.1,
+		};
+    this.model = {
+        value : this.settingsManager.settings.FetchSize,
+        //width: 15
+    }
+    this.controller.setupWidget('slider', this.attributes, this.model);
+    this.propertyChanged = this.FetchSizeChanged.bindAsEventListener(this);
+    Mojo.Event.listen(this.controller.get('slider'),Mojo.Event.propertyChange,this.propertyChanged);
+    $('fetchSize').innerHTML = "Items: " + this.model.value;
+	
+}
+
+
+PreferencesAssistant.prototype.FetchSizeChanged=function(event)
+{
+	$('fetchSize').innerHTML = "Items: " + this.model.value;
+	this.settingsManager.settings.FetchSize = this.model.value;
+	this.settingsManager.SaveSettings();
 }
 
 
@@ -232,6 +249,7 @@ PreferencesAssistant.prototype.listDeleteHandler = function(event){
     this.UpdateSelector();
     this.settingsManager.SaveSettings();
 }
+
 PreferencesAssistant.prototype.listTapHandler = function(event){
 
     if (Element.hasClassName(event.originalEvent.target, 'list-item-remove-button')) {
@@ -258,11 +276,8 @@ PreferencesAssistant.prototype.listTapHandler = function(event){
     
 }
 PreferencesAssistant.prototype.listAddHandler = function(event){
-    /*
-     // If 'item' and 'index' are undefined, then the 'add...' item was tapped, and we add a "new/blank" item.
-     event.model.items.push({data:$L('New Item') });
-     this.controller.modelChanged(event.model, this);
-     */
+
+
     this.newAccount = new Account();
     
     this.controller.stageController.pushScene("account", {

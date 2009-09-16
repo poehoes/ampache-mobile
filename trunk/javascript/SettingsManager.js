@@ -108,10 +108,10 @@ SettingsManager = Class.create({
     FindMissingSettings: function(){
         if (this.settings != null) {
             if (this.settings.BackgroundColor == null) {
-                this.settings.BackgroundColor = this.DEFAULT_COLOR;
+                this.settings.BackgroundColor = DEFAULT_COLOR;
             }
             if (this.settings.BackgroundImage == null) {
-                this.settings.BackgroundImage = this.DEFAULT_IMAGE;
+                this.settings.BackgroundImage = DEFAULT_IMAGE;
             }
             if (this.settings.StreamDebug == null) {
                 this.settings.StreamDebug = false;
@@ -120,7 +120,12 @@ SettingsManager = Class.create({
             if (this.settings.BackgroundMode == null) {
                 this.settings.BackgroundMode = 0;
             }
-            
+            if (this.settings.FetchSize==null)
+			{
+				this.settings.FetchSize = DEFAULT_FETCH_SIZE;
+			}
+			
+			
             this.SaveSettings(null, null);
         }
     },
@@ -149,8 +154,7 @@ SettingsManager = Class.create({
         })
     },
     
-    DEFAULT_COLOR: "#384438",
-    DEFAULT_IMAGE: "images/backgrounds/solids/background1.png",
+
 
 
 })
@@ -170,13 +174,22 @@ Settings = Class.create({
     CurrentAccountIndex: null,
     ExtraCoverArt: false,
     StreamDebug: false,
-    BackgroundColor: "#384438",
-    BackgroundImage: "images/backgrounds/solids/background1.png",
-    BackgroundSolid: "images/backgrounds/solids/background1.png",
+    
+	FetchSize:DEFAULT_FETCH_SIZE,
+	
+	BackgroundColor: DEFAULT_COLOR,
+    BackgroundImage: DEFAULT_IMAGE,
+    BackgroundSolid: DEFAULT_IMAGE,
     BackgroundMode: this.CUSTOM_COLOR,
-    BackgroundOverlay: "images/backgrounds/overlay/overlay1.png",
+    BackgroundOverlay: DEFAULT_OVERLAY,
     
     CUSTOM_COLOR: 0,
     CUSTOM_IMAGE: 1,
 
 });
+
+var DEFAULT_COLOR = "#384438";
+var DEFAULT_IMAGE = "images/backgrounds/solids/background1.png";
+var DEFAULT_FETCH_SIZE = 300;
+var DEFAULT_OVERLAY =  "images/backgrounds/overlay/overlay1.png";
+

@@ -1,6 +1,6 @@
 {
 	"id": "com.palm.ampachemobile",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"vendor": "Ampache",
 	"type": "web",
 	"main": "index.html",

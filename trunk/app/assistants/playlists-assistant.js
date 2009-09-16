@@ -28,7 +28,7 @@ function PlaylistsAssistant(params){
 	this.PlaylistList = new Array();
 	
 	
-	this.PLAYLIST_LIMIT = 200;
+	this.PLAYLIST_LIMIT = AmpacheMobile.settingsManager.settings.FetchSize;;
 	this.playlistOffset = 0;
 	
 	Mojo.Log.info("<-- PlaylistsAssistant.prototype.constructor");
@@ -45,7 +45,7 @@ PlaylistsAssistant.prototype.setup = function(){
 
 		this.PPattr = {
 			title: this.SceneTitle,
-			//image: 'stuff'
+			image: 'images/playlists.png',
 		};
 		this.playlistLoadModel = {
 			//iconPath: "action-icon",

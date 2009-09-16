@@ -287,7 +287,7 @@ AmpacheServer = Class.create({
     
     GetArtistsCallback: null,
     
-    GetArtists: function(_GetArtistsCallback, _offset, _limit){
+    GetArtists: function(_GetArtistsCallback, _offset, _limit, _search){
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetArtists");
         
@@ -304,7 +304,13 @@ AmpacheServer = Class.create({
             
             offset[2] = "limit";
             offset[3] = _limit;
-            
+			
+			if(_search!=null)
+			{
+			    offset[4] = "filter";
+                offset[5] = _search
+            }
+			
             var path = this.BuildActionString("artists", offset);
         }
         else {
@@ -321,7 +327,7 @@ AmpacheServer = Class.create({
                 console.info('******* onLoading happened')
             },
             onLoaded: function(){
-                console.info('******* onLodaed happened')
+                console.info('******* onLoaded happened')
             },
             onSuccess: this.GotArtistsCallback.bind(this),
             onComplete: function(){
@@ -376,51 +382,56 @@ AmpacheServer = Class.create({
     
     //******************************************************************************************/
     //Get Albums information 
-    GetAlbumsCallback: null,
-    GetAlbumsInteractiveIndex: 0,
-    GetAlbumsLeftOvers: "",
-    GetAlbumsTimeInterval: null,
-    GetAlbumsRequest: null,
     
-    GetAlbumsLastAlbumIndex: 0,
+	GetAlbumsCallback: null,
     
-    GetAlbums: function(_GetAlbumsCallback, _ArtistId, _offset, _limit){
+    GetAlbums: function(_GetAlbumsCallback, _ArtistId, _offset, _limit,_search){
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetAlbums");
         
+		var i = 0;
+		
         this.GetAlbumsCallback = _GetAlbumsCallback;
         
         if (typeof this.GetAlbumsCallback != "function") 
             this.GetAlbumsCallback = new Function(func)
         
-        
+        var type = "albums";
+		 var filter = [];
+		
         if (_ArtistId != null) {
         
-            var filter = [];
-            filter[0] = "filter";
-            filter[1] = _ArtistId;
+           
+            filter[i++] = "filter";
+            filter[i++] = _ArtistId;
             
             
             
-            var path = this.BuildActionString("artist_albums", filter);
+            type = "artist_albums";
             
         }
-        else {
-            if ((_offset != null) && (_limit != null)) {
-                var offset = [];
-                offset[0] = "offset";
-                offset[1] = _offset;
-                
-                
-                offset[2] = "limit";
-                offset[3] = _limit;
-                
-                var path = this.BuildActionString("albums", offset);
-            }
-            else {
-                var path = this.BuildActionString("albums");
-            }
-        }
+       
+        if ((_offset != null) && (_limit != null)) {
+		
+			filter[i++] = "offset";
+			filter[i++] = _offset;
+			
+			
+			filter[i++] = "limit";
+			filter[i++] = _limit;
+			
+			if (_search != null) {
+				filter[i++] = "filter";
+				filter[i++] = _search
+			}
+			
+			
+		}
+			
+
+         var path = this.BuildActionString(type, filter);
+		
+		
         
         
         this.GetAlbumsInteractiveIndex = 0;
@@ -439,104 +450,18 @@ AmpacheServer = Class.create({
                 console.info('******* onLoaded happened')
             },
             //onInteractive:this.GotAlbumsInteractiveCallback.bind(this),
-            onSuccess: this.GotAlbumsCallbackOldSchool.bind(this),
+            onSuccess: this.GotAlbumsCallback.bind(this),
             
             //onComplete: this.GotAlbumsInteractiveCallback.bind(this),
-            onFailure: this.GotAlbumsOnFailure.bind(this)
+            onFailure: this.GotAlbumsCallback.bind(this)
         });
         
         Mojo.Log.info("<-- AmpacheServer.prototype.GetAlbums");
     },
     
-    
-    GotAlbumsLastIndex: 0,
-    GotAlbumsProcessing: false,
-    
-    GetAlbumsCancel: function(event){
-        if (this.GetAlbumsRequest != null) {
-            this.GetAlbumsRequest.transport.abort();
-            
-        }
-        this.GotAlbumReset();
-    },
-    
-    
-    
-    GotAlbumsOnSuccess: function(event){
-        this.GotAlbumsInteractiveCallback(event);
-        this.GotAlbumReset();
-    },
-    
-    
-    
-    
-    GotAlbumsOnFailure: function(event){
-        this.GotAlbumReset();
-    },
-    
-    GotAlbumReset: function(event){
-        this.GetAlbumsRequest = null;
-        this.GotAlbumsProcessing = false;
-        this.GetAlbumsLastAlbumIndex = 0;
-        
-    },
-    
-    
-    GotAlbumsInteractiveCallback: function(event, isLast){
-        Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsInteractiveCallback");
-        //if (this.GotAlbumsProcessing == false) {
-        //	this.GotAlbumsProcessing = true;
-        
-        
-        
-        
-        //Get unprocessed chunk
-        var startKey = "<album ";
-        var endKey = "</album>";
-        
-        var newLastIndex = event.responseText.lastIndexOf(endKey) + endKey.length;
-        if ((this.GetAlbumsLastAlbumIndex != newLastIndex) && (!this.GotAlbumsProcessing)) {
-            this.GotAlbumsProcessing = true
-            var previousLastIndex = this.GetAlbumsLastAlbumIndex;
-            this.GetAlbumsLastAlbumIndex = newLastIndex;
-            var unprocessedText = event.responseText.substring(previousLastIndex, newLastIndex);
-            
-            var startIndex = unprocessedText.indexOf(startKey);
-            unprocessedText = unprocessedText.substring(startIndex)
-            
-            Mojo.Log.info("unprocessedText: \n" + unprocessedText);
-            
-            this.GotAlbumsCallback(unprocessedText);
-            this.GotAlbumsProcessing = false;
-        }
-        else {
-            Mojo.Log.info("No new albums");
-            
-        }
-        
-        
-        /*
-         var unprocessedText = event.responseText.substring(this.GotAlbumsLastIndex, lastClose+endKey.length);
-         var firstOpen = unprocessedText.indexOf(startKey);
-         unprocessedText = unprocessedText.substring(firstOpen);
-         
-         this.GotAlbumsLastIndex = lastClose+endKey.length;
-         
-         Mojo.Log.info("unprocessedText: \n"+ unprocessedText);
-         
-         this.GotAlbumsCallback(unprocessedText);
-         
-         this.GotAlbumsProcessing = false;*/
-        //}
-        //else
-        //{
-        //	Mojo.Log.info("Returning, still processing previous message");
-        //}
-        Mojo.Log.info("<-- AmpacheServer.prototype.GotAlbumsInteractiveCallback");
-    },
-    
-    
-    GotAlbumsCallbackOldSchool: function(transport){
+
+	
+    GotAlbumsCallback: function(transport){
         Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsCallback");
         
         
@@ -582,7 +507,7 @@ AmpacheServer = Class.create({
     },
     
     
-    
+    /*
     GotAlbumsCallback: function(xml){
         Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsCallback");
         
@@ -607,23 +532,7 @@ AmpacheServer = Class.create({
             AlbumList = new Array();
             
             var albumListXML = xmlDoc.getElementsByTagName("album");
-            /*			
-             root>
-             <album id="2910">
-             <name>Back in Black</name>
-             <artist id="129348">AC/DC</artist>
-             <year>1984</year>
-             <tracks>12</tracks>
-             <disk>1</disk>
-             <tag id="2481" count="2">Rock & Roll</tag>
-             <tag id="2482" count="1">Rock</tag>
-             <tag id="2483" count="1">Roll</tag>
-             <art>http://localhost/image.php?id=129348</art>
-             <preciserating>3</preciserating>
-             <rating>2.9</rating>
-             </album>
-             </root>
-             */
+           
             for (var i = 0; i < albumListXML.length; i++) {
             
             
@@ -659,6 +568,9 @@ AmpacheServer = Class.create({
     },
     
     TotalAlbums: 0,
+    
+    */
+    
     //******************************************************************************************/
     //Get Album Songs
     GetSongsCallback: null,
