@@ -33,8 +33,10 @@ function AlbumsAssistant(params){
     
     this.AlbumList = new Array();
     
-    
-    this.ALBUM_LIMIT = 200;
+    this.LoadingFinished = false;
+	this.Visible = false;
+	
+    this.ALBUM_LIMIT = AmpacheMobile.settingsManager.settings.FetchSize;
     this.albumOffset = 0;
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.constructor");
@@ -52,25 +54,42 @@ AlbumsAssistant.prototype.FinishedGettingAlbums = function(_albumsList){
     
         var newItem = _albumsList[i];
         this.AlbumList.push(newItem);
-        //this.listModel.items.mojo.noticeAddedItems(this.listModel.items.length, [newItem]);
-        //albumsList.mojo.noticeAddedItems(this.listModel.items.length, [newItem]);
-    
-    
+        
     }
-    var progress = this.listModel.items.length / this.ExpectedAlbums;
+   
+    //Update Progress
+	var progress = this.listModel.items.length / this.ExpectedAlbums;
     this.albumLoadModel.value = progress;
     this.controller.modelChanged(this.albumLoadModel);
     
-    this.AlbumList.sort(this.sortbyYearTitle);
+	
+	this.AlbumList.sort(this.sortbyYearTitle);
+    
+	
+	//Add to list   
     var albumsList = this.controller.get('albumsFilterList');
-    albumsList.mojo.noticeUpdatedItems(0, this.AlbumList);
-    
-    if (progress >= 1) {
-    
+    if ((this.filterString == "") ||(this.filterString == null)) {
+        albumsList.mojo.noticeUpdatedItems(0, this.AlbumList);
+    }
+    else //list currently has a filter
+    {
+        var matches = this.GetAllMatches(this.filterString);
+        albumsList.mojo.noticeUpdatedItems(0, matches);
+        albumsList.mojo.setLength(matches.length);
+        albumsList.mojo.setCount(matches.length);
+    }
+	
+	
+   
+	
+    if (_albumsList.length != this.ALBUM_LIMIT ) {
+        this.albumLoadModel.value = 1;
+        this.controller.modelChanged(this.albumLoadModel);
+	    this.LoadingFinished = true;
     }
     else {
-        AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null, this.listModel.items.length, this.ALBUM_LIMIT);
-        
+		this.albumOffset = this.listModel.items.length;
+		this.GetMoreAlbums();
     }
     
     
@@ -91,7 +110,7 @@ AlbumsAssistant.prototype.setup = function(){
     
     this.PPattr = {
         title: this.SceneTitle,
-        //image: 'stuff'
+        image: 'images/albums.png',
     };
     this.albumLoadModel = {
         //iconPath: "action-icon",
@@ -177,12 +196,13 @@ AlbumsAssistant.prototype.setup = function(){
     
     this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
     
+	/*
     if (this.isArtistView == true) {
         AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), this.Artist.id);
     }
     else {
         AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null, this.albumOffset, this.ALBUM_LIMIT);
-    }
+    }*/
     
     this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
     
@@ -190,6 +210,16 @@ AlbumsAssistant.prototype.setup = function(){
     
 }
 
+AlbumsAssistant.prototype.GetMoreAlbums = function(){
+	if ((this.Visible == true) && (this.LoadingFinished==false)) {
+		if (this.isArtistView == true) {
+			AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), this.Artist.id, this.albumOffset, this.ALBUM_LIMIT);
+		}
+		else {
+			AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null, this.albumOffset, this.ALBUM_LIMIT);
+		}
+	}
+}
 
 AlbumsAssistant.prototype.OnListAddEvent = function(event){
     Mojo.Log.info("--> AlbumsAssistant.prototype.OnListAddEvent");
@@ -347,7 +377,8 @@ AlbumsAssistant.prototype.activate = function(event){
 
     Mojo.Log.info("--> AlbumsAssistant.prototype.activate");
     
-    this.controller.setupWidget('albumProgressbar', this.PPattr, this.albumLoadModel);
+	this.Visible = true;
+	this.GetMoreAlbums();
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.activate");
 }
@@ -359,8 +390,9 @@ AlbumsAssistant.prototype.deactivate = function(event){
 
     Mojo.Log.info("--> AlbumsAssistant.prototype.deactivate");
     
-    AmpacheMobile.ampacheServer.GetAlbumsCancel();
-    
+    //AmpacheMobile.ampacheServer.GetAlbumsCancel();
+	this.Visible = false;
+	
     Mojo.Log.info("<-- AlbumsAssistant.prototype.deactivate");
     
 }
@@ -450,16 +482,18 @@ AlbumsAssistant.prototype.GetAllMatches = function(filterString){
 
 AlbumsAssistant.prototype.filterString = null;
 AlbumsAssistant.prototype.Matches = null;
+ArtistsAssistant.prototype.LastFilterLength = null;
 
 AlbumsAssistant.prototype.FilterAlbumList = function(filterString, listWidget, offset, count){
-    Mojo.Log.info("--> AlbumsAssistant.prototype.FilterArtistList filterString:", filterString, "offset:", offset, "count:", count);
+    Mojo.Log.info("--> AlbumsAssistant.prototype.FilterAlbumList filterString:", filterString, "offset:", offset, "count:", count);
     var subset = [];
     
     
     
     if (this.AlbumList.length != 0) {
     
-        if (filterString != this.filterString) {
+        if ( (filterString != this.filterString) || (this.LastFilterLength != this.AlbumList.length) ) {
+            this.LastFilterLength = this.AlbumList.length;
             this.Matches = this.GetAllMatches(filterString);
             this.filterString = filterString;
         }
@@ -484,7 +518,7 @@ AlbumsAssistant.prototype.FilterAlbumList = function(filterString, listWidget, o
     }
     
     
-    Mojo.Log.info("<-- AlbumsAssistant.prototype.FilterArtistList:");
+    Mojo.Log.info("<-- AlbumsAssistant.prototype.FilterAlbumList:");
     
     
 }

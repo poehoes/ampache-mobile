@@ -233,28 +233,28 @@ height: 100%;
 
 
 
-#mainMenuList .mainMenuDesc {
+.mainMenuList .mainMenuDesc {
 	color: white;
 	/*margin-top: -10px;*/
 	padding: 0 15px 10px 15px;
 	font-size:small;
 }
 
-#mainMenuList .mainMenuTitle {
+.mainMenuList .mainMenuTitle {
 	color: white;
 	margin-top: 10px;
 	padding: 0px 15px 10px 15px;
 }
 
 
-#mainMenuList .mainMenuDesc {
+.mainMenuList .mainMenuDesc {
 	color: white;
 	margin-top: -10px;
 	padding: 0 15px 10px 15px;
 	font-size:small;
 }
 
-#mainMenuList .mainMenuTitle {
+.mainMenuList .mainMenuTitle {
 	color: white;
 	padding: 0 15px 10px 15px;
 }
@@ -1379,7 +1379,7 @@ img.album-art {
 
 .palm-divider.labeled .right {
   margin-top: 50px;
-  background: url(../images/thick-border.png) repeat-x center;/*url(../images/palm-divider-line.png) left center no-repeat;*/
+  background: url(../images/thick-border.png) repeat-x left;/*url(../images/palm-divider-line.png) left center no-repeat;*/
 }
 
 .palm-divider .label {

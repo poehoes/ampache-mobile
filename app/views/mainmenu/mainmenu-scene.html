@@ -1,12 +1,36 @@
 <div id="main" class="palm-dark palm-hasheader">
-	<div class="palm-header left" id="main-hdr">
-	  	Ampache Music Server
-	  <div x-mojo-element="Spinner" id="mainmenu-spinner" class='tinySpinner'  ></div>
-	</div>
-
-
-<div id="mainMenuList" x-mojo-element="List" ></div>
-
-<div class='customBackground'></div>
-<div id="audioPlayerDiv"></div>
+    <div class="palm-header left" id="main-hdr">
+        Ampache Music Server
+        <div x-mojo-element="Spinner" id="mainmenu-spinner" class='tinySpinner'>
+        </div>
+    </div>
+    <div class="palm-list mainMenuList">
+        <div class="palm-row multi-line first last" id='#{name}_example' x-Mojo-tap-highlight="momentary">
+            <div class="palm-row-wrapper">
+                <div class="mainMenuLeft">
+                    <div class="mainMenuTitle">
+                        Search
+                    </div>
+                </div>
+                <div class="mainMenuRight">
+                    <img class="mainMenuIcon" src="images/search.png">
+                    </img>
+                </div>
+                <div class="mainMenuClear">
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    <div class="palm-divider solid">
+    </div>
+    <div id="mainMenuList" class="mainMenuList" x-mojo-element="List">
+    </div>
+    <div class='customBackground'>
+    </div>
+    <div id="audioPlayerDiv">
+    </div>
+	
+	
+	
 </div>

@@ -49,13 +49,21 @@ MainmenuAssistant.prototype.setup = function(){
     
     
     this.mainmenu = [
+	
 	/*
 	{
         category: $L("top"),
         directory: $L("search"),
         name: $L("Search"),
-        scene: $L("search")
-    },*/ 
+        scene: $L("search"),
+        description: null,
+        icon: "images/search.png"
+		
+    },
+	*/
+	
+	
+	 
 	{
         category: $L("bottom"),
         directory: $L("artists"),
@@ -89,6 +97,16 @@ MainmenuAssistant.prototype.setup = function(){
         description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
 		icon: "images/playlists.png"
     },
+	
+	/*{
+        category: $L("bottom"),
+        directory: $L("preferences"),
+        name: $L("Preferences"),
+        scene: $L("preferences"),
+        //description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
+        icon: "images/settings.png"
+    },*/
+	
 	/* 
 	{
         category: $L("bottom"),
