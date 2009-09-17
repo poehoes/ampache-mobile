@@ -586,6 +586,10 @@ AudioPlayer = Class.create({
 				this.stalled =true;
 				break;
 			
+			case "durationchange":
+			     this.UpdateNowPlayingTime();
+			     break;
+			
 			case "timeupdate":
                 //this.UpdateNowPlayingTime()
                 break;

@@ -36,7 +36,7 @@ function AlbumsAssistant(params){
     this.LoadingFinished = false;
 	this.Visible = false;
 	
-    this.ALBUM_LIMIT = AmpacheMobile.settingsManager.settings.FetchSize;
+    this.ALBUM_LIMIT = AmpacheMobile.FetchSize;
     this.albumOffset = 0;
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.constructor");

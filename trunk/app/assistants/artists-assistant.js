@@ -23,7 +23,7 @@ function ArtistsAssistant(params){
 	
 	this.ExpectedArtists = params.ExpectedArtists;
 	
-	this.ARTIST_LIMIT = AmpacheMobile.settingsManager.settings.FetchSize;
+	this.ARTIST_LIMIT = AmpacheMobile.FetchSize;
 	this.artistOffset = 0;
 	
 	this.Visible = true;

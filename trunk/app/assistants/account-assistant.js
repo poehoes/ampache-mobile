@@ -78,9 +78,28 @@ AccountAssistant.prototype.setup = function(){
     this.controller.listen("passwordField", Mojo.Event.propertyChange, this.changePassword.bindAsEventListener(this));
     this.controller.listen("userNameField", Mojo.Event.propertyChange, this.changeUserName.bindAsEventListener(this));
     
+	   //*****************************************************************************
+    // Fetch Size Setup
+       this.attributes = {
+        modelProperty:  'value',
+        minValue:      1,
+        maxValue:      2000,
+        round:         true,
+        updateInterval: 0.1,
+        };
+    this.model = {
+        value : this.Account.FetchSize,
+        //width: 15
+    }
+    this.controller.setupWidget('slider', this.attributes, this.model);
+    this.propertyChanged = this.FetchSizeChanged.bindAsEventListener(this);
+    this.controller.listen('slider', Mojo.Event.propertyChange,this.propertyChanged);
+    $('fetchSize').innerHTML = "Items: " + this.model.value;
     
     
 }
+
+
 
 
 AccountAssistant.prototype.ValidSettings = function(account){
@@ -305,6 +324,17 @@ AccountAssistant.prototype.ConnectionTestTimeout = function(){
 }
 
 
+AccountAssistant.prototype.FetchSizeChanged=function(event)
+{
+   
+ 
+   this.model.value = Math.round(this.model.value/10)*10;  
+   if(this.model.value==0)this.model.value=1;
+   $('fetchSize').innerHTML = "Items: " + this.model.value;
+   this.Account.FetchSize = this.model.value;
+}
+
+
 AccountAssistant.prototype.changeAccountName = function(event){
     Mojo.Log.info("Account Name Changed; value = ", event.value);
     this.Account.AccountName = event.value;
@@ -359,7 +389,7 @@ AccountAssistant.prototype.deactivate = function(event){
     this.controller.stopListening("ServerURLField", Mojo.Event.propertyChange, this.changeURL);
     this.controller.stopListening("passwordField", Mojo.Event.propertyChange, this.changePassword);
     this.controller.stopListening("userNameField", Mojo.Event.propertyChange, this.changeUserName);
-    
+    this.controller.stopListening("slider",Mojo.Event.propertyChange,this.propertyChanged);
     
 }
 
