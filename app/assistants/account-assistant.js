@@ -13,6 +13,11 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var DEFAULT_MAX_FETCH = 1500;
+var DEFAULT_MIN_FETCH = 50;
+
+
 function AccountAssistant(params){
     this.Account = params.Account;
     this.Type = params.Type;
@@ -82,19 +87,19 @@ AccountAssistant.prototype.setup = function(){
     // Fetch Size Setup
        this.attributes = {
         modelProperty:  'value',
-        minValue:      1,
-        maxValue:      2000,
-        round:         true,
+        minValue:      Math.log(DEFAULT_MIN_FETCH)/Math.log(DEFAULT_MAX_FETCH),
+        maxValue:      1,
+        //round:         true,
         updateInterval: 0.1,
         };
     this.model = {
-        value : this.Account.FetchSize,
+        value : Math.log(this.Account.FetchSize)/Math.log(DEFAULT_MAX_FETCH),
         //width: 15
     }
     this.controller.setupWidget('slider', this.attributes, this.model);
     this.propertyChanged = this.FetchSizeChanged.bindAsEventListener(this);
     this.controller.listen('slider', Mojo.Event.propertyChange,this.propertyChanged);
-    $('fetchSize').innerHTML = "Items: " + this.model.value;
+    $('fetchSize').innerHTML = "Items: " + this.Account.FetchSize;
     
     
 }
@@ -323,15 +328,16 @@ AccountAssistant.prototype.ConnectionTestTimeout = function(){
     
 }
 
-
+//Logrithimic scale for the FetchSize
 AccountAssistant.prototype.FetchSizeChanged=function(event)
 {
-   
+   var value = Math.pow(DEFAULT_MAX_FETCH, this.model.value);
+   value = Math.round(value);
  
-   this.model.value = Math.round(this.model.value/10)*10;  
-   if(this.model.value==0)this.model.value=1;
-   $('fetchSize').innerHTML = "Items: " + this.model.value;
-   this.Account.FetchSize = this.model.value;
+ 
+   if(value==0) value=1;
+   $('fetchSize').innerHTML = "Items: " + value;
+   this.Account.FetchSize = value;
 }
 
 

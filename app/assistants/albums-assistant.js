@@ -144,17 +144,16 @@ AlbumsAssistant.prototype.setup = function(){
     
     
     if (this.DisplayArtistInfo == true) {
-        Mojo.Log.info("Display Artist Info");
-        this.listAttributes = {
-        
-            itemTemplate: 'albums/listitem_w_artist',
+        var listAttributes = {
+            filterFunction: this.FilterAlbumList.bind(this),
+			itemTemplate: 'albums/listitem_w_artist',
             dividerTemplate: 'albums/divider',
             dividerFunction: this.dividerFunc.bind(this),
-            //renderLimit : 500,
-            //lookahead: 100,
-            filterFunction: this.FilterAlbumList.bind(this)
+            
         };
-        /*
+        
+		
+		/*
          this.listAttributes = {
          itemTemplate: 'albums/listitem',
          //dividerTemplate: 'artist-albums/divider',
@@ -164,19 +163,22 @@ AlbumsAssistant.prototype.setup = function(){
     }
     else {
         if (AmpacheMobile.settingsManager.settings.ExtraCoverArt) {
-            this.listAttributes = {
+            var listAttributes = {
                 itemTemplate: 'albums/listitem_w_coverart',
                 filterFunction: this.FilterAlbumList.bind(this)
             };
         }
         else {
-            this.listAttributes = {
+            var listAttributes = {
                 itemTemplate: 'albums/listitem',
                 filterFunction: this.FilterAlbumList.bind(this)
             };
         }
     }
     
+	
+	
+	
     this.listModel = {
         disabled: false,
         items: this.AlbumList,
@@ -184,25 +186,13 @@ AlbumsAssistant.prototype.setup = function(){
     
     
     
-    
-    this.controller.setupWidget('albumsFilterList', this.listAttributes, this.listModel);
+    this.controller.setupWidget('albumsFilterList', listAttributes, this.listModel);
     
     this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
     Mojo.Event.listen(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
     
     
-    
-    
-    
     this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
-    
-	/*
-    if (this.isArtistView == true) {
-        AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), this.Artist.id);
-    }
-    else {
-        AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null, this.albumOffset, this.ALBUM_LIMIT);
-    }*/
     
     this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
     
@@ -211,14 +201,16 @@ AlbumsAssistant.prototype.setup = function(){
 }
 
 AlbumsAssistant.prototype.GetMoreAlbums = function(){
-	if ((this.Visible == true) && (this.LoadingFinished==false)) {
+	Mojo.Log.info("--> AlbumsAssistant.prototype.GetMoreAlbums");
+	if ((this.Visible == true) && (this.LoadingFinished == false)) {
 		if (this.isArtistView == true) {
 			AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), this.Artist.id, this.albumOffset, this.ALBUM_LIMIT);
 		}
 		else {
-			AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null, this.albumOffset, this.ALBUM_LIMIT);
+			AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null          , this.albumOffset, this.ALBUM_LIMIT);
 		}
 	}
+	Mojo.Log.info("<-- AlbumsAssistant.prototype.GetMoreAlbums");
 }
 
 AlbumsAssistant.prototype.OnListAddEvent = function(event){
@@ -226,7 +218,9 @@ AlbumsAssistant.prototype.OnListAddEvent = function(event){
     
     
     Mojo.Log.info("--> AlbumsAssistant.prototype.OnListAddEvent");
-}, AlbumsAssistant.prototype.listTapHandler = function(event){
+}
+
+AlbumsAssistant.prototype.listTapHandler = function(event){
     Mojo.Log.info("--> AlbumsAssistant.prototype.listTapHandler");
     
     this.TurnOnSpinner();
@@ -378,6 +372,7 @@ AlbumsAssistant.prototype.activate = function(event){
     Mojo.Log.info("--> AlbumsAssistant.prototype.activate");
     
 	this.Visible = true;
+	
 	this.GetMoreAlbums();
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.activate");
@@ -482,7 +477,7 @@ AlbumsAssistant.prototype.GetAllMatches = function(filterString){
 
 AlbumsAssistant.prototype.filterString = null;
 AlbumsAssistant.prototype.Matches = null;
-ArtistsAssistant.prototype.LastFilterLength = null;
+AlbumsAssistant.prototype.LastFilterLength = null;
 
 AlbumsAssistant.prototype.FilterAlbumList = function(filterString, listWidget, offset, count){
     Mojo.Log.info("--> AlbumsAssistant.prototype.FilterAlbumList filterString:", filterString, "offset:", offset, "count:", count);

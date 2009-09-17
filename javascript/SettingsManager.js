@@ -13,6 +13,13 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var DEFAULT_COLOR = "#384438";
+var DEFAULT_IMAGE = "images/backgrounds/solids/background1.png";
+var DEFAULT_FETCH_SIZE = 300;
+var DEFAULT_OVERLAY =  "images/backgrounds/overlay/overlay1.png";
+
+
 SettingsManager = Class.create({
 
     settings: null,
@@ -192,8 +199,5 @@ Settings = Class.create({
 
 });
 
-var DEFAULT_COLOR = "#384438";
-var DEFAULT_IMAGE = "images/backgrounds/solids/background1.png";
-var DEFAULT_FETCH_SIZE = 300;
-var DEFAULT_OVERLAY =  "images/backgrounds/overlay/overlay1.png";
+
 
