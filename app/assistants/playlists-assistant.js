@@ -28,7 +28,7 @@ function PlaylistsAssistant(params){
 	this.PlaylistList = new Array();
 	
 	
-	this.PLAYLIST_LIMIT = AmpacheMobile.settingsManager.settings.FetchSize;;
+	this.PLAYLIST_LIMIT = AmpacheMobile.FetchSize;
 	this.playlistOffset = 0;
 	
 	Mojo.Log.info("<-- PlaylistsAssistant.prototype.constructor");

@@ -137,33 +137,12 @@ PreferencesAssistant.prototype.setup = function(){
     
 	
 	
-	//*****************************************************************************
-	// Fetch Size Setup
-	   this.attributes = {
-        modelProperty:  'value',
-        minValue:      1,
-        maxValue:      1000,
-        round:         true,
-        updateInterval: 0.1,
-		};
-    this.model = {
-        value : this.settingsManager.settings.FetchSize,
-        //width: 15
-    }
-    this.controller.setupWidget('slider', this.attributes, this.model);
-    this.propertyChanged = this.FetchSizeChanged.bindAsEventListener(this);
-    Mojo.Event.listen(this.controller.get('slider'),Mojo.Event.propertyChange,this.propertyChanged);
-    $('fetchSize').innerHTML = "Items: " + this.model.value;
+
 	
 }
 
 
-PreferencesAssistant.prototype.FetchSizeChanged=function(event)
-{
-	$('fetchSize').innerHTML = "Items: " + this.model.value;
-	this.settingsManager.settings.FetchSize = this.model.value;
-	this.settingsManager.SaveSettings();
-}
+
 
 
 PreferencesAssistant.prototype.PushBackground = function(){

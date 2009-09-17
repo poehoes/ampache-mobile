@@ -123,8 +123,10 @@ ConnectionAssistant.prototype.GotSettings = function(settings){
     }
     else {
     
-        AmpacheMobile.Account = AmpacheMobile.settingsManager.GetCurrentAccount(this.controller.stageController);
-        
+		AmpacheMobile.Account = AmpacheMobile.settingsManager.GetCurrentAccount(this.controller.stageController);
+		
+		
+		
         if (AmpacheMobile.Account == null) {
             Mojo.Log.info("Updating Accounts List")
             if (AmpacheMobile.settingsManager.settings.Accounts.length == 0) {
@@ -293,6 +295,7 @@ ConnectionAssistant.prototype.AlertOption = function(value){
             AmpacheMobile.ampacheServer = null;
             AmpacheMobile.ampacheServer = new AmpacheServer(account.ServerURL, account.UserName, account.Password);
             AmpacheMobile.ampacheServer.connect(this.ConnectionCallback.bind(this), this);
+			AmpacheMobile.FetchSize = account.FetchSize;
         }
     }
 }

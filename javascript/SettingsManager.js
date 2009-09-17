@@ -99,13 +99,13 @@ SettingsManager = Class.create({
     GetSettingsSuccess: function(settings){
         console.log("***************Success Get Happened")
         this.settings = settings;
-        this.FindMissingSettings();
+        this.PopulateMissingDefaults();
         if (GetSettingsSuccessCallback != null) 
             GetSettingsSuccessCallback(this.settings);
         GetSettingsSuccessCallback = null;
     },
     
-    FindMissingSettings: function(){
+    PopulateMissingDefaults: function(){
         if (this.settings != null) {
             if (this.settings.BackgroundColor == null) {
                 this.settings.BackgroundColor = DEFAULT_COLOR;
@@ -120,11 +120,14 @@ SettingsManager = Class.create({
             if (this.settings.BackgroundMode == null) {
                 this.settings.BackgroundMode = 0;
             }
-            if (this.settings.FetchSize==null)
-			{
-				this.settings.FetchSize = DEFAULT_FETCH_SIZE;
-			}
 			
+			for(i=0;i<this.settings.Accounts.length;i++)
+			{
+				if(this.settings.Accounts[i].FetchSize == null)
+				{
+					this.settings.Accounts[i].FetchSize = DEFAULT_FETCH_SIZE;
+				}
+			}
 			
             this.SaveSettings(null, null);
         }
@@ -166,6 +169,7 @@ Account = Class.create({
     UserName: null,
     Password: null,
     ServerURL: null,
+	FetchSize:DEFAULT_FETCH_SIZE,
 })
 
 
@@ -175,7 +179,7 @@ Settings = Class.create({
     ExtraCoverArt: false,
     StreamDebug: false,
     
-	FetchSize:DEFAULT_FETCH_SIZE,
+	
 	
 	BackgroundColor: DEFAULT_COLOR,
     BackgroundImage: DEFAULT_IMAGE,
