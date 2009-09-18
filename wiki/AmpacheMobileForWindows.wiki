@@ -18,5 +18,10 @@ How do I bring up the Preferences Menu?
 ALT+M
 }}}
 
+==Known Issues==
+  * Device Image will not work for the Backgrounds, because there is no Device.
+  * This is pretty processor intensive, running lots of javascript.
+
+
 ==Special Notes==
 Palm has been very supportive of the WebOS community so please resist the urge to distribute their framework freely on the internet, that way we can continue to benefit from their openness and this app will keep working hopefully.
