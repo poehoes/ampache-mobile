@@ -19,6 +19,13 @@ How do I bring up the Preferences Menu?
 ALT+M
 }}}
 
+How do I navigate?
+{{{
+Escape to go back
+
+Otherwise its mouse driven.
+}}}
+
 ==Known Issues==
   * Device Image will not work for the Backgrounds, because there is no Device.
   * This is pretty processor intensive, running lots of javascript.
