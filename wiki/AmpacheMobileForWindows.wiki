@@ -8,7 +8,7 @@ http://i607.photobucket.com/albums/tt151/bjgeiser/windows.png?t=1253249742
   # Download and Install Safari for Windows
   # Mojo Libraries (NOTE: Distribution of the SDK is not legal)
     * You are going to have to find this on your own
-    * [http://forums.precentral.net/web-os-development/185038-develop-pre-apps-safari-without-sdk.html PreCentral Tread on this Topic]
+    * [http://forums.precentral.net/web-os-development/185038-develop-pre-apps-safari-without-sdk.html PreCentral Thread on this Topic]
     * I got mine from the emulator included with the Mojo SDK using WinSCP.
     * Make sure path is C:\usr\palm
   # Run the Ampache Mobile for Windows executable
