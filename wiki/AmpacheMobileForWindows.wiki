@@ -1,0 +1,22 @@
+==Introduction==
+Want to try Ampache Mobile and don't actually have a WebOS phone.  Well now you can!!  WebOS is a combination Javascript, CSS and HTML.  It runs the WebKit browser (the same foundation that Safari and Google Chrome are built on).  The one missing piece to running a WebOS app on windows, or any other desktop operating system are the javascript and css libraries which palm created, otherwise known as the Mojo SDK.
+
+==Installation==
+  # Download and Install Safari for Windows
+  # Mojo Libraries
+    * I will not provide this for you.  You are going to have to find this on your own
+    * [http://forums.precentral.net/web-os-development/185038-develop-pre-apps-safari-without-sdk.html PreCentral Tread on this Topic]
+    * I got mine from the emulator included with the Mojo SDK using WinSCP.
+    * Make sure path is C:\usr\palm
+  # Run the Ampache Mobile for Windows executable
+    * It will uncompress a zip file to C:\usr\palm\applications\
+    * Then launch Safari for you.
+
+==FAQ==
+How do I bring up the Preferences Menu?
+{{{
+ALT+M
+}}}
+
+==Special Notes==
+Palm has been very supportive of the WebOS community so please resist the urge to distribute their framework freely on the internet, that way we can continue to benefit from their openness and this app will keep working hopefully.
