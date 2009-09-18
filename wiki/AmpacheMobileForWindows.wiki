@@ -5,11 +5,11 @@ Want to try Ampache Mobile and don't actually have a WebOS phone.  Or do you use
 http://i607.photobucket.com/albums/tt151/bjgeiser/windows.png?t=1253249742
 
 ==Installation==
-  # Download and Install Safari for Windows
+  # Download and Install Safari for Windows [http://www.apple.com/safari link]
   # Mojo Libraries (NOTE: Distribution of the SDK is not legal)
     * You are going to have to find this on your own
     * [http://forums.precentral.net/web-os-development/185038-develop-pre-apps-safari-without-sdk.html PreCentral Thread on this Topic]
-  # Run the Ampache Mobile for Windows executable
+  # Run the Ampache Mobile for Windows executable [http://code.google.com/p/ampache-mobile/downloads/list link]
     * It will uncompress a zip file to C:\usr\palm\applications\
     * Then launch Safari for you.
 
