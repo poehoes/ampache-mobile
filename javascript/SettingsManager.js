@@ -18,7 +18,7 @@ var DEFAULT_COLOR = "#384438";
 var DEFAULT_IMAGE = "images/backgrounds/solids/background1.png";
 var DEFAULT_FETCH_SIZE = 300;
 var DEFAULT_OVERLAY =  "images/backgrounds/overlay/overlay1.png";
-
+var DEFAULT_ROTATION = false;
 
 SettingsManager = Class.create({
 
@@ -75,7 +75,7 @@ SettingsManager = Class.create({
     
     AppendAccount: function(account){
         var index = this.settings.Accounts.length;
-        return this.settings.Accounts[index] = account;
+        this.settings.Accounts[index] = account;
     },
     
     AddAccount: function(AccountName, username, password, url){
@@ -128,6 +128,11 @@ SettingsManager = Class.create({
                 this.settings.BackgroundMode = 0;
             }
 			
+			if (this.settings.AllowRatation==null)
+			{
+				this.settings.AllowRotation = DEFAULT_ROTATION;
+			}
+			
 			for(i=0;i<this.settings.Accounts.length;i++)
 			{
 				if(this.settings.Accounts[i].FetchSize == null)
@@ -162,7 +167,7 @@ SettingsManager = Class.create({
             if (OnFailure != null) 
                 OnFailure();
         })
-    },
+    }
     
 
 
@@ -176,7 +181,7 @@ Account = Class.create({
     UserName: null,
     Password: null,
     ServerURL: null,
-	FetchSize:DEFAULT_FETCH_SIZE,
+	FetchSize:DEFAULT_FETCH_SIZE
 })
 
 
@@ -186,7 +191,7 @@ Settings = Class.create({
     ExtraCoverArt: false,
     StreamDebug: false,
     
-	
+	AllowRotation:DEFAULT_ROTATION,
 	
 	BackgroundColor: DEFAULT_COLOR,
     BackgroundImage: DEFAULT_IMAGE,
@@ -195,7 +200,7 @@ Settings = Class.create({
     BackgroundOverlay: DEFAULT_OVERLAY,
     
     CUSTOM_COLOR: 0,
-    CUSTOM_IMAGE: 1,
+    CUSTOM_IMAGE: 1
 
 });
 

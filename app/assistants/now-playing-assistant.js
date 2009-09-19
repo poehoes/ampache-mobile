@@ -56,6 +56,8 @@ NowPlayingAssistant.prototype.setup = function(){
 
     Mojo.Log.info("--> NowPlayingAssistant.prototype.setup");
     
+	
+	
 	this.playing=false;
 	
 	this.NowPlayingDisplaySongInfo(this.playList, this.startIndex);
@@ -349,6 +351,9 @@ NowPlayingAssistant.prototype.deactivate = function(event){
 	AmpacheMobile.audioPlayer.clearNowPlaying();
 	
 	window.onresize=null;
+	
+	
+	
 	
     Mojo.Log.info("--> NowPlayingAssistant.prototype.activate");
 }
