@@ -23,6 +23,12 @@ html, body {
 height: 100%;
 margin: 0;
 padding: 0;
+
+}
+
+.wallpaper{
+	-webkit-background-size : 100%;
+	background-repeat:no-repeat;
 }
 
 .count-pill-container {
@@ -212,6 +218,24 @@ height: 100%;
 	z-index: 10;
 }
 
+.nowPlayingSpinner{
+	position:fixed
+	z-index: 10;
+}
+
+
+.spinner-message
+{
+	position:absolute;
+	/*left: 20%;*/
+    width:inherit;
+	top: 128px;
+
+    font-size:smaller;
+	text-align:center;
+	color:white;
+}
+
 #overlaySelector
 {
 	color:white;
@@ -315,11 +339,12 @@ body.palm-default {
 
 
 
+
+/*
 .music-streaming .stream-buffering-icon {
 		width:  240px;
 		height: 240px;
 		margin: 0px auto 0 auto;
-		/*padding-top: 50px;*/
 }
 
 
@@ -330,10 +355,9 @@ body.palm-default {
 		height: 240px;
 		margin: 0 auto;
 
-		/*padding-top: 50px;*/
 		
 }
-
+*/
 
 /*
 .music-streaming .stream-buffered-icon {

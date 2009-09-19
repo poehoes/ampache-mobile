@@ -61,21 +61,21 @@ SongsAssistant.prototype.setup = function(){
 	
 	if (this.DisplayAlbumInfo == true) {
 		var attributes = {
-			itemTemplate: 'songs/listitem_w_artist',
+			itemTemplate: 'songs/listitem_w_artist'
 		//dividerTemplate: 'artist-albums/divider',
 		//dividerFunction: this.dividerFunc.bind(this),
 		};
 	}
 	else {
 		var attributes = {
-			itemTemplate: 'songs/listitem',
+			itemTemplate: 'songs/listitem'
 		//dividerTemplate: 'artist-albums/divider',
 		//dividerFunction: this.dividerFunc.bind(this),
 		};
 	}
 	this.listModel = {
 		disabled: false,
-		items: this.SongsList,
+		items: this.SongsList
 	};
 	
 	
@@ -99,7 +99,7 @@ SongsAssistant.prototype.handleShuffleAll = function(event)
 	{
 		playList:this.SongsList,
 		startIndex:0,
-		shuffle:true,
+		shuffle:true
 	});
 	
 }
@@ -112,7 +112,7 @@ SongsAssistant.prototype.listTapHandler = function(event){
 	{
 		playList:this.SongsList,
 		startIndex:event.index,
-		shuffle:false,
+		shuffle:false
 	});
 	
 	

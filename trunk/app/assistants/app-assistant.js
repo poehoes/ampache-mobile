@@ -55,7 +55,7 @@ function AppAssistant(appController) {
 	//AppAssistant.audioPlayer = new AudioPlayer(appController);
 	
 	
-	
+	var browser=navigator.appName;
 	
 	Mojo.Log.info("<-- AppAssistant Constructor");
 	

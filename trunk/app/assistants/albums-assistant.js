@@ -13,7 +13,8 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-function AlbumsAssistant(params){
+function AlbumsAssistant(params)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.constructor");
     this.SceneTitle = params.SceneTitle;
     this.DisplayArtistInfo = params.DisplayArtistInfo;
@@ -22,7 +23,8 @@ function AlbumsAssistant(params){
     
     this.ExpectedAlbums = params.ExepectedAlbums;
     
-    if (params.Artist != null) {
+    if (params.Artist != null) 
+    {
         this.Artist = params.Artist;
         this.isArtistView = true;
         
@@ -34,62 +36,68 @@ function AlbumsAssistant(params){
     this.AlbumList = new Array();
     
     this.LoadingFinished = false;
-	this.Visible = false;
-	
+    this.Visible = false;
+    
     this.ALBUM_LIMIT = AmpacheMobile.FetchSize;
     this.albumOffset = 0;
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.constructor");
 }
 
-AlbumsAssistant.prototype.FinishedGettingAlbums = function(_albumsList){
+AlbumsAssistant.prototype.FinishedGettingAlbums = function(_albumsList)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.FinishedGettingAlbums");
     
     var currentItemsIndex = this.listModel.items.length;
     
-    if (this.spinnerModel.spinning) {
+    if (this.spinnerModel.spinning) 
+    {
         this.TurnOffSpinner();
     }
-    for (var i = 0; i < _albumsList.length; i++) {
+    for (var i = 0; i < _albumsList.length; i++) 
+    {
     
         var newItem = _albumsList[i];
         this.AlbumList.push(newItem);
         
     }
-   
+    
     //Update Progress
-	var progress = this.listModel.items.length / this.ExpectedAlbums;
+    var progress = this.listModel.items.length / this.ExpectedAlbums;
     this.albumLoadModel.value = progress;
     this.controller.modelChanged(this.albumLoadModel);
     
-	
-	this.AlbumList.sort(this.sortbyYearTitle);
     
-	
-	//Add to list   
+    this.AlbumList.sort(this.sortbyYearTitle);
+    
+    
+    //Add to list   
     var albumsList = this.controller.get('albumsFilterList');
-    if ((this.filterString == "") ||(this.filterString == null)) {
+    if ((this.filterString == "") || (this.filterString == null)) 
+    {
         albumsList.mojo.noticeUpdatedItems(0, this.AlbumList);
     }
     else //list currently has a filter
-    {
+     {
         var matches = this.GetAllMatches(this.filterString);
         albumsList.mojo.noticeUpdatedItems(0, matches);
         albumsList.mojo.setLength(matches.length);
         albumsList.mojo.setCount(matches.length);
     }
-	
-	
-   
-	
-    if (_albumsList.length != this.ALBUM_LIMIT ) {
+    
+    
+    
+    
+    if (_albumsList.length != this.ALBUM_LIMIT) 
+    {
         this.albumLoadModel.value = 1;
         this.controller.modelChanged(this.albumLoadModel);
-	    this.LoadingFinished = true;
+        this.LoadingFinished = true;
     }
-    else {
-		this.albumOffset = this.listModel.items.length;
-		this.GetMoreAlbums();
+    else 
+    {
+        this.albumOffset = this.listModel.items.length;
+        this.GetMoreAlbums();
     }
     
     
@@ -99,7 +107,8 @@ AlbumsAssistant.prototype.FinishedGettingAlbums = function(_albumsList){
 }
 
 
-AlbumsAssistant.prototype.setup = function(){
+AlbumsAssistant.prototype.setup = function()
+{
 
     Mojo.Log.info("--> AlbumsAssistant.prototype.setup");
     
@@ -108,13 +117,15 @@ AlbumsAssistant.prototype.setup = function(){
     
     
     
-    this.PPattr = {
+    this.PPattr = 
+    {
         title: this.SceneTitle,
-        image: 'images/albums.png',
+        image: 'images/albums.png'
     };
-    this.albumLoadModel = {
+    this.albumLoadModel = 
+    {
         //iconPath: "action-icon",
-        value: 0,
+        value: 0
         //disabled : false
     };
     this.controller.setupWidget('albumProgressbar', this.PPattr, this.albumLoadModel);
@@ -132,28 +143,32 @@ AlbumsAssistant.prototype.setup = function(){
     
     
     /* setup widgets here */
-    this.spinnerLAttrs = {
+    this.spinnerLAttrs = 
+    {
         spinnerSize: 'large'
     }
     
-    this.spinnerModel = {
-        spinning: true
+    this.spinnerModel = 
+    {
+        spinning: false
     }
     
     this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
     
     
-    if (this.DisplayArtistInfo == true) {
-        var listAttributes = {
+    if (this.DisplayArtistInfo == true) 
+    {
+        var listAttributes = 
+        {
             filterFunction: this.FilterAlbumList.bind(this),
-			itemTemplate: 'albums/listitem_w_artist',
+            itemTemplate: 'albums/listitem_w_artist',
             dividerTemplate: 'albums/divider',
-            dividerFunction: this.dividerFunc.bind(this),
-            
+            dividerFunction: this.dividerFunc.bind(this)
+        
         };
         
-		
-		/*
+        
+        /*
          this.listAttributes = {
          itemTemplate: 'albums/listitem',
          //dividerTemplate: 'artist-albums/divider',
@@ -161,27 +176,33 @@ AlbumsAssistant.prototype.setup = function(){
          
          };*/
     }
-    else {
-        if (AmpacheMobile.settingsManager.settings.ExtraCoverArt) {
-            var listAttributes = {
+    else 
+    {
+        if (AmpacheMobile.settingsManager.settings.ExtraCoverArt) 
+        {
+            var listAttributes = 
+            {
                 itemTemplate: 'albums/listitem_w_coverart',
                 filterFunction: this.FilterAlbumList.bind(this)
             };
         }
-        else {
-            var listAttributes = {
+        else 
+        {
+            var listAttributes = 
+            {
                 itemTemplate: 'albums/listitem',
                 filterFunction: this.FilterAlbumList.bind(this)
             };
         }
     }
     
-	
-	
-	
-    this.listModel = {
+    
+    
+    
+    this.listModel = 
+    {
         disabled: false,
-        items: this.AlbumList,
+        items: this.AlbumList
     };
     
     
@@ -196,34 +217,42 @@ AlbumsAssistant.prototype.setup = function(){
     
     this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
     
+	this.TurnOnSpinner("Retrieving<br>Albums");
+	
     Mojo.Log.info("<-- AlbumsAssistant.prototype.setup");
     
 }
 
-AlbumsAssistant.prototype.GetMoreAlbums = function(){
-	Mojo.Log.info("--> AlbumsAssistant.prototype.GetMoreAlbums");
-	if ((this.Visible == true) && (this.LoadingFinished == false)) {
-		if (this.isArtistView == true) {
-			AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), this.Artist.id, this.albumOffset, this.ALBUM_LIMIT);
-		}
-		else {
-			AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null          , this.albumOffset, this.ALBUM_LIMIT);
-		}
-	}
-	Mojo.Log.info("<-- AlbumsAssistant.prototype.GetMoreAlbums");
+AlbumsAssistant.prototype.GetMoreAlbums = function()
+{
+    Mojo.Log.info("--> AlbumsAssistant.prototype.GetMoreAlbums");
+    if ((this.Visible == true) && (this.LoadingFinished == false)) 
+    {
+        if (this.isArtistView == true) 
+        {
+            AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), this.Artist.id, this.albumOffset, this.ALBUM_LIMIT);
+        }
+        else 
+        {
+            AmpacheMobile.ampacheServer.GetAlbums(this.FinishedGettingAlbums.bind(this), null, this.albumOffset, this.ALBUM_LIMIT);
+        }
+    }
+    Mojo.Log.info("<-- AlbumsAssistant.prototype.GetMoreAlbums");
 }
 
-AlbumsAssistant.prototype.OnListAddEvent = function(event){
+AlbumsAssistant.prototype.OnListAddEvent = function(event)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.OnListAddEvent");
     
     
     Mojo.Log.info("--> AlbumsAssistant.prototype.OnListAddEvent");
 }
 
-AlbumsAssistant.prototype.listTapHandler = function(event){
+AlbumsAssistant.prototype.listTapHandler = function(event)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.listTapHandler");
     
-    this.TurnOnSpinner();
+    this.TurnOnSpinner("Retrieving<br>Songs");
     this.RequestedAlbum = event.item;
     AmpacheMobile.ampacheServer.GetSongs(this.FinishedGettingAlbumSongs.bind(this), event.item.id, null, null);
     
@@ -231,41 +260,46 @@ AlbumsAssistant.prototype.listTapHandler = function(event){
     Mojo.Log.info("<-- AlbumsAssistant.prototype.listTapHandler");
 }
 
-AlbumsAssistant.prototype.handleShuffleAll = function(event){
+AlbumsAssistant.prototype.handleShuffleAll = function(event)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.handleShuffleAll");
     
     
-    this.TurnOnSpinner();
+    this.TurnOnSpinner("Retrieving<br>Songs");
     AmpacheMobile.ampacheServer.GetSongs(this.FinishedGettingArtistSongs.bind(this), null, this.Artist.id, null);
     this.RequestedArtist = event.item;
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.handleShuffleAll");
 }
 
-AlbumsAssistant.prototype.FinishedGettingArtistSongs = function(_songsList){
+AlbumsAssistant.prototype.FinishedGettingArtistSongs = function(_songsList)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.GotAllSongsCallback");
     this.TurnOffSpinner();
-    this.controller.stageController.pushScene('now-playing', {
+    this.controller.stageController.pushScene('now-playing', 
+    {
         playList: _songsList,
         startIndex: 0,
-        shuffle: true,
+        shuffle: true
     });
     Mojo.Log.info("<-- AlbumsAssistant.prototype.GotAllSongsCallback");
     
 }
 
 
-AlbumsAssistant.prototype.FinishedGettingAlbumSongs = function(_songsList){
+AlbumsAssistant.prototype.FinishedGettingAlbumSongs = function(_songsList)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.FinishedGettingAlbumSongs");
     
     //this.GetArtistsPending = false;
     this.TurnOffSpinner();
-    this.controller.stageController.pushScene('songs', {
+    this.controller.stageController.pushScene('songs', 
+    {
         SceneTitle: this.RequestedAlbum.artist + " - " + this.RequestedAlbum.name,
         Artist: this.RequestedAlbum.artist,
         //DisplayArtistInfo:false,
         SongsList: _songsList,
-        art: this.RequestedAlbum.art,
+        art: this.RequestedAlbum.art
     });
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.FinishedGettingAlbumSongs");
@@ -273,7 +307,8 @@ AlbumsAssistant.prototype.FinishedGettingAlbumSongs = function(_songsList){
 }
 
 
-AlbumsAssistant.prototype.dividerFunc = function(itemModel){
+AlbumsAssistant.prototype.dividerFunc = function(itemModel)
+{
     //Mojo.Log.info("--> AlbumsAssistant.prototype.dividerFunc");
     
     /*
@@ -300,7 +335,8 @@ AlbumsAssistant.prototype.dividerFunc = function(itemModel){
 
 
 //This function will sort the album list by year and then alphabetically within the year
-AlbumsAssistant.prototype.sortbyYearTitle = function(a, b){
+AlbumsAssistant.prototype.sortbyYearTitle = function(a, b)
+{
 
     var retvalue;
     
@@ -333,7 +369,8 @@ AlbumsAssistant.prototype.sortbyYearTitle = function(a, b){
     
     
     
-    if (ayear == byear) {
+    if (ayear == byear) 
+    {
         if (a.name == b.name) 
             return 0;
         
@@ -346,20 +383,21 @@ AlbumsAssistant.prototype.sortbyYearTitle = function(a, b){
         alpabetize.sort();
         
         
-        if (alpabetize[0] == a.name) {
+        if (alpabetize[0] == a.name) 
+        {
             retvalue = -1;
         }
         else 
             retvalue = 1;
     }
-    else 
-        if (ayear < byear) {
-            retvalue = 1;
-        }
-        else 
-            if (ayear > byear) {
-                retvalue = -1;
-            }
+    else if (ayear < byear) 
+    {
+        retvalue = 1;
+    }
+    else if (ayear > byear) 
+    {
+        retvalue = -1;
+    }
     
     //Mojo.Log.info("A.year:", a.year, "b.year:", b.year, "revalue", retvalue);
     
@@ -367,13 +405,14 @@ AlbumsAssistant.prototype.sortbyYearTitle = function(a, b){
 }
 
 
-AlbumsAssistant.prototype.activate = function(event){
+AlbumsAssistant.prototype.activate = function(event)
+{
 
     Mojo.Log.info("--> AlbumsAssistant.prototype.activate");
     
-	this.Visible = true;
-	
-	this.GetMoreAlbums();
+    this.Visible = true;
+    
+    this.GetMoreAlbums();
     
     Mojo.Log.info("<-- AlbumsAssistant.prototype.activate");
 }
@@ -381,18 +420,20 @@ AlbumsAssistant.prototype.activate = function(event){
 
 
 
-AlbumsAssistant.prototype.deactivate = function(event){
+AlbumsAssistant.prototype.deactivate = function(event)
+{
 
     Mojo.Log.info("--> AlbumsAssistant.prototype.deactivate");
     
     //AmpacheMobile.ampacheServer.GetAlbumsCancel();
-	this.Visible = false;
-	
+    this.Visible = false;
+    
     Mojo.Log.info("<-- AlbumsAssistant.prototype.deactivate");
     
 }
 
-AlbumsAssistant.prototype.cleanup = function(event){
+AlbumsAssistant.prototype.cleanup = function(event)
+{
 
     Mojo.Log.info("--> AlbumsAssistant.prototype.cleanup");
     
@@ -405,14 +446,18 @@ AlbumsAssistant.prototype.cleanup = function(event){
 }
 
 
-AlbumsAssistant.prototype.TurnOnSpinner = function(){
+AlbumsAssistant.prototype.TurnOnSpinner = function(message)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.TurnOnSpinner");
-    this.spinnerModel.spinning = true;
+    CenterSpinner($('large-activity-spinner'));
+	//this.controller.get('wait-message').innerHTML = message;
+	this.spinnerModel.spinning = true;
     this.controller.modelChanged(this.spinnerModel);
-    Mojo.Log.info("<-- AlbumsAssistant.prototype.TurnOnSpinner");
+    Mojo.Log.info("<-- AlbumsAssistant.prototype.");
 }
 
-AlbumsAssistant.prototype.TurnOffSpinner = function(){
+AlbumsAssistant.prototype.TurnOffSpinner = function()
+{
     Mojo.Log.info("-----> AlbumsAssistant.prototype.TurnOffSpinner");
     this.spinnerModel.spinning = false;
     this.controller.modelChanged(this.spinnerModel);
@@ -453,19 +498,25 @@ AlbumsAssistant.prototype.TurnOffSpinner = function(){
  
  Mojo.Log.info("<-- AlbumsAssistant.prototype.FilteralbumAlbumList");
  }*/
-AlbumsAssistant.prototype.GetAllMatches = function(filterString){
+AlbumsAssistant.prototype.GetAllMatches = function(filterString)
+{
     var subset = [];
     
-    if (filterString == "") {
-        for (var i = 0; i < this.AlbumList.length; i++) {
+    if (filterString == "") 
+    {
+        for (var i = 0; i < this.AlbumList.length; i++) 
+        {
         
             subset.push(this.AlbumList[i]);
         }
     }
-    else {
-        for (var i = 0; i < this.AlbumList.length; i++) {
+    else 
+    {
+        for (var i = 0; i < this.AlbumList.length; i++) 
+        {
             var matchString = this.AlbumList[i].name + " " + this.AlbumList[i].artist
-            if (matchString.toLowerCase().include(filterString.toLowerCase())) {
+            if (matchString.toLowerCase().include(filterString.toLowerCase())) 
+            {
             
                 subset.push(this.AlbumList[i]);
             }
@@ -479,15 +530,18 @@ AlbumsAssistant.prototype.filterString = null;
 AlbumsAssistant.prototype.Matches = null;
 AlbumsAssistant.prototype.LastFilterLength = null;
 
-AlbumsAssistant.prototype.FilterAlbumList = function(filterString, listWidget, offset, count){
+AlbumsAssistant.prototype.FilterAlbumList = function(filterString, listWidget, offset, count)
+{
     Mojo.Log.info("--> AlbumsAssistant.prototype.FilterAlbumList filterString:", filterString, "offset:", offset, "count:", count);
     var subset = [];
     
     
     
-    if (this.AlbumList.length != 0) {
+    if (this.AlbumList.length != 0) 
+    {
     
-        if ( (filterString != this.filterString) || (this.LastFilterLength != this.AlbumList.length) ) {
+        if ((filterString != this.filterString) || (this.LastFilterLength != this.AlbumList.length)) 
+        {
             this.LastFilterLength = this.AlbumList.length;
             this.Matches = this.GetAllMatches(filterString);
             this.filterString = filterString;
@@ -497,8 +551,10 @@ AlbumsAssistant.prototype.FilterAlbumList = function(filterString, listWidget, o
         
         var Matches = this.Matches;
         
-        for (var i = 0; i < count; i++) {
-            if ((i + offset) < Matches.length) {
+        for (var i = 0; i < count; i++) 
+        {
+            if ((i + offset) < Matches.length) 
+            {
             
                 subset.push(Matches[i + offset]);
             }

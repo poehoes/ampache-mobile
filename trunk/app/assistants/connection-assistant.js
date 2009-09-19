@@ -38,11 +38,12 @@ ConnectionAssistant.prototype.setup = function(){
     
     this.accountsModel = {
         listTitle: $L('Accounts'),
-        items: this.Accounts,
+        items: this.Accounts
+		
     };
     this.innerListAttrs = {
         listTemplate: 'connection/listContainer',
-        itemTemplate: 'connection/listItem',
+        itemTemplate: 'connection/listItem'
         //addItemLabel: $L("Account..."),
         //swipeToDelete: true,
         //autoconfirmDelete: false,
@@ -82,7 +83,8 @@ ConnectionAssistant.prototype.setup = function(){
 
 ConnectionAssistant.prototype.TurnOnSpinner = function(){
     Mojo.Log.info("--> ConnectionAssistant.prototype.TurnOnSpinner");
-    this.spinnerModel.spinning = true;
+    CenterSpinner($('large-activity-spinner'));
+	this.spinnerModel.spinning = true;
     this.controller.modelChanged(this.spinnerModel);
     Mojo.Log.info("<-- ConnectionAssistant.prototype.TurnOnSpinner");
 }
@@ -105,7 +107,7 @@ ConnectionAssistant.prototype.listTapHandler = function(event){
 ConnectionAssistant.prototype.pushPreferences = function(settingsManager){
     var params = {
     
-        settingsManager: AmpacheMobile.settingsManager,
+        settingsManager: AmpacheMobile.settingsManager
     }
     this.controller.stageController.pushScene("preferences", params);
 }
@@ -212,10 +214,11 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
                     label: $L('Preferences'),
                     value: "preferences",
                     type: 'secondary'
-                }, ],
-                allowHTMLMessage: html,
+                } ],
+                allowHTMLMessage: html
             
-            });
+            }
+			);
         }
     }
     else {
@@ -252,8 +255,9 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
                 label: $L('Preferences'),
                 value: "preferences",
                 type: 'affirmative'
-            }, ],
-            allowHTMLMessage: html,
+            } 
+			],
+            allowHTMLMessage: html
         
         });
     }
@@ -270,7 +274,7 @@ ConnectionAssistant.prototype.AlertOption = function(value){
         case "preferences":
             var params = {
             
-                settingsManager: AmpacheMobile.settingsManager,
+                settingsManager: AmpacheMobile.settingsManager
             }
             this.controller.stageController.pushScene("preferences", params);
             break;
@@ -278,7 +282,9 @@ ConnectionAssistant.prototype.AlertOption = function(value){
     
     
     Mojo.Log.info("<-- ConnectionAssistant.prototype.AlertOption")
-}, ConnectionAssistant.prototype.LoadMainMenu = function(account){
+}
+
+ConnectionAssistant.prototype.LoadMainMenu = function(account){
     /* put in event handlers here that should only be in effect when this scene is active. For
      example, key handlers that are observing the document */
     if (account != null) {
@@ -325,7 +331,7 @@ ConnectionAssistant.prototype.activate = function(event){
 }
 
 ConnectionAssistant.prototype.SetBackground = function(image, color){
-    this.controller.get('body_wallpaper').style.background = "url(" + image + ")";
+    this.controller.get('body_wallpaper').style.background = "url(" + image + ") no-repeat";
     this.controller.get('body_wallpaper').style.backgroundColor = color;
 }
 

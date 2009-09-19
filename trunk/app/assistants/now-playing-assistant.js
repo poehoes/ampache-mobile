@@ -79,7 +79,9 @@ NowPlayingAssistant.prototype.setup = function(){
         value: 0,
         maxValue: 100,
         minValue: 0,
-        progress: 0
+        progress: 0,
+		property: "updating"
+		
     };
     
     Mojo.Log.info("Setup spinnnerAttrs");
@@ -104,7 +106,7 @@ NowPlayingAssistant.prototype.setup = function(){
         progressStartProperty: 'progressStart',
         progressProperty: 'progressEnd',
         round: true,
-        'updateInterval': .4
+        updateInterval: 0.4
     };
     Mojo.Log.info("Setup slider");
     this.controller.setupWidget('sliderdiv', sliderAttributes, this.sliderModel);
@@ -131,10 +133,44 @@ NowPlayingAssistant.prototype.setup = function(){
     AmpacheMobile.audioPlayer.setNowPlaying(this);
 	//this.musicPlayer = AmpacheMobile.audioPlayer.player;
 		
+	window.onresize= this.FitToWindow;
+	
+	this.FitToWindow();	
 	
     Mojo.Log.info("<-- NowPlayingAssistant.prototype.setup");
 }
 
+
+NowPlayingAssistant.prototype.FitToWindow = function()
+{
+	
+	var coverArt = $('coverArt');
+
+	
+	
+	
+	
+	var height = coverArt.height; 
+	var option1 = (window.innerHeight-150)*0.75;
+	var option2 = window.innerWidth*0.75
+	
+	var height = (option1<option2) ? option1: option2;
+
+	
+	coverArt.height = height;
+	coverArt.width =  height;
+	 
+	//alert(window.innerHeight-height);
+	
+	spinner.style.left = (coverArt.offsetLeft + (height/2-64)) + "px";
+    spinner.style.top =  (coverArt.offsetTop + (height/2-64)) + "px";
+	
+	//CenterSpinner($('spinner'));
+	
+
+    
+	
+}
 
 //****************************************************************************************************************
 // Gestures and animation
@@ -307,7 +343,7 @@ NowPlayingAssistant.prototype.deactivate = function(event){
     AmpacheMobile.audioPlayer.stop();
 	AmpacheMobile.audioPlayer.clearNowPlaying();
 	
-	
+	window.onresize=null;
 	
     Mojo.Log.info("--> NowPlayingAssistant.prototype.activate");
 }
@@ -584,7 +620,7 @@ NowPlayingAssistant.prototype.onStreamingErrorDismiss = function(value){
                 parameters: {
 						target: this.errorSong.url
 					
-				},
+				}
             /*
              onSuccess: function(status){
              $('area-to-update').update(Object.toJSON(status));
@@ -620,13 +656,13 @@ NowPlayingAssistant.prototype.streamingError = function(errorText, song){
 					label: 'OK',
 					value: "retry",
 					type: 'primary'
-				}, /*{
+				} /*{
 					label: 'Let Palm Try',
 					value: "palm-attempt",
 					type: 'secondary'
 				
 				}*/],
-		allowHTMLMessage:true,
+		allowHTMLMessage:true
 	});
 }
 
