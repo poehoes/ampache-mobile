@@ -63,6 +63,9 @@ function StageAssistant(stageController) {
 	//AmpacheMobile.audioPlayer = new AudioPlayer(stageController);
 	AmpacheMobile.mediaEventsService = new MediaEventsService();
 	
+	
+	
+	
 }
 
 StageAssistant.appMenuAttr = {omitDefaultItems: true};
@@ -116,7 +119,7 @@ StageAssistant.prototype.handleCommand = function(event){
 				}
 				;				var params = {
 				
-					settingsManager: AmpacheMobile.settingsManager,
+					settingsManager: AmpacheMobile.settingsManager
 				}
 				this.controller.pushScene("preferences", params);
 				break;
@@ -153,6 +156,10 @@ StageAssistant.prototype.handleCommand = function(event){
 	
 }
 
-
+function CenterSpinner(spinner)
+{
+	spinner.style.left = (window.innerWidth/2-64) + "px";
+    spinner.style.top = (window.innerHeight/2-64) + "px";
+}
 
 

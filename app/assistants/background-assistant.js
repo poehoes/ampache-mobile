@@ -1,3 +1,18 @@
+/*
+ Copyright (c) Ampache Mobile
+ All rights reserved.
+ This file is part of Ampache Mobile.
+ Ampache Mobile is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ Ampache Mobile is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License
+ along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 BackgroundAssistant = Class.create({
     CurrentColor: null,
@@ -13,9 +28,10 @@ BackgroundAssistant = Class.create({
         this.CurrentOverlay = AmpacheMobile.settingsManager.settings.BackgroundOverlay;
         this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
         
-        if (this.CurrentMode == null) 
-            this.CurrentMode = 0;
-        
+        if (this.CurrentMode == null) {
+			this.CurrentMode = 0;
+		}
+		
         this.wallpaperTypeModel = {
             value: this.CurrentMode,
             disabled: false
@@ -28,7 +44,7 @@ BackgroundAssistant = Class.create({
             }, {
                 label: "Image",
                 value: 1
-            }, ]
+            }]
         }, this.wallpaperTypeModel);
         
         this.controller.get('wallpaperType').observe(Mojo.Event.propertyChange, this.wallpaperTypeChanged.bind(this));
@@ -50,7 +66,8 @@ BackgroundAssistant = Class.create({
             //background: 'black',		//You can set an image or a color
             onLeftFunction: this.wentLeft.bind(this),
             onRightFunction: this.wentRight.bind(this)
-        }
+        };
+		
         this.controller.setupWidget('myPhotoDiv', photoAttributes, this.photoModel);
         this.myPhotoDivElement = $('myPhotoDiv');
         
@@ -59,23 +76,23 @@ BackgroundAssistant = Class.create({
         
         this.solidImages = [];
         this.solidImages[0] = {
-            source: 'images/backgrounds/solids/background1.png',
-        }
+            source: 'images/backgrounds/solids/background1.png'
+        };
         this.solidImages[1] = {
-            source: 'images/backgrounds/solids/background2.png',
-        }
+            source: 'images/backgrounds/solids/background2.png'
+        };
         this.solidImages[2] = {
-            source: 'images/backgrounds/solids/background3.png',
-        }
+            source: 'images/backgrounds/solids/background3.png'
+        };
         this.solidImages[3] = {
-            source: 'images/backgrounds/solids/background4.png',
-        }
+            source: 'images/backgrounds/solids/background4.png'
+        };
         this.solidImages[4] = {
-            source: 'images/backgrounds/solids/background5.png',
-        }
+            source: 'images/backgrounds/solids/background5.png'
+        };
         this.solidImages[5] = {
-            source: 'images/backgrounds/solids/background6.png',
-        }
+            source: 'images/backgrounds/solids/background6.png'
+        };
         
         
         
@@ -85,7 +102,7 @@ BackgroundAssistant = Class.create({
         //***************************************************************
         // Overlay Selector
         
-        this.Overlays = new Array()
+        this.Overlays = [];
         
         this.Overlays[0] = {
             label: "None",

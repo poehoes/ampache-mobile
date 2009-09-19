@@ -45,13 +45,11 @@ PlaylistsAssistant.prototype.setup = function(){
 
 		this.PPattr = {
 			title: this.SceneTitle,
-			image: 'images/playlists.png',
+			image: 'images/playlists.png'
 		};
 		this.playlistLoadModel = {
-			//iconPath: "action-icon",
-			value: 0,
-			//disabled : false
-		};
+			value: 0
+	    };
 		this.controller.setupWidget('playlistProgressbar', this.PPattr, this.playlistLoadModel);
 	
 	
@@ -87,7 +85,7 @@ PlaylistsAssistant.prototype.setup = function(){
 	
 	this.listModel = {
 		disabled: false,
-		items: this.PlaylistList,
+		items: this.PlaylistList
 	};
 	
 	
@@ -158,7 +156,7 @@ PlaylistsAssistant.prototype.OnListAddEvent=function(event)
 	
 	
 	Mojo.Log.info("--> PlaylistsAssistant.prototype.OnListAddEvent");	
-},
+}
 
 
 
@@ -186,7 +184,7 @@ PlaylistsAssistant.prototype.FinishedGettingPlaylistSongs = function(_songsList)
 		Artist:null,
 		DisplayAlbumInfo:true,
 	    SongsList:_songsList,
-		art:null,
+		art:null
 	});
 	
     Mojo.Log.info("<-- ArtistsAssistant.prototype.FinishedGettingPlaylistSongs");
@@ -231,7 +229,7 @@ PlaylistsAssistant.prototype.FinishedGettingArtistSongs = function(_songsList)
 	{
 		playList:_songsList,
 		startIndex:0,
-		shuffle:true,
+		shuffle:true
 	});
 	Mojo.Log.info("<-- PlaylistsAssistant.prototype.GotAllSongsCallback");
 	
@@ -315,6 +313,7 @@ PlaylistsAssistant.prototype.cleanup = function(event){
 PlaylistsAssistant.prototype.TurnOnSpinner = function()
 {
 	Mojo.Log.info("--> PlaylistsAssistant.prototype.TurnOnSpinner");
+	CenterSpinner($('large-activity-spinner'));
 	this.spinnerModel.spinning = true;
     this.controller.modelChanged(this.spinnerModel);
 	Mojo.Log.info("<-- PlaylistsAssistant.prototype.TurnOnSpinner");

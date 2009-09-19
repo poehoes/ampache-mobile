@@ -42,7 +42,7 @@ ArtistsAssistant.prototype.setup = function(){
 	}
 	
 	this.spinnerModel = {
-		spinning: true
+		spinning: false
 	}
 	
 	this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
@@ -53,9 +53,7 @@ ArtistsAssistant.prototype.setup = function(){
 			image: 'images/artists.png'
 		};
 		this.artistLoadModel = {
-			//iconPath: "action-icon",
-			value: 0,
-			//disabled : false
+			value: 0
 		};
 		this.controller.setupWidget('artistProgressbar', this.PPattr, this.artistLoadModel);
 	
@@ -76,7 +74,7 @@ ArtistsAssistant.prototype.setup = function(){
 	};
 	this.listModel = {
 		disabled: false,
-		items: this.ArtistList,
+		items: this.ArtistList
 	};
 	
 	this.ArtistsController = this.controller;
@@ -100,6 +98,7 @@ ArtistsAssistant.prototype.setup = function(){
 
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 	
+	this.TurnOnArtistsSpinner();
 	
 }
 
@@ -191,7 +190,7 @@ ArtistsAssistant.prototype.listTapHandler = function(event){
 		DisplayArtistInfo:false,
 	    //AlbumsList:_artistAlbumsList,
 		Artist:this.RequestedArtist,
-		ExepectedAlbums:this.RequestedArtist.albums,
+		ExepectedAlbums:this.RequestedArtist.albums
 	});
 	
     Mojo.Log.info("<-- ArtistsAssistant.prototype.listTapHandler");
@@ -220,6 +219,7 @@ ArtistsAssistant.prototype.FinishedGettingArtistAlbums = function(_artistAlbumsL
 ArtistsAssistant.prototype.TurnOnArtistsSpinner = function()
 {
 	Mojo.Log.info("-----> ArtistsAssistant.prototype.TurnOnArtistsSpinner");
+	CenterSpinner($('large-activity-spinner'));
 	this.spinnerModel.spinning = true;
     this.ArtistsController.modelChanged(this.spinnerModel);
 	Mojo.Log.info("<----- ArtistsAssistant.prototype.TurnOnArtistsSpinner");
