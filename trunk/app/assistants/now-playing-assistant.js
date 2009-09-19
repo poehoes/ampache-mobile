@@ -143,22 +143,27 @@ NowPlayingAssistant.prototype.setup = function(){
 
 NowPlayingAssistant.prototype.FitToWindow = function()
 {
-	
+	var percentate = 0.8;
 	var coverArt = $('coverArt');
 
 	
 	
 	
 	
+	var diff = window.innerHeight -height;
 	var height = coverArt.height; 
-	var option1 = (window.innerHeight-150)*0.75;
-	var option2 = window.innerWidth*0.75
+	var option1 = (window.innerHeight-200);
+	
+	if(option1<0) option1 = 0;
+	var option2 = window.innerWidth*percentate;
 	
 	var height = (option1<option2) ? option1: option2;
 
 	
 	coverArt.height = height;
 	coverArt.width =  height;
+	
+	var diff = window.innerHeight -height;
 	 
 	//alert(window.innerHeight-height);
 	
