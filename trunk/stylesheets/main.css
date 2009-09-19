@@ -156,13 +156,33 @@ height: 100%;
 }
 .mainMenuRight
 {
-	float:right;
-	width:20%;
+	position:absolute;
+	right:5px;
+	/*float:right;
+	width:20%;*/
 }
 
 .mainMenuClear
 {
 	float:none;
+}
+
+.extended-alpha
+{
+	position:relative;
+	top:-12px;
+	left:-480px;
+	
+}
+
+.extend-alpha
+{
+	position:relative;
+    left:480px;
+    width:100%;	
+	margin-bottom:10px;
+	z-index:-1;
+	background: url(../images/thick-border.png) repeat-x bottom;
 }
 
 

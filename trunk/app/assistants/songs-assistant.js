@@ -194,6 +194,7 @@ SongsAssistant.prototype.activate = function(event){
 
 	this.controller.get('title').update(this.SceneTitle);
     
+	
     Mojo.Log.info("<-- SongsAssistant.prototype.activate");
 }
 
