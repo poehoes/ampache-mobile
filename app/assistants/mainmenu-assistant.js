@@ -79,15 +79,16 @@ MainmenuAssistant = Class.create(
             description: $L(AmpacheMobile.ampacheServer.albums.toString()),
             icon: "images/albums.png"
         }, 
-        /*
-         {
-         category: $L("bottom"),
-         directory: $L("songs"),
-         name: $L("Songs"),
-         scene: $L("songs"),
-         description: $L(AmpacheMobile.ampacheServer.songs.toString())
-         },
-         */
+        
+        /*{
+            category: $L("bottom"),
+            directory: $L("songs"),
+            name: $L("Songs"),
+            scene: $L("songs"),
+            icon: "images/songs.png",
+            description: $L(AmpacheMobile.ampacheServer.songs.toString())
+        },*/ 
+        
         {
             category: $L("bottom"),
             directory: $L("playlists"),
@@ -218,40 +219,13 @@ MainmenuAssistant = Class.create(
                     break;
                     
                 case "songs":
-                    var megaBytes = Math.round((AmpacheMobile.ampacheServer.songs * 223) / (1024 * 1024) * 100) / 100
-                    if (megaBytes < 1.3) 
+                    this.controller.stageController.pushScene('songs', 
                     {
+                        SceneTitle: "Songs",
+                        Type: "all-songs",
+                        Item: event.item
                     
-                    
-                        this.TurnOnSpinner("Getting Songs");
-                        if (this.AlbumsList == null) 
-                        {
-                            AmpacheMobile.ampacheServer.GetSongs(this.FinishedGettingSongs.bind(this), null);
-                        }
-                        else 
-                        {
-                            this.FinishedGettingSongs(this.SongsList);
-                        }
-                    }
-                    else 
-                    {
-                        Mojo.Log.info("Display Alert");
-                        this.controller.showAlertDialog(
-                        {
-                            onChoose: function(value)
-                            {
-                            },
-                            title: $L("Songs unavailable"),
-                            message: "Sorry but this would result in processing " + megaBytes + "MB of information and would likely lock up your phone.  Please use Artists or Albums instead",
-                            choices: [
-                            {
-                                label: $L('OK'),
-                                value: 'ok',
-                                type: 'color'
-                            }]
-                        });
-                        this.getPending = false;
-                    }
+                    });
                     break;
                     
                 default:

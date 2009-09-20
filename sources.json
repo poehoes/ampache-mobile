@@ -11,7 +11,7 @@
     {"source": "javascript\/AudioPlayer.js"},
     {"source": "javascript\/mediaevents-service.js"},
 	{"source": "javascript\/ColorPicker.js"},
-	
+	{"source": "javascript\/ItemsHelper.js"},
 	
     {
         "source": "app\/assistants\/connection-assistant.js",
