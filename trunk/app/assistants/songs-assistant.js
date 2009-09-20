@@ -23,20 +23,26 @@ SongsAssistant = Class.create(
         this.Type = params.Type;
         this.Item = params.Item;
         
-        if ((this.Type == "playlist") || (this.Type=="all-songs")) 
+        if ((this.Type == "playlist") || (this.Type == "all-songs") || (this.Type == "search") || (this.Type == "search-global")) 
         {
             this.DisplayAlbumInfo = true;
         }
         
-		this.itemsHelper = new ItemsHelper();  
+        
+        if (params.Search) 
+        {
+            this.Search = params.Search;
+        }
+        
+        this.itemsHelper = new ItemsHelper();
     },
     
     setup: function()
     {
     
-        
-      
-        
+    
+    
+    
         //********************************************************************************
         //Setup Loading Progress Pill
         this.PPattr = 
@@ -68,7 +74,7 @@ SongsAssistant = Class.create(
         {
             var attributes = 
             {
-				filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
+                filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
                 itemTemplate: 'songs/listitem'
                 //dividerTemplate: 'artist-albums/divider',
                 //dividerFunction: this.dividerFunc.bind(this),
@@ -113,42 +119,48 @@ SongsAssistant = Class.create(
         
         };
         this.itemsHelper.setup(params);
-		
-		
+        
+        
         
         this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
         
         
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
         
-		this.TurnOnSpinner("Retrieving<br>Songs");
-		
+        this.TurnOnSpinner("Retrieving<br>Songs");
+        
         
     },
     
     GetSongs: function(callback, offset, limit)
     {
-       
-            if (this.Type == "playlist") 
-            {
-                this.itemsHelper.ExpectedItems = this.Item.items;
-				AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Item.id, offset, limit);
-            }
-			if(this.Type == "album")
-			{
-				this.itemsHelper.ExpectedItems = this.Item.tracks;
-				AmpacheMobile.ampacheServer.GetSongs(callback, this.Item.id, null, null, offset, limit);
-			}
-			if(this.Type=="all-songs")
-			{
-				this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-				AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, offset, limit);
-			}
-			
+    
+        if (this.Type == "playlist") 
+        {
+            this.itemsHelper.ExpectedItems = this.Item.items;
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Item.id, offset, limit);
+        }
+        else if (this.Type == "album") 
+        {
+            this.itemsHelper.ExpectedItems = this.Item.tracks;
+            AmpacheMobile.ampacheServer.GetSongs(callback, this.Item.id, null, null, offset, limit);
+        }
+        else if ((this.Type == "all-songs") || (this.Type == "search")) 
+        {
+            this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, offset, limit, this.Search);
+        }
+        else if (this.Type == "search-global") 
+        {
+            this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, offset, limit, this.Search, true);
+        }
+        
+        
         
     },
     
-     IsMatch: function(item, filterString)
+    IsMatch: function(item, filterString)
     {
         var matchString = item.title;
         if (matchString.toLowerCase().include(filterString.toLowerCase())) 
@@ -232,7 +244,8 @@ SongsAssistant = Class.create(
     
     deactivate: function(event)
     {
-        this.itemsHelper.Visible = false;;
+        this.itemsHelper.Visible = false;
+        ;
     },
     
     
@@ -245,9 +258,9 @@ SongsAssistant = Class.create(
     },
     
     
-   
     
-
+    
+    
     
     
     TurnOnSpinner: function(message)
@@ -267,11 +280,11 @@ SongsAssistant = Class.create(
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");
     }
-
-
-
-
-
+    
+    
+    
+    
+    
 })
 
 

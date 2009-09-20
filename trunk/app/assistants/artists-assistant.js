@@ -18,8 +18,13 @@ ArtistsAssistant = Class.create(
 
     initialize: function(params)
     {
-        this.ExpectedArtists = params.ExpectedArtists;
-        this.itemsHelper = new ItemsHelper();   
+        this.SceneTitle = params.SceneTitle;
+		this.ExpectedArtists = params.ExpectedArtists;
+        this.itemsHelper = new ItemsHelper();
+		if(params.Search)
+		{
+			this.Search = params.Search;
+		} 
     },
     
     setup: function()
@@ -43,7 +48,7 @@ ArtistsAssistant = Class.create(
         //  Setup Progress Pill
 		this.PPattr = 
         {
-            title: "Artists",
+            title: this.SceneTitle,
             image: 'images/artists.png'
         };
         this.artistLoadModel = 
@@ -102,7 +107,7 @@ ArtistsAssistant = Class.create(
     
     GetArtists: function(GotItems, offset, limit)
     {
-        AmpacheMobile.ampacheServer.GetArtists(GotItems, offset, limit)
+        AmpacheMobile.ampacheServer.GetArtists(GotItems, offset, limit, this.Search)
     },
     
     
