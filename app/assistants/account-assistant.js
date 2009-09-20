@@ -14,7 +14,7 @@
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 var DEFAULT_MAX_FETCH = 1500;
-var DEFAULT_MIN_FETCH = 50;
+var DEFAULT_MIN_FETCH = 1;
 
 
 

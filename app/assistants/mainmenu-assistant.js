@@ -152,9 +152,21 @@ MainmenuAssistant = Class.create(
                 this.controller.stageController.setWindowOrientation("up");
             }
         }
+		
+		
+		//*****************************************************************************************************
+		// Search Event
+		this.controller.get('search').observe(Mojo.Event.tap, this.pushSearch.bindAsEventListener(this));
+		
+		
     },
     
-    
+    pushSearch:function()
+	{
+		 this.controller.stageController.pushScene('search-menu')
+	},
+	
+	
     listTapHandler: function(event)
     {
         Mojo.Log.info("--> listTapHandler: " + event.item.scene);
@@ -172,7 +184,8 @@ MainmenuAssistant = Class.create(
                     {
                         this.controller.stageController.pushScene("artists", 
                         {
-                            ExpectedArtists: numArtists
+                            SceneTitle: "Artists",
+							ExpectedArtists: numArtists
                         });
                     }
                     this.getPending = false;
@@ -240,6 +253,27 @@ MainmenuAssistant = Class.create(
         Mojo.Log.info("<-- listTapHandler");
     },
     
+	
+	 // This function will popup a dialog, displaying the message passed in.
+    showDialogBox: function(title, message)
+    {
+        this.controller.showAlertDialog(
+        {
+            onChoose: function(value)
+            {
+            },
+            title: title,
+            message: message,
+            choices: [
+            {
+                label: 'OK',
+                value: 'OK',
+                type: 'color'
+            }]
+        });
+    },
+	
+	
     TurnOnSpinner: function(spinnerText)
     {
         this.spinnerModel.spinning = true;

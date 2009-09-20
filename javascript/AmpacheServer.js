@@ -561,74 +561,12 @@ AmpacheServer = Class.create(
     },
     
     
-    /*
-     GotAlbumsCallback: function(xml){
-     Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsCallback");
-     
-     //Mojo.Log.info(transport.responseText);
-     
-     var xml_header = '<?xml version="1.0" encoding="UTF-8" ?><root>';
-     
-     
-     try // Firefox, Mozilla, Opera, etc.
-     {
-     parser = new DOMParser();
-     xmlDoc = parser.parseFromString(xml_header + xml, "text/xml");
-     }
-     catch (e) {
-     alert(e.message);
-     return;
-     }
-     
-     var AlbumList = null
-     
-     if (xmlDoc != null) {
-     AlbumList = new Array();
-     
-     var albumListXML = xmlDoc.getElementsByTagName("album");
-     
-     for (var i = 0; i < albumListXML.length; i++) {
-     
-     
-     var _id = albumListXML[i].getAttribute("id")
-     var _name = albumListXML[i].getElementsByTagName("name")[0].firstChild.data;
-     var _artist = albumListXML[i].getElementsByTagName("artist")[0].firstChild.data;
-     var _tracks = albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data;
-     var _year = albumListXML[i].getElementsByTagName("year")[0].firstChild.data;
-     var _disk = albumListXML[i].getElementsByTagName("disk")[0].firstChild.data;
-     var _art = albumListXML[i].getElementsByTagName("art")[0].firstChild.data;
-     
-     var newAlbum = new AlbumModel(_id, _name, _artist, _tracks, _year, _disk, _art);
-     
-     AlbumList[i] = newAlbum;
-     }
-     
-     
-     }
-     else {
-     Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);
-     }
-     
-     
-     this.TotalAlbums += AlbumList.length
-     Mojo.Log.info("Processed " + AlbumList.length + " albums");
-     Mojo.Log.info("Total Albums: " + this.TotalAlbums);
-     
-     if (AlbumList != null) {
-     this.GetAlbumsCallback(AlbumList);
-     //this.GetAlbumsCallback = null;
-     }
-     Mojo.Log.info("<-- AmpacheServer.prototype.GotAlbumsCallback");
-     },
-     
-     TotalAlbums: 0,
-     
-     */
+
     //******************************************************************************************/
     //Get Album Songs
     GetSongsCallback: null,
     
-    GetSongs: function(_GetSongsCallback, _AlbumId, _ArtistId, _PlayListID, _offset, _limit, _search)
+    GetSongs: function(_GetSongsCallback, _AlbumId, _ArtistId, _PlayListID, _offset, _limit, _search, _global_search)
     {
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetSongs");
@@ -667,6 +605,10 @@ AmpacheServer = Class.create(
             type = "playlist_songs";
             
         }
+		else if((_global_search) && (_global_search==true))
+		{
+			type="search_songs";
+		}
 		else
 		{
 			type = "songs";

@@ -36,6 +36,10 @@ AlbumsAssistant = Class.create(
             this.isArtistView = false;
         
         
+		if(params.Search)
+        {
+            this.Search = params.Search;
+        } 
         
         this.itemsHelper = new ItemsHelper();
         
@@ -207,7 +211,7 @@ AlbumsAssistant = Class.create(
         }
         else 
         {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, offset, limit);
+            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, offset, limit,this.Search);
         }
         
         Mojo.Log.info("<-- GetMoreAlbums");
