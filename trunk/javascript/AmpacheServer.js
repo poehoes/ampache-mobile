@@ -13,7 +13,8 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-AmpacheServer = Class.create({
+AmpacheServer = Class.create(
+{
 
 
 
@@ -56,7 +57,8 @@ AmpacheServer = Class.create({
      <videos><![CDATA[1]]></videos>
      </root> ';
      */
-    initialize: function(url, username, password){
+    initialize: function(url, username, password)
+    {
         Mojo.Log.info("Enter AmpacheServer.prototype.initialize", url, username, password);
         
         //this.phpPath = '/server/xml.server.php?action=';
@@ -67,7 +69,8 @@ AmpacheServer = Class.create({
         Mojo.Log.info("Exit AmpacheServer.prototype.initialize");
     },
     
-    getAmpacheTime: function(){
+    getAmpacheTime: function()
+    {
         Mojo.Log.info("Enter AmpacheServer.prototype.getAmpacheTime");
         var foo = new Date; // Generic JS date object 
         var unixtime_ms = foo.getTime(); // Returns milliseconds since the epoch 
@@ -76,7 +79,8 @@ AmpacheServer = Class.create({
         return unixtime;
     },
     
-    BuildConnectionUrl: function(url, username, password){
+    BuildConnectionUrl: function(url, username, password)
+    {
         Mojo.Log.info("Enter AmpacheServer.prototype.BuildConnectionUrl", url, username, password);
         
         
@@ -96,13 +100,16 @@ AmpacheServer = Class.create({
         return connectionUrl;
     },
     
-    BuildActionString: function(action, keypairParams){
+    BuildActionString: function(action, keypairParams)
+    {
         Mojo.Log.info("--> AmpacheServer.prototype.BuildActionString");
         var paramsString = "";
         
         
-        if (keypairParams != null) {
-            for (var i = 0; i < keypairParams.length; i += 2) {
+        if (keypairParams != null) 
+        {
+            for (var i = 0; i < keypairParams.length; i += 2) 
+            {
                 paramsString += "&" + keypairParams[i] + "=" + keypairParams[i + 1]
             }
         }
@@ -115,27 +122,33 @@ AmpacheServer = Class.create({
     },
     
     
-    _ping: function(){
+    _ping: function()
+    {
         Mojo.Log.info("--> AmpacheServer.prototype._ping");
         
         
         var path = this.BuildActionString("ping");
         
-        var request = new Ajax.Request(path, {
+        var request = new Ajax.Request(path, 
+        {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
-            onCreate: function(){
+            onCreate: function()
+            {
                 console.info('******* onCreate happened')
             },
-            onLoading: function(){
+            onLoading: function()
+            {
                 console.info('******* onLoading happened')
             },
-            onLoaded: function(){
+            onLoaded: function()
+            {
                 console.info('******* onLodaed happened')
             },
             onSuccess: this._pingCallback.bind(this),
             
-            onComplete: function(){
+            onComplete: function()
+            {
                 console.info('******* onComplete happened')
             },
             
@@ -146,17 +159,20 @@ AmpacheServer = Class.create({
         Mojo.Log.info("<-- AmpacheServer.prototype._ping");
     },
     
-    _pingCallback: function(transport){
+    _pingCallback: function(transport)
+    {
         Mojo.Log.info("--> AmpacheServer.prototype._pingCallback");
         Mojo.Log.info(transport.responseText);
         Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
     },
     
     
-    disconnect: function(){
+    disconnect: function()
+    {
         Mojo.Log.info("--> AmpacheServer.prototype.disconnect");
         
-        if (this.pingTimer != null) {
+        if (this.pingTimer != null) 
+        {
             window.clearInterval(this.pingTimer);
             this.pingTimer = null;
         }
@@ -168,7 +184,8 @@ AmpacheServer = Class.create({
     
     
     //Following format http://localhost/ampache/server/xml.server.php?action=handshake&auth=$passphrase&timestamp=$time&version=350001&user=vollmerk
-    connect: function(callback){
+    connect: function(callback)
+    {
         Mojo.Log.info("--> AmpacheServer.prototype.connect");
         
         this.ConnectCallback = callback;
@@ -185,19 +202,24 @@ AmpacheServer = Class.create({
         
         Mojo.Log.info("Sending ajax request to: ", AuthPath);
         
-        var request = new Ajax.Request(AuthPath, {
+        var request = new Ajax.Request(AuthPath, 
+        {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
-            onCreate: function(){
+            onCreate: function()
+            {
                 console.info('******* onCreate happened')
             },
-            onLoading: function(){
+            onLoading: function()
+            {
                 console.info('******* onLoading happened')
             },
-            onLoaded: function(){
+            onLoaded: function()
+            {
                 console.info('******* onLodaed happened')
             },
-            onSuccess: function(){
+            onSuccess: function()
+            {
                 console.info('******* onComplete happened')
             },
             onComplete: this.ConnectCallbackSuccess.bind(this),
@@ -211,7 +233,8 @@ AmpacheServer = Class.create({
     },
     
     
-    ConnectCallbackSuccess: function(transport){
+    ConnectCallbackSuccess: function(transport)
+    {
         Mojo.Log.info("--> AmpacheServer.prototype.ConnectCallbackSuccess");
         Mojo.Log.info("TestConnectionCallbackSuccess gotResults: " + transport.responseText);
         
@@ -219,7 +242,8 @@ AmpacheServer = Class.create({
         
         var returnValue = transport.responseText;
         ;
-        if (transport.responseText == "") {
+        if (transport.responseText == "") 
+        {
             returnValue = "Error: Empty response";
         }
         
@@ -237,13 +261,15 @@ AmpacheServer = Class.create({
          <videos><![CDATA[1]]></videos>
          </root> ';
          */
-        if (transport.responseXML != null) {
+        if (transport.responseXML != null) 
+        {
             Mojo.Log.info("responseXML exits");
             var response = transport.responseXML;
             var findAuth = response.getElementsByTagName("auth");
             
             //Check for auth key to validate that login information is correct
-            if (findAuth.length != 0) {
+            if (findAuth.length != 0) 
+            {
                 Mojo.Log.info("Found Auth");
                 this.auth = findAuth[0].firstChild.data;
                 
@@ -262,10 +288,12 @@ AmpacheServer = Class.create({
                 
                 returnValue = "connected";
             }
-            else {
+            else 
+            {
                 //if no auth key exists check for an error
                 var findErrorCode = response.getElementsByTagName("error");
-                if (findErrorCode.length != 0) {
+                if (findErrorCode.length != 0) 
+                {
                     returnValue = findErrorCode[0].firstChild.data;
                 }
             }
@@ -276,7 +304,8 @@ AmpacheServer = Class.create({
         Mojo.Log.info("<-- AmpacheServer.prototype.ConnectCallbackSuccess");
     },
     
-    ConnectCallbackFailure: function(transport){
+    ConnectCallbackFailure: function(transport)
+    {
         Mojo.Log.info("Enter AmpacheServer.prototype.TestConnectionCallbackFailure");
         this.TestConnectionCallback("failed", this.TestConnectionContext)
         Mojo.Log.info("Exit AmpacheServer.prototype.TestConnectionCallbackFailure");
@@ -287,7 +316,8 @@ AmpacheServer = Class.create({
     
     GetArtistsCallback: null,
     
-    GetArtists: function(_GetArtistsCallback, _offset, _limit, _search){
+    GetArtists: function(_GetArtistsCallback, _offset, _limit, _search)
+    {
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetArtists");
         
@@ -296,7 +326,8 @@ AmpacheServer = Class.create({
         if (typeof this.GetArtistsCallback != "function") 
             this.GetArtistsCallback = new Function(func)
         
-        if ((_offset != null) && (_limit != null)) {
+        if ((_offset != null) && (_limit != null)) 
+        {
             var offset = [];
             offset[0] = "offset";
             offset[1] = _offset;
@@ -304,33 +335,39 @@ AmpacheServer = Class.create({
             
             offset[2] = "limit";
             offset[3] = _limit;
-			
-			if(_search!=null)
-			{
-			    offset[4] = "filter";
+            
+            if (_search != null) 
+            {
+                offset[4] = "filter";
                 offset[5] = _search
             }
-			
+            
             var path = this.BuildActionString("artists", offset);
         }
-        else {
+        else 
+        {
             var path = this.BuildActionString("artists");
         }
         
-        var request = new Ajax.Request(path, {
+        var request = new Ajax.Request(path, 
+        {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
-            onCreate: function(){
+            onCreate: function()
+            {
                 console.info('******* onCreate happened')
             },
-            onLoading: function(){
+            onLoading: function()
+            {
                 console.info('******* onLoading happened')
             },
-            onLoaded: function(){
+            onLoaded: function()
+            {
                 console.info('******* onLoaded happened')
             },
             onSuccess: this.GotArtistsCallback.bind(this),
-            onComplete: function(){
+            onComplete: function()
+            {
                 console.info('******* onComplete happened')
             },
             onFailure: this.GotArtistsCallback.bind(this)
@@ -339,13 +376,15 @@ AmpacheServer = Class.create({
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
     },
     
-    GotArtistsCallback: function(transport){
+    GotArtistsCallback: function(transport)
+    {
         Mojo.Log.info(transport.responseText);
         
         
         var ArtistList = null
         
-        if (transport.responseXML != null) {
+        if (transport.responseXML != null) 
+        {
             ArtistList = new Array();
             
             var artistListXML = transport.responseXML.getElementsByTagName("artist");
@@ -353,7 +392,8 @@ AmpacheServer = Class.create({
             //Mojo.Log.info("Artist lenth: " + artistListXML.length);
             
             
-            for (var i = 0; i < artistListXML.length; i++) {
+            for (var i = 0; i < artistListXML.length; i++) 
+            {
             
             
                 var _id = artistListXML[i].getAttribute("id")
@@ -372,7 +412,8 @@ AmpacheServer = Class.create({
             
             
         }
-        else {
+        else 
+        {
             Mojo.Controller.errorDialog("Get Artists failed: " + this.XMLFormattingIssue);
         }
         
@@ -383,25 +424,27 @@ AmpacheServer = Class.create({
     //******************************************************************************************/
     //Get Albums information 
     
-	GetAlbumsCallback: null,
+    GetAlbumsCallback: null,
     
-    GetAlbums: function(_GetAlbumsCallback, _ArtistId, _offset, _limit,_search){
+    GetAlbums: function(_GetAlbumsCallback, _ArtistId, _offset, _limit, _search)
+    {
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetAlbums");
         
-		var i = 0;
-		
+        var i = 0;
+        
         this.GetAlbumsCallback = _GetAlbumsCallback;
         
         if (typeof this.GetAlbumsCallback != "function") 
             this.GetAlbumsCallback = new Function(func)
         
         var type = "albums";
-		 var filter = [];
-		
-        if (_ArtistId != null) {
+        var filter = [];
         
-           
+        if (_ArtistId != null) 
+        {
+        
+        
             filter[i++] = "filter";
             filter[i++] = _ArtistId;
             
@@ -410,43 +453,49 @@ AmpacheServer = Class.create({
             type = "artist_albums";
             
         }
-       
-        if ((_offset != null) && (_limit != null)) {
-		
-			filter[i++] = "offset";
-			filter[i++] = _offset;
-			
-			
-			filter[i++] = "limit";
-			filter[i++] = _limit;
-			
-			if (_search != null) {
-				filter[i++] = "filter";
-				filter[i++] = _search
-			}
-			
-			
-		}
-			
-
-         var path = this.BuildActionString(type, filter);
-		
-		
+        
+        if ((_offset != null) && (_limit != null)) 
+        {
+        
+            filter[i++] = "offset";
+            filter[i++] = _offset;
+            
+            
+            filter[i++] = "limit";
+            filter[i++] = _limit;
+            
+            if (_search != null) 
+            {
+                filter[i++] = "filter";
+                filter[i++] = _search
+            }
+            
+            
+        }
+        
+        
+        var path = this.BuildActionString(type, filter);
+        
+        
         
         
         this.GetAlbumsInteractiveIndex = 0;
         this.TotalAlbums = 0;
         
-        this.GetAlbumsRequest = new Ajax.Request(path, {
+        this.GetAlbumsRequest = new Ajax.Request(path, 
+        {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
-            onCreate: function(){
+            onCreate: function()
+            {
                 console.info('******* onCreate happened')
             },
-            onLoading: function(){
+            onLoading: function()
+            {
                 console.info('******* onLoading happened')
             },
-            onLoaded: function(){
+            onLoaded: function()
+            {
                 console.info('******* onLoaded happened')
             },
             //onInteractive:this.GotAlbumsInteractiveCallback.bind(this),
@@ -459,9 +508,10 @@ AmpacheServer = Class.create({
         Mojo.Log.info("<-- AmpacheServer.prototype.GetAlbums");
     },
     
-
-	
-    GotAlbumsCallback: function(transport){
+    
+    
+    GotAlbumsCallback: function(transport)
+    {
         Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsCallback");
         
         
@@ -469,12 +519,14 @@ AmpacheServer = Class.create({
         
         var AlbumList = null
         
-        if (xmlDoc != null) {
+        if (xmlDoc != null) 
+        {
             AlbumList = new Array();
             
             var albumListXML = xmlDoc.getElementsByTagName("album");
             
-            for (var i = 0; i < albumListXML.length; i++) {
+            for (var i = 0; i < albumListXML.length; i++) 
+            {
             
             
                 var _id = albumListXML[i].getAttribute("id")
@@ -492,14 +544,16 @@ AmpacheServer = Class.create({
             
             
         }
-        else {
+        else 
+        {
             Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);
         }
         
         
         Mojo.Log.info("Processed " + AlbumList.length + " albums");
         
-        if (AlbumList != null) {
+        if (AlbumList != null) 
+        {
             this.GetAlbumsCallback(AlbumList);
             //this.GetAlbumsCallback = null;
         }
@@ -508,74 +562,74 @@ AmpacheServer = Class.create({
     
     
     /*
-    GotAlbumsCallback: function(xml){
-        Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsCallback");
-        
-        //Mojo.Log.info(transport.responseText);
-        
-        var xml_header = '<?xml version="1.0" encoding="UTF-8" ?><root>';
-        
-        
-        try // Firefox, Mozilla, Opera, etc.
-        {
-            parser = new DOMParser();
-            xmlDoc = parser.parseFromString(xml_header + xml, "text/xml");
-        } 
-        catch (e) {
-            alert(e.message);
-            return;
-        }
-        
-        var AlbumList = null
-        
-        if (xmlDoc != null) {
-            AlbumList = new Array();
-            
-            var albumListXML = xmlDoc.getElementsByTagName("album");
-           
-            for (var i = 0; i < albumListXML.length; i++) {
-            
-            
-                var _id = albumListXML[i].getAttribute("id")
-                var _name = albumListXML[i].getElementsByTagName("name")[0].firstChild.data;
-                var _artist = albumListXML[i].getElementsByTagName("artist")[0].firstChild.data;
-                var _tracks = albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data;
-                var _year = albumListXML[i].getElementsByTagName("year")[0].firstChild.data;
-                var _disk = albumListXML[i].getElementsByTagName("disk")[0].firstChild.data;
-                var _art = albumListXML[i].getElementsByTagName("art")[0].firstChild.data;
-                
-                var newAlbum = new AlbumModel(_id, _name, _artist, _tracks, _year, _disk, _art);
-                
-                AlbumList[i] = newAlbum;
-            }
-            
-            
-        }
-        else {
-            Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);
-        }
-        
-        
-        this.TotalAlbums += AlbumList.length
-        Mojo.Log.info("Processed " + AlbumList.length + " albums");
-        Mojo.Log.info("Total Albums: " + this.TotalAlbums);
-        
-        if (AlbumList != null) {
-            this.GetAlbumsCallback(AlbumList);
-            //this.GetAlbumsCallback = null;
-        }
-        Mojo.Log.info("<-- AmpacheServer.prototype.GotAlbumsCallback");
-    },
-    
-    TotalAlbums: 0,
-    
-    */
-    
+     GotAlbumsCallback: function(xml){
+     Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsCallback");
+     
+     //Mojo.Log.info(transport.responseText);
+     
+     var xml_header = '<?xml version="1.0" encoding="UTF-8" ?><root>';
+     
+     
+     try // Firefox, Mozilla, Opera, etc.
+     {
+     parser = new DOMParser();
+     xmlDoc = parser.parseFromString(xml_header + xml, "text/xml");
+     }
+     catch (e) {
+     alert(e.message);
+     return;
+     }
+     
+     var AlbumList = null
+     
+     if (xmlDoc != null) {
+     AlbumList = new Array();
+     
+     var albumListXML = xmlDoc.getElementsByTagName("album");
+     
+     for (var i = 0; i < albumListXML.length; i++) {
+     
+     
+     var _id = albumListXML[i].getAttribute("id")
+     var _name = albumListXML[i].getElementsByTagName("name")[0].firstChild.data;
+     var _artist = albumListXML[i].getElementsByTagName("artist")[0].firstChild.data;
+     var _tracks = albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data;
+     var _year = albumListXML[i].getElementsByTagName("year")[0].firstChild.data;
+     var _disk = albumListXML[i].getElementsByTagName("disk")[0].firstChild.data;
+     var _art = albumListXML[i].getElementsByTagName("art")[0].firstChild.data;
+     
+     var newAlbum = new AlbumModel(_id, _name, _artist, _tracks, _year, _disk, _art);
+     
+     AlbumList[i] = newAlbum;
+     }
+     
+     
+     }
+     else {
+     Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);
+     }
+     
+     
+     this.TotalAlbums += AlbumList.length
+     Mojo.Log.info("Processed " + AlbumList.length + " albums");
+     Mojo.Log.info("Total Albums: " + this.TotalAlbums);
+     
+     if (AlbumList != null) {
+     this.GetAlbumsCallback(AlbumList);
+     //this.GetAlbumsCallback = null;
+     }
+     Mojo.Log.info("<-- AmpacheServer.prototype.GotAlbumsCallback");
+     },
+     
+     TotalAlbums: 0,
+     
+     */
     //******************************************************************************************/
     //Get Album Songs
     GetSongsCallback: null,
     
-    GetSongs: function(_GetSongsCallback, _AlbumId, _ArtistId, _PlayListID){
+    GetSongs: function(_GetSongsCallback, _AlbumId, _ArtistId, _PlayListID, _offset, _limit, _search)
+    {
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetSongs");
         
@@ -584,55 +638,85 @@ AmpacheServer = Class.create({
         if (typeof this.GetSongsCallback != "function") 
             this.GetSongsCallback = new Function(func)
         
-        
+        var i=0;
         var path = "";
-        if (_AlbumId != null) {
+		var type = "";
+		 var filter = [];
+		
+        if (_AlbumId != null) 
+        {
         
-            var filter = [];
-            filter[0] = "filter";
-            filter[1] = _AlbumId;
+            filter[i++] = "filter";
+            filter[i++] = _AlbumId;
             
-            path = this.BuildActionString("album_songs", filter);
+            type = "album_songs";
             
         }
-        else 
-            if (_ArtistId != null) {
-                var filter = [];
-                filter[0] = "filter";
-                filter[1] = _ArtistId;
-                path = this.BuildActionString("artist_songs", filter);
-                
+        else if (_ArtistId != null) 
+        {
+            filter[i++] = "filter";
+            filter[i++] = _ArtistId;
+            type = "artist_songs";
+            
+        }
+        else if (_PlayListID != null) 
+        {
+           
+            filter[i++] = "filter";
+            filter[i++] = _PlayListID;
+            type = "playlist_songs";
+            
+        }
+		else
+		{
+			type = "songs";
+		}
+        
+         if ((_offset != null) && (_limit != null)) 
+        {
+        
+            filter[i++] = "offset";
+            filter[i++] = _offset;
+            
+            
+            filter[i++] = "limit";
+            filter[i++] = _limit;
+            
+            if (_search != null) 
+            {
+                filter[i++] = "filter";
+                filter[i++] = _search
             }
-            else 
-                if (_PlayListID != null) {
-                    var filter = [];
-                    filter[0] = "filter";
-                    filter[1] = _PlayListID;
-                    path = this.BuildActionString("playlist_songs", filter);
-                    
-                }
+            
+            
+        }
+		
+		path = this.BuildActionString(type, filter);
         
         
-        
-        
-        var request = new Ajax.Request(path, {
+        var request = new Ajax.Request(path, 
+        {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
-            onCreate: function(){
+            onCreate: function()
+            {
                 console.info('******* onCreate happened')
             },
-            onLoading: function(){
+            onLoading: function()
+            {
                 console.info('******* onLoading happened')
             },
-            onLoaded: function(){
+            onLoaded: function()
+            {
                 console.info('******* onLoaded happened')
             },
-            onSuccess: function(){
+            onSuccess: function()
+            {
                 console.info('******* onSuccess happened')
             },
             onComplete: this.GotSongsCallbackInternal.bind(this),
             
-            onFailure: this.GotSongsCallbackInternal.bind(this),
+            onFailure: this.GotSongsCallbackInternal.bind(this)
         
         });
         
@@ -642,7 +726,8 @@ AmpacheServer = Class.create({
     
     
     
-    GotSongsCallbackInternal: function(transport){
+    GotSongsCallbackInternal: function(transport)
+    {
         Mojo.Log.info("--> AmpacheServer.prototype.GotSongsCallbackInternal");
         
         Mojo.Log.info(transport.responseText);
@@ -650,7 +735,8 @@ AmpacheServer = Class.create({
         
         var SongsList = null
         
-        if (transport.responseXML != null) {
+        if (transport.responseXML != null) 
+        {
             SongsList = new Array();
             
             /*
@@ -674,7 +760,8 @@ AmpacheServer = Class.create({
              */
             var songsListXML = transport.responseXML.getElementsByTagName("song");
             
-            for (var i = 0; i < songsListXML.length; i++) {
+            for (var i = 0; i < songsListXML.length; i++) 
+            {
                 var _id = songsListXML[i].getAttribute("id")
                 var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
                 var _artist = songsListXML[i].getElementsByTagName("artist")[0].firstChild.data;
@@ -685,7 +772,8 @@ AmpacheServer = Class.create({
                 var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
                 
                 var mimeXML = songsListXML[i].getElementsByTagName("mime")
-                if (mimeXML[0].firstChild != null) {
+                if (mimeXML[0].firstChild != null) 
+                {
                     var _mime = mimeXML[0].firstChild.data;
                 }
                 else 
@@ -693,7 +781,8 @@ AmpacheServer = Class.create({
                 
                 
                 var artXML = songsListXML[i].getElementsByTagName("art")
-                if (artXML[0].firstChild != null) {
+                if (artXML[0].firstChild != null) 
+                {
                     var _art = artXML[0].firstChild.data;
                 }
                 else 
@@ -705,13 +794,13 @@ AmpacheServer = Class.create({
                 SongsList[i] = newSong;
             }
         }
-        else {
+        else 
+        {
             Mojo.Controller.errorDialog("Get songs failed: " + this.XMLFormattingIssue);
         }
         
         Mojo.Log.info("Calling callback");
         this.GetSongsCallback(SongsList);
-        this.GetSongsCallback = null;
         Mojo.Log.info("<-- AmpacheServer.prototype.GotSongsCallbackInternal");
     },
     
@@ -721,7 +810,8 @@ AmpacheServer = Class.create({
     
     GetPlaylistsCallback: null,
     
-    GetPlaylists: function(_GetPlaylistsCallback, _offset, _limit){
+    GetPlaylists: function(_GetPlaylistsCallback, _offset, _limit)
+    {
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetPlaylists");
         
@@ -730,7 +820,8 @@ AmpacheServer = Class.create({
         if (typeof this.GetPlaylistsCallback != "function") 
             this.GetPlaylistsCallback = new Function(func)
         
-        if ((_offset != null) && (_limit != null)) {
+        if ((_offset != null) && (_limit != null)) 
+        {
             var offset = [];
             offset[0] = "offset";
             offset[1] = _offset;
@@ -741,24 +832,30 @@ AmpacheServer = Class.create({
             
             var path = this.BuildActionString("playlists", offset);
         }
-        else {
+        else 
+        {
             var path = this.BuildActionString("playlists");
         }
         
-        var request = new Ajax.Request(path, {
+        var request = new Ajax.Request(path, 
+        {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
-            onCreate: function(){
+            onCreate: function()
+            {
                 console.info('******* onCreate happened')
             },
-            onLoading: function(){
+            onLoading: function()
+            {
                 console.info('******* onLoading happened')
             },
-            onLoaded: function(){
+            onLoaded: function()
+            {
                 console.info('******* onLodaed happened')
             },
             onSuccess: this.GotPlaylistsCallback.bind(this),
-            onComplete: function(){
+            onComplete: function()
+            {
                 console.info('******* onComplete happened')
             },
             onFailure: this.GotPlaylistsCallback.bind(this)
@@ -767,13 +864,15 @@ AmpacheServer = Class.create({
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
     },
     
-    GotPlaylistsCallback: function(transport){
+    GotPlaylistsCallback: function(transport)
+    {
         Mojo.Log.info(transport.responseText);
         
         
         var PlaylistsList = null
         
-        if (transport.responseXML != null) {
+        if (transport.responseXML != null) 
+        {
             PlaylistsList = new Array();
             
             var PlaylistsListXML = transport.responseXML.getElementsByTagName("playlist");
@@ -781,7 +880,8 @@ AmpacheServer = Class.create({
             //Mojo.Log.info("Artist lenth: " + artistListXML.length);
             
             
-            for (var i = 0; i < PlaylistsListXML.length; i++) {
+            for (var i = 0; i < PlaylistsListXML.length; i++) 
+            {
             
             
                 var _id = PlaylistsListXML[i].getAttribute("id")
@@ -797,7 +897,8 @@ AmpacheServer = Class.create({
             
             
         }
-        else {
+        else 
+        {
             Mojo.Controller.errorDialog("Get Playlists failed: " + this.XMLFormattingIssue);
         }
         
@@ -814,7 +915,8 @@ AmpacheServer = Class.create({
     
     /********************************************************************************************/
     // Test Processing
-    TestConnection: function(url1, username1, password1, callback, source){
+    TestConnection: function(url1, username1, password1, callback, source)
+    {
         Mojo.Log.info("Enter AmpacheServer.prototype.TestConnection");
         
         this.TestConnectionContext = source;
@@ -830,19 +932,24 @@ AmpacheServer = Class.create({
         
         
         
-        var request = new Ajax.Request(testpath, {
+        var request = new Ajax.Request(testpath, 
+        {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
-            onCreate: function(){
+            onCreate: function()
+            {
                 console.info('******* onCreate happened')
             },
-            onLoading: function(){
+            onLoading: function()
+            {
                 console.info('******* onLoading happened')
             },
-            onLoaded: function(){
+            onLoaded: function()
+            {
                 console.info('******* onLodaed happened')
             },
-            onSuccess: function(){
+            onSuccess: function()
+            {
                 console.info('******* onComplete happened')
             },
             onComplete: this.TestConnectionCallbackSuccess.bind(this),
@@ -854,33 +961,39 @@ AmpacheServer = Class.create({
     
     
     
-    TestConnectionCallbackSuccess: function(transport){
+    TestConnectionCallbackSuccess: function(transport)
+    {
         Mojo.Log.info("Enter AmpacheServer.prototype.TestConnectionCallbackSuccess");
         Mojo.Log.info("TestConnectionCallbackSuccess gotResults: " + transport.responseText);
         
         
         var returnValue = transport.responseText;
         ;
-        if (transport.responseText == "") {
+        if (transport.responseText == "") 
+        {
             returnValue = "Error: Empty response";
         }
         
-        if (transport.responseXML != null) {
+        if (transport.responseXML != null) 
+        {
             Mojo.Log.info("responseXML exits");
             var response = transport.responseXML;
             var findAuth = response.getElementsByTagName("auth");
             
             //Check for auth key to validate that login information is correct
-            if (findAuth.length != 0) {
+            if (findAuth.length != 0) 
+            {
                 Mojo.Log.info("Found Auth");
                 this.authKey = findAuth[0].firstChild.data;
                 Mojo.Log.info("authKey", this.authKey);
                 returnValue = "Connection Test Success";
             }
-            else {
+            else 
+            {
                 //if no auth key exists check for an error
                 var findErrorCode = response.getElementsByTagName("error");
-                if (findErrorCode.length != 0) {
+                if (findErrorCode.length != 0) 
+                {
                     returnValue = findErrorCode[0].firstChild.data;
                 }
             }
@@ -892,7 +1005,8 @@ AmpacheServer = Class.create({
     },
     
     
-    TestConnectionCallbackFailure: function(transport){
+    TestConnectionCallbackFailure: function(transport)
+    {
         Mojo.Log.info("Enter AmpacheServer.prototype.TestConnectionCallbackFailure");
         this.TestConnectionCallback("Test failed", this.TestConnectionContext)
         Mojo.Log.info("Exit AmpacheServer.prototype.TestConnectionCallbackFailure");
@@ -907,27 +1021,32 @@ AmpacheServer = Class.create({
     
     
     
-    ConnectionCallbackSuccess: function(transport){
+    ConnectionCallbackSuccess: function(transport)
+    {
         Mojo.Log.info("gotResults:" + transport.responseText);
         
-        if (this.ConnectCallBack != null) {
+        if (this.ConnectCallBack != null) 
+        {
             Mojo.Log.info("Calling Callback function", this.ConnectCallBack);
             this.ConnectCallBack(transport.responseText, this.ConnectCallbackContext);
         }
     },
     
     
-    ConnectionCallbackFailure: function(transport){
+    ConnectionCallbackFailure: function(transport)
+    {
         var m = t.evaluate(transport);
         
         Mojo.Log.info("Failed:", m);
         this.ConnectCallBack(m);
-    },
+    }
 });
 
-ArtistModel = Class.create({
+ArtistModel = Class.create(
+{
 
-    initialize: function(_id, _name, _albums, _songs){
+    initialize: function(_id, _name, _albums, _songs)
+    {
         //Mojo.Log.info("Arist model: " + _name);
         
         this.id = _id;
@@ -940,7 +1059,7 @@ ArtistModel = Class.create({
     id: null,
     name: null,
     albums: null,
-    songs: null,
+    songs: null
 
 });
 
@@ -961,9 +1080,11 @@ ArtistModel = Class.create({
  </album>
  </root>
  */
-AlbumModel = Class.create({
+AlbumModel = Class.create(
+{
 
-    initialize: function(_id, _name, _artist, _tracks, _year, _disc, _art){
+    initialize: function(_id, _name, _artist, _tracks, _year, _disc, _art)
+    {
         //Mojo.Log.info("--> AlbumModel constructor " + _name);
         
         this.id = _id;
@@ -986,7 +1107,8 @@ AlbumModel = Class.create({
     art: "",
     description: "",
     
-    sortByYearTitleString: function(){
+    sortByYearTitleString: function()
+    {
         //This is just for the sort function of the albums scene
         
         var year
@@ -1000,7 +1122,8 @@ AlbumModel = Class.create({
     },
     
     
-    generateDescription: function(){
+    generateDescription: function()
+    {
         this.description = "";
         if (this.year != "") 
             this.description += "Year: " + this.year + " ";
@@ -1010,7 +1133,7 @@ AlbumModel = Class.create({
             this.description += "Disc #: " + this.disc + " ";
         
         
-    },
+    }
 
 });
 
@@ -1033,9 +1156,11 @@ AlbumModel = Class.create({
  </song>
  </root>
  */
-SongModel = Class.create({
+SongModel = Class.create(
+{
 
-    initialize: function(_id, _title, _artist, _album, _track, _time, _url, _size, _art, _mime){
+    initialize: function(_id, _title, _artist, _album, _track, _time, _url, _size, _art, _mime)
+    {
         //Mojo.Log.info("--> SongModel constructor " + _title);
         
         this.id = _id;
@@ -1062,7 +1187,7 @@ SongModel = Class.create({
     url: null,
     size: null,
     art: null,
-    mime: null,
+    mime: null
 
     //used when put into a song array to create a playlist
     //played:null,
@@ -1095,9 +1220,11 @@ SongModel = Class.create({
  <type>Public</type>
  </playlist>
  */
-PlaylistModel = Class.create({
+PlaylistModel = Class.create(
+{
 
-    initialize: function(_id, _name, _owner, _items, _type){
+    initialize: function(_id, _name, _owner, _items, _type)
+    {
         this.id = _id;
         this.name = _name;
         this.owner = _owner;
@@ -1111,7 +1238,7 @@ PlaylistModel = Class.create({
     owner: null,
     items: null,
     type: null,
-    desc: null,
+    desc: null
 
 });
 
@@ -1119,8 +1246,10 @@ PlaylistModel = Class.create({
 
 
 
-AmpacheServerAUTH = Class.create({
-    root: [{
+AmpacheServerAUTH = Class.create(
+{
+    root: [
+    {
         auth: "",
         api: "",
         update: "",
@@ -1130,8 +1259,8 @@ AmpacheServerAUTH = Class.create({
         albumns: "",
         artists: "",
         playlists: "",
-        videos: "",
-    }],
+        videos: ""
+    }]
 });
 
 

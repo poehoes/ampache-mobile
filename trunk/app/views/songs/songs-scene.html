@@ -1,59 +1,28 @@
 <div id="main" class="palm-hasheader palm-dark  music-songs">
-	<div class="palm-header left" id="main-hdr">
-      <!--
-	  <div id='now-playing-button' class="now-playing-button" x-mojo-tap-highlight="immediate">
-        <div class="now-playing-wrapper">
-          <span x-mojo-loc=''>Now Playing</span>
-        </div>
-      </div>
-	  -->
-      <div class="truncating-text" id="title" x-mojo-loc=''>
-      	
-      </div>
+    <div x-mojo-element="ProgressPill" id="songProgressbar" class="ProgressPillHeader">
     </div>
-  
-
-<div x-mojo-element="Spinner" id="large-activity-spinner" class='centerSpinner'  ></div>  
-<div class='customBackground'></div>
-
-  <div id="shuffleAll" class="shuffle-all-list-item palm-row single shuffleRow" x-mojo-tap-highlight="momentary" >
-    <div class="palm-row-wrapper ">
-      <!--
-	  <div class="music-songs-thumbnail-previews" >
-        <div id="albumArtLeft"  class="thumb left">
-          <div class="music-songs-overlay"></div>
-          <div class="music-songs-thumbnail"><img class="music-songs-image" src="images/default-album-art-list-view.png" /></div>
+    <div x-mojo-element="Spinner" id="large-activity-spinner" class='centerSpinner'>
+        <div class="spinner-message">
+            Retrieving
+            <br>
+            Songs
         </div>
-        <div id="albumArtCenter"  class="thumb center">
-          <div class="music-songs-overlay"></div>
-          <div class="music-songs-thumbnail"><img class="music-songs-image" src="images/default-album-art-list-view.png" /></div>
-        </div>
-        <div id="albumArtRight" class="thumb right">
-          <div class="music-songs-overlay"></div>
-          <div class="music-songs-thumbnail"><img class="music-songs-image" src="images/default-album-art-list-view.png" /></div>
-        </div>
-      </div>
-      <div class="count-pill-container">
-      	<div class="count-pill-wrapper" id="shuffle-count"></div>
-      </div> 
-	  -->    
-
-	  <div class="shuffleLeft shuffleAllText"> 
-    
-       	<div class="truncating-text" x-mojo-loc=''>Shuffle All</div>     
     </div>
-			<div class="shuffleLeft shuffleAllIcon">
-			<img src="images/shuffle-32.png" id="coverArt"></img>
-			</div>
-
-	                      
+    <div id="shuffleAll" class="shuffle-all-list-item palm-row single shuffleRow" x-mojo-tap-highlight="momentary">
+        <div class="palm-row-wrapper ">
+            <div class="shuffleLeft shuffleAllText">
+                <div class="truncating-text" x-mojo-loc=''>
+                    Shuffle All
+                </div>
+            </div>
+            <div class="shuffleLeft shuffleAllIcon">
+                <img src="images/shuffle-32.png" id="coverArt">
+                </img>
+            </div>
+        </div>
     </div>
-  </div>
-
-
-
-  <div id="thick-border" class="thick-bottom-border" style="display:block;"></div>
-
-<div id="songsList" x-mojo-element="List" ></div>
-
- </div>   
+    <div id="thick-border" class="thick-bottom-border" style="display:block;">
+    </div>
+    <div id="songsList" x-mojo-element="FilterList">
+    </div>
+</div>
