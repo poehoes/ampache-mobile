@@ -53,7 +53,6 @@ AlbumsAssistant = Class.create(
         
         
         
-        $(coverArt).src = "images/shuffle-32.png";
         
         
         

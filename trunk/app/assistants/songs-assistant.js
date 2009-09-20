@@ -19,40 +19,23 @@ SongsAssistant = Class.create(
 
     initialize: function(params)
     {
-        Mojo.Log.info("--> constructor");
         this.SceneTitle = params.SceneTitle;
         this.Type = params.Type;
         this.Item = params.Item;
-        //this.DisplayAlbumInfo = params.DisplayAlbumInfo;
-        //this.SongsList = params.SongsList;
-        
-        
-        //this.thisIsAnAlbum = params.thisIsAnAlbum;
-        //this.art = params.art;
         
         if ((this.Type == "playlist") || (this.Type=="all-songs")) 
         {
             this.DisplayAlbumInfo = true;
         }
         
-        this.SongList = new Array();
-        
-        this.LIMIT = AmpacheMobile.FetchSize;
-        this.Offset = 0;
-        
-        this.LoadingFinished = false;
-        this.Visible = false;
-        
-        Mojo.Log.info("<-- constructor");
+		this.itemsHelper = new ItemsHelper();  
     },
     
     setup: function()
     {
     
-        Mojo.Log.info("--> setup");
         
-        
-        $(coverArt).src = "images/shuffle-32.png";
+      
         
         //********************************************************************************
         //Setup Loading Progress Pill
@@ -75,7 +58,7 @@ SongsAssistant = Class.create(
         {
             var attributes = 
             {
-                filterFunction: this.FilterSongList.bind(this),
+                filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
                 itemTemplate: 'songs/listitem_w_artist'
                 //dividerTemplate: 'artist-albums/divider',
                 //dividerFunction: this.dividerFunc.bind(this),
@@ -85,7 +68,7 @@ SongsAssistant = Class.create(
         {
             var attributes = 
             {
-				filterFunction: this.FilterSongList.bind(this),
+				filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
                 itemTemplate: 'songs/listitem'
                 //dividerTemplate: 'artist-albums/divider',
                 //dividerFunction: this.dividerFunc.bind(this),
@@ -94,32 +77,44 @@ SongsAssistant = Class.create(
         this.listModel = 
         {
             disabled: false,
-            items: this.SongList
+            items: this.itemsHelper.ItemsList
         };
-        
-        
-        this.artistSongsList = null;
         this.controller.setupWidget('songsList', attributes, this.listModel);
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
         
         //******************************************************************************************************
         // Setup Spinner
-        /* setup widgets here */
         this.spinnerLAttrs = 
         {
             spinnerSize: 'large'
-        }
-        
+        };
         this.spinnerModel = 
         {
             spinning: false
-        }
-        
+        };
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
         
+        //*********************************************************************************************************
+        // Items Helper
+        var params = 
+        {
+            controller: this.controller,
+            TurnOffSpinner: this.TurnOffSpinner.bind(this),
+            filterList: this.controller.get('songsList'),
+            getItemsCallback: this.GetSongs.bind(this),
+            listModel: this.listModel,
+            progressModel: this.songLoadModel,
+            fetchLimit: AmpacheMobile.FetchSize,
+            ExpectedItems: null,
+            SortFunction: null,
+            MatchFunction: this.IsMatch
         
+        };
+        this.itemsHelper.setup(params);
+		
+		
         
         this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
         
@@ -128,92 +123,39 @@ SongsAssistant = Class.create(
         
 		this.TurnOnSpinner("Retrieving<br>Songs");
 		
-        Mojo.Log.info("<-- setup");
         
     },
     
-    GetSongs: function()
+    GetSongs: function(callback, offset, limit)
     {
-        if ((this.Visible == true) && (this.LoadingFinished==false))
-        {
+       
             if (this.Type == "playlist") 
             {
-                this.ExpectedItems = this.Item.items;
-				AmpacheMobile.ampacheServer.GetSongs(this.GotSongs.bind(this), null, null, this.Item.id, this.Offset, this.LIMIT);
+                this.itemsHelper.ExpectedItems = this.Item.items;
+				AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Item.id, offset, limit);
             }
 			if(this.Type == "album")
 			{
-				this.ExpectedItems = this.Item.tracks;
-				AmpacheMobile.ampacheServer.GetSongs(this.GotSongs.bind(this), this.Item.id, null, null, this.Offset, this.LIMIT);
+				this.itemsHelper.ExpectedItems = this.Item.tracks;
+				AmpacheMobile.ampacheServer.GetSongs(callback, this.Item.id, null, null, offset, limit);
 			}
 			if(this.Type=="all-songs")
 			{
-				this.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-				AmpacheMobile.ampacheServer.GetSongs(this.GotSongs.bind(this), null, null, null, this.Offset, this.LIMIT);
+				this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
+				AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, offset, limit);
 			}
 			
-        }
+        
     },
     
-    
-    GotSongs: function(_songsList)
+     IsMatch: function(item, filterString)
     {
-    
-    
-        if (this.spinnerModel.spinning) 
+        var matchString = item.title;
+        if (matchString.toLowerCase().include(filterString.toLowerCase())) 
         {
-            this.TurnOffSpinner();
+            return true;
         }
-        
-        for (var i = 0; i < _songsList.length; i++) 
-        {
-        
-            var newItem = _songsList[i];
-            this.SongList.push(newItem);
-            
-        }
-        
-        //Update Progress
-        var progress = this.listModel.items.length / this.ExpectedItems ;
-        this.songLoadModel.value = progress;
-        this.controller.modelChanged(this.songLoadModel);
-        
-        
-        this.SongList.sort(this.sortbyYearTitle);
-        
-        
-        //Add to list   
-        var songsList = this.controller.get('songsList');
-        if ((this.filterString == "") || (this.filterString == null)) 
-        {
-            songsList.mojo.noticeUpdatedItems(0, this.SongList);
-        }
-        else //list currently has a filter
-         {
-            var matches = this.GetAllMatches(this.filterString);
-            songsList.mojo.noticeUpdatedItems(0, matches);
-            songsList.mojo.setLength(matches.length);
-            songsList.mojo.setCount(matches.length);
-        }
-        
-        
-        
-        
-        if (_songsList.length != this.LIMIT) 
-        {
-            this.songLoadModel.value = 1;
-            this.controller.modelChanged(this.songLoadModel);
-            this.LoadingFinished = true;
-        }
-        else 
-        {
-            this.Offset = this.listModel.items.length;
-            this.GetSongs();
-        }
-        
-        
-        Mojo.Log.info("Progress: " + progress);
-        
+        return false;
     },
     
     
@@ -221,7 +163,7 @@ SongsAssistant = Class.create(
     {
         this.controller.stageController.pushScene('now-playing', 
         {
-            playList: this.SongList,
+            playList: this.itemsHelper.ItemsList,
             startIndex: 0,
             shuffle: true
         });
@@ -235,25 +177,11 @@ SongsAssistant = Class.create(
         
         this.controller.stageController.pushScene('now-playing', 
         {
-            playList: this.SongList,
+            playList: this.itemsHelper.ItemsList,
             startIndex: event.index,
             shuffle: false
         });
         
-        
-        /*
-         Mojo.Log.info("Launch Stream of", event.item.url);
-         this.controller.serviceRequest('palm://com.palm.applicationManager', {
-         method:'launch',
-         parameters: {
-         id : 'com.palm.app.streamingmusicplayer',
-         params: {
-         //target : Mojo.appPath + "audio/conan06.wav"
-         target : event.item.url,
-         }
-         }
-         });
-         */
         Mojo.Log.info("<-- listTapHandler");
     },
     
@@ -289,42 +217,14 @@ SongsAssistant = Class.create(
     {
     
         var retvalue = 0;
-        /*
-         if(a.year == b.year)
-         {
-         var alpabetize = []
-         alpabetize[0] = a.name;
-         alpabetize[1] = b.name;
-         alpabetize.sort();
-         
-         if(alpabetize[0] == a.name)
-         {
-         retvalue =-1;
-         }
-         else retvalue =1;
-         }
-         else if(a.year < b.year)
-         {
-         retvalue = 1;
-         }
-         else if(a.year > b.year)
-         {
-         retvalue = -1;
-         }
-         
-         //Mojo.Log.info("A.year:", a.year, "b.year:", b.year, "revalue", retvalue);
-         */
         return retvalue;
     },
     
     
     activate: function(event)
     {
-    
-        Mojo.Log.info("--> activate");
-        this.Visible = true;
-        this.GetSongs();
-        Mojo.Log.info("<-- activate");
+        this.itemsHelper.Visible = true;
+        this.itemsHelper.GetItems();
     },
     
     
@@ -332,9 +232,7 @@ SongsAssistant = Class.create(
     
     deactivate: function(event)
     {
-        Mojo.Log.info("--> deactivate");
-        this.Visible = false;
-        Mojo.Log.info("<-- deactivate");
+        this.itemsHelper.Visible = false;;
     },
     
     
@@ -347,82 +245,9 @@ SongsAssistant = Class.create(
     },
     
     
+   
     
-    GetAllMatches: function(filterString)
-    {
-        var subset = [];
-        
-        if (filterString == "") 
-        {
-            for (var i = 0; i < this.SongList.length; i++) 
-            {
-            
-                subset.push(this.SongList[i]);
-            }
-        }
-        else 
-        {
-            for (var i = 0; i < this.SongList.length; i++) 
-            {
-                var matchString = this.SongList[i].title;
-                if (matchString.toLowerCase().include(filterString.toLowerCase())) 
-                {
-                
-                    subset.push(this.SongList[i]);
-                }
-            }
-        }
-        return subset;
-    },
-    
-    
-    filterString: null,
-    Matches: null,
-    LastFilterLength: null,
-    
-    FilterSongList: function(filterString, listWidget, offset, count)
-    {
-        Mojo.Log.info("--> FilterSongList filterString:", filterString, "offset:", offset, "count:", count);
-        var subset = [];
-        
-        
-        
-        if (this.SongList.length != 0) 
-        {
-        
-            if ((filterString != this.filterString) || (this.LastFilterLength != this.SongList.length)) 
-            {
-                this.LastFilterLength = this.SongList.length;
-                this.Matches = this.GetAllMatches(filterString);
-                this.filterString = filterString;
-            }
-            
-            Mojo.Log.info("Filtering: " + filterString);
-            
-            var Matches = this.Matches;
-            
-            for (var i = 0; i < count; i++) 
-            {
-                if ((i + offset) < Matches.length) 
-                {
-                
-                    subset.push(Matches[i + offset]);
-                }
-                
-            }
-            
-            
-            listWidget.mojo.noticeUpdatedItems(offset, subset);
-            listWidget.mojo.setLength(Matches.length);
-            listWidget.mojo.setCount(Matches.length);
-            
-        }
-        
-        
-        Mojo.Log.info("<-- FilterSongList:");
-        
-        
-    },
+
     
     
     TurnOnSpinner: function(message)

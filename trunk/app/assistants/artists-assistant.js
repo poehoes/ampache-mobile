@@ -18,34 +18,30 @@ ArtistsAssistant = Class.create(
 
     initialize: function(params)
     {
-    
         this.ExpectedArtists = params.ExpectedArtists;
-        
-        this.itemsHelper = new ItemsHelper();
-        
+        this.itemsHelper = new ItemsHelper();   
     },
     
     setup: function()
     {
     
-        this.ArtistList = new Array();
         
-        
-        /* setup widgets here */
+		//*********************************************************************************************************
+		//  Setup Spinner
         this.spinnerLAttrs = 
         {
             spinnerSize: 'large'
-        }
-        
+        };
         this.spinnerModel = 
         {
             spinning: false
-        }
-        
+        };
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
-        
-        this.PPattr = 
+		
+		//*********************************************************************************************************
+        //  Setup Progress Pill
+		this.PPattr = 
         {
             title: "Artists",
             image: 'images/artists.png'
@@ -58,12 +54,8 @@ ArtistsAssistant = Class.create(
         
         
         
-        /*
-         var attributes = {
-         itemTemplate: 'artists/listitem',
-         dividerTemplate: 'artists/divider',
-         dividerFunction: this.dividerFunc.bind(this),
-         };*/
+        //*********************************************************************************************************
+        //  Setup Filter List
         var attributesFilter = 
         {
             itemTemplate: 'artists/listitem',
@@ -74,31 +66,17 @@ ArtistsAssistant = Class.create(
         this.listModel = 
         {
             disabled: false,
-            items: this.ArtistList
+            items: this.itemsHelper.ItemsList
         };
-        
-        this.ArtistsController = this.controller;
-        
-        this.GetArtistsPending = false;
-        
-        //this.controller.setupWidget('artistList', attributes, this.listModel);
         this.controller.setupWidget('artistFilterList', attributesFilter, this.listModel);
-        
-        
-        
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
-        //Mojo.Event.listen(this.controller.get('artistList'), Mojo.Event.listTap, this.listTapHandler);
-        
         Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
         
-        this.gotFilter = this.searchFilter.bind(this);
-        Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.filter, this.gotFilter, true);
         
         
         
-        this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
-        
+        //*********************************************************************************************************
+        // Items Helper
         var params = 
         {
             controller: this.controller,
@@ -112,24 +90,24 @@ ArtistsAssistant = Class.create(
             SortFunction: null,
             MatchFunction: this.IsMatch
         
-        }
-        
+        };
         this.itemsHelper.setup(params);
         
         
         
         this.TurnOnSpinner();
+        this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
         
     },
     
     GetArtists: function(GotItems, offset, limit)
     {
-        AmpacheMobile.ampacheServer.GetArtists(GotItems, offset, limit)   
+        AmpacheMobile.ampacheServer.GetArtists(GotItems, offset, limit)
     },
     
     
     
-     IsMatch: function(item, filterString)
+    IsMatch: function(item, filterString)
     {
         var matchString = item.name;
         if (matchString.toLowerCase().include(filterString.toLowerCase())) 
@@ -139,16 +117,11 @@ ArtistsAssistant = Class.create(
         return false;
     },
     
-    
-    
-    
-    
-    
     listTapHandler: function(event)
     {
         Mojo.Log.info("--> listTapHandler", event.item.name);
         
-     
+        
         this.RequestedArtist = event.item;
         this.controller.stageController.pushScene('albums', 
         {
@@ -163,13 +136,13 @@ ArtistsAssistant = Class.create(
     },
     
     
-   
+    
     TurnOnSpinner: function()
     {
         Mojo.Log.info("-----> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
         this.spinnerModel.spinning = true;
-        this.ArtistsController.modelChanged(this.spinnerModel);
+        this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOnSpinner");
     },
     
@@ -177,16 +150,14 @@ ArtistsAssistant = Class.create(
     {
         Mojo.Log.info("-----> TurnOffSpinner");
         this.spinnerModel.spinning = false;
-        this.ArtistsController.modelChanged(this.spinnerModel);
+        this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");
     },
     
     
     
     dividerFunc: function(itemModel)
-    {
-        //Mojo.Log.info("--> dividerFunc");
-        
+    {   
         if (itemModel.name.charAt(0).toLowerCase() == "t") 
         {
             if (itemModel.name.substring(0, 4).toLowerCase() == "the ") 
@@ -221,54 +192,25 @@ ArtistsAssistant = Class.create(
         {
             return itemModel.name.charAt(0).toUpperCase();
         }
-        
-        //Mojo.Log.info("--> dividerFunc");
     },
-    
-    
     
     activate: function(event)
     {
-    
-        Mojo.Log.info("--> activate");
-        
         this.itemsHelper.Visible = true;
         this.itemsHelper.GetItems();
-        
-        Mojo.Log.info("<-- activate");
     },
-    
-    
-    
     
     deactivate: function(event)
     {
-        Mojo.Log.info("--> deactivate");
         this.TurnOffSpinner();
         this.itemsHelper.Visible = false;
-        Mojo.Log.info("<-- deactivate");
     },
     
     cleanup: function(event)
     {
-        /* this function should do any cleanup needed before the scene is destroyed as 
-         a result of being popped off the scene stack */
-        //Mojo.Event.stopListening(this.controller.get('artistList'),Mojo.Event.listTap, this.listTapHandler); 
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
-        Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.filter, this.gotFilter);
-    },
-    
-    searchFilter: function(event)
-    {
-        Mojo.Log.info("--> searchFilter filterString:", event.filterString);
-        
-        
-        
-        Mojo.Log.info("<-- searchFilter filterString:", event.filterString);
     }
-    
-    
-    
+  
     
 })
 
