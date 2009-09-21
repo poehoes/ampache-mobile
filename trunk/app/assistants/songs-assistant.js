@@ -23,10 +23,10 @@ SongsAssistant = Class.create(
         this.Type = params.Type;
         this.Item = params.Item;
         
-		
-		this.Playlist_id = params.Playlist_id;
-		this.Album_id = params.Album_id;
-		
+        
+        this.Playlist_id = params.Playlist_id;
+        this.Album_id = params.Album_id;
+        
         if ((this.Type == "playlist") || (this.Type == "all-songs") || (this.Type == "search") || (this.Type == "search-global")) 
         {
             this.DisplayAlbumInfo = true;
@@ -94,6 +94,8 @@ SongsAssistant = Class.create(
         this.controller.setupWidget('songsList', attributes, this.listModel);
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
+        this.holdHandler = this.holdEvent.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler)
         
         
         //******************************************************************************************************
@@ -140,6 +142,19 @@ SongsAssistant = Class.create(
     },
     
     
+    holdEvent: function(event)
+    {
+        event.stop();
+        alert(event.count);
+    },
+    
+    
+    pushArtist: function(id)
+    {
+        alert(id);
+    },
+    
+    
     GetSongs: function(callback, offset, limit)
     {
     
@@ -150,7 +165,8 @@ SongsAssistant = Class.create(
         }
         else if (this.Type == "album") 
         {
-            if(this.Item) this.itemsHelper.ExpectedItems = this.Item.tracks;
+            if (this.Item) 
+                this.itemsHelper.ExpectedItems = this.Item.tracks;
             AmpacheMobile.ampacheServer.GetSongs(callback, this.Album_id, null, null, offset, limit);
         }
         else if ((this.Type == "all-songs") || (this.Type == "search")) 
@@ -181,13 +197,15 @@ SongsAssistant = Class.create(
     
     handleShuffleAll: function(event)
     {
-        this.controller.stageController.pushScene('now-playing', 
+        if (this.itemsHelper.ItemsList.length > 0) 
         {
-            playList: this.itemsHelper.ItemsList,
-            startIndex: 0,
-            shuffle: true
-        });
-        
+            this.controller.stageController.pushScene('now-playing', 
+            {
+                playList: this.itemsHelper.ItemsList,
+                startIndex: 0,
+                shuffle: true
+            });
+        }
     },
     
     listTapHandler: function(event)
@@ -212,7 +230,7 @@ SongsAssistant = Class.create(
                 });
             }
             
-			else if (elements[1] == "album") 
+            else if (elements[1] == "album") 
             {
                 this.controller.stageController.pushScene('songs', 
                 {

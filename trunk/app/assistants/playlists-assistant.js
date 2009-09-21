@@ -23,6 +23,12 @@ PlaylistsAssistant = Class.create(
         this.DisplayArtistInfo = params.DisplayArtistInfo;
         this.ExpectedPlaylists = params.ExpectedPlaylists
         
+		this.Search=null;
+		if (params.Search) 
+		{
+			this.Search = params.Search;
+		}
+		
         this.itemsHelper = new ItemsHelper();
     },
     
@@ -54,7 +60,7 @@ PlaylistsAssistant = Class.create(
         };
         this.spinnerModel = 
         {
-            spinning: true
+            spinning: false
         };
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
@@ -99,13 +105,14 @@ PlaylistsAssistant = Class.create(
         
         
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
+        this.TurnOnSpinner();
+		
     },
     
     
     GetPlaylists: function(GotItems, offset, limit)
     {
-        AmpacheMobile.ampacheServer.GetPlaylists(GotItems, offset, limit)
+        AmpacheMobile.ampacheServer.GetPlaylists(GotItems, offset, limit, this.Search)
     },
     
     

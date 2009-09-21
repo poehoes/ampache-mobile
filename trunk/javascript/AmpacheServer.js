@@ -13,8 +13,7 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-var DEFAULT_PING_TIME = 1000*60;
+var DEFAULT_PING_TIME = 1000 * 60;
 
 AmpacheServer = Class.create(
 {
@@ -166,16 +165,16 @@ AmpacheServer = Class.create(
     {
         Mojo.Log.info("--> AmpacheServer.prototype._pingCallback");
         Mojo.Log.info(transport.responseText);
-		var ping = new PingModel(transport.responseXML);
-		
-		if (this.pingTimer) 
-		{
-			window.clearInterval(this.pingTimer);
-		    this.pingTimer = null;
-		}
-		this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining - DEFAULT_PING_TIME);
-		
-		
+        var ping = new PingModel(transport.responseXML);
+        
+        if (this.pingTimer) 
+        {
+            window.clearInterval(this.pingTimer);
+            this.pingTimer = null;
+        }
+        this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining - DEFAULT_PING_TIME);
+        
+        
         Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
     },
     
@@ -309,8 +308,8 @@ AmpacheServer = Class.create(
                     returnValue = findErrorCode[0].firstChild.data;
                 }
             }
-			
-			this._ping();
+            
+            this._ping();
         }
         
         Mojo.Log.info("Calling callback function this.ConnectCallback:");
@@ -575,7 +574,7 @@ AmpacheServer = Class.create(
     },
     
     
-
+    
     //******************************************************************************************/
     //Get Album Songs
     GetSongsCallback: null,
@@ -590,11 +589,11 @@ AmpacheServer = Class.create(
         if (typeof this.GetSongsCallback != "function") 
             this.GetSongsCallback = new Function(func)
         
-        var i=0;
+        var i = 0;
         var path = "";
-		var type = "";
-		 var filter = [];
-		
+        var type = "";
+        var filter = [];
+        
         if (_AlbumId != null) 
         {
         
@@ -613,22 +612,22 @@ AmpacheServer = Class.create(
         }
         else if (_PlayListID != null) 
         {
-           
+        
             filter[i++] = "filter";
             filter[i++] = _PlayListID;
             type = "playlist_songs";
             
         }
-		else if((_global_search) && (_global_search==true))
-		{
-			type="search_songs";
-		}
-		else
-		{
-			type = "songs";
-		}
+        else if ((_global_search) && (_global_search == true)) 
+        {
+            type = "search_songs";
+        }
+        else 
+        {
+            type = "songs";
+        }
         
-         if ((_offset != null) && (_limit != null)) 
+        if ((_offset != null) && (_limit != null)) 
         {
         
             filter[i++] = "offset";
@@ -646,8 +645,8 @@ AmpacheServer = Class.create(
             
             
         }
-		
-		path = this.BuildActionString(type, filter);
+        
+        path = this.BuildActionString(type, filter);
         
         
         var request = new Ajax.Request(path, 
@@ -721,21 +720,21 @@ AmpacheServer = Class.create(
                 var _id = songsListXML[i].getAttribute("id")
                 var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
                 
-				var artistTag = songsListXML[i].getElementsByTagName("artist")[0];
-				var _artist = artistTag.firstChild.data;
-				var _artist_id = artistTag.getAttribute("id");
+                var artistTag = songsListXML[i].getElementsByTagName("artist")[0];
+                var _artist = artistTag.firstChild.data;
+                var _artist_id = artistTag.getAttribute("id");
                 
-				var albumTag = songsListXML[i].getElementsByTagName("album")[0]
-				var _album = albumTag.firstChild.data;
+                var albumTag = songsListXML[i].getElementsByTagName("album")[0]
+                var _album = albumTag.firstChild.data;
                 var _album_id = albumTag.getAttribute("id");
-				
-				var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
+                
+                var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
                 var _time = songsListXML[i].getElementsByTagName("time")[0].firstChild.data;
                 var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
                 var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
                 
-				
-				
+                
+                
                 var mimeXML = songsListXML[i].getElementsByTagName("mime")
                 if (mimeXML[0].firstChild != null) 
                 {
@@ -754,7 +753,7 @@ AmpacheServer = Class.create(
                     var _art = "";
                 
                 
-                var newSong = new SongModel(_id, _title, _artist,_artist_id, _album, _album_id,_track, _time, _url, _size, _art, _mime);
+                var newSong = new SongModel(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime);
                 
                 SongsList[i] = newSong;
             }
@@ -775,7 +774,7 @@ AmpacheServer = Class.create(
     
     GetPlaylistsCallback: null,
     
-    GetPlaylists: function(_GetPlaylistsCallback, _offset, _limit)
+    GetPlaylists: function(_GetPlaylistsCallback, _offset, _limit, _search)
     {
     
         Mojo.Log.info("--> AmpacheServer.prototype.GetPlaylists");
@@ -788,12 +787,20 @@ AmpacheServer = Class.create(
         if ((_offset != null) && (_limit != null)) 
         {
             var offset = [];
-            offset[0] = "offset";
-            offset[1] = _offset;
+            var i = 0;
+            offset[i++] = "offset";
+            offset[i++] = _offset;
             
             
-            offset[2] = "limit";
-            offset[3] = _limit;
+            offset[i++] = "limit";
+            offset[i++] = _limit;
+            
+            if (_search != null) 
+            {
+                offset[i++] = "filter";
+                offset[i++] = _search
+            }
+            
             
             var path = this.BuildActionString("playlists", offset);
         }
@@ -1099,7 +1106,7 @@ AlbumModel = Class.create(
         
         
     }
-
+    
 });
 
 /*
@@ -1124,7 +1131,7 @@ AlbumModel = Class.create(
 SongModel = Class.create(
 {
 
-    initialize: function(_id, _title, _artist,_artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime)
+    initialize: function(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime)
     {
         //Mojo.Log.info("--> SongModel constructor " + _title);
         
@@ -1138,8 +1145,8 @@ SongModel = Class.create(
         this.size = _size;
         this.art = _art;
         this.mime = _mime;
-		this.album_id = _album_id;
-		this.artist_id = _artist_id;
+        this.album_id = _album_id;
+        this.artist_id = _artist_id;
         this.played = false;
         
         //Mojo.Log.info("<-- SongModel constructor " + _title);
@@ -1148,9 +1155,9 @@ SongModel = Class.create(
     id: null,
     title: null,
     artist: null,
-	artist_id:null,
+    artist_id: null,
     album: null,
-	album_id:null,
+    album_id: null,
     track: null,
     time: null,
     url: null,
@@ -1212,31 +1219,29 @@ PlaylistModel = Class.create(
 });
 
 
-PingModel = Class.create ({
-	
-	/*
-<?xml version="1.0" encoding="UTF-8" ?>
-<root>
-    <session_expire><![CDATA[Sun, 20 Sep 2009 22:29:27 -0500]]></session_expire>
-    <version><![CDATA[350001]]></version>
+PingModel = Class.create(
+{
 
-</root>
-*/
-	
-	initialize: function(PingXML)
+    /*
+     <?xml version="1.0" encoding="UTF-8" ?>
+     <root>
+     <session_expire><![CDATA[Sun, 20 Sep 2009 22:29:27 -0500]]></session_expire>
+     <version><![CDATA[350001]]></version>
+     </root>
+     */
+    initialize: function(PingXML)
     {
-		 var pingResponse = PingXML.getElementsByTagName("root")[0];
-		 this.SessionExpires = pingResponse.getElementsByTagName("session_expire")[0].firstChild.data;
-		 this.UTC =  Date.parse(this.SessionExpires);
-		 this.TimeRemaining = this.UTC - Date.now();
-		 this.ApiVersion = pingResponse.getElementsByTagName("version")[0].firstChild.data;
-	},
-	
-	UTC:null,
-	SessionExpires:null,
-	ApiVersion:null
-}
-);
+        var pingResponse = PingXML.getElementsByTagName("root")[0];
+        this.SessionExpires = pingResponse.getElementsByTagName("session_expire")[0].firstChild.data;
+        this.UTC = Date.parse(this.SessionExpires);
+        this.TimeRemaining = this.UTC - Date.now();
+        this.ApiVersion = pingResponse.getElementsByTagName("version")[0].firstChild.data;
+    },
+    
+    UTC: null,
+    SessionExpires: null,
+    ApiVersion: null
+});
 
 
 
