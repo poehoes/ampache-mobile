@@ -13,6 +13,9 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var DEFAULT_PING_TIME = 1000*60;
+
 AmpacheServer = Class.create(
 {
 
@@ -163,6 +166,16 @@ AmpacheServer = Class.create(
     {
         Mojo.Log.info("--> AmpacheServer.prototype._pingCallback");
         Mojo.Log.info(transport.responseText);
+		var ping = new PingModel(transport.responseXML);
+		
+		if (this.pingTimer) 
+		{
+			window.clearInterval(this.pingTimer);
+		    this.pingTimer = null;
+		}
+		this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining - DEFAULT_PING_TIME);
+		
+		
         Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
     },
     
@@ -238,7 +251,6 @@ AmpacheServer = Class.create(
         Mojo.Log.info("--> AmpacheServer.prototype.ConnectCallbackSuccess");
         Mojo.Log.info("TestConnectionCallbackSuccess gotResults: " + transport.responseText);
         
-        this.pingTimer = setInterval(this._ping.bind(this), 1000 * 60);
         
         var returnValue = transport.responseText;
         ;
@@ -297,6 +309,8 @@ AmpacheServer = Class.create(
                     returnValue = findErrorCode[0].firstChild.data;
                 }
             }
+			
+			this._ping();
         }
         
         Mojo.Log.info("Calling callback function this.ConnectCallback:");
@@ -1198,6 +1212,31 @@ PlaylistModel = Class.create(
 });
 
 
+PingModel = Class.create ({
+	
+	/*
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <session_expire><![CDATA[Sun, 20 Sep 2009 22:29:27 -0500]]></session_expire>
+    <version><![CDATA[350001]]></version>
+
+</root>
+*/
+	
+	initialize: function(PingXML)
+    {
+		 var pingResponse = PingXML.getElementsByTagName("root")[0];
+		 this.SessionExpires = pingResponse.getElementsByTagName("session_expire")[0].firstChild.data;
+		 this.UTC =  Date.parse(this.SessionExpires);
+		 this.TimeRemaining = this.UTC - Date.now();
+		 this.ApiVersion = pingResponse.getElementsByTagName("version")[0].firstChild.data;
+	},
+	
+	UTC:null,
+	SessionExpires:null,
+	ApiVersion:null
+}
+);
 
 
 

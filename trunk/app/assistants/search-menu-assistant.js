@@ -24,10 +24,10 @@ SearchMenuAssistant = Class.create(
     setup: function()
     {
         //*****************************************************************************************************
-		// Setup Menu
-		this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-	 
-	    //******************************************************************************************************
+        // Setup Menu
+        this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
+        
+        //******************************************************************************************************
         // Setup Spinner
         this.spinnerLAttrs = 
         {
@@ -57,10 +57,15 @@ SearchMenuAssistant = Class.create(
         
         //***************************************************************************************************************
         // Setup Search Field
-        this.searchAttributes = {} // hintText: $L('Search')}
+        this.searchAttributes = 
+        {
+            autoFocus: true
+        } // hintText: $L('Search')}
         this.searchModel = {}
         this.controller.setupWidget("search-field", this.searchAttributes, this.searchModel);
         this.controller.listen("search-field", Mojo.Event.propertyChange, this.searchTextChanged.bindAsEventListener(this));
+        this.SearchField = this.controller.get("search-field");
+        
         
         //*****************************************************************************************************
         // Search Event
@@ -68,40 +73,64 @@ SearchMenuAssistant = Class.create(
         this.controller.get('searchAlbums').observe(Mojo.Event.tap, this.searchForAlbums.bindAsEventListener(this));
         this.controller.get('searchSongs').observe(Mojo.Event.tap, this.searchForSongs.bindAsEventListener(this));
         this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
+        
+        
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.handleKeyPressEvent.bindAsEventListener(this));
     },
     
     searchText: null,
     searchTextChanged: function(event)
     {
-    
         Mojo.Log.info("searchText Changed; value = ", event.value);
         this.searchText = event.value;
+      
         
     },
     
     
-	searchCriteria:function(numChars)
-	{
-		var retVal = false;
-		if ((this.searchText != "") && (this.searchText != null)) 
-		{
-			if(this.searchText.length>=numChars)
-			{
-				retVal=true;
-			}
-			else
-			{
-				this.showDialogBox("Error", "Please enter at least "+ numChars + " characters for your search.  This is limit the size of your search.")
-			}
-		}
-		else
-		{
-			this.showDialogBox("Error", "Please enter a search string")
-		}
-		return retVal;
-	},
-	
-	
+    handleKeyPressEvent: function(event)
+    {
+        /*
+		var eventModel = 
+        {
+            eventType: event.type,
+            eventKeyCode: event.originalEvent.keyCode,
+            eventChar: String.fromCharCode(event.originalEvent.keyCode)
+        };
+        */
+		this.SetFocus();
+		
+		// var text = this.SearchField.mojo.getValue();
+        // text += String.fromCharCode(event.originalEvent.keyCode);
+		// his.SearchField.mojo.setValue(text);
+        
+        //var content = Mojo.View.render({template: "input/keyPress/evententry", object: eventModel});    
+        //this.div.insert(content);
+    },
+    
+    
+    searchCriteria: function(numChars)
+    {
+        var retVal = false;
+        if ((this.searchText != "") && (this.searchText != null)) 
+        {
+            if (this.searchText.length >= numChars) 
+            {
+                retVal = true;
+            }
+            else 
+            {
+                this.showDialogBox("Error", "Please enter at least " + numChars + " characters for your search.  This is limit the size of your search.")
+            }
+        }
+        else 
+        {
+            this.showDialogBox("Error", "Please enter a search string")
+        }
+        return retVal;
+    },
+    
+    
     searchForAlbums: function()
     {
         if (this.searchCriteria(3)) 
@@ -119,7 +148,7 @@ SearchMenuAssistant = Class.create(
             }
             
         }
-       
+        
         
     },
     
@@ -142,7 +171,7 @@ SearchMenuAssistant = Class.create(
             
             });
         }
-       
+        
     },
     
     
@@ -164,7 +193,7 @@ SearchMenuAssistant = Class.create(
             
             });
         }
-      
+        
     },
     
     
@@ -186,8 +215,13 @@ SearchMenuAssistant = Class.create(
                 });
             }
         }
-       
         
+        
+    },
+    
+    SetFocus: function()
+    {
+        this.SearchField.mojo.focus();
     },
     
     // This function will popup a dialog, displaying the message passed in.
@@ -195,9 +229,7 @@ SearchMenuAssistant = Class.create(
     {
         this.controller.showAlertDialog(
         {
-            onChoose: function(value)
-            {
-            },
+            onChoose: this.SetFocus.bind(this),
             title: title,
             message: message,
             choices: [
@@ -227,6 +259,7 @@ SearchMenuAssistant = Class.create(
     
     activate: function(event)
     {
+        this.controller.get("search-field").mojo.focus();
     },
     
     
