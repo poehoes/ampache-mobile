@@ -23,6 +23,10 @@ SongsAssistant = Class.create(
         this.Type = params.Type;
         this.Item = params.Item;
         
+		
+		this.Playlist_id = params.Playlist_id;
+		this.Album_id = params.Album_id;
+		
         if ((this.Type == "playlist") || (this.Type == "all-songs") || (this.Type == "search") || (this.Type == "search-global")) 
         {
             this.DisplayAlbumInfo = true;
@@ -35,6 +39,8 @@ SongsAssistant = Class.create(
         }
         
         this.itemsHelper = new ItemsHelper();
+        
+        AmpacheMobile.clickedLink = false;
     },
     
     setup: function()
@@ -89,6 +95,7 @@ SongsAssistant = Class.create(
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
         
+        
         //******************************************************************************************************
         // Setup Spinner
         this.spinnerLAttrs = 
@@ -132,18 +139,19 @@ SongsAssistant = Class.create(
         
     },
     
+    
     GetSongs: function(callback, offset, limit)
     {
     
         if (this.Type == "playlist") 
         {
             this.itemsHelper.ExpectedItems = this.Item.items;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Item.id, offset, limit);
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Playlist_id, offset, limit);
         }
         else if (this.Type == "album") 
         {
-            this.itemsHelper.ExpectedItems = this.Item.tracks;
-            AmpacheMobile.ampacheServer.GetSongs(callback, this.Item.id, null, null, offset, limit);
+            if(this.Item) this.itemsHelper.ExpectedItems = this.Item.tracks;
+            AmpacheMobile.ampacheServer.GetSongs(callback, this.Album_id, null, null, offset, limit);
         }
         else if ((this.Type == "all-songs") || (this.Type == "search")) 
         {
@@ -186,13 +194,45 @@ SongsAssistant = Class.create(
     {
         Mojo.Log.info("--> listTapHandler");
         
+        var click_id = event.originalEvent.target.id;
         
-        this.controller.stageController.pushScene('now-playing', 
+        if (click_id.substr(0, 4) == "link") 
         {
-            playList: this.itemsHelper.ItemsList,
-            startIndex: event.index,
-            shuffle: false
-        });
+        
+        
+            var elements = click_id.split("_");
+            if (elements[1] == "artist") 
+            {
+                this.controller.stageController.pushScene('albums', 
+                {
+                    SceneTitle: event.item.artist,
+                    DisplayArtistInfo: false,
+                    Artist_id: event.item.artist_id,
+                    ExepectedAlbums: 0
+                });
+            }
+            
+			else if (elements[1] == "album") 
+            {
+                this.controller.stageController.pushScene('songs', 
+                {
+                    SceneTitle: event.item.artist + " - " + event.item.album,
+                    Type: "album",
+                    Album_id: event.item.album_id
+                
+                });
+            }
+            
+        }
+        else 
+        {
+            this.controller.stageController.pushScene('now-playing', 
+            {
+                playList: this.itemsHelper.ItemsList,
+                startIndex: event.index,
+                shuffle: false
+            });
+        }
         
         Mojo.Log.info("<-- listTapHandler");
     },
@@ -252,9 +292,8 @@ SongsAssistant = Class.create(
     
     cleanup: function(event)
     {
-        /* this function should do any cleanup needed before the scene is destroyed as 
-         a result of being popped off the scene stack */
         Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
+        this.itemsHelper = null;
     },
     
     

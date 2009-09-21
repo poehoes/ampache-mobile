@@ -706,13 +706,22 @@ AmpacheServer = Class.create(
             {
                 var _id = songsListXML[i].getAttribute("id")
                 var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
-                var _artist = songsListXML[i].getElementsByTagName("artist")[0].firstChild.data;
-                var _album = songsListXML[i].getElementsByTagName("album")[0].firstChild.data;
-                var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
+                
+				var artistTag = songsListXML[i].getElementsByTagName("artist")[0];
+				var _artist = artistTag.firstChild.data;
+				var _artist_id = artistTag.getAttribute("id");
+                
+				var albumTag = songsListXML[i].getElementsByTagName("album")[0]
+				var _album = albumTag.firstChild.data;
+                var _album_id = albumTag.getAttribute("id");
+				
+				var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
                 var _time = songsListXML[i].getElementsByTagName("time")[0].firstChild.data;
                 var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
                 var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
                 
+				
+				
                 var mimeXML = songsListXML[i].getElementsByTagName("mime")
                 if (mimeXML[0].firstChild != null) 
                 {
@@ -731,7 +740,7 @@ AmpacheServer = Class.create(
                     var _art = "";
                 
                 
-                var newSong = new SongModel(_id, _title, _artist, _album, _track, _time, _url, _size, _art, _mime);
+                var newSong = new SongModel(_id, _title, _artist,_artist_id, _album, _album_id,_track, _time, _url, _size, _art, _mime);
                 
                 SongsList[i] = newSong;
             }
@@ -1101,7 +1110,7 @@ AlbumModel = Class.create(
 SongModel = Class.create(
 {
 
-    initialize: function(_id, _title, _artist, _album, _track, _time, _url, _size, _art, _mime)
+    initialize: function(_id, _title, _artist,_artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime)
     {
         //Mojo.Log.info("--> SongModel constructor " + _title);
         
@@ -1115,6 +1124,8 @@ SongModel = Class.create(
         this.size = _size;
         this.art = _art;
         this.mime = _mime;
+		this.album_id = _album_id;
+		this.artist_id = _artist_id;
         this.played = false;
         
         //Mojo.Log.info("<-- SongModel constructor " + _title);
@@ -1123,7 +1134,9 @@ SongModel = Class.create(
     id: null,
     title: null,
     artist: null,
+	artist_id:null,
     album: null,
+	album_id:null,
     track: null,
     time: null,
     url: null,
