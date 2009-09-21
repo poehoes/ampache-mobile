@@ -80,14 +80,15 @@ MainmenuAssistant = Class.create(
             icon: "images/albums.png"
         }, 
         
-        {
+        /*
+		{
             category: $L("bottom"),
             directory: $L("songs"),
             name: $L("Songs"),
             scene: $L("songs"),
             icon: "images/songs.png",
             description: $L(AmpacheMobile.ampacheServer.songs.toString())
-        },
+        },*/
         
         {
             category: $L("bottom"),

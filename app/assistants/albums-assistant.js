@@ -26,11 +26,12 @@ AlbumsAssistant = Class.create(
         
         this.ExpectedAlbums = params.ExepectedAlbums;
         
-        if (params.Artist != null) 
+        if (params.Artist_id != null) 
         {
-            this.Artist = params.Artist;
+            //this.Artist = params.Artist;
             this.isArtistView = true;
-            
+            this.Artist_id = params.Artist_id;
+			
         }
         else 
             this.isArtistView = false;
@@ -207,7 +208,7 @@ AlbumsAssistant = Class.create(
         
         if (this.isArtistView == true) 
         {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist.id, offset, limit);
+            AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist_id, offset, limit);
         }
         else 
         {
@@ -223,12 +224,12 @@ AlbumsAssistant = Class.create(
     {
         Mojo.Log.info("--> listTapHandler");
         
-        this.RequestedPlaylist = event.item;
         this.controller.stageController.pushScene('songs', 
         {
             SceneTitle: event.item.artist + " - " + event.item.name,
             Type: "album",
-            Item: event.item
+            Album_id: event.item.id,
+			Item:event.item
         
         });
         
@@ -241,7 +242,7 @@ AlbumsAssistant = Class.create(
         
         
         this.TurnOnSpinner("Retrieving<br>Songs");
-        AmpacheMobile.ampacheServer.GetSongs(this.FinishedGettingShuffleAll.bind(this), null, this.Artist.id, null);
+        AmpacheMobile.ampacheServer.GetSongs(this.FinishedGettingShuffleAll.bind(this), null, this.Artist_id, null);
         this.RequestedArtist = event.item;
         
         Mojo.Log.info("<-- handleShuffleAll");
@@ -377,7 +378,7 @@ AlbumsAssistant = Class.create(
         
         
         Mojo.Event.stopListening(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
-        
+        this.itemsHelper=null;
         Mojo.Log.info("<-- cleanup");
         
         

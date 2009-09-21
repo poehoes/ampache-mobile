@@ -80,9 +80,31 @@ SearchMenuAssistant = Class.create(
     },
     
     
+	searchCriteria:function(numChars)
+	{
+		var retVal = false;
+		if ((this.searchText != "") && (this.searchText != null)) 
+		{
+			if(this.searchText.length>=numChars)
+			{
+				retVal=true;
+			}
+			else
+			{
+				this.showDialogBox("Error", "Please enter at least "+ numChars + " characters for your search.  This is limit the size of your search.")
+			}
+		}
+		else
+		{
+			this.showDialogBox("Error", "Please enter a search string")
+		}
+		return retVal;
+	},
+	
+	
     searchForAlbums: function()
     {
-        if ((this.searchText != "") && (this.searchText != null)) 
+        if (this.searchCriteria(3)) 
         {
             var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums);
             if (numAlbums != 0) 
@@ -97,10 +119,7 @@ SearchMenuAssistant = Class.create(
             }
             
         }
-        else 
-        {
-            this.showDialogBox("Error", "Please enter a search string")
-        }
+       
         
     },
     
@@ -108,7 +127,7 @@ SearchMenuAssistant = Class.create(
     searchForSongs: function()
     {
     
-        if ((this.searchText != "") && (this.searchText != null)) 
+        if (this.searchCriteria(3)) 
         {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs);
             this.controller.stageController.pushScene('songs', 
@@ -123,24 +142,21 @@ SearchMenuAssistant = Class.create(
             
             });
         }
-        else 
-        {
-            this.showDialogBox("Error", "Please enter a search string")
-        }
+       
     },
     
     
     searchForGlobal: function()
     {
     
-        if ((this.searchText != "") && (this.searchText != null)) 
+        if (this.searchCriteria(4)) 
         {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs);
             this.controller.stageController.pushScene('songs', 
             {
                 SceneTitle: "Search: Songs",
                 Type: "search-global",
-                SceneTitle: "Search Albums: " + this.searchText,
+                SceneTitle: "Global Search: " + this.searchText,
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,
                 
@@ -148,10 +164,7 @@ SearchMenuAssistant = Class.create(
             
             });
         }
-        else 
-        {
-            this.showDialogBox("Error", "Please enter a search string")
-        }
+      
     },
     
     
@@ -159,7 +172,7 @@ SearchMenuAssistant = Class.create(
     
     searchForArtists: function()
     {
-        if ((this.searchText != "") && (this.searchText != null)) 
+        if (this.searchCriteria(3)) 
         {
             var numArtists = parseInt(AmpacheMobile.ampacheServer.artists);
             if (numArtists != 0) 
@@ -173,10 +186,7 @@ SearchMenuAssistant = Class.create(
                 });
             }
         }
-        else 
-        {
-            this.showDialogBox("Error", "Please enter a search string")
-        }
+       
         
     },
     

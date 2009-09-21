@@ -132,8 +132,8 @@ ArtistsAssistant = Class.create(
         {
             SceneTitle: this.RequestedArtist.name,
             DisplayArtistInfo: false,
-            //AlbumsList:_artistAlbumsList,
-            Artist: this.RequestedArtist,
+            Artist_id: event.item.id,
+			//Artist: this.RequestedArtist,
             ExepectedAlbums: this.RequestedArtist.albums
         });
         
@@ -214,6 +214,7 @@ ArtistsAssistant = Class.create(
     cleanup: function(event)
     {
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+		this.itemsHelper=null;
     }
   
     

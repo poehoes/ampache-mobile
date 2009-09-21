@@ -133,7 +133,8 @@ PlaylistsAssistant = Class.create(
         {
             SceneTitle: event.item.name,
             Type: "playlist",
-            Item: event.item
+            Playlist_id: event.item.id,
+			Item:event.item
         });
         
     },
