@@ -14,7 +14,7 @@
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 var DEFAULT_MAX_FETCH = 1500;
-var DEFAULT_MIN_FETCH = 1;
+var DEFAULT_MIN_FETCH = 75;
 
 
 
@@ -120,6 +120,26 @@ AccountAssistant = Class.create(
         this.controller.listen('slider', Mojo.Event.propertyChange, this.propertyChanged);
         $('fetchSize').innerHTML = "Items: " + this.Account.FetchSize;
         
+		
+		//******************************************************************************************************************
+		 //Setup Album Art Toggle
+        this.tattr = 
+        {
+            trueLabel: 'On',//if the state is true, what to label the toggleButton; default is 'On'
+            trueValue: true,//if the state is true, what to set the model[property] to; default if not specified is true
+            falseLabel: 'Off', //if the state is false, what to label the toggleButton; default is Off
+            falseValue: false, //if the state is false, , what to set the model[property] to; default if not specific is false],
+            fieldName: 'toggle' //name of the field; optional
+        }
+        this.tModel = 
+        {
+            value: this.Account.ExtraCoverArt, // Current value of widget, from choices array.
+            disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
+        }
+        
+        this.controller.setupWidget('art-toggle', this.tattr, this.tModel);
+        this.ExtraArtPressedHandler = this.ExtraArtPressed.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
         
     },
     
@@ -164,6 +184,22 @@ AccountAssistant = Class.create(
         return retVal;
     },
     
+	
+	ExtraArtPressed: function(event)
+    {
+        //Display the value of the toggle
+        if (event.value == true) 
+        {
+            this.Account.ExtraCoverArt = true;
+            this.showDialogBox("WARNING", "This feature is disabled by default because it greatly diminishes performance, but it sure looks good");
+        }
+        else 
+        {
+            this.Account.ExtraCoverArt = false;
+        }
+        this.settingsManager.SaveSettings();
+    },
+	
     
     accountQuestions: function(value)
     {
@@ -428,10 +464,27 @@ AccountAssistant = Class.create(
     
     cleanup: function(event)
     {
-        /* this function should do any cleanup needed before the scene is destroyed as 
+        Mojo.Event.stopListening(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
         
-         a result of being popped off the scene stack */
-        
-    }
+    },
+	
+	    // This function will popup a dialog, displaying the message passed in.
+    showDialogBox: function(title, message)
+    {
+        this.controller.showAlertDialog(
+        {
+            onChoose: function(value)
+            {
+            },
+            title: title,
+            message: message,
+            choices: [
+            {
+                label: 'OK',
+                value: 'OK',
+                type: 'color'
+            }]
+        });
+    },
     
 });

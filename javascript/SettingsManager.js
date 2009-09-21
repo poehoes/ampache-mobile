@@ -133,12 +133,19 @@ SettingsManager = Class.create({
 				this.settings.AllowRotation = DEFAULT_ROTATION;
 			}
 			
+			this.settings.Version = Mojo.Controller.appInfo.version;
+			
 			for(i=0;i<this.settings.Accounts.length;i++)
 			{
 				if(this.settings.Accounts[i].FetchSize == null)
 				{
 					this.settings.Accounts[i].FetchSize = DEFAULT_FETCH_SIZE;
 				}
+				
+				if(this.settings.Accounts[i].ExtraCoverArt == null)
+                {
+                    this.settings.Accounts[i].ExtraCoverArt = false;
+                }
 			}
 			
             this.SaveSettings(null, null);
@@ -181,16 +188,18 @@ Account = Class.create({
     UserName: null,
     Password: null,
     ServerURL: null,
+	ExtraCoverArt: false,
 	FetchSize:DEFAULT_FETCH_SIZE
+	
 })
 
 
 Settings = Class.create({
     Accounts: null,
     CurrentAccountIndex: null,
-    ExtraCoverArt: false,
-    StreamDebug: false,
     
+    StreamDebug: false,
+    Version:"0.0.5",
 	AllowRotation:DEFAULT_ROTATION,
 	
 	BackgroundColor: DEFAULT_COLOR,

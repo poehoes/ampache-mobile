@@ -72,6 +72,7 @@ SearchMenuAssistant = Class.create(
         this.controller.get('searchArtists').observe(Mojo.Event.tap, this.searchForArtists.bindAsEventListener(this));
         this.controller.get('searchAlbums').observe(Mojo.Event.tap, this.searchForAlbums.bindAsEventListener(this));
         this.controller.get('searchSongs').observe(Mojo.Event.tap, this.searchForSongs.bindAsEventListener(this));
+		this.controller.get('searchPlaylists').observe(Mojo.Event.tap, this.searchForPlaylists.bindAsEventListener(this));
         this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
         
         
@@ -120,12 +121,12 @@ SearchMenuAssistant = Class.create(
             }
             else 
             {
-                this.showDialogBox("Error", "Please enter at least " + numChars + " characters for your search.  This is limit the size of your search.")
+                this.showDialogBox("Search", "Please enter at least " + numChars + " characters for your search.")
             }
         }
         else 
         {
-            this.showDialogBox("Error", "Please enter a search string")
+            this.showDialogBox("Search", "Please enter a search string")
         }
         return retVal;
     },
@@ -152,6 +153,27 @@ SearchMenuAssistant = Class.create(
         
     },
     
+	
+	 searchForPlaylists: function()
+    {
+        if (this.searchCriteria(3)) 
+        {
+            var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists);
+            if (numPlaylists != 0) 
+            {
+                this.controller.stageController.pushScene('playlists', 
+                {
+                    SceneTitle: "Search Playlists: " + this.searchText,
+                    Search: this.searchText == "" ? null : this.searchText,
+					ExpectedPlaylists: numPlaylists
+                });
+            }
+            
+        }
+        
+        
+    },
+	
     
     searchForSongs: function()
     {

@@ -26,6 +26,10 @@ padding: 0;
 
 }
 
+a:link {
+COLOR: grey;
+}
+
 .wallpaper{
 	-webkit-background-size : 100%;
 	background-repeat:no-repeat;
@@ -405,7 +409,7 @@ body.palm-default {
 }
 
 .music-streaming .stream-debug {
-		margin: -10px 5px 5px 5px;
+		margin: -15px 5px 5px 5px;
 		color: white;
 		font-size:small;
 		font-weight:bold;
@@ -430,6 +434,10 @@ padding: 0px 5px 5px 5px;
 		font-weight:bold;
 		width:100%;
 		text-align:center;
+}
+
+.music-streaming .stream-info {
+	margin-top:-10px;
 }
 
 .music-streaming .stream-info .elapsed,

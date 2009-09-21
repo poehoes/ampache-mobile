@@ -16,7 +16,7 @@
 function ConnectionAssistant(params){
     Mojo.Log.info("--> ConnectionAssistant Constructor");
     
-    
+    this.ConnctionPending = false;
     
     Mojo.Log.info("<-- ConnectionAssistant Constructor");
 }
@@ -100,8 +100,11 @@ ConnectionAssistant.prototype.TurnOffSpinner = function(){
 
 ConnectionAssistant.prototype.listTapHandler = function(event){
 
-    this.LoadMainMenu(event.item);
-    
+    if (this.ConnctionPending == false) 
+	{
+	    this.ConnctionPending = true;
+		this.LoadMainMenu(event.item);
+	}
 }
 
 ConnectionAssistant.prototype.pushPreferences = function(settingsManager){
@@ -179,7 +182,7 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
     
     
     this.TurnOffSpinner();
-    
+    this.ConnctionPending= false;
     
     if (connectResult == "connected") {
     

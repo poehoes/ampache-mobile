@@ -122,7 +122,7 @@ AlbumsAssistant = Class.create(
         }
         else 
         {
-            if (AmpacheMobile.settingsManager.settings.ExtraCoverArt) 
+            if (AmpacheMobile.Account.ExtraCoverArt) 
             {
                 var listAttributes = 
                 {

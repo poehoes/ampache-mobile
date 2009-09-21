@@ -92,25 +92,7 @@ PreferencesAssistant = Class.create(
         
         
         
-        //Setup Album Art Toggle
-        // Setup toggle widget and an observer for when it is changed
-        this.tattr = 
-        {
-            trueLabel: 'On',//if the state is true, what to label the toggleButton; default is 'On'
-            trueValue: true,//if the state is true, what to set the model[property] to; default if not specified is true
-            falseLabel: 'Off', //if the state is false, what to label the toggleButton; default is Off
-            falseValue: false, //if the state is false, , what to set the model[property] to; default if not specific is false],
-            fieldName: 'toggle' //name of the field; optional
-        }
-        this.tModel = 
-        {
-            value: this.settingsManager.settings.ExtraCoverArt, // Current value of widget, from choices array.
-            disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
-        }
-        
-        this.controller.setupWidget('art-toggle', this.tattr, this.tModel);
-        this.togglePressed = this.togglePressed.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.togglePressed);
+       
         
         //**********************************************************************************************************************
         //Setup Stream Debug Toggle
@@ -211,20 +193,7 @@ PreferencesAssistant = Class.create(
 	},
     
 	
-    togglePressed: function(event)
-    {
-        //Display the value of the toggle
-        if (event.value == true) 
-        {
-            this.settingsManager.settings.ExtraCoverArt = true;
-            this.showDialogBox("WARNING", "This feature is disabled by default because it greatly diminishes performance, but it sure looks good");
-        }
-        else 
-        {
-            this.settingsManager.settings.ExtraCoverArt = false;
-        }
-        this.settingsManager.SaveSettings();
-    },
+   
     
     // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function(title, message)
@@ -381,7 +350,7 @@ PreferencesAssistant = Class.create(
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteHandler);
         Mojo.Event.stopListening(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
         
-        Mojo.Event.stopListening(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.togglePressed);
+        
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
 		
