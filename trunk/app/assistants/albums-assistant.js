@@ -345,17 +345,17 @@ AlbumsAssistant = Class.create(
                 
         }
 		
-		if(reSortList && this.itemsHelper.LoadingFinished)
+		if(reSortList)// && this.itemsHelper.LoadingFinished)
 		{
 			 AmpacheMobile.settingsManager.settings.AlbumsSort = this.sortType;
              AmpacheMobile.settingsManager.SaveSettings();
 			 this.itemsHelper.ReSortList();
         }
-		else if(reSortList)
+		/*else if(reSortList)
 		{
 			this.showDialogBox("WARNING", "Cannot sort while list is loading.")
 			this.sortType = this.prevSortType;
-		}
+		}*/
         
     },
 	
