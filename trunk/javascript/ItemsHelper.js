@@ -46,6 +46,8 @@ ItemsHelper = Class.create({
 		this.listModel = params.listModel;
 		this.MatchFunction = params.MatchFunction;
 		
+		this.PopulateSort = params.PopulateSort;
+		
 	},
 	
 	
@@ -66,6 +68,8 @@ ItemsHelper = Class.create({
         
         this.TurnOffSpinner();
 		
+		if(this.PopulateSort) this.PopulateSort(_ItemsList);
+		
         for (var i = 0; i < _ItemsList.length; i++) 
         {
         
@@ -80,8 +84,12 @@ ItemsHelper = Class.create({
         this.controller.modelChanged(this.progressModel);
         
         //Sorting Here
-		if(this.SortFunction) this.ItemsList.sort(this.SortFunction);
-        
+		
+		if (this.SortFunction) 
+		{
+			
+			this.ItemsList.sort(this.SortFunction);
+		}
         
         //Add to list   
         
@@ -117,6 +125,37 @@ ItemsHelper = Class.create({
         Mojo.Log.info("<-- FinishedGettings");
         
     },
+	
+	ReSortList:function(){
+		if (this.LoadingFinished) 
+		{
+			if (this.PopulateSort) 
+				this.PopulateSort(this.ItemsList);
+			
+			if (this.SortFunction) 
+			{
+				this.ItemsList.sort(this.SortFunction);
+			}
+			
+			
+			
+			//Add to list   
+			if ((this.filterString == "") || (this.filterString == null)) 
+			{
+				this.Matches = this.ItemsList;
+				this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
+			}
+			else //list currently has a filter
+ 			{
+				this.Matches = this.GetAllMatches(this.filterString);
+				this.filterList.mojo.noticeUpdatedItems(0, this.Matches);
+				this.filterList.mojo.setLength(this.Matches.length);
+				this.filterList.mojo.setCount(this.Matches.length);
+			}
+		}
+	},
+	
+	
 	
 	GetAllMatches: function(filterString)
     {
