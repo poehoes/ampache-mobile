@@ -128,6 +128,11 @@ SettingsManager = Class.create({
                 this.settings.BackgroundMode = 0;
             }
 			
+			if(this.settings.AlbumsSort==null)
+			{
+				this.settings.AlbumsSort = 0;
+			}
+			
 			if (this.settings.AllowRatation==null)
 			{
 				this.settings.AllowRotation = DEFAULT_ROTATION;
@@ -209,7 +214,9 @@ Settings = Class.create({
     BackgroundOverlay: DEFAULT_OVERLAY,
     
     CUSTOM_COLOR: 0,
-    CUSTOM_IMAGE: 1
+    CUSTOM_IMAGE: 1,
+	
+	AlbumsSort:0
 
 });
 
