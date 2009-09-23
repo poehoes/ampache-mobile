@@ -127,8 +127,8 @@ ItemsHelper = Class.create({
     },
 	
 	ReSortList:function(){
-		if (this.LoadingFinished) 
-		{
+		//if (this.LoadingFinished) 
+		//{
 			if (this.PopulateSort) 
 				this.PopulateSort(this.ItemsList);
 			
@@ -152,7 +152,7 @@ ItemsHelper = Class.create({
 				this.filterList.mojo.setLength(this.Matches.length);
 				this.filterList.mojo.setCount(this.Matches.length);
 			}
-		}
+		//}
 	},
 	
 	
