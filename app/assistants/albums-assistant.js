@@ -72,7 +72,7 @@ AlbumsAssistant = Class.create(
         this.PPattr = 
         {
             title: this.SceneTitle,
-            image: 'images/albums.png'
+            image: 'images/icons/albums.png'
         };
         this.albumLoadModel = 
         {

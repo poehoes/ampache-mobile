@@ -75,24 +75,16 @@ BackgroundAssistant = Class.create({
         Mojo.Event.listen(this.controller.get('myPhotoDiv'), Mojo.Event.imageViewChanged, this.imageViewChanged);
         
         this.solidImages = [];
-        this.solidImages[0] = {
-            source: 'images/backgrounds/solids/background1.png'
-        };
-        this.solidImages[1] = {
-            source: 'images/backgrounds/solids/background2.png'
-        };
-        this.solidImages[2] = {
-            source: 'images/backgrounds/solids/background3.png'
-        };
-        this.solidImages[3] = {
-            source: 'images/backgrounds/solids/background4.png'
-        };
-        this.solidImages[4] = {
-            source: 'images/backgrounds/solids/background5.png'
-        };
-        this.solidImages[5] = {
-            source: 'images/backgrounds/solids/background6.png'
-        };
+        
+		for (var i = 0; i < 7; i++) 
+		{
+			var imgSource = 'images/backgrounds/solids/background' + (i+1) +'.png'
+			this.solidImages[i] = 
+			{
+				source: imgSource
+			};
+		}
+        
         
         
         
@@ -375,7 +367,7 @@ BackgroundAssistant = Class.create({
     
     deactivate: function(){
         this.controller.get('body_wallpaper').style.background = null;
-        this.controller.get('body_wallpaper').style.backgroundColor = "white";
+        this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
         
         Mojo.Event.stopListening(this.controller.get('myPhotoDiv'), Mojo.Event.imageViewChanged, this.imageViewChanged);
         

@@ -49,7 +49,7 @@ ArtistsAssistant = Class.create(
 		this.PPattr = 
         {
             title: this.SceneTitle,
-            image: 'images/artists.png'
+            image: 'images/icons/artists.png'
         };
         this.artistLoadModel = 
         {

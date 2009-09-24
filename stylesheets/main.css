@@ -74,12 +74,16 @@ COLOR: grey;
   padding: 0px;
   font-weight: bold;
   cursor: default;
+
+  
 }
 
 #headerProgress
 {
 	z-index:-1;	
+	
 }
+
 
 /*
 .customBackground{
@@ -153,6 +157,28 @@ height: 100%;
 }
 
 
+.songsMenuLeft
+{
+    float:left;
+    width:90%;
+}
+.songsMenuRight
+{
+    position:absolute;
+    right:0px;
+    /*float:right;
+    width:20%;*/
+}
+
+.songsMenuIcon
+{
+    margin:5px 5px 5px 0px;
+    height:40px;
+    width:40px;
+    
+}
+
+
 .mainMenuLeft
 {
 	float:left;
@@ -170,6 +196,15 @@ height: 100%;
 {
 	float:none;
 }
+
+.mainMenuIcon
+{
+    margin:5px 20px 5px 0px;
+    height:40px;
+    width:40px;
+    
+}
+
 
 .extended-alpha
 {
@@ -190,13 +225,7 @@ height: 100%;
 }
 
 
-.mainMenuIcon
-{
-	margin:5px 20px 5px 0px;
-	height:40px;
-	width:40px;
-	
-}
+
 
 
 .shuffleRight
@@ -474,20 +503,20 @@ padding: 0px 5px 5px 5px;
 
 
 
-.palm-menu-icon.music-shuffle { background-image: url(../images/shuffle.png); }
+.palm-menu-icon.music-shuffle { background-image: url(../images/player/shuffle.png); }
 
-.palm-menu-icon.music-forward { background-image: url(../images/forward.png); }
-.palm-menu-icon.music-play { background-image: url(../images/play.png); }
-.palm-menu-icon.music-rewind { background-image: url(../images/backward.png); }
-.palm-menu-icon.music-forward-disabled { background-image: url(../images/menu-icon-music-forward-disabled.png); }
-.palm-menu-icon.music-play-disabled { background-image: url(../images/menu-icon-music-play-disabled.png); }
-.palm-menu-icon.music-rewind-disabled { background-image: url(../images/menu-icon-music-rewind-disabled.png); }
-.palm-menu-icon.music-pause { background-image: url(../images/pause.png); }
-.palm-menu-icon.music-stop { background-image: url(../images/menu-icon-music-stop.png); }
+.palm-menu-icon.music-forward { background-image: url(../images/player/forward.png); }
+.palm-menu-icon.music-play { background-image: url(../images/player/play.png); }
+.palm-menu-icon.music-rewind { background-image: url(../images/player/backward.png); }
+.palm-menu-icon.music-forward-disabled { background-image: url(../images/player/menu-icon-music-forward-disabled.png); }
+.palm-menu-icon.music-play-disabled { background-image: url(../images/player/menu-icon-music-play-disabled.png); }
+.palm-menu-icon.music-rewind-disabled { background-image: url(../images/player/menu-icon-music-rewind-disabled.png); }
+.palm-menu-icon.music-pause { background-image: url(../images/player/pause.png); }
+.palm-menu-icon.music-stop { background-image: url(../images/player/menu-icon-music-stop.png); }
 
 
-.palm-menu-icon.music-repeat-one { background-image: url(../images/menu-icon-music-repeat-one.png); }
-.palm-menu-icon.music-repeat { background-image: url(../images/menu-icon-music-repeat.png); }
+.palm-menu-icon.music-repeat-one { background-image: url(../images/player/menu-icon-music-repeat-one.png); }
+.palm-menu-icon.music-repeat { background-image: url(../images/player/menu-icon-music-repeat.png); }
 
 /*
 .palm-dev-menu.view-menu,

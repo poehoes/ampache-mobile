@@ -17,6 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
+var RepeatModeType = {"no_repeat":0, "repeat_forever":1, "repeat_once":2 }
+
 
 AudioPlayer = Class.create({
 
@@ -34,6 +36,8 @@ AudioPlayer = Class.create({
 	player: null,
     playList: null,
     shuffleOn:false,
+	repeatMode:RepeatModeType.no_repeat,
+	
 	
 	debug: false,
 	
@@ -140,7 +144,7 @@ AudioPlayer = Class.create({
        switch (event.key) {
             
             case "next":
-                this.play_next();
+                this.play_next(true);
                 break;
                 
             case "prev":
@@ -318,6 +322,17 @@ AudioPlayer = Class.create({
 		this.shuffleOn = true;
 	},
 	
+	//**********************************************************************************************************************
+    //Code for repeat
+    //**********************************************************************************************************************
+    setRepeatMode:function(type)
+	{
+		this.repeatMode = type;
+	},
+	
+	
+	
+	
 	getNextTrack:function()
 	{
 		if ((this.currentPlayingIndex + 1) < (this.playList.length)) {
@@ -374,7 +389,41 @@ AudioPlayer = Class.create({
 		this.Paused=true;
     },
     
-    play_next: function(){
+	playFinished:false,
+	
+	play_finished: function()
+	{
+		this.currentPlayingIndex = 0
+		this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
+		this.Paused=false;
+		
+		
+		switch (this.repeatMode)
+		{
+			case RepeatModeType.no_repeat:
+				this.playFinished=true;
+				this.stop();
+				this.NowPlayingShowPlay();
+				this.UpdateNowPlayingBuffering(0, 0);
+				this.NowPlayingUpdateSongInfo();
+				this.NowPlayingResetTime();
+				
+				break;
+			case RepeatModeType.repeat_forever:
+				this.internal_play();
+				break;
+			case RepeatModeType.repeat_once:
+				this.repeatMode = RepeatModeType.no_repeat;
+				this.NowPlayingSetRepeatMode();
+				this.internal_play();
+				break;
+				
+		}
+		
+		
+	},
+	
+    play_next: function(clicked){
         Mojo.Log.info("--> AudioPlayer.prototype.play_next");
         this.printPlayOrderList();
 		
@@ -385,6 +434,13 @@ AudioPlayer = Class.create({
 			this.stop();
             this.internal_play();
         }
+		else
+		{
+		  	if((!clicked) || (this.repeatMode != RepeatModeType.no_repeat)){
+				this.play_finished();
+			} 
+		}
+		
         Mojo.Log.info("<-- AudioPlayer.prototype.play_next");
     },
     
@@ -411,12 +467,11 @@ AudioPlayer = Class.create({
     
         Mojo.Log.info("--> AudioPlayer.prototype.internal_play");
         
-		if (this.Paused == true) {
-			
+		if ((this.Paused) && (!this.playFinished)){
 			this.player.play()
 		}
 		else {
-		
+		    this.playFinished = false;
 			Mojo.Log.info("Starting play of " +
 			this.playList[this.currentPlayingTrack].artist +
 			" - " +
@@ -428,7 +483,7 @@ AudioPlayer = Class.create({
 			
 			Mojo.Log.info("URL play of " +
 			this.playList[this.currentPlayingTrack].url);
-			
+			this.NowPlayingResetTime();
 			this.UpdateNowPlayingBuffering(0, 0);
 			this.NowPlayingUpdateSongInfo();
 			this.UpdateNowPlayingShowSpinner(true);
@@ -638,7 +693,7 @@ AudioPlayer = Class.create({
 				break;
 			
 			case "ended":
-                this.play_next();
+                this.play_next(false);
 				this.NowPlayingStopPlaybackTimer();
                 break;
         }
@@ -750,6 +805,22 @@ AudioPlayer = Class.create({
 		}
 	},
 	
+	NowPlayingResetTime: function()
+	{
+		if (this.NowPlaying != null) 
+		{
+			this.NowPlaying.updateTime(0, 0);
+		}
+	},
+	
+	NowPlayingSetRepeatMode: function()
+    {
+        if (this.NowPlaying != null) 
+        {
+            this.NowPlaying.setRepeatMode(this.repeatMode);
+        }
+    },
+	
 	
 	
 	_updateBuffering: function(){
@@ -776,7 +847,7 @@ AudioPlayer = Class.create({
     
 	clearNowPlaying: function(){
         this.NowPlaying =null;     
-    },
+    }
 });
 
 
