@@ -13,6 +13,9 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var PREF_COLOR = '#4c4c4c'
+
 PreferencesAssistant = Class.create(
 {
 
@@ -30,7 +33,7 @@ PreferencesAssistant = Class.create(
     
         //Mojo.loadStylesheet(this.controller.document, "stylesheets/preferences.css");
         this.controller.get('body_wallpaper').style.background = null;
-        this.controller.get('body_wallpaper').style.backgroundColor = "white";
+        this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
         
         
         this.accountsModel = 

@@ -59,7 +59,7 @@ MainmenuAssistant = Class.create(
          name: $L("Search"),
          scene: $L("search"),
          description: null,
-         icon: "images/search.png"
+         icon: "images/icons/search.png"
          
          },
          */
@@ -69,7 +69,7 @@ MainmenuAssistant = Class.create(
             name: $L("Artists"),
             scene: $L("artists"),
             description: $L(AmpacheMobile.ampacheServer.artists.toString()),
-            icon: "images/artists.png"
+            icon: "images/icons/artists.png"
         }, 
         {
             category: $L("bottom"),
@@ -77,7 +77,7 @@ MainmenuAssistant = Class.create(
             name: $L("Albums"),
             scene: $L("albums"),
             description: $L(AmpacheMobile.ampacheServer.albums.toString()),
-            icon: "images/albums.png"
+            icon: "images/icons/albums.png"
         }, 
         
         /*
@@ -96,7 +96,7 @@ MainmenuAssistant = Class.create(
             name: $L("Playlists"),
             scene: $L("playlists"),
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
-            icon: "images/playlists.png"
+            icon: "images/icons/playlists.png"
         }        /*{
          category: $L("bottom"),
          directory: $L("preferences"),

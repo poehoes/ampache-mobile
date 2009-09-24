@@ -54,7 +54,7 @@ SongsAssistant = Class.create(
         this.PPattr = 
         {
             title: this.SceneTitle,
-            image: 'images/songs.png'
+            image: 'images/icons/songs.png'
         };
         this.songLoadModel = 
         {
@@ -208,50 +208,81 @@ SongsAssistant = Class.create(
         }
     },
     
+	
+	popupHandler:function(event)
+	{
+		 var item = this;
+		 
+		 var controller = item._this.controller;
+		 Mojo.Log.info(event);
+		 if (event == "pushArtist") 
+		 {
+		 	controller.stageController.pushScene('albums', 
+		 	{
+		 		SceneTitle: item.artist,
+		 		DisplayArtistInfo: false,
+		 		Artist_id: item.artist_id,
+		 		ExepectedAlbums: 0
+		 	});
+		 }
+		 
+		 else if (event == "pushAlbum") 
+		 {
+		 	controller.stageController.pushScene('songs', 
+		 	{
+		 		SceneTitle: item.artist + " - " + item.album,
+		 		Type: "album",
+		 		Album_id: item.album_id
+		 	
+		 	});
+		 }
+	},
+	
+	
     listTapHandler: function(event)
     {
         Mojo.Log.info("--> listTapHandler");
         
         var click_id = event.originalEvent.target.id;
         
-        if (click_id.substr(0, 4) == "link") 
-        {
-        
-        
-            var elements = click_id.split("_");
-            if (elements[1] == "artist") 
-            {
-                this.controller.stageController.pushScene('albums', 
-                {
-                    SceneTitle: event.item.artist,
-                    DisplayArtistInfo: false,
-                    Artist_id: event.item.artist_id,
-                    ExepectedAlbums: 0
-                });
-            }
-            
-            else if (elements[1] == "album") 
-            {
-                this.controller.stageController.pushScene('songs', 
-                {
-                    SceneTitle: event.item.artist + " - " + event.item.album,
-                    Type: "album",
-                    Album_id: event.item.album_id
-                
-                });
-            }
-            
-        }
-        else 
-        {
-            this.controller.stageController.pushScene('now-playing', 
-            {
-                playList: this.itemsHelper.ItemsList,
-                startIndex: event.index,
-                shuffle: false
-            });
-        }
-        
+        if (click_id == "moreOptions") 
+		{
+			var item = event.item;
+			item._this = this;
+			var editCmd = [
+			{
+				label: event.item.artist,
+				command: "pushArtist",
+				secondaryIconPath:"images/icons/artists.png"
+			
+			
+			}, 
+			{
+				label: event.item.album,
+				command: "pushAlbum",
+				secondaryIconPath:"images/icons/albums.png"
+			
+			
+			}];
+			
+			this.controller.popupSubmenu(
+			{
+				onChoose: this.popupHandler.bind(item),
+				placeNear: event.originalEvent.target,
+				items: editCmd
+			});
+		}
+		else 
+		{
+			this.controller.stageController.pushScene('now-playing', 
+			{
+				
+				playList: this.itemsHelper.ItemsList,
+				startIndex: event.index,
+				shuffle: false
+			});
+		}
+       
         Mojo.Log.info("<-- listTapHandler");
     },
     

@@ -46,7 +46,7 @@ SearchMenuAssistant = Class.create(
         this.PPattr = 
         {
             title: "Search",
-            image: 'images/SEARCH.png'
+            image: 'images/icons/search.png'
         };
         this.searchLoadModel = 
         {

@@ -43,7 +43,7 @@ PlaylistsAssistant = Class.create(
         this.PPattr = 
         {
             title: this.SceneTitle,
-            image: 'images/playlists.png'
+            image: 'images/icons/playlists.png'
         };
         this.playlistLoadModel = 
         {

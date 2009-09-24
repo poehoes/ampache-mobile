@@ -189,7 +189,7 @@ NowPlayingAssistant = Class.create(
         
         if (event.velocity.x < -1500) 
         {
-            AmpacheMobile.audioPlayer.play_next();
+            AmpacheMobile.audioPlayer.play_next(true);
             //this.moveArt();
         }
         if (event.velocity.x > 1500) 
@@ -743,7 +743,7 @@ NowPlayingAssistant = Class.create(
             switch (event.command)
             {
                 case "forward":
-                    AmpacheMobile.audioPlayer.play_next();
+                    AmpacheMobile.audioPlayer.play_next(true);
                     break;
                 case "rewind":
                     AmpacheMobile.audioPlayer.play_prev();
@@ -861,34 +861,20 @@ NowPlayingAssistant = Class.create(
         
         Mojo.Log.info("--> toggleRepeat  repeatMode:", this.repeatMode);
         
-        if (this.repeatMode == 1) 
-        {
-            this.controller.showAlertDialog(
-            {
-                // onChoose: this.onErrorDialogDismiss.bind(this),
-                title: "Feature not Complete",
-                message: "This feature has not been finished, look for it in a future version",
-                choices: [
-                {
-                    label: $L('Cancel'),
-                    value: "cancel",
-                    type: 'dismiss'
-                }]
-            });
-        }
-        //if (this.shuffle) {
-        //AmpacheMobile.audioPlayer.toggleShuffleOn();
-        //}
-        //else
-        //{
-        //AmpacheMobile.audioPlayer.toggleShuffleOff();
-        //}
-        
+        AmpacheMobile.audioPlayer.setRepeatMode(this.repeatMode);
+		
         this.setMenuControls();
         
         
     },
     
+	setRepeatMode:function(mode)
+	{
+		 this.repeatMode=mode;
+		 this.setMenuControls();
+	},
+	
+	
     
     toggleShuffle: function()
     {
