@@ -17,10 +17,6 @@ var DEFAULT_PING_TIME = 1000 * 120;
 
 AmpacheServer = Class.create(
 {
-
-
-
-
     URL: "",
     UserName: "",
     Password: "",
@@ -43,7 +39,6 @@ AmpacheServer = Class.create(
     videos: "",
     
     XMLFormattingIssue: "Error requesting data from Ampache.  Possible Reasons: Songs with Unicode information.",
-    
     
     /*'<?xml version="1.0" encoding="UTF-8" ?> 
      <root>
@@ -84,7 +79,6 @@ AmpacheServer = Class.create(
     BuildConnectionUrl: function(url, username, password)
     {
         Mojo.Log.info("Enter AmpacheServer.prototype.BuildConnectionUrl", url, username, password);
-        
         
         var time = this.getAmpacheTime();
         Mojo.Log.info("Time", time);
@@ -404,11 +398,8 @@ AmpacheServer = Class.create(
             
             //Mojo.Log.info("Artist lenth: " + artistListXML.length);
             
-            
             for (var i = 0; i < artistListXML.length; i++) 
             {
-            
-            
                 var _id = artistListXML[i].getAttribute("id")
                 var _name = artistListXML[i].getElementsByTagName("name")[0].firstChild.data;
                 var _albums = artistListXML[i].getElementsByTagName("albums")[0].firstChild.data;
@@ -416,14 +407,10 @@ AmpacheServer = Class.create(
                 
                 var newArtist = new ArtistModel(_id, _name, _albums, _songs);
                 //newArtist.initialize(_id, _name, _albums, _songs);
-                
-                
                 //Mojo.Log.info("Artist "+_id+": " + _name);
                 
                 ArtistList[i] = newArtist;
             }
-            
-            
         }
         else 
         {
@@ -540,8 +527,6 @@ AmpacheServer = Class.create(
             
             for (var i = 0; i < albumListXML.length; i++) 
             {
-            
-            
                 var _id = albumListXML[i].getAttribute("id")
                 var _name = albumListXML[i].getElementsByTagName("name")[0].firstChild.data;
                 var _artist = albumListXML[i].getElementsByTagName("artist")[0].firstChild.data;
@@ -554,8 +539,6 @@ AmpacheServer = Class.create(
                 
                 AlbumList[i] = newAlbum;
             }
-            
-            
         }
         else 
         {
