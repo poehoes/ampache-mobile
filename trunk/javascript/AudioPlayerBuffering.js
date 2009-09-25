@@ -18,8 +18,7 @@
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-AudioPlayer = Class.create({
-
+AudioPlayer = Class.create({;
     PlayerReady: false,
     NowPlaying: null,
     NowPlayingVisible: false,
@@ -58,8 +57,6 @@ AudioPlayer = Class.create({
 		Mojo.Log.info("<-- AudioPlayer.prototype.initialize");
 		
     },
-    
-	
 
 	//**********************************************************************************************************************
 	//Code for audio events vodo
@@ -79,7 +76,6 @@ AudioPlayer = Class.create({
 		Mojo.Log.info("<-- AudioPlayer.prototype.registerEventsForPlayer");
 	},
 	
-	
 	unregisterEventsForPlayer: function(player){
 		Mojo.Log.info("--> AudioPlayer.prototype.unregisterEventsForPlayer");
 		
@@ -91,10 +87,6 @@ AudioPlayer = Class.create({
 		
 		Mojo.Log.info("<-- AudioPlayer.prototype.unregisterEventsForPlayer");
 	},
-	
-	
-	
-  
 	
 	registerEventsForBuffer:function(buffer)
 	{
@@ -154,18 +146,10 @@ AudioPlayer = Class.create({
 					this.AudioPlayers[i] = new Audio();
 					this.AudioPlayers[i].Context = this;
 					this.AudioPlayers[i].autoplay = false;
-					
 				};
-				
-				
 				//this.player = AudioTag.extendElement(_controller.get('audioPlayerDiv'), _controller);
-				
 			}
 			else {
-			
-			
-			
-			
 				Mojo.Log.info("Setting up audio for palm");
 			
 				this.MediaEvents = this.registerForMediaEvents(this.handleAudioEvents.bind(this));
@@ -195,12 +179,6 @@ AudioPlayer = Class.create({
 			
 			this.player = this.AudioPlayers[this.playerIndex]
 			this.registerEventsForPlayer(this.player);
-			
-			
-			
-	
-			
-			
 			
 		}
         Mojo.Log.info("<-- AudioPlayer.prototype.createAudioObj");
@@ -465,7 +443,6 @@ AudioPlayer = Class.create({
 			this.RequestedPlayBeforeReady=true;
 		}
         
-        
         Mojo.Log.error("<-- AudioPlayer.prototype.play");
         
     },
@@ -546,14 +523,10 @@ AudioPlayer = Class.create({
 			this.player.play()
 		}
 		else {
-		
 			Mojo.Log.error("Starting play of " +
-			this.playList[this.currentPlayingTrack].artist +
-			" - " +
-			this.playList[this.currentPlayingTrack].album +
-			" - " +
-			this.playList[this.currentPlayingTrack].track +
-			" - " +
+			this.playList[this.currentPlayingTrack].artist + " - " +
+			this.playList[this.currentPlayingTrack].album + " - " +
+			this.playList[this.currentPlayingTrack].track + " - " +
 			this.playList[this.currentPlayingTrack].title);
 			
 			Mojo.Log.error("URL play of " +
@@ -587,11 +560,8 @@ AudioPlayer = Class.create({
 		}
 		this.Paused = false;
         
-        
         Mojo.Log.error("<-- AudioPlayer.prototype.internal_play");
-        
     },
-    
     
     handleAudioEvents: function(event){
 		Mojo.Log.error("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
@@ -600,9 +570,6 @@ AudioPlayer = Class.create({
 		
 		
         switch (event.type) {
-            
-			
-			
             case "canplay":
                 obj.UpdateNowPlayingShowSpinner(false);
 				obj.player.play();
@@ -794,9 +761,7 @@ AudioPlayer = Class.create({
 			if(_spinnerOn==true) this.NowPlaying.showSpinner();
 			else if(_spinnerOn==false) this.NowPlaying.hideSpinner();
 			else{}
-			
 		}
-		
 	},
 	
 	NowPlayingShowPause:function()
@@ -844,9 +809,6 @@ AudioPlayer = Class.create({
 			
 		}
 	},
-	
-	
-	
 	
 	_updateBuffering: function(){
 		//Mojo.Log.error("--> AudioPlayer.prototype._updateBuffering")
