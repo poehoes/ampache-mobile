@@ -60,20 +60,20 @@ AudioPlayer = Class.create({
 			this.mediaEvents = this.registerForMediaEvents(this.mediaEventsCallbacks.bind(this));
 			
 		}
-		Mojo.Log.error("<-- AudioPlayer.prototype.initialize %j", this.audioObj);
+		Mojo.Log.info("<-- AudioPlayer.prototype.initialize %j", this.audioObj);
 		
     },
     
   
     
     createAudioObj: function(_controller){
-        Mojo.Log.error("--> AudioPlayer.prototype.createAudioObj");
+        Mojo.Log.info("--> AudioPlayer.prototype.createAudioObj");
         
         if (this.audioObj == null) {
 		
 			// use Safari's HTML5 implementation if we are runing on palm host
 			if (Mojo.Host.current === Mojo.Host.browser) {
-				Mojo.Log.error("Setting up audio for safari");
+				Mojo.Log.info("Setting up audio for safari");
 				this.inPalmHost = true;
 				this.PlayerReady = true;
 				this.player = new Audio();
@@ -82,7 +82,7 @@ AudioPlayer = Class.create({
 			}
 			else {
 			
-				Mojo.Log.error("Setting up audio for palm");
+				Mojo.Log.info("Setting up audio for palm");
 				this.inPalmHost = false;
 				this.PlayerReady = false;
 				
@@ -132,7 +132,7 @@ AudioPlayer = Class.create({
 			
 			
 		}
-        Mojo.Log.error("<-- AudioPlayer.prototype.createAudioObj");
+        Mojo.Log.info("<-- AudioPlayer.prototype.createAudioObj");
     },
     
 	
@@ -140,7 +140,7 @@ AudioPlayer = Class.create({
     //Handles Bluetooth Commands
     mediaEventsCallbacks: function(event){
       
-       Mojo.Log.error("--> AudioPlayer.prototype.mediaEventsCallbacks: "+ event.key);
+       Mojo.Log.info("--> AudioPlayer.prototype.mediaEventsCallbacks: "+ event.key);
        switch (event.key) {
             
             case "next":
@@ -183,7 +183,7 @@ AudioPlayer = Class.create({
 	
 	registerForMediaEvents: function(callback)
     {
-        Mojo.Log.error("--> AudioPlayer.prototype.registerForMediaEvents");
+        Mojo.Log.info("--> AudioPlayer.prototype.registerForMediaEvents");
 		
 		var parameters = {};
         parameters.appName = Mojo.appName;
@@ -200,25 +200,25 @@ AudioPlayer = Class.create({
             );
 			
 			
-	    Mojo.Log.error("<-- AudioPlayer.prototype.registerForMediaEvents");
+	    Mojo.Log.info("<-- AudioPlayer.prototype.registerForMediaEvents");
     },
 	
 	
 	getStreamInfo: function(){
-		Mojo.Log.error("--> AudioPlayer.prototype.getStreamInfo");
+		Mojo.Log.info("--> AudioPlayer.prototype.getStreamInfo");
 		var info = "Info Unavailable"
 		if (this.player.palm!=null) {
 			info = "bitrate estimated: " + this.player.palm.bitrate.audio.estimate + "\r\n";
 			info += "bitrate avg: " + this.player.palm.bitrate.audio.average.toString() + "\r\n";
 			info += "bitrate max: " + this.player.palm.bitrate.audio.maximum.toString();
 		}
-		Mojo.Log.error("<-- AudioPlayer.prototype.getStreamInfo");
+		Mojo.Log.info("<-- AudioPlayer.prototype.getStreamInfo");
 		return info;
 	},
 	
 	ConnectedToServer:  function(event) 
 	{
-		Mojo.Log.error("--> AudioPlayer.prototype.ConnectedToServer");
+		Mojo.Log.info("--> AudioPlayer.prototype.ConnectedToServer");
         //this.playList = newPlayList;
 		this.PlayerReady = true;
 		if(this.RequestedPlayBeforeReady==true)
@@ -226,11 +226,11 @@ AudioPlayer = Class.create({
 			this.RequestedPlayBeforeReady=false;
 			this.play();
 		}
-        Mojo.Log.error("<-- AudioPlayer.prototype.ConnectedToServer");
+        Mojo.Log.info("<-- AudioPlayer.prototype.ConnectedToServer");
 	},
 	
     addPlayList: function(newPlayList, _shuffleOn, _startIndex){
-        Mojo.Log.error("--> AudioPlayer.prototype.addPlayList");
+        Mojo.Log.info("--> AudioPlayer.prototype.addPlayList");
         this.playList = newPlayList;
 		this.markPlayListUnplayed();
 		this.playOrderList = this.createOrderList();
@@ -554,7 +554,7 @@ AudioPlayer = Class.create({
 		if(this.player.palm != null && this.player.palm.errorDetails != null  && this.player.palm.errorDetails.errorCode != null)
 		{
 			var errorDetails = this.player.palm.errorDetails;
-			Mojo.Log.error("Error Details: %j", errorDetails);
+			Mojo.Log.info("Error Details: %j", errorDetails);
 			
 			
 			var errorClassString = "Unknown: (0x" + errorDetails.errorClass.toString(16).toUpperCase() + ")"
@@ -622,7 +622,7 @@ AudioPlayer = Class.create({
     handleAudioEvents: function(event){
 		Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
         
-        Mojo.Log.error("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
+        //Mojo.Log.error("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
 		//Mojo.Log.info("handeAudioEvent: " + event.type);
         
 		this.NowPlayingStreamDebug(event.type);

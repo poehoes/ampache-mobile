@@ -300,7 +300,7 @@ ConnectionAssistant.prototype.LoadMainMenu = function(account){
             Mojo.Log.info("Creating AmpacheServer Object");
             this.spinnerModel.spinning = true;
             this.controller.modelChanged(this.spinnerModel);
-            //AmpacheMobile.Account = account;
+            AmpacheMobile.Account = account;
             AmpacheMobile.ampacheServer = null;
             AmpacheMobile.ampacheServer = new AmpacheServer(account.ServerURL, account.UserName, account.Password);
             AmpacheMobile.ampacheServer.connect(this.ConnectionCallback.bind(this), this);
