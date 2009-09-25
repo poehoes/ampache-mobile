@@ -13,7 +13,7 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-var DEFAULT_PING_TIME = 1000 * 60;
+var DEFAULT_PING_TIME = 1000 * 120;
 
 AmpacheServer = Class.create(
 {
@@ -172,7 +172,7 @@ AmpacheServer = Class.create(
             window.clearInterval(this.pingTimer);
             this.pingTimer = null;
         }
-        this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining - DEFAULT_PING_TIME);
+        this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining);
         
         
         Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
@@ -1234,7 +1234,10 @@ PingModel = Class.create(
         var pingResponse = PingXML.getElementsByTagName("root")[0];
         this.SessionExpires = pingResponse.getElementsByTagName("session_expire")[0].firstChild.data;
         this.UTC = Date.parse(this.SessionExpires);
-        this.TimeRemaining = this.UTC - Date.now();
+        var CurrentTime = new Date();
+		var CurrentUTC = CurrentTime.getTime();
+        this.TimeRemaining = this.UTC - CurrentUTC;
+		this.TimeRemaining *= 0.45; //So it will ping twice during the session time
         this.ApiVersion = pingResponse.getElementsByTagName("version")[0].firstChild.data;
     },
     
