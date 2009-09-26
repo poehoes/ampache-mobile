@@ -23,12 +23,12 @@ PlaylistsAssistant = Class.create(
         this.DisplayArtistInfo = params.DisplayArtistInfo;
         this.ExpectedPlaylists = params.ExpectedPlaylists
         
-		this.Search=null;
-		if (params.Search) 
-		{
-			this.Search = params.Search;
-		}
-		
+        this.Search = null;
+        if (params.Search) 
+        {
+            this.Search = params.Search;
+        }
+        
         this.itemsHelper = new ItemsHelper();
     },
     
@@ -38,6 +38,11 @@ PlaylistsAssistant = Class.create(
     setup: function()
     {
     
+        //******************************************************************************************************
+        // Make scrim
+        this.scrim = $("spinner-scrim");
+        this.scrim.hide();
+        
         //*********************************************************************************************************
         //  Setup Progress Pill
         this.PPattr = 
@@ -106,7 +111,7 @@ PlaylistsAssistant = Class.create(
         
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
         this.TurnOnSpinner();
-		
+        
     },
     
     
@@ -141,7 +146,7 @@ PlaylistsAssistant = Class.create(
             SceneTitle: event.item.name,
             Type: "playlist",
             Playlist_id: event.item.id,
-			Item:event.item
+            Item: event.item
         });
         
     },
@@ -183,6 +188,7 @@ PlaylistsAssistant = Class.create(
     {
         Mojo.Log.info("--> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
+		this.scrim.show();
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- TurnOnSpinner");
@@ -191,6 +197,7 @@ PlaylistsAssistant = Class.create(
     TurnOffSpinner: function()
     {
         Mojo.Log.info("-----> TurnOffSpinner");
+		this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");

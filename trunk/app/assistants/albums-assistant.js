@@ -13,9 +13,17 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-var AlbumSortType = {"alpha":0, "year":1, "artist":2};
-var SortOrder = {"descending":1, "ascending":-1}
+var AlbumSortType = 
+{
+    "alpha": 0,
+    "year": 1,
+    "artist": 2
+};
+var SortOrder = 
+{
+    "descending": 1,
+    "ascending": -1
+}
 
 AlbumsAssistant = Class.create(
 {
@@ -35,23 +43,23 @@ AlbumsAssistant = Class.create(
             //this.Artist = params.Artist;
             this.isArtistView = true;
             this.Artist_id = params.Artist_id;
-			
+            
         }
         else 
             this.isArtistView = false;
         
         
-		if(params.Search)
+        if (params.Search) 
         {
             this.Search = params.Search;
-        } 
+        }
         
         this.itemsHelper = new ItemsHelper();
         
-		this.sortType = AmpacheMobile.settingsManager.settings.AlbumsSort;
-		this.sortOrder = SortOrder.descending;
-		
-		
+        this.sortType = AmpacheMobile.settingsManager.settings.AlbumsSort;
+        this.sortOrder = SortOrder.descending;
+        
+        
         Mojo.Log.info("<-- constructor");
     },
     
@@ -64,7 +72,10 @@ AlbumsAssistant = Class.create(
         Mojo.Log.info("--> setup");
         
         
-        
+        //******************************************************************************************************
+        // Make scrim
+        this.scrim = $("spinner-scrim");
+        this.scrim.hide();
         
         
         
@@ -170,37 +181,56 @@ AlbumsAssistant = Class.create(
         
         this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
         
-		//var toggleAlpaha = (AlbumSortType.alpha == this.sortType);
-		//var toggleYear =(AlbumSortType.year == this.sortType);
-		//var toggleArtist = (AlbumSortType.artist == this.sortType)
-		
-		//Setup App Menu
-		var appMenuAttr = {omitDefaultItems: true};
+        //var toggleAlpaha = (AlbumSortType.alpha == this.sortType);
+        //var toggleYear =(AlbumSortType.year == this.sortType);
+        //var toggleArtist = (AlbumSortType.artist == this.sortType)
         
-		
-		
-		this.sortItems = [
-            
-            {label:"Alphabetical", command:"doSort-alpha" /*, toggleCmd: toggleAlpaha*/},
-            {label:"Year", command: "doSort-year" /*,  toggleCmd: toggleYear*/},
-            {label:"Artist", command:"doSort-artist" /*, toggleCmd: toggleArtist*/}
-            
-        ];
+        //Setup App Menu
+        var appMenuAttr = 
+        {
+            omitDefaultItems: true
+        };
         
-		
-		this.appMenuModel = {
+        
+        
+        this.sortItems = [
+        
+        {
+            label: "Alphabetical",
+            command: "doSort-alpha" /*, toggleCmd: toggleAlpaha*/
+        }, 
+        {
+            label: "Year",
+            command: "doSort-year" /*,  toggleCmd: toggleYear*/
+        }, 
+        {
+            label: "Artist",
+            command: "doSort-artist" /*, toggleCmd: toggleArtist*/
+        }];
+        
+        
+        this.appMenuModel = 
+        {
             visible: true,
             items: [
-                //{label: "Test Connection", command: "doTest-cmd"},
-                {label: "Preferences...",  command: "doPref-cmd" },
-                {label: "Sort",  items:this.sortItems },
-			    {label: "About...", command: "about-cmd"}
-            ]
+            //{label: "Test Connection", command: "doTest-cmd"},
+            {
+                label: "Preferences...",
+                command: "doPref-cmd"
+            }, 
+            {
+                label: "Sort",
+                items: this.sortItems
+            }, 
+            {
+                label: "About...",
+                command: "about-cmd"
+            }]
         };
-		
-		
-		
-		
+        
+        
+        
+        
         this.controller.setupWidget(Mojo.Menu.appMenu, appMenuAttr, this.appMenuModel);
         
         this.TurnOnSpinner("Retrieving<br>Albums");
@@ -219,7 +249,7 @@ AlbumsAssistant = Class.create(
             ExpectedItems: this.ExpectedAlbums,
             SortFunction: this.sortList.bind(this),
             MatchFunction: this.IsMatch,
-			PopulateSort: this.AddSortToItems.bind(this)
+            PopulateSort: this.AddSortToItems.bind(this)
         
         }
         
@@ -230,14 +260,14 @@ AlbumsAssistant = Class.create(
         
     },
     
-	
-	
-	
-	
-	
-
-	
-	
+    
+    
+    
+    
+    
+    
+    
+    
     IsMatch: function(item, filterString)
     {
         var matchString = item.name + " " + item.artist;
@@ -259,13 +289,13 @@ AlbumsAssistant = Class.create(
         }
         else 
         {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, offset, limit,this.Search);
+            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, offset, limit, this.Search);
         }
         
         Mojo.Log.info("<-- GetMoreAlbums");
     },
     
- 
+    
     
     listTapHandler: function(event)
     {
@@ -276,7 +306,7 @@ AlbumsAssistant = Class.create(
             SceneTitle: event.item.artist + " - " + event.item.name,
             Type: "album",
             Album_id: event.item.id,
-			Item:event.item
+            Item: event.item
         
         });
         
@@ -310,133 +340,133 @@ AlbumsAssistant = Class.create(
     },
     
     
-	handleCommand : function(event)
+    handleCommand: function(event)
     {
         var reSortList = false;
-		this.prevSortType = this.sortType;
-		
+        this.prevSortType = this.sortType;
+        
         switch (event.command)
         {
             case "doSort-year":
-			    if(this.sortType!= AlbumSortType.year)
-				{
-					this.sortType= AlbumSortType.year;
-				    reSortList = true;
-				}
+                if (this.sortType != AlbumSortType.year) 
+                {
+                    this.sortType = AlbumSortType.year;
+                    reSortList = true;
+                }
                 event.stopPropagation();
                 break;
             case "doSort-alpha":
-			    if(this.sortType!= AlbumSortType.alpha)
+                if (this.sortType != AlbumSortType.alpha) 
                 {
-                    this.sortType= AlbumSortType.alpha;
+                    this.sortType = AlbumSortType.alpha;
                     reSortList = true;
                 }
                 event.stopPropagation();
                 break;
             case "doSort-artist":
-                 if(this.sortType!= AlbumSortType.artist)
+                if (this.sortType != AlbumSortType.artist) 
                 {
-                    this.sortType= AlbumSortType.artist;
+                    this.sortType = AlbumSortType.artist;
                     reSortList = true;
                 }
-				event.stopPropagation();
+                event.stopPropagation();
                 break;
                 
                 
         }
-		
-		if(reSortList)// && this.itemsHelper.LoadingFinished)
-		{
-			 AmpacheMobile.settingsManager.settings.AlbumsSort = this.sortType;
-             AmpacheMobile.settingsManager.SaveSettings();
-			 this.itemsHelper.ReSortList();
-        }
-		/*else if(reSortList)
-		{
-			this.showDialogBox("WARNING", "Cannot sort while list is loading.")
-			this.sortType = this.prevSortType;
-		}*/
         
+        if (reSortList)// && this.itemsHelper.LoadingFinished)
+        {
+            AmpacheMobile.settingsManager.settings.AlbumsSort = this.sortType;
+            AmpacheMobile.settingsManager.SaveSettings();
+            this.itemsHelper.ReSortList();
+        }
+        /*else if(reSortList)
+         {
+         this.showDialogBox("WARNING", "Cannot sort while list is loading.")
+         this.sortType = this.prevSortType;
+         }*/
     },
-	
-	
-    AddSortToItems:function(items)
-	{
-		for (var i = 0; i < items.length; i++) 
-		{
-			switch (this.sortType)
-			{
-				case AlbumSortType.year:
-					items[i].sort = items[i].year;
-					break;
-				case AlbumSortType.artist:
-					items[i].sort = items[i].artist.toUpperCase();
-					break;
-				default:
-					items[i].sort = items[i].name[0].toUpperCase();
-					break;	
-			}
-		}
-	},
-	
-	 
+    
+    
+    AddSortToItems: function(items)
+    {
+        for (var i = 0; i < items.length; i++) 
+        {
+            switch (this.sortType)
+            {
+                case AlbumSortType.year:
+                    items[i].sort = items[i].year;
+                    break;
+                case AlbumSortType.artist:
+                    items[i].sort = items[i].artist.toUpperCase();
+                    break;
+                default:
+                    items[i].sort = items[i].name[0].toUpperCase();
+                    break;
+            }
+        }
+    },
+    
+    
     
     
     dividerFunc: function(itemModel)
     {
         switch (this.sortType)
-        {   
+        {
             case AlbumSortType.year:
-			   
+                
                 return itemModel.year;
                 break;
             case AlbumSortType.artist:
-			   
+                
                 return itemModel.artist;
                 break;
             default:
-				return itemModel.sort[0];
+                return itemModel.sort[0];
                 break;
                 
                 
         }
-		
-		
-		  
+        
+        
+        
     },
     
     
     
-	sortList:function(a, b)
-	{
-		switch (this.sortType)
-		{	
-			case AlbumSortType.year:
-			    return (this.sortbyYearTitle(a,b)*this.sortOrder);
-				break;
-			case AlbumSortType.artist:
-			    return (this.sortAlpha(a.sort,b.sort)*this.sortOrder);
-				break;
-		    default:
-                return (this.sortAlpha(a.name.toUpperCase(),b.name.toUpperCase())*this.sortOrder);
+    sortList: function(a, b)
+    {
+        switch (this.sortType)
+        {
+            case AlbumSortType.year:
+                return (this.sortbyYearTitle(a, b) * this.sortOrder);
                 break;
-            	
-				
-		}
-		
-	},
-
-	
-	
-	sortAlpha: function(a, b)
-	{
-		if (a == b) 
-			return 0;
-		
-		if(a<b)
-		  return -1;
-		else return 1
-	},
+            case AlbumSortType.artist:
+                return (this.sortAlpha(a.sort, b.sort) * this.sortOrder);
+                break;
+            default:
+                return (this.sortAlpha(a.name.toUpperCase(), b.name.toUpperCase()) * this.sortOrder);
+                break;
+                
+                
+        }
+        
+    },
+    
+    
+    
+    sortAlpha: function(a, b)
+    {
+        if (a == b) 
+            return 0;
+        
+        if (a < b) 
+            return -1;
+        else 
+            return 1
+    },
     
     //This function will sort the album list by year and then alphabetically within the year
     sortbyYearTitle: function(a, b)
@@ -459,8 +489,8 @@ AlbumsAssistant = Class.create(
         
         if (ayear == byear) 
         {
-            return this.sortAlpha(a.name,b.name);
-			
+            return this.sortAlpha(a.name, b.name);
+            
         }
         else if (ayear < byear) 
         {
@@ -510,7 +540,7 @@ AlbumsAssistant = Class.create(
         
         
         Mojo.Event.stopListening(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
-        this.itemsHelper=null;
+        this.itemsHelper = null;
         Mojo.Log.info("<-- cleanup");
         
         
@@ -522,6 +552,7 @@ AlbumsAssistant = Class.create(
         Mojo.Log.info("--> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
         //this.controller.get('wait-message').innerHTML = message;
+		this.scrim.show();
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- ");
@@ -530,12 +561,13 @@ AlbumsAssistant = Class.create(
     TurnOffSpinner: function()
     {
         Mojo.Log.info("-----> TurnOffSpinner");
+		this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");
     },
-	
-	    // This function will popup a dialog, displaying the message passed in.
+    
+    // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function(title, message)
     {
         this.controller.showAlertDialog(
@@ -554,8 +586,8 @@ AlbumsAssistant = Class.create(
         });
     }
     
-
-
-   
+    
+    
+    
 })
 

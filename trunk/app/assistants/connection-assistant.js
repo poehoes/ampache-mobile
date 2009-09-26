@@ -13,7 +13,8 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-function ConnectionAssistant(params){
+function ConnectionAssistant(params)
+{
     Mojo.Log.info("--> ConnectionAssistant Constructor");
     
     this.ConnctionPending = false;
@@ -21,9 +22,14 @@ function ConnectionAssistant(params){
     Mojo.Log.info("<-- ConnectionAssistant Constructor");
 }
 
-ConnectionAssistant.prototype.setup = function(){
+ConnectionAssistant.prototype.setup = function()
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.setup");
     
+    //******************************************************************************************************
+    // Make scrim
+    this.scrim = $("connect-scrim");
+    this.scrim.hide();
     
     
     //AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
@@ -36,12 +42,14 @@ ConnectionAssistant.prototype.setup = function(){
     this.Accounts = new Array();
     
     
-    this.accountsModel = {
+    this.accountsModel = 
+    {
         listTitle: $L('Accounts'),
         items: this.Accounts
-		
+    
     };
-    this.innerListAttrs = {
+    this.innerListAttrs = 
+    {
         listTemplate: 'connection/listContainer',
         itemTemplate: 'connection/listItem'
         //addItemLabel: $L("Account..."),
@@ -60,11 +68,13 @@ ConnectionAssistant.prototype.setup = function(){
     /* use Mojo.View.render to render view templates and add them to the scene, if needed. */
     
     /* setup widgets here */
-    this.spinnerLAttrs = {
+    this.spinnerLAttrs = 
+    {
         spinnerSize: 'large'
     }
     
-    this.spinnerModel = {
+    this.spinnerModel = 
+    {
         spinning: true
     }
     
@@ -81,34 +91,37 @@ ConnectionAssistant.prototype.setup = function(){
 }
 
 
-ConnectionAssistant.prototype.TurnOnSpinner = function(){
+ConnectionAssistant.prototype.TurnOnSpinner = function()
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.TurnOnSpinner");
     CenterSpinner($('large-activity-spinner'));
+    this.scrim.show();
 	this.spinnerModel.spinning = true;
     this.controller.modelChanged(this.spinnerModel);
     Mojo.Log.info("<-- ConnectionAssistant.prototype.TurnOnSpinner");
 }
 
 
-ConnectionAssistant.prototype.TurnOffSpinner = function(){
+ConnectionAssistant.prototype.TurnOffSpinner = function()
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.TurnOffSpinner");
-    this.spinnerModel.spinning = false;
+    this.scrim.hide();
+	this.spinnerModel.spinning = false;
     this.controller.modelChanged(this.spinnerModel);
     Mojo.Log.info("<-- ConnectionAssistant.prototype.TurnOffSpinner");
 }
 
 
-ConnectionAssistant.prototype.listTapHandler = function(event){
-
-    if (this.ConnctionPending == false) 
-	{
-	    this.ConnctionPending = true;
-		this.LoadMainMenu(event.item);
-	}
+ConnectionAssistant.prototype.listTapHandler = function(event)
+{
+    this.TurnOnSpinner();
+    this.LoadMainMenu(event.item);   
 }
 
-ConnectionAssistant.prototype.pushPreferences = function(settingsManager){
-    var params = {
+ConnectionAssistant.prototype.pushPreferences = function(settingsManager)
+{
+    var params = 
+    {
     
         settingsManager: AmpacheMobile.settingsManager
     }
@@ -116,32 +129,39 @@ ConnectionAssistant.prototype.pushPreferences = function(settingsManager){
 }
 
 
-ConnectionAssistant.prototype.GotSettings = function(settings){
+ConnectionAssistant.prototype.GotSettings = function(settings)
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.GotSettings")
     
     this.TurnOffSpinner();
     
-    if (settings == null) {
+    if (settings == null) 
+    {
         Mojo.Log.info("No Settings Case")
         AmpacheMobile.settingsManager.CreateSettings();
         this.pushPreferences(AmpacheMobile.settingsManager);
     }
-    else {
+    else 
+    {
     
-		AmpacheMobile.Account = AmpacheMobile.settingsManager.GetCurrentAccount(this.controller.stageController);
-		
-		
-		
-        if (AmpacheMobile.Account == null) {
+        AmpacheMobile.Account = AmpacheMobile.settingsManager.GetCurrentAccount(this.controller.stageController);
+        
+        
+        
+        if (AmpacheMobile.Account == null) 
+        {
             Mojo.Log.info("Updating Accounts List")
-            if (AmpacheMobile.settingsManager.settings.Accounts.length == 0) {
+            if (AmpacheMobile.settingsManager.settings.Accounts.length == 0) 
+            {
                 this.pushPreferences(AmpacheMobile.settingsManager);
             }
-            else {
+            else 
+            {
                 this.PopulateAccountsList(settings.Accounts);
             }
         }
-        else {
+        else 
+        {
             this.TurnOnSpinner();
             this.LoadMainMenu(AmpacheMobile.Account);
             
@@ -154,7 +174,8 @@ ConnectionAssistant.prototype.GotSettings = function(settings){
     Mojo.Log.info("<-- StageAssistant.prototype.GotSettings")
 }
 
-ConnectionAssistant.prototype.PopulateAccountsList = function(Accounts, invalidate){
+ConnectionAssistant.prototype.PopulateAccountsList = function(Accounts, invalidate)
+{
 
     Mojo.Log.info("--> ConnectionAssistant.prototype.PopulateAccountsList");
     
@@ -167,7 +188,8 @@ ConnectionAssistant.prototype.PopulateAccountsList = function(Accounts, invalida
     Mojo.Log.info("<-- ConnectionAssistant.prototype.PopulateAccountsList");
 }
 
-ConnectionAssistant.prototype.handleLaunch = function(params){
+ConnectionAssistant.prototype.handleLaunch = function(params)
+{
 
     Mojo.Log.info("--> ConnectionAssistant.prototype.handleLaunch");
     
@@ -176,67 +198,76 @@ ConnectionAssistant.prototype.handleLaunch = function(params){
 }
 
 
-ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, source){
+ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, source)
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.ConnectionCallback");
     Mojo.Log.info("ConnectionCallback Got Connection info", connectResult);
     
     
     this.TurnOffSpinner();
-    this.ConnctionPending= false;
     
-    if (connectResult == "connected") {
+    if (connectResult == "connected") 
+    {
     
         //Check ampache Version	
         var apiVersion = parseInt(AmpacheMobile.ampacheServer.api)
-        if (apiVersion >= 350001) {
+        if (apiVersion >= 350001) 
+        {
         
         
             Mojo.Log.info("Pushing Main Menu", connectResult);
-            if (this.controller.stageController != null) {
+            if (this.controller.stageController != null) 
+            {
                 this.controller.stageController.pushScene("mainmenu");
             }
-            else {
+            else 
+            {
                 this.controller.pushScene("mainmenu");
             }
         }
         else // Incorrect API
-        {
+         {
             var html = true;
             var DisplayMessage = "Error: You are connecting to an incompatible version of Ampache<br><br> You are using API Version: " + AmpacheMobile.ampacheServer.api +
             "<br><br>Ampache Mobile requires at least version 3.5.x of the server"
             
-            this.controller.showAlertDialog({
+            this.controller.showAlertDialog(
+            {
                 onChoose: this.AlertOption.bind(this),
                 title: $L("Connection Error"),
                 message: DisplayMessage,
-                choices: [{
+                choices: [
+                {
                     label: $L('Retry'),
                     value: "retry",
                     type: 'primary'
-                }, {
+                }, 
+                {
                     label: $L('Preferences'),
                     value: "preferences",
                     type: 'secondary'
-                } ],
+                }],
                 allowHTMLMessage: html
             
-            }
-			);
+            });
         }
     }
-    else {
+    else 
+    {
     
         //Mojo.Log.info("Current Context", typeof this);
         
         //var currentScene = this.controller.activeScene();
         var html = false;
         DisplayMessage = connectResult;
-        if (connectResult.toLowerCase() == "acl error") {
+        if (connectResult.toLowerCase() == "acl error") 
+        {
             DisplayMessage = "Error: " + connectResult + "<br><br>" + AmpacheMobile.AclErrorHelp
             html = true;
         }
         
-        if (connectResult.toLowerCase() == "error: empty response") {
+        if (connectResult.toLowerCase() == "error: empty response") 
+        {
             DisplayMessage = connectResult + "<br><br>" + AmpacheMobile.EmptyResponseErrorHelp;
             html = true;
             
@@ -246,20 +277,22 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
         
         
         Mojo.Log.info("Display Alert");
-        this.controller.showAlertDialog({
+        this.controller.showAlertDialog(
+        {
             onChoose: this.AlertOption.bind(this),
             title: $L("Connection Error"),
             message: DisplayMessage,
-            choices: [{
+            choices: [
+            {
                 label: $L('Retry'),
                 value: "retry",
                 type: 'affirmative'
-            }, {
+            }, 
+            {
                 label: $L('Preferences'),
                 value: "preferences",
                 type: 'affirmative'
-            } 
-			],
+            }],
             allowHTMLMessage: html
         
         });
@@ -268,14 +301,17 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
     Mojo.Log.info("<-- ConnectionAssistant.prototype.ConnectionCallback")
 }
 
-ConnectionAssistant.prototype.AlertOption = function(value){
+ConnectionAssistant.prototype.AlertOption = function(value)
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.AlertOption value: " + value)
-    switch (value) {
+    switch (value)
+    {
         case "retry":
             this.LoadMainMenu(AmpacheMobile.Account);
             break;
         case "preferences":
-            var params = {
+            var params = 
+            {
             
                 settingsManager: AmpacheMobile.settingsManager
             }
@@ -287,41 +323,46 @@ ConnectionAssistant.prototype.AlertOption = function(value){
     Mojo.Log.info("<-- ConnectionAssistant.prototype.AlertOption")
 }
 
-ConnectionAssistant.prototype.LoadMainMenu = function(account){
+ConnectionAssistant.prototype.LoadMainMenu = function(account)
+{
     /* put in event handlers here that should only be in effect when this scene is active. For
      example, key handlers that are observing the document */
-    if (account != null) {
+    if (account != null) 
+    {
     
-        if ((account.ServerURL == "") || (account.Password == "") || (account.UserName == "")) {
+        if ((account.ServerURL == "") || (account.Password == "") || (account.UserName == "")) 
+        {
             Mojo.Log.info("Try to load preferences");
             this.controller.stageController.pushScene("preferences", "connection");
         }
-        else {
+        else 
+        {
             Mojo.Log.info("Creating AmpacheServer Object");
-            this.spinnerModel.spinning = true;
-            this.controller.modelChanged(this.spinnerModel);
             AmpacheMobile.Account = account;
             AmpacheMobile.ampacheServer = null;
             AmpacheMobile.ampacheServer = new AmpacheServer(account.ServerURL, account.UserName, account.Password);
             AmpacheMobile.ampacheServer.connect(this.ConnectionCallback.bind(this), this);
-			AmpacheMobile.FetchSize = account.FetchSize;
+            AmpacheMobile.FetchSize = account.FetchSize;
         }
     }
 }
 
 
-ConnectionAssistant.prototype.activate = function(event){
+ConnectionAssistant.prototype.activate = function(event)
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.activate");
     
     this.TurnOffSpinner();
     
-    if (AmpacheMobile.settingsManager.settings != null) {
+    if (AmpacheMobile.settingsManager.settings != null) 
+    {
         this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts, true);
         this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
         
     }
     
-    if ((AmpacheMobile.ampacheServer != null) && (AmpacheMobile.ampacheServer.pingTimer != null)) {
+    if ((AmpacheMobile.ampacheServer != null) && (AmpacheMobile.ampacheServer.pingTimer != null)) 
+    {
         AmpacheMobile.ampacheServer.disconnect();
     }
     
@@ -333,13 +374,15 @@ ConnectionAssistant.prototype.activate = function(event){
     
 }
 
-ConnectionAssistant.prototype.SetBackground = function(image, color){
+ConnectionAssistant.prototype.SetBackground = function(image, color)
+{
     this.controller.get('body_wallpaper').style.background = "url(" + image + ") no-repeat";
     this.controller.get('body_wallpaper').style.backgroundColor = color;
 }
 
 
-ConnectionAssistant.prototype.deactivate = function(event){
+ConnectionAssistant.prototype.deactivate = function(event)
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.deactivate");
     /* remove any event handlers you added in activate and do any other cleanup that should happen before
      this scene is popped or another scene is pushed on top */
@@ -348,7 +391,8 @@ ConnectionAssistant.prototype.deactivate = function(event){
     Mojo.Log.info("<-- ConnectionAssistant.prototype.deactivate");
 }
 
-ConnectionAssistant.prototype.cleanup = function(event){
+ConnectionAssistant.prototype.cleanup = function(event)
+{
     Mojo.Log.info("--> ConnectionAssistant.prototype.cleanup");
     /* this function should do any cleanup needed before the scene is destroyed as 
      a result of being popped off the scene stack */
