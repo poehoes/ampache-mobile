@@ -29,7 +29,11 @@ ArtistsAssistant = Class.create(
     
     setup: function()
     {
-    
+         //******************************************************************************************************
+         // Make scrim
+         this.scrim = $("spinner-scrim");
+         this.scrim.hide();
+	   
         
 		//*********************************************************************************************************
 		//  Setup Spinner
@@ -146,6 +150,7 @@ ArtistsAssistant = Class.create(
     {
         Mojo.Log.info("-----> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
+		this.scrim.show();
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOnSpinner");
@@ -154,6 +159,7 @@ ArtistsAssistant = Class.create(
     TurnOffSpinner: function()
     {
         Mojo.Log.info("-----> TurnOffSpinner");
+		this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");

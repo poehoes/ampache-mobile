@@ -378,8 +378,10 @@ AudioPlayer = Class.create({
     
     stop: function(){
         this.NowPlayingStopPlaybackTimer();
-        this.player.pause();
-        this.player.src = null;
+        
+		this.player.pause();
+        this.player.empty();
+		this.player.src = null;
         //this.player = null;
     },
     
@@ -405,7 +407,7 @@ AudioPlayer = Class.create({
 				this.stop();
 				this.NowPlayingShowPlay();
 				this.UpdateNowPlayingBuffering(0, 0);
-				this.NowPlayingUpdateSongInfo();
+				this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
 				this.NowPlayingResetTime();
 				
 				break;
@@ -423,22 +425,47 @@ AudioPlayer = Class.create({
 		
 	},
 	
+	play_change_interval:null,
+	
+	kill_play_change_interval:function()
+	{
+		if(this.play_change_interval)
+		{
+			window.clearInterval(this.play_change_interval);
+            this.play_change_interval = null;
+		}
+	},
+	
     play_next: function(clicked){
         Mojo.Log.info("--> AudioPlayer.prototype.play_next");
         this.printPlayOrderList();
 		
 		//this.playList[this.currentPlayingTrack].played = true;
         this.currentPlayingTrack = this.getNextTrack();
-        if (this.currentPlayingTrack  > -1) {
-            this.Paused=false;
-			this.stop();
-            this.internal_play();
-        }
-		else
+        if (this.currentPlayingTrack > -1) 
 		{
-		  	if((!clicked) || (this.repeatMode != RepeatModeType.no_repeat)){
+			this.Paused = false;
+			this.stop();
+			this.stop();
+			
+			this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
+			if (clicked) //Add a little bit of delay after a next request to allow for rapid song switching.
+			{
+			     this.kill_play_change_interval();
+				 this.play_change_interval =  window.setInterval(this.delayed_play.bind(this), 500);
+			     
+			}
+			else 
+			{
+				this.internal_play();
+			}
+		}
+		else 
+		{
+			if ((!clicked) || (this.repeatMode != RepeatModeType.no_repeat)) 
+			{
 				this.play_finished();
-			} 
+			}
 		}
 		
         Mojo.Log.info("<-- AudioPlayer.prototype.play_next");
@@ -453,11 +480,21 @@ AudioPlayer = Class.create({
         if (this.currentPlayingTrack  > -1) {
             this.Paused=false;
 			this.stop();
-            this.internal_play();
+            //this.internal_play();
+			this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
+			this.kill_play_change_interval();
+            this.play_change_interval =  window.setInterval(this.delayed_play.bind(this), 500);
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.play_prev");
     },
     
+	delayed_play:function()
+	{
+		 this.Paused=false;
+		 this.internal_play();
+	},
+	
+	
     play_previous: function(){
     
     
@@ -467,6 +504,8 @@ AudioPlayer = Class.create({
     
         Mojo.Log.info("--> AudioPlayer.prototype.internal_play");
         
+		this.kill_play_change_interval();
+		
 		if ((this.Paused) && (!this.playFinished)){
 			this.player.play()
 		}
@@ -485,7 +524,7 @@ AudioPlayer = Class.create({
 			this.playList[this.currentPlayingTrack].url);
 			this.NowPlayingResetTime();
 			this.UpdateNowPlayingBuffering(0, 0);
-			this.NowPlayingUpdateSongInfo();
+			this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
 			this.UpdateNowPlayingShowSpinner(true);
 			this.player.src = this.playList[this.currentPlayingTrack].url;
 			this.player.load()
@@ -789,10 +828,10 @@ AudioPlayer = Class.create({
 		Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer")
 	},
 	
-	NowPlayingUpdateSongInfo: function()
+	NowPlayingUpdateSongInfo: function(index)
 	{
 		if (this.NowPlaying != null) {
-			this.NowPlaying.NowPlayingDisplaySongInfo(this.playList, this.currentPlayingTrack);
+			this.NowPlaying.NowPlayingDisplaySongInfo(this.playList, index);
 			
 		}
 	},

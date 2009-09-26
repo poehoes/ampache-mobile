@@ -5,6 +5,11 @@
 	    <div class="palm-header-spacer">
     </div>
 	
+    <div id="search-scrim" class="palm-scrim"></div>
+	<div x-mojo-element="Spinner" id="large-activity-spinner" class='centerSpinner'>
+        <span id="wait-message" class="spinner-message">Searching</span>
+    </div>
+	
     <div id="search-group" class="palm-group unlabeled palm-dark mainMenuList">
         <div id="search-list" class="palm-list">
             <div class="palm-row first">
@@ -17,7 +22,7 @@
                         <div class="label left">
                             Find...
                         </div>
-                        <div id="search-field" x-mojo-element="TextField">
+                        <div x-mojo-element="TextField" id="search-field">
                         </div>
                     </div>
                 </div>
