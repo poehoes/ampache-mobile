@@ -133,7 +133,7 @@ SettingsManager = Class.create({
 				this.settings.AlbumsSort = 0;
 			}
 			
-			if (this.settings.AllowRatation==null)
+			if (this.settings.AllowRotation==null)
 			{
 				this.settings.AllowRotation = DEFAULT_ROTATION;
 			}
