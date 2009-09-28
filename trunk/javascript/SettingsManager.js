@@ -13,20 +13,22 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 var DEFAULT_COLOR = "#384438";
 var DEFAULT_IMAGE = "images/backgrounds/solids/background1.png";
 var DEFAULT_FETCH_SIZE = 300;
-var DEFAULT_OVERLAY =  "images/backgrounds/overlay/overlay1.png";
+var DEFAULT_OVERLAY = "images/backgrounds/overlay/overlay1.png";
 var DEFAULT_ROTATION = false;
 
-SettingsManager = Class.create({
+SettingsManager = Class.create(
+{
 
     settings: null,
     depot: null,
     
-    initialize: function(DataBaseName){
-        var options = {
+    initialize: function(DataBaseName)
+    {
+        var options = 
+        {
             name: "AmpacheMobileData", //Name used for the HTML5 database name. (required)
             version: 1, //Version number used for the HTML5 database. (optional, defaults to 1)	
             //displayName: "demoDB", //Name that would be used in user interface that the user sees regarding this database. Not currently used. (optional, defaults to name)
@@ -41,44 +43,53 @@ SettingsManager = Class.create({
     
     
     
-    dbSuccess: function(){
+    dbSuccess: function()
+    {
         console.log("***** depot operation success!");
     },
     
-    dbFailure: function(transaction, result){
+    dbFailure: function(transaction, result)
+    {
         console.log("***** depot failure: ");
         Mojo.Controller.errorDialog("This is not good!.  Settings database failed to load.  Error Message: ");
     },
     
     
-    CreateSettings: function(){
+    CreateSettings: function()
+    {
         this.settings = new Settings();
         this.settings.Accounts = new Array();
         this.settings.CurrentAccountIndex = 0;
     },
     
-    CreateEmptyAccount: function(){
+    CreateEmptyAccount: function()
+    {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = new Account();
         return this.settings.Accounts[index];
     },
     
-    GetCurrentAccount: function(){
+    GetCurrentAccount: function()
+    {
         var settings = this.settings;
-        if ((settings.CurrentAccountIndex >= 0) && (settings.CurrentAccountIndex < settings.Accounts.length)) {
+        if ((settings.CurrentAccountIndex >= 0) && (settings.CurrentAccountIndex < settings.Accounts.length)) 
+        {
             return settings.Accounts[settings.CurrentAccountIndex];
         }
-        else {
+        else 
+        {
             return null;
         }
     },
     
-    AppendAccount: function(account){
+    AppendAccount: function(account)
+    {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = account;
     },
     
-    AddAccount: function(AccountName, username, password, url){
+    AddAccount: function(AccountName, username, password, url)
+    {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = new Account();
         this.settings.Accounts[index].UserName = username;
@@ -89,12 +100,14 @@ SettingsManager = Class.create({
         
     },
     
-    RemoveAccount: function(index){
+    RemoveAccount: function(index)
+    {
         this.settings.Accounts.splice(index, 1);
     },
     
     
-    GetSettings: function(OnSuccess, OnFailure){
+    GetSettings: function(OnSuccess, OnFailure)
+    {
         GetSettingsSuccessCallback = OnSuccess;
         GetSettingsFailureCallback = OnFailure;
         
@@ -103,7 +116,8 @@ SettingsManager = Class.create({
     },
     
     GetSettingsSuccessCallback: null,
-    GetSettingsSuccess: function(settings){
+    GetSettingsSuccess: function(settings)
+    {
         console.log("***************Success Get Happened")
         this.settings = settings;
         this.PopulateMissingDefaults();
@@ -112,47 +126,53 @@ SettingsManager = Class.create({
         GetSettingsSuccessCallback = null;
     },
     
-    PopulateMissingDefaults: function(){
-        if (this.settings != null) {
-            if (this.settings.BackgroundColor == null) {
+    PopulateMissingDefaults: function()
+    {
+        if (this.settings != null) 
+        {
+            if (this.settings.BackgroundColor == null) 
+            {
                 this.settings.BackgroundColor = DEFAULT_COLOR;
             }
-            if (this.settings.BackgroundImage == null) {
+            if (this.settings.BackgroundImage == null) 
+            {
                 this.settings.BackgroundImage = DEFAULT_IMAGE;
             }
-            if (this.settings.StreamDebug == null) {
+            if (this.settings.StreamDebug == null) 
+            {
                 this.settings.StreamDebug = false;
             }
             
-            if (this.settings.BackgroundMode == null) {
+            if (this.settings.BackgroundMode == null) 
+            {
                 this.settings.BackgroundMode = 0;
             }
-			
-			if(this.settings.AlbumsSort==null)
-			{
-				this.settings.AlbumsSort = 0;
-			}
-			
-			if (this.settings.AllowRotation==null)
-			{
-				this.settings.AllowRotation = DEFAULT_ROTATION;
-			}
-			
-			this.settings.Version = Mojo.Controller.appInfo.version;
-			
-			for(i=0;i<this.settings.Accounts.length;i++)
-			{
-				if(this.settings.Accounts[i].FetchSize == null)
-				{
-					this.settings.Accounts[i].FetchSize = DEFAULT_FETCH_SIZE;
-				}
-				
-				if(this.settings.Accounts[i].ExtraCoverArt == null)
+            
+            if (this.settings.AlbumsSort == null) 
+            {
+                this.settings.AlbumsSort = 0;
+            }
+            
+            if (this.settings.AllowRotation == null) 
+            {
+                this.settings.AllowRotation = DEFAULT_ROTATION;
+            }
+            
+            this.settings.Version = Mojo.Controller.appInfo.version;
+            
+            for (i = 0; i < this.settings.Accounts.length; i++) 
+            {
+                if (this.settings.Accounts[i].FetchSize == null) 
+                {
+                    this.settings.Accounts[i].FetchSize = DEFAULT_FETCH_SIZE;
+                }
+                
+                if (this.settings.Accounts[i].ExtraCoverArt == null) 
                 {
                     this.settings.Accounts[i].ExtraCoverArt = false;
                 }
-			}
-			
+            }
+            
             this.SaveSettings(null, null);
         }
     },
@@ -161,7 +181,8 @@ SettingsManager = Class.create({
     
     
     GetSettingsFailureCallback: null,
-    GetSettingsFailure: function(){
+    GetSettingsFailure: function()
+    {
         console.log("***************Failure Get Happened")
         if (GetSettingsFailureCallback != null) 
             GetSettingsFailureCallback();
@@ -169,45 +190,50 @@ SettingsManager = Class.create({
         GetSettingsFailureCallback = null;
     },
     
-    SaveSettings: function(OnSuccess, OnFailure){
-        this.depot.add("AppSettings", this.settings, function(){
+    SaveSettings: function(OnSuccess, OnFailure)
+    {
+        this.depot.add("AppSettings", this.settings, function()
+        {
             console.log("***************Success SaveSettings Happened")
             if (OnSuccess != null) 
                 OnSuccess();
-        }, function(){
+        }, function()
+        {
             console.log("***************Failure SaveSettings Happened")
             if (OnFailure != null) 
                 OnFailure();
         })
     }
     
-
-
-
+    
+    
+    
 })
 
 
 
-Account = Class.create({
+Account = Class.create(
+{
     AccountName: null,
     UserName: null,
     Password: null,
     ServerURL: null,
-	ExtraCoverArt: false,
-	FetchSize:DEFAULT_FETCH_SIZE
-	
+    ExtraCoverArt: false,
+    FetchSize: DEFAULT_FETCH_SIZE
+
 })
 
 
-Settings = Class.create({
+Settings = Class.create(
+{
     Accounts: null,
     CurrentAccountIndex: null,
     
     StreamDebug: false,
-    Version:"0.0.5",
-	AllowRotation:DEFAULT_ROTATION,
-	
-	BackgroundColor: DEFAULT_COLOR,
+    Version: "0.0.5",
+    AllowRotation: DEFAULT_ROTATION,
+    
+    BackgroundColor: DEFAULT_COLOR,
     BackgroundImage: DEFAULT_IMAGE,
     BackgroundSolid: DEFAULT_IMAGE,
     BackgroundMode: this.CUSTOM_COLOR,
@@ -215,8 +241,8 @@ Settings = Class.create({
     
     CUSTOM_COLOR: 0,
     CUSTOM_IMAGE: 1,
-	
-	AlbumsSort:0
+    
+    AlbumsSort: 0
 
 });
 

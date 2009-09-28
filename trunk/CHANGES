@@ -1,19 +1,23 @@
-Version 0.0.5 (Beta) ()
+Version 0.5.0 (Beta) (09/27/2009)
 	* New Feature: (Global Search) should vastly improve performance if you know what you are looking for.
 	* New Feature: (Dynamic Resizing) Dynamic resizing of now playing screen. Meaning support for the Palm Pixi.  Resizing during notifications. ect.
 	* New Feature: (Rotation) Landscape Mode (Rotation) Default:Off  
 	* New Feature: (Performance Tuning) Per/Account Settings for fine tuning of performance (Recommended Usage: Make 2 accounts, one for a fast connection and one for a slow)
 	      o Fetch Size: Change how many items are downloaded at once from the server. Default: 300 items.  Recommended higher number for fast connection, lower number for slow connection.
-		  o Album/Artist Art: Moved this setting from system wide to account specific. 
-	* New Feature: (Quick Links) Clickable Links in Songs list for Search, Playlists.
-	* New Feature: (Sorting) Albums List is now Sortable thru App Menu current sorting choices are Alphabetical, Year, Artist.  Choice is saved.
+		  o Artist Albums Art: Moved this setting from system wide to account specific. 
+	* New Feature: (Quick Links) Clickable Links in Songs list for Search, Playlists, for loading Album or 
+	* New Feature: (Albums Sorting) Albums List is now Sortable thru App Menu current sorting choices are Alphabetical, Year, Artist.  Choice is saved.
 	* Improvement: Partially loaded lists will start loading where they left off, upon navigating back to them.
+	* Improvement: Made Audio player wait 500 ms before starting stream when user requests next/prev song this way if you a user is tapping next repeatedly it will not attempt to start every song as it did before.
 	* Improvement: Complete rewrite of underlying code that drives list loading, should be faster && less buggy.
 	* Improvement: Icons in list headers
+	* Improvement: Added scrims to cover up clickable items when app is busy 
 	* Bug Fix: Play/Pause with Palm Headphones restarted track.  Works as expected now.
 	* Bug Fix: Fixed filtering while loading on Albums and Artists.  If you attempted to filter the list while it was loading the filter would not apply to newly downloaded items.  This is now resolved.
-	* Bug Fix: Fixed Ping so that it only pings as often as it needs to.  Previously pinged every 1 minute.  Should save on battery.
+	* Bug Fix: Fixed ping so that it pings in sync with the session timeout (~30minutes).  Previously pinged every 1 minute.  Should save on battery.
 	* Bug Fix: Auto size background to fit available screen, choosing a part of a bigger image as the background isn't going to happen with current API.
+	* Bug Fix: Fixed spaces in background path.
+	NOTE: Changed versioning to allow for lower number to be used for small bug fixes.
 	
 Version 0.0.4 (Beta)(09/13/2009)
 
