@@ -148,13 +148,13 @@ SongsAssistant = Class.create(
     holdEvent: function(event)
     {
         event.stop();
-        alert(event.count);
+        //alert(event.count);
     },
     
     
     pushArtist: function(id)
     {
-        alert(id);
+        //alert(id);
     },
     
     
