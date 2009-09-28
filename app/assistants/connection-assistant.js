@@ -286,12 +286,12 @@ ConnectionAssistant.prototype.ConnectionCallback = function(connectResult, sourc
             {
                 label: $L('Retry'),
                 value: "retry",
-                type: 'affirmative'
+                type: 'primary'
             }, 
             {
                 label: $L('Preferences'),
                 value: "preferences",
-                type: 'affirmative'
+                type: 'secondary'
             }],
             allowHTMLMessage: html
         
