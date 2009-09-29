@@ -26,7 +26,7 @@ AmpacheServer = Class.create(
     
     ServerAction: "/server/xml.server.php?action=",
     
-    //Information from connect
+    /*Information from connect*/
     auth: "",
     api: "",
     update: "",
