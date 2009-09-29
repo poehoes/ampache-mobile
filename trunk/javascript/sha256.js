@@ -8,7 +8,6 @@
 **/
  
 function SHA256(s){
- 
 	var chrsz   = 8;
 	var hexcase = 0;
  
@@ -90,7 +89,6 @@ function SHA256(s){
 		var utftext = "";
  
 		for (var n = 0; n < string.length; n++) {
- 
 			var c = string.charCodeAt(n);
  
 			if (c < 128) {
@@ -105,9 +103,7 @@ function SHA256(s){
 				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 				utftext += String.fromCharCode((c & 63) | 128);
 			}
- 
 		}
- 
 		return utftext;
 	}
  
@@ -123,5 +119,4 @@ function SHA256(s){
  
 	s = Utf8Encode(s);
 	return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
- 
 }
