@@ -49,7 +49,7 @@ AudioPlayer = Class.create({
 			this.AudioPlayers = new Array();
 			this.mediaEvents = this.registerForMediaEvents(this.mediaEventsCallbacks.bind(this));
 		}
-		Mojo.Log.info("<-- AudioPlayer.prototype.initialize %j", this.audioObj);
+		Mojo.Log.info("<-- AudioPlayer.prototype.initialize", this.audioObj);
     },
     
     createAudioObj: function(_controller){

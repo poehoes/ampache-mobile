@@ -503,7 +503,7 @@ NowPlayingAssistant = Class.create(
     NowPlayingDisplaySongInfo: function(playList, currentIndex)
     {
         var song = playList[currentIndex]
-        Mojo.Log.info("--> NowPlayingDisplaySongInfo song: %j", song);
+        Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
         
         this.controller.get('loaded-display').show();
         

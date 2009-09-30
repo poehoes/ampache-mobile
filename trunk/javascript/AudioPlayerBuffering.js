@@ -18,7 +18,7 @@
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-AudioPlayer = Class.create({;
+AudioPlayer = Class.create({
     PlayerReady: false,
     NowPlaying: null,
     NowPlayingVisible: false,

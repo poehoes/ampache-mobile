@@ -189,8 +189,8 @@ SongsAssistant = Class.create(
     
     IsMatch: function(item, filterString)
     {
-        var matchString = item.title;
-        if (matchString.toLowerCase().include(filterString.toLowerCase())) 
+        var matchString = item.title + " " + item.artist + " " + item.album;
+		if (matchString.toLowerCase().include(filterString.toLowerCase())) 
         {
             return true;
         }
@@ -215,6 +215,7 @@ SongsAssistant = Class.create(
     popupHandler: function(event)
     {
         var item = this;
+		
         
         var controller = item._this.controller;
         Mojo.Log.info(event);
@@ -239,8 +240,43 @@ SongsAssistant = Class.create(
             
             });
         }
+		else if (event === "pushFiltered")
+		{
+			var playList = item._this.itemsHelper.GetAllMatches(item._this.itemsHelper.filterString);
+			var index = item._event.index;
+			controller.stageController.pushScene('now-playing', 
+            {
+            
+                playList: playList,
+                startIndex: index,
+                shuffle: false
+            });
+			
+		}
+		else if (event === "pushSongs")
+		{
+			var playList = item._this.itemsHelper.ItemsList;
+			var index = item._this.FindIndex(item.id);
+			controller.stageController.pushScene('now-playing', 
+            {
+                playList: playList,
+                startIndex: index,
+                shuffle: false
+            });
+			
+			
+		}
     },
     
+	FindIndex : function (id)
+	{
+		for (var i=0; i<this.itemsHelper.ItemsList.length; i++) {
+	           if(this.itemsHelper.ItemsList[i].id==id)
+			   {
+			     return i;
+			   }
+        };
+	},
     
     listTapHandler: function(event)
     {
@@ -277,13 +313,47 @@ SongsAssistant = Class.create(
         }
         else 
         {
-            this.controller.stageController.pushScene('now-playing', 
-            {
-            
-                playList: this.itemsHelper.ItemsList,
-                startIndex: event.index,
-                shuffle: false
-            });
+			
+			if ((this.itemsHelper.filterString == "") || (this.itemsHelper.filterString == null)) 
+			{//Not Filtered
+				var playList = this.itemsHelper.ItemsList;
+				this.controller.stageController.pushScene('now-playing', 
+				{
+				
+					playList: playList,
+					startIndex: event.index,
+					shuffle: false
+				});
+			}
+			else 
+			{   //Filtered
+				var item = event.item;
+				item._this = this;
+				item._event = event;
+				
+				var filteredCmd = [
+				{
+					label: "Play Only Filtered Songs",
+					command: "pushFiltered"
+				}, 
+				{
+					label: "Play All Songs",
+					command: "pushSongs"
+				}];
+				
+				this.controller.popupSubmenu(
+				{
+					onChoose: this.popupHandler.bind(item),
+					placeNear: event.originalEvent.target,
+					items: filteredCmd
+				});
+				
+				
+				
+			}
+			
+			
+
         }
         
         Mojo.Log.info("<-- listTapHandler");
