@@ -150,7 +150,7 @@ AmpacheServer = Class.create(
         Mojo.Log.info("<-- AmpacheServer.prototype.disconnect");
     },
     
-    
+    ConnectRequest:null,
     //Following format http://localhost/ampache/server/xml.server.php?action=handshake&auth=$passphrase&timestamp=$time&version=350001&user=vollmerk
     connect:function(callback){
         Mojo.Log.info("--> AmpacheServer.prototype.connect");
@@ -160,7 +160,7 @@ AmpacheServer = Class.create(
         
         var AuthPath = this.BuildConnectionUrl(this.URL, this.UserName, this.Password);
         Mojo.Log.info("Sending ajax request to: ", AuthPath);
-        var request = new Ajax.Request(AuthPath, 
+        this.ConnectRequest = new Ajax.Request(AuthPath, 
         {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
@@ -180,6 +180,11 @@ AmpacheServer = Class.create(
             onFailure: this.ConnectCallbackFailure.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.connect");
+    },
+    
+    ConnectCancel:function()
+    {
+        this.ConnectRequest.abort();
     },
     
     
@@ -251,7 +256,7 @@ AmpacheServer = Class.create(
     //Get All Artist information 
     GetArtistsCallback: null,
                         
-    GetArtists function(_GetArtistsCallback, _offset, _limit, _search){
+    GetArtists : function(_GetArtistsCallback, _offset, _limit, _search){
         Mojo.Log.info("--> AmpacheServer.prototype.GetArtists");
         this.GetArtistsCallback = _GetArtistsCallback;
         if (typeof this.GetArtistsCallback != "function") 
@@ -504,34 +509,66 @@ AmpacheServer = Class.create(
              */
             var songsListXML = transport.responseXML.getElementsByTagName("song");
             for (var i = 0; i < songsListXML.length; i++) {
-                var _id = songsListXML[i].getAttribute("id")
-                var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
-                var artistTag = songsListXML[i].getElementsByTagName("artist")[0];
-                var _artist = artistTag.firstChild.data;
-                var _artist_id = artistTag.getAttribute("id");
-                var albumTag = songsListXML[i].getElementsByTagName("album")[0]
-                var _album = albumTag.firstChild.data;
-                var _album_id = albumTag.getAttribute("id");
-                var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
-                var _time = songsListXML[i].getElementsByTagName("time")[0].firstChild.data;
-                var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
-                var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
-                var mimeXML = songsListXML[i].getElementsByTagName("mime")
-                if (mimeXML[0].firstChild != null) {
-                    var _mime = mimeXML[0].firstChild.data;
-                }
-                else 
-                    var _mime = "";
                 
-                var artXML = songsListXML[i].getElementsByTagName("art")
-                if (artXML[0].firstChild != null) {
-                    var _art = artXML[0].firstChild.data;
-                }
-                else 
-                    var _art = "";
+                    var _id = songsListXML[i].getAttribute("id")
+                    var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
+                    
+                    try 
+                    {
+                        var artistTag = songsListXML[i].getElementsByTagName("artist")[0];
+                        var _artist = artistTag.firstChild.data;
+                        var _artist_id = artistTag.getAttribute("id");
+                    }
+                    catch(err)
+                    {
+                        var _artist = "";
+                        var _artist_id = -1;
+                    }
+
+                    try 
+                    {
+                        var albumTag = songsListXML[i].getElementsByTagName("album")[0]
+                        var _album = albumTag.firstChild.data;
+                        var _album_id = albumTag.getAttribute("id");
+                    }
+                    catch(err)
+                    {
+                        var _album = "";
+                        var _album_id = -1;
+                    }					
+
+
+                    
+                    var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
+                    var _time = songsListXML[i].getElementsByTagName("time")[0].firstChild.data;
+                    var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
+                    var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
+                    
+                    
+                    
+                    var mimeXML = songsListXML[i].getElementsByTagName("mime")
+                    if (mimeXML[0].firstChild != null) 
+                    {
+                        var _mime = mimeXML[0].firstChild.data;
+                    }
+                    else 
+                        var _mime = "";
+                    
+                    
+                    var artXML = songsListXML[i].getElementsByTagName("art")
+                    if (artXML[0].firstChild != null) 
+                    {
+                        var _art = artXML[0].firstChild.data;
+                    }
+                    else 
+                        var _art = "";
+                    
+                    
+                    var newSong = new SongModel(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime);
+                    
+                    SongsList[i] = newSong;
+                 
                 
-                var newSong = new SongModel(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime);
-                SongsList[i] = newSong;
             }
         }
         else {
@@ -897,9 +934,9 @@ PingModel = Class.create(
         this.SessionExpires = pingResponse.getElementsByTagName("session_expire")[0].firstChild.data;
         this.UTC = Date.parse(this.SessionExpires);
         var CurrentTime = new Date();
-		var CurrentUTC = CurrentTime.getTime();
+        var CurrentUTC = CurrentTime.getTime();
         this.TimeRemaining = this.UTC - CurrentUTC;
-		this.TimeRemaining *= 0.45; //So it will ping twice during the session time
+        this.TimeRemaining *= 0.45; //So it will ping twice during the session time
         this.ApiVersion = pingResponse.getElementsByTagName("version")[0].firstChild.data;
     },
     UTC: null,
@@ -923,6 +960,23 @@ AmpacheServerAUTH = Class.create(
         videos: ""
     }]
 });
+
+
+/**
+ * Ajax.Request.abort
+ * extend the prototype.js Ajax.Request object so that it supports an abort method
+ */
+Ajax.Request.prototype.abort = function() {
+    // prevent and state change callbacks from being issued
+    this.transport.onreadystatechange = Prototype.emptyFunction;
+    // abort the XHR
+    this.transport.abort();
+    // update the request counter
+    Ajax.activeRequestCount--;
+};
+
+
+
 
 AmpacheServer.Result = false;
 AmpacheServer.ConnectResult = "";
