@@ -509,10 +509,8 @@ AmpacheServer = Class.create(
              */
             var songsListXML = transport.responseXML.getElementsByTagName("song");
             for (var i = 0; i < songsListXML.length; i++) {
-                
                     var _id = songsListXML[i].getAttribute("id")
                     var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
-                    
                     try 
                     {
                         var artistTag = songsListXML[i].getElementsByTagName("artist")[0];
@@ -524,7 +522,6 @@ AmpacheServer = Class.create(
                         var _artist = "";
                         var _artist_id = -1;
                     }
-
                     try 
                     {
                         var albumTag = songsListXML[i].getElementsByTagName("album")[0]
@@ -536,39 +533,26 @@ AmpacheServer = Class.create(
                         var _album = "";
                         var _album_id = -1;
                     }					
-
-
                     
                     var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
                     var _time = songsListXML[i].getElementsByTagName("time")[0].firstChild.data;
                     var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
                     var _size = songsListXML[i].getElementsByTagName("size")[0].firstChild.data;
                     
-                    
-                    
                     var mimeXML = songsListXML[i].getElementsByTagName("mime")
                     if (mimeXML[0].firstChild != null) 
-                    {
                         var _mime = mimeXML[0].firstChild.data;
-                    }
                     else 
                         var _mime = "";
                     
-                    
                     var artXML = songsListXML[i].getElementsByTagName("art")
                     if (artXML[0].firstChild != null) 
-                    {
                         var _art = artXML[0].firstChild.data;
-                    }
                     else 
                         var _art = "";
                     
-                    
                     var newSong = new SongModel(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime);
-                    
                     SongsList[i] = newSong;
-                 
-                
             }
         }
         else {
@@ -637,8 +621,6 @@ AmpacheServer = Class.create(
         if (transport.responseXML != null) {
             PlaylistsList = new Array();
             var PlaylistsListXML = transport.responseXML.getElementsByTagName("playlist");
-            //Mojo.Log.info("Artist lenth: " + artistListXML.length);
-            
             for (var i = 0; i < PlaylistsListXML.length; i++) {
                 var _id = PlaylistsListXML[i].getAttribute("id")
                 var _name = PlaylistsListXML[i].getElementsByTagName("name")[0].firstChild.data;

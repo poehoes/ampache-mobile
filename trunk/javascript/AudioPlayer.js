@@ -108,24 +108,19 @@ AudioPlayer = Class.create({
             case "next":
                 this.play_next(true);
                 break;
-                
             case "prev":
                 this.play_prev();
                 break;
-                
             case "pause":
 			     this.Paused = true;
                 this.pause();
 			    break;
-                
             case "stop":
                 this.pause();
             	break;
-                
             case "play":
                 this.play();
 			    break;
-                
             case "togglePausePlay":
                 if (!this.Paused) {
 					this.Paused = true;
@@ -171,9 +166,8 @@ AudioPlayer = Class.create({
 	ConnectedToServer:function(event){
 		Mojo.Log.info("--> AudioPlayer.prototype.ConnectedToServer");
         //this.playList = newPlayList;
-		this.PlayerReady = true;
-		if(this.RequestedPlayBeforeReady==true)
-		{
+        this.PlayerReady = true;
+		if(this.RequestedPlayBeforeReady==true) {
 			this.RequestedPlayBeforeReady=false;
 			this.play();
 		}
@@ -209,9 +203,14 @@ AudioPlayer = Class.create({
 	//Code for shuffle
 	//**********************************************************************************************************************
 	markPlayListUnplayed: function(){
-		for (var i = 0; i < this.playList.length; i++) {
+        /*var i = this.playList.length;
+        do { 
+            this.playList[i].played = false; 
+        } while (--i);
+        */
+        for (var i = 0; i < this.playList.length; i++) {
 			this.playList[i].played = false;
-		};
+		}; 
 	},		
 	
 	createOrderList:function(){
@@ -244,6 +243,16 @@ AudioPlayer = Class.create({
 	toggleShuffleOn:function() {
 		this.playOrderList.sort(this.randOrd);
 		this.playOrderList.sort(this.randOrd);
+        var i = this.playList.length;
+        do {
+			if (this.playOrderList[i] == this.currentPlayingTrack) {
+				temp = this.playOrderList[0];
+				this.playOrderList[0] =  this.currentPlayingTrack;
+				this.playOrderList[i]= temp;
+				break;
+			};
+        } while (--i);
+        /*
 		for (var i = 0; i < this.playList.length; i++) {
 			if (this.playOrderList[i] == this.currentPlayingTrack) {
 				temp = this.playOrderList[0];
@@ -251,7 +260,7 @@ AudioPlayer = Class.create({
 				this.playOrderList[i]= temp;
 				break;
 			};
-		}
+		}*/
 		this.currentPlayingIndex = 0;
 		this.printPlayOrderList();
 		this.shuffleOn = true;
