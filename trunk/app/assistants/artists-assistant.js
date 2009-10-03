@@ -16,26 +16,22 @@
 ArtistsAssistant = Class.create(
 {
 
-    initialize: function(params)
-    {
+    initialize: function(params){
         this.SceneTitle = params.SceneTitle;
 		this.ExpectedArtists = params.ExpectedArtists;
         this.itemsHelper = new ItemsHelper();
-		if(params.Search)
-		{
+		if(params.Search) {
 			this.Search = params.Search;
 		} 
     },
     
-    setup: function()
-    {
+    setup: function(){
          //******************************************************************************************************
          // Make scrim
          this.scrim = $("spinner-scrim");
          this.scrim.hide();
-	   
-        
-		//*********************************************************************************************************
+		
+         //*********************************************************************************************************
 		//  Setup Spinner
         this.spinnerLAttrs = 
         {
@@ -47,7 +43,6 @@ ArtistsAssistant = Class.create(
         };
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
-		
 		//*********************************************************************************************************
         //  Setup Progress Pill
 		this.PPattr = 
@@ -60,8 +55,6 @@ ArtistsAssistant = Class.create(
             value: 0
         };
         this.controller.setupWidget('artistProgressbar', this.PPattr, this.artistLoadModel);
-        
-        
         
         //*********************************************************************************************************
         //  Setup Filter List
@@ -81,9 +74,6 @@ ArtistsAssistant = Class.create(
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
         
-        
-        
-        
         //*********************************************************************************************************
         // Items Helper
         var params = 
@@ -98,39 +88,26 @@ ArtistsAssistant = Class.create(
             ExpectedItems: this.ExpectedArtists,
             SortFunction: null,
             MatchFunction: this.IsMatch
-        
         };
         this.itemsHelper.setup(params);
-        
-        
-        
         this.TurnOnSpinner();
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
     },
     
-    GetArtists: function(GotItems, offset, limit)
-    {
+    GetArtists: function(GotItems, offset, limit){
         AmpacheMobile.ampacheServer.GetArtists(GotItems, offset, limit, this.Search)
     },
     
-    
-    
-    IsMatch: function(item, filterString)
-    {
+    IsMatch: function(item, filterString){
         var matchString = item.name;
-        if (matchString.toLowerCase().include(filterString.toLowerCase())) 
-        {
+        if (matchString.toLowerCase().include(filterString.toLowerCase())) {
             return true;
         }
         return false;
     },
     
-    listTapHandler: function(event)
-    {
+    listTapHandler: function(event){
         Mojo.Log.info("--> listTapHandler", event.item.name);
-        
-        
         this.RequestedArtist = event.item;
         this.controller.stageController.pushScene('albums', 
         {
@@ -140,14 +117,10 @@ ArtistsAssistant = Class.create(
 			//Artist: this.RequestedArtist,
             ExepectedAlbums: this.RequestedArtist.albums
         });
-        
         Mojo.Log.info("<-- listTapHandler");
     },
     
-    
-    
-    TurnOnSpinner: function()
-    {
+    TurnOnSpinner: function(){
         Mojo.Log.info("-----> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
 		this.scrim.show();
@@ -156,8 +129,7 @@ ArtistsAssistant = Class.create(
         Mojo.Log.info("<----- TurnOnSpinner");
     },
     
-    TurnOffSpinner: function()
-    {
+    TurnOffSpinner: function(){
         Mojo.Log.info("-----> TurnOffSpinner");
 		this.scrim.hide();
         this.spinnerModel.spinning = false;
@@ -165,65 +137,44 @@ ArtistsAssistant = Class.create(
         Mojo.Log.info("<----- TurnOffSpinner");
     },
     
-    
-    
-    dividerFunc: function(itemModel)
-    {   
-        if (itemModel.name.charAt(0).toLowerCase() == "t") 
-        {
-            if (itemModel.name.substring(0, 4).toLowerCase() == "the ") 
-            {
-            
-            
+    dividerFunc: function(itemModel){   
+        if (itemModel.name.charAt(0).toLowerCase() == "t"){
+            if (itemModel.name.substring(0, 4).toLowerCase() == "the "){
                 var regExp = /\s+/g;
                 var name = itemModel.name.toLowerCase().replace(regExp, '');
-                
                 return name[3].toUpperCase();
             }
-            else 
-            {
+            else {
                 return "T";
             }
         }
-        else if (itemModel.name.charAt(0).toLowerCase() == "a") 
-        {
-            if (itemModel.name.substring(0, 2).toLowerCase() == "a ") 
-            {
+        else if (itemModel.name.charAt(0).toLowerCase() == "a"){
+            if (itemModel.name.substring(0, 2).toLowerCase() == "a "){
                 var regExp = /\s+/g;
                 var name = itemModel.name.toLowerCase().replace(regExp, '');
                 return name[1].toUpperCase();
             }
-            else 
-            {
+            else {
                 return "A";
             }
-            
         }
-        else 
-        {
+        else {
             return itemModel.name.charAt(0).toUpperCase();
         }
     },
     
-    activate: function(event)
-    {
+    activate: function(event){
         this.itemsHelper.Visible = true;
         this.itemsHelper.GetItems();
     },
     
-    deactivate: function(event)
-    {
+    deactivate: function(event){
         this.TurnOffSpinner();
         this.itemsHelper.Visible = false;
     },
     
-    cleanup: function(event)
-    {
+    cleanup: function(event){
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
 		this.itemsHelper=null;
     }
-  
-    
 })
-
-

@@ -163,7 +163,7 @@ AmpacheServer = Class.create(
         this.ConnectRequest = new Ajax.Request(AuthPath, 
         {
             method: 'get',
-            evalJSON: false, //to enforce parsing JSON if there is JSON response
+            evalJSON: false, //to enf rce parsing JSON if there is JSON response
             onCreate:function(){
                 console.info('******* onCreate happened')
             },
@@ -306,15 +306,31 @@ AmpacheServer = Class.create(
             ArtistList = new Array();
             var artistListXML = transport.responseXML.getElementsByTagName("artist");
             //Mojo.Log.info("Artist lenth: " + artistListXML.length);
-            for (var i = 0; i < artistListXML.length; i++){ // TODO DB
-                var _id = artistListXML[i].getAttribute("id")
-                var _name = artistListXML[i].getElementsByTagName("name")[0].firstChild.data;
-                var _albums = artistListXML[i].getElementsByTagName("albums")[0].firstChild.data;
-                var _songs = artistListXML[i].getElementsByTagName("songs")[0].firstChild.data;
-                var newArtist = new ArtistModel(_id, _name, _albums, _songs);
-                //newArtist.initialize(_id, _name, _albums, _songs);
-                //Mojo.Log.info("Artist "+_id+": " + _name);
-                ArtistList[i] = newArtist;
+            if ( artistListXML.length > 0) {
+                var i = 0;
+
+                //do {
+                //    ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                //    i++;
+                //} while (i < artistListXML.length)
+                
+                var n = parseInt(artistListXML.length/4);   // four Stage unloop... semi Duffish
+                do {
+                    ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                    i++;
+                    ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                    i++;
+                    ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                    i++;
+                    ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                    i++;
+                } while( i < n );
+                if (i < artistListXML.length) {
+                    do {
+                        ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                        i++;
+                    } while (i < artistListXML.length)
+                }
             }
         }
         else {
@@ -388,17 +404,25 @@ AmpacheServer = Class.create(
         if (xmlDoc != null){
             AlbumList = new Array();
             var albumListXML = xmlDoc.getElementsByTagName("album");
-            
-            for (var i = 0; i < albumListXML.length; i++){
-                var _id = albumListXML[i].getAttribute("id")
-                var _name = albumListXML[i].getElementsByTagName("name")[0].firstChild.data;
-                var _artist = albumListXML[i].getElementsByTagName("artist")[0].firstChild.data;
-                var _tracks = albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data;
-                var _year = albumListXML[i].getElementsByTagName("year")[0].firstChild.data;
-                var _disk = albumListXML[i].getElementsByTagName("disk")[0].firstChild.data;
-                var _art = albumListXML[i].getElementsByTagName("art")[0].firstChild.data;
-                var newAlbum = new AlbumModel(_id, _name, _artist, _tracks, _year, _disk, _art);
-                AlbumList[i] = newAlbum;
+            if (albumListXML.length > 0){ 
+                var i = 0;
+                var n = parseInt(albumListXML.length/4);   // four Stage unloop... semi Duffish
+                do {
+                    AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"),albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data,albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data,  albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                    i++;
+                    AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"),albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data,albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data,  albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                    i++;
+                    AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"),albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data,albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data,  albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                    i++;
+                    AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"),albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data,albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data,  albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                    i++;
+                } while( i < n );
+                if (i < albumListXML.length) {
+                    do {
+                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"),albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data,albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data,  albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                        i++;
+                    } while (i < albumListXML.length)
+                }
             }
         }
         else {
@@ -508,32 +532,29 @@ AmpacheServer = Class.create(
              </root>
              */
             var songsListXML = transport.responseXML.getElementsByTagName("song");
+            //var i = 0;
+            //do {
             for (var i = 0; i < songsListXML.length; i++) {
                     var _id = songsListXML[i].getAttribute("id")
                     var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
-                    try 
-                    {
+                    try {
                         var artistTag = songsListXML[i].getElementsByTagName("artist")[0];
                         var _artist = artistTag.firstChild.data;
                         var _artist_id = artistTag.getAttribute("id");
                     }
-                    catch(err)
-                    {
+                    catch(err) {
                         var _artist = "";
                         var _artist_id = -1;
                     }
-                    try 
-                    {
+                    try {
                         var albumTag = songsListXML[i].getElementsByTagName("album")[0]
                         var _album = albumTag.firstChild.data;
                         var _album_id = albumTag.getAttribute("id");
                     }
-                    catch(err)
-                    {
+                    catch(err) {
                         var _album = "";
                         var _album_id = -1;
                     }					
-                    
                     var _track = songsListXML[i].getElementsByTagName("track")[0].firstChild.data;
                     var _time = songsListXML[i].getElementsByTagName("time")[0].firstChild.data;
                     var _url = songsListXML[i].getElementsByTagName("url")[0].firstChild.data;
@@ -553,7 +574,8 @@ AmpacheServer = Class.create(
                     
                     var newSong = new SongModel(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime);
                     SongsList[i] = newSong;
-            }
+                    i++;
+            }// while (i < songsListXML.length);
         }
         else {
             Mojo.Controller.errorDialog("Get songs failed: " + this.XMLFormattingIssue);

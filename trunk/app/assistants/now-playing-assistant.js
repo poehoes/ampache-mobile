@@ -16,52 +16,32 @@
 //*********************************************************************************************************************************
 //                                Scene Functions
 //*********************************************************************************************************************************
-
 NowPlayingAssistant = Class.create(
 {
-    initialize: function(params)
-    {
+    initialize: function(params){
         Mojo.Log.info("--> NowPlayingAssistant.prototype.constuctor");
-        
         //this.playList = params.playList;
-        
         this.playList = params.playList;
         this.startIndex = params.startIndex;
         this.shuffle = params.shuffle;
-        
-        
         this.pauseStopItem = this.pauseItem;
         this.repeatMode = 0;
-        
         Mojo.Log.info("<-- NowPlayingAssistant.prototype.constuctor");
     },
     
-    
-    setup: function()
-    {
-    
+    setup: function(){
         Mojo.Log.info("--> setup");
-        
-        
-        
         this.playing = false;
-        
         this.NowPlayingDisplaySongInfo(this.playList, this.startIndex);
-        
         this.controller.setupWidget(Mojo.Menu.appMenu, this.appMenuAttr, this.appMenuModel);
-        
         this.cmdMenuModel = 
         {
             visible: true,
             items: null
         };
-        
-        
         // set up the controls
-        
         this.setMenuControls(true, false, false);
         this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuModel);
-        
         
         Mojo.Log.info("Setup sliderModel");
         this.sliderModel = 
@@ -79,8 +59,6 @@ NowPlayingAssistant = Class.create(
         {
             spinnerSize: 'large'
         };
-        
-        
         
         Mojo.Log.info("Setup spinnerModel");
         this.spinnerModel = 
@@ -114,35 +92,22 @@ NowPlayingAssistant = Class.create(
         this.controller.get('playback-display').observe(Mojo.Event.flick, this.handleFlick.bindAsEventListener(this));
         this.controller.get('playback-display').observe(Mojo.Event.tap, this.doubleClick.bindAsEventListener(this));
         
-        
         this.updateBuffering(0, 0);
-        
         
         //Setup audio player
         AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
-        
         AmpacheMobile.audioPlayer.addPlayList(this.playList, this.shuffle, this.startIndex);
         //AmpacheMobile.audioPlayer.setCurrentTrack(this.startIndex);
         AmpacheMobile.audioPlayer.setNowPlaying(this);
         //this.musicPlayer = AmpacheMobile.audioPlayer.player;
-        
         window.onresize = this.FitToWindow;
-        
         this.FitToWindow();
-        
         Mojo.Log.info("<-- setup");
     },
     
-    
-    FitToWindow: function()
-    {
+    FitToWindow: function(){
         var percentate = 0.8;
         var coverArt = $('coverArt');
-        
-        
-        
-        
-        
         var diff = window.innerHeight - height;
         var height = coverArt.height;
         var option1 = (window.innerHeight - 200);
@@ -150,128 +115,87 @@ NowPlayingAssistant = Class.create(
         if (option1 < 0) 
             option1 = 0;
         var option2 = window.innerWidth * percentate;
-        
         var height = (option1 < option2) ? option1 : option2;
-        
-        
         coverArt.height = height;
         coverArt.width = height;
-        
         var diff = window.innerHeight - height;
-        
         //alert(window.innerHeight-height);
-        
         spinner.style.left = (coverArt.offsetLeft + (height / 2 - 64)) + "px";
         spinner.style.top = (coverArt.offsetTop + (height / 2 - 64)) + "px";
-        
         //CenterSpinner($('spinner'));
-    
-    
-    
-    
     },
     
     //****************************************************************************************************************
     // Gestures and animation
     //****************************************************************************************************************
-    
-    noDrag: function(event)
-    {
+    noDrag: function(event){
         event.stop();
     },
     
-    
-    handleFlick: function(event)
-    {
+    handleFlick: function(event){
         Mojo.Log.info("--> handleFlick: %j", event);
-        
         event.stop();
-        
-        if (event.velocity.x < -1500) 
-        {
+        if (event.velocity.x < -1500){
             AmpacheMobile.audioPlayer.play_next(true);
             //this.moveArt();
         }
         if (event.velocity.x > 1500) 
             AmpacheMobile.audioPlayer.play_prev();
-        
         Mojo.Log.info("<-- handleFlick");
     },
     
-    
-    
     // All this for double clicking
-    doubleClick: function()
-    {
+    doubleClick: function(){
         Mojo.Log.info("--> doubleClick");
-        if (this.click == 1) 
-        {
+        if (this.click == 1){
             this.togglePausePlay();
         }
-        else 
-        {
+        else{
             this.click = 1
             this.clickInterval = window.setInterval(this.killlClick.bind(this), 450);
         }
     },
     
-    killlClick: function()
-    {
+    killlClick: function(){
         Mojo.Log.info("--> killlClick");
-        
         this.click = 0;
         window.clearInterval(this.clickInterval);
         this.clickInterval = null;
     },
     
-    togglePausePlay: function()
-    {
+    togglePausePlay: function(){
         Mojo.Log.info("--> togglePausePlay");
-        if (!AmpacheMobile.audioPlayer.player.paused) 
-        {
+        if (!AmpacheMobile.audioPlayer.player.paused){
             this.showPlayButton();
             AmpacheMobile.audioPlayer.pause();
         }
-        else 
-        {
+        else {
             this.showPauseButton();
             AmpacheMobile.audioPlayer.play();
         }
         Mojo.Log.info("--> togglePausePlay");
     },
-    
-    
-    
-    
     /*
      // hardcoded position for the album art divs
      ANIMATION_FAR_LEFT_LEFT = -400
-     
      ANIMATION_PREV_LEFT = -140
      ANIMATION_PREV_HEIGHT = 200
      ANIMATION_PREV_BOTTOM = 200
-     
      ANIMATION_CURRENT_LEFT = 70
      ANIMATION_CURRENT_HEIGHT = 220
      ANIMATION_CURRENT_BOTTOM = 100
-     
      ANIMATION_NEXT_LEFT = 280
      ANIMATION_NEXT_HEIGHT =200
      ANIMATION_NEXT_BOTTOM = 95
-     
      ANIMATION_FAR_RIGHT_LEFT = 400
      moveArt : function(){
      this.currentPicDiv = this.controller.get('loaded-display');
-     
      var oldInfo = {};
      oldInfo.left = 200;
      oldInfo.bottom = this.ANIMATION_CURRENT_BOTTOM;
-     
      var newInfo = {};
      newInfo.left = 280;
      newInfo.bottom = this.ANIMATION_CURRENT_BOTTOM;
-     
-     
      Mojo.Animation.animateStyle(this.currentPicDiv, 'left', 'bezier', {
      from: 0,
      to: 100,
@@ -283,13 +207,10 @@ NowPlayingAssistant = Class.create(
      }
      });
      
-     
-     
      }
      _getDims = function (divPos){
      
      var dims = {};
-     
      switch (divPos){
      case 0:
      dims.left = this.ANIMATION_FAR_LEFT_LEFT;
@@ -323,86 +244,57 @@ NowPlayingAssistant = Class.create(
      
      }
      */
-    activate: function(event)
-    {
+    activate: function(event){
         Mojo.Log.info("--> activate");
-        
-        
-        
         AmpacheMobile.audioPlayer.play();
         AmpacheMobile.audioPlayer.setNowPlaying(this);
-        
         this.showPlayButton();
-        
         AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
-        
         Mojo.Log.info("<-- activate");
     },
-    
-    
-    deactivate: function(event)
-    {
+
+    deactivate: function(event){
         Mojo.Log.info("<-- activate");
         AmpacheMobile.audioPlayer.stop();
         AmpacheMobile.audioPlayer.clearNowPlaying();
-        
         window.onresize = null;
-        
-        
-        
-        
         Mojo.Log.info("--> activate");
     },
     
-    cleanup: function(event)
-    {
+    cleanup: function(event){
     },
     
-    
-    
-    updateTime: function(current, duration)
-    {
+    updateTime: function(current, duration){
         //Mojo.Log.info("-- updateTime secs", current);
         this.updateCounters(Math.round(current), duration);
         this.percentage = 0;
-        if (duration == 0) 
-        {
+        if (duration == 0){
             this.percentage = 0;
         }
-        else 
-        {
+        else {
             this.percentage = (current / duration) * 100;
         }
         this.sliderModel.value = this.percentage;
         this.controller.modelChanged(this.sliderModel);
     },
     
-    updateCounters: function(current, duration)
-    {
+    updateCounters: function(current, duration){
         var remaining = Math.floor(duration - current);
         this.controller.get('playback-remaining').innerHTML = "-" + this.timeFormatter(remaining);
         var timeString = this.timeFormatter(current);
         this.controller.get('playback-progress').innerHTML = timeString;
-        
     },
     
-    
-    timeFormatter: function(secs)
-    {
+    timeFormatter: function(secs){
         //Mojo.Log.info("--> timeFormatter secs", secs);
-        
         var hrs = Math.floor(secs / 3600);
         var mins = Math.floor(secs / 60) - hrs * 60;
         secs = secs % 60;
-        
         var displayHours = "";
-        if (hrs > 0) 
-        {
+        if (hrs > 0){
             displayHours = hrs + ":";
         }
-        
         var result = displayHours + ((mins < 10) ? "0" + mins : mins) + ":" + ((secs < 10) ? "0" + secs : secs);
-        
         //Mojo.Log.info("<-- timeFormatter result", result);
         return result;
     },
@@ -410,10 +302,8 @@ NowPlayingAssistant = Class.create(
     //*********************************************************************************************************************************
     //                                Progress Bar Slider / Buffering
     //*********************************************************************************************************************************
-    progressBarDragEnd: function()
-    {
+    progressBarDragEnd: function(){
         Mojo.Log.info("--> progressBarDragEnd");
-        
         this.sliderIsDragging = false;
         var pos = this.sliderModel.value;
         var percentage = (pos / 100);
@@ -431,8 +321,7 @@ NowPlayingAssistant = Class.create(
         Mojo.Log.info("<-- progressBarDragEnd");
     },
     
-    progressBarDragStart: function()
-    {
+    progressBarDragStart: function(){
         Mojo.Log.info("--> progressBarDragStart");
         /*
          if (this.sliderIsDragging)
@@ -453,12 +342,10 @@ NowPlayingAssistant = Class.create(
             return;
         this.sliderIsDragging = true;
         AmpacheMobile.audioPlayer.NowPlayingStopPlaybackTimer();
-        
         Mojo.Log.info("<-- progressBarDragStart");
     },
     
-    progressBarSeek: function(event)
-    {
+    progressBarSeek: function(event){
         Mojo.Log.info("--> progressBarSeek");
         var pos = event.value;
         var secs = Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
@@ -467,8 +354,7 @@ NowPlayingAssistant = Class.create(
     },
     
     
-    updateBuffering: function(startPctg, endPctg)
-    {
+    updateBuffering: function(startPctg, endPctg){
         this.sliderModel.progressStart = startPctg
         this.sliderModel.progressEnd = endPctg;
         this.controller.modelChanged(this.sliderModel);
@@ -477,140 +363,94 @@ NowPlayingAssistant = Class.create(
     //*********************************************************************************************************************************
     //                                Spinner
     //*********************************************************************************************************************************
-    showSpinner: function()
-    {
+    showSpinner: function(){
         Mojo.Log.info("--> showSpinner");
-        
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- showSpinner");
-        
     },
-    hideSpinner: function()
-    {
+    hideSpinner: function(){
         Mojo.Log.info("--> hideSpinner");
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- hideSpinner");
     },
     
-    
-    
     //*********************************************************************************************************************************
     //  Now Playing Song Info
     //*********************************************************************************************************************************
-    
-    NowPlayingDisplaySongInfo: function(playList, currentIndex)
-    {
+    NowPlayingDisplaySongInfo: function(playList, currentIndex){
         var song = playList[currentIndex]
         Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
-        
         this.controller.get('loaded-display').show();
-        
         this.controller.get('songTitle').innerHTML = song.title.escapeHTML();
         //this.controller.get('artist').innerHTML = song.artist.escapeHTML();
         //this.controller.get('album').innerHTML = song.album.escapeHTML();
         this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
-        
-        
-        
-        if ((song.art == null) || (song.art == "")) 
-        {
+        if ((song.art == null) || (song.art == "")){
             $('coverArt').src = "images/blankalbum.png"
         }
-        else 
-        {
+        else {
             if ($('coverArt').src != song.art) 
                 $('coverArt').src = song.art;
         }
         var xofy = (currentIndex + 1) + "/" + playList.length;
         this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
-        
         var title = "Now Playing"
         this.controller.get('title').innerHTML = title.escapeHTML();
-        
-        
         Mojo.Log.info("<-- NowPlayingDisplaySongInfo");
-        
-        
     },
     
-    streamDebug: function(state)
-    {
+    streamDebug: function(state){
         var display = "";
-        switch (state)
-        {
-        
+        switch (state){
             case "Downloading NaN%":
                 display = "Download Starting";
                 break;
-                
             case "Downloading 100%":
                 display = "Downloading Finished";
                 break;
-                
             case "loadstart":
                 display = "Starting Stream"
                 break;
-                
             case "canplaythrough":
                 display = "Can Play Through";
                 break;
-                
             case "progress":
                 display = "Downloading";
                 break;
-                
             case "stalled":
                 display = "Stream loading stalled";
                 break;
-                
             case "load":
                 display = "Fully Loaded";
                 break;
-                
             default:
                 display = state;
                 break;
         }
-        
         this.controller.get('stream-debug').innerHTML = display;
     },
     
-    
-    setMenuControls: function()
-    {
+    setMenuControls: function(){
         var items = new Array();
-        
-        
         var leftGroup = new Array();
         leftGroup[0] = this._getShuffleItem()
-        
-        
         var centerGroup = new Array();
-        
         var playButton = this.playItem;
         var rewindButton = this.rewindItem;
         var forwardButton = this.forwardItem;
         var pauseButton = this.pauseStopItem;
-        
-        
-        
         centerGroup[0] = rewindButton;
-        if (!this.playing) 
-        {
+        if (!this.playing){
             centerGroup[1] = playButton;
         }
-        else 
-        {
+        else {
             centerGroup[1] = pauseButton;
         }
         centerGroup[2] = forwardButton;
-        
-        
         var rightGroup = new Array();
         rightGroup[0] = this._getRepeatItem();
-        
         // pad to center the button group
         items[0] = 
         {
@@ -624,20 +464,15 @@ NowPlayingAssistant = Class.create(
         {
             items: rightGroup
         };
-        
         this.cmdMenuModel.items = items;
         this.controller.modelChanged(this.cmdMenuModel);
-        
         //if (enableRewFast) 
         //setTimeout(this._registerCmdMenuOnClicks.bind(this), 0);
     },
     
-    onStreamingErrorDismiss: function(value)
-    {
+    onStreamingErrorDismiss: function(value){
         Mojo.Log.info("--> onErrorDialogDismiss value: " + value);
-        
-        switch (value)
-        {
+        switch (value) {
             case "retry":
                 break;
             case "palm-attempt":
@@ -647,7 +482,6 @@ NowPlayingAssistant = Class.create(
                     parameters: 
                     {
                         target: this.errorSong.url
-                    
                     }
                 /*
                  onSuccess: function(status){
@@ -663,19 +497,11 @@ NowPlayingAssistant = Class.create(
                 });
                 break;
         }
-        
-        
         this.errorSong = null;
         Mojo.Log.info("<-- onErrorDialogDismiss");
     },
-    
-    
-    
-    
-    streamingError: function(errorText, song)
-    {
+    streamingError: function(errorText, song){
         this.errorSong = song;
-        
         this.controller.showAlertDialog(
         {
             onChoose: this.onStreamingErrorDismiss.bind(this),
@@ -683,7 +509,6 @@ NowPlayingAssistant = Class.create(
             message: errorText,
             choices: [
             {
-            
                 label: 'OK',
                 value: "retry",
                 type: 'primary'
@@ -698,9 +523,7 @@ NowPlayingAssistant = Class.create(
         });
     },
     
-    
-    showError: function(errorText)
-    {
+    showError: function(errorText){
         this.controller.showAlertDialog(
         {
             onChoose: this.onErrorDialogDismiss.bind(this),
@@ -715,33 +538,26 @@ NowPlayingAssistant = Class.create(
         });
     },
     
-    onErrorDialogDismiss: function(event)
-    {
+    onErrorDialogDismiss: function(event){
         this.controller.stageController.popScene();
     },
     
     
-    showPauseButton: function()
-    {
+    showPauseButton: function(){
         this.playing = true;
         this.setMenuControls();
     },
     
-    showPlayButton: function()
-    {
+    showPlayButton: function(){
         this.playing = false;
         ;
         this.setMenuControls();
     },
     
-    handleCommand: function(event)
-    {
+    handleCommand: function(event){
         Mojo.Log.info("--> handleCommand:", event.command);
-        
-        if (event.type == Mojo.Event.command) 
-        {
-            switch (event.command)
-            {
+        if (event.type == Mojo.Event.command){
+            switch (event.command){
                 case "forward":
                     AmpacheMobile.audioPlayer.play_next(true);
                     break;
@@ -787,9 +603,7 @@ NowPlayingAssistant = Class.create(
                     break;
             }
         }
-        
         Mojo.Log.info("<-- handleCommand:", event.command);
-        
     },
     
     /**
@@ -800,16 +614,13 @@ NowPlayingAssistant = Class.create(
         var icon;
         var toggleCmd;
         
-        if (this.shuffle == true) 
-        {
+        if (this.shuffle == true){
             icon = "music-shuffle";
             toggleCmd = 'toggleShuffle';
         }
-        else 
-        {
+        else {
             icon = "music-shuffle";
         }
-        
         return {
             toggleCmd: toggleCmd,
             items: [{
@@ -817,32 +628,25 @@ NowPlayingAssistant = Class.create(
                 icon: icon
             }]
         };
-        
         //return {toggleCmd:'toggle-stuff', icon: icon, command:'toggleShuffle'};
     },
     
-    _getRepeatItem: function()
-    {
-    
+    _getRepeatItem: function(){
         //var repeatMode = this.musicPlayer.getRepeatMode();
         var icon;
         var toggleCmd;
         
-        if (this.repeatMode == 0) 
-        {
+        if (this.repeatMode == 0){
             icon = 'music-repeat';
         }
-        else if (this.repeatMode == 1) 
-        {
+        else if (this.repeatMode == 1){
             icon = 'music-repeat';
             toggleCmd = 'toggleRepeat';
         }
-        else 
-        {
+        else {
             icon = 'music-repeat-one';
             toggleCmd = 'toggleRepeat';
         }
-        
         return {
             toggleCmd: toggleCmd,
             items: [{
@@ -854,133 +658,67 @@ NowPlayingAssistant = Class.create(
         //return {icon: icon, command:'toggleRepeat'};
     },
     
-    toggleRepeat: function()
-    {
+    toggleRepeat: function(){
         this.repeatMode++;
         this.repeatMode = this.repeatMode % 3;
-        
         Mojo.Log.info("--> toggleRepeat  repeatMode:", this.repeatMode);
-        
         AmpacheMobile.audioPlayer.setRepeatMode(this.repeatMode);
-		
         this.setMenuControls();
-        
-        
     },
     
-	setRepeatMode:function(mode)
-	{
+	setRepeatMode:function(mode){
 		 this.repeatMode=mode;
 		 this.setMenuControls();
 	},
-	
-	
     
-    toggleShuffle: function()
-    {
+    toggleShuffle: function(){
         this.shuffle = !this.shuffle;
-        if (this.shuffle) 
-        {
+        if (this.shuffle){
             AmpacheMobile.audioPlayer.toggleShuffleOn();
         }
-        else 
-        {
+        else{
             AmpacheMobile.audioPlayer.toggleShuffleOff();
         }
-        
         this.setMenuControls();
-        
-        
     },
-    
     
     playItem: 
-    {
-        icon: 'music-play',
-        command: 'play'
-    },
+    { icon: 'music-play', command: 'play' },
+   
     playItemDisabled: 
-    {
-        icon: 'music-play-disabled',
-        command: 'playItemDisabled'
-    },
+    { icon: 'music-play-disabled', command: 'playItemDisabled' },
+   
     pauseItem: 
-    {
-        icon: 'music-pause',
-        command: 'pause'
-    },
+    { icon: 'music-pause', command: 'pause' },
+
     stopItem: 
-    {
-        icon: 'music-stop',
-        command: 'stop'
-    },
-    
-    
+    { icon: 'music-stop', command: 'stop' },
+   
     shuffleOnItem: 
-    {
-        toggleCmd: "toggleShuffle",
-        items: [
-        {
-            command: 'shuffle-off',
-            icon: 'music-shuffle'
-        }]
-    },
+    { toggleCmd: "toggleShuffle", items: [ { command: 'shuffle-off', icon: 'music-shuffle' }] },
     
     shuffleOffItem: 
-    {
-        toggleCmd: null,
-        icon: 'music-shuffle',
-        command: 'shuffle-on'
-    },
+    { toggleCmd: null, icon: 'music-shuffle', command: 'shuffle-on' },
     
     forwardItem: 
-    {
-        icon: 'music-forward',
-        command: 'forward'
-    },
+    { icon: 'music-forward', command: 'forward' },
     
     forwardItemDisabled: 
-    {
-        icon: 'music-forward-disabled',
-        command: 'forwardItemDisabled'
-    },
+    { icon: 'music-forward-disabled', command: 'forwardItemDisabled' },
     
     rewindItem: 
-    {
-        icon: 'music-rewind',
-        command: 'rewind'
-    },
+    { icon: 'music-rewind', command: 'rewind' },
     
     rewindItemDisabled: 
-    {
-        icon: 'music-rewind-disabled',
-        command: 'rewindItemDisabled'
-    },
+    { icon: 'music-rewind-disabled', command: 'rewindItemDisabled' },
     
     repeatItem: 
-    {
-        icon: 'music-repeat',
-        command: 'repeat'
-    },
-    
+    { icon: 'music-repeat', command: 'repeat' },
     
     appMenuAttr: 
-    {
-        omitDefaultItems: true
-    },
-    appMenuModel: 
-    {
-        visible: true,
-        items: [
-        //{label: "Test Connection", command: "doTest-cmd"},
-        {
-            label: "Stream Info",
-            command: "doStreamingInfo-cmd"
-        }, 
-        {
-            label: "About...",
-            command: "about-cmd"
-        }]
-    }
+    { omitDefaultItems: true },
 
+    appMenuModel: 
+    { visible: true, items: [ { label: "Stream Info", command: "doStreamingInfo-cmd" }, { label: "About...", command: "about-cmd" }]
+    }
 })
