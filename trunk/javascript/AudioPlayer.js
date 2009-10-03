@@ -203,11 +203,6 @@ AudioPlayer = Class.create({
 	//Code for shuffle
 	//**********************************************************************************************************************
 	markPlayListUnplayed: function(){
-        /*var i = this.playList.length;
-        do { 
-            this.playList[i].played = false; 
-        } while (--i);
-        */
         for (var i = 0; i < this.playList.length; i++) {
 			this.playList[i].played = false;
 		}; 
@@ -244,6 +239,7 @@ AudioPlayer = Class.create({
 		this.playOrderList.sort(this.randOrd);
 		this.playOrderList.sort(this.randOrd);
         var i = this.playList.length;
+        /*
         do {
 			if (this.playOrderList[i] == this.currentPlayingTrack) {
 				temp = this.playOrderList[0];
@@ -252,7 +248,7 @@ AudioPlayer = Class.create({
 				break;
 			};
         } while (--i);
-        /*
+        */
 		for (var i = 0; i < this.playList.length; i++) {
 			if (this.playOrderList[i] == this.currentPlayingTrack) {
 				temp = this.playOrderList[0];
@@ -260,7 +256,7 @@ AudioPlayer = Class.create({
 				this.playOrderList[i]= temp;
 				break;
 			};
-		}*/
+		}
 		this.currentPlayingIndex = 0;
 		this.printPlayOrderList();
 		this.shuffleOn = true;
