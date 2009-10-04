@@ -279,7 +279,7 @@ GenresAssistant = Class.create(
         this.itemsHelper.Visible = true;
         this.itemsHelper.GetItems();
 		
-		$('count-genre').hide();
+		
     },
     
     deactivate: function(event)

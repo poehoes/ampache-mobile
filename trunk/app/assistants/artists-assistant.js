@@ -85,6 +85,8 @@ ArtistsAssistant = Class.create(
         
         //*********************************************************************************************************
         // Items Helper
+		var sorting = this.Genre_id ? this.sortAlpha.bind(this) : null;
+		
         var params = 
         {
             controller: this.controller,
@@ -95,7 +97,7 @@ ArtistsAssistant = Class.create(
             progressModel: this.artistLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedArtists,
-            SortFunction: this.sortAlpha.bind(this),
+            SortFunction: sorting,
             MatchFunction: this.IsMatch
         };
         this.itemsHelper.setup(params);
@@ -106,8 +108,7 @@ ArtistsAssistant = Class.create(
 	
 	sortAlpha: function(a, b)
     {
-        if (this.Genre_id) //Sorting only necessary for Genre responses
-		{
+        
 			var regExp = /(the|a)\s+/g;
 			var a_fixed = a.name.toLowerCase().replace(regExp, '');;
 			var b_fixed = b.name.toLowerCase().replace(regExp, '');;
@@ -119,11 +120,7 @@ ArtistsAssistant = Class.create(
 				return -1;
 			else 
 				return 1
-		}
-		else
-		{
-			return 0;
-		}
+		
     },
 	
 	
