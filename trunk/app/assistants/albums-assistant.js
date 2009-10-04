@@ -36,7 +36,7 @@ AlbumsAssistant = Class.create(
         //this.AlbumsList = params.AlbumsList;
         //this.AlbumsList.sort(this.sortfunction);
         
-        this.ExpectedAlbums = params.ExepectedAlbums;
+        this.ExpectedAlbums = params.ExpectedAlbums;
         
         if (params.Artist_id != null) 
         {
@@ -45,9 +45,17 @@ AlbumsAssistant = Class.create(
             this.Artist_id = params.Artist_id;
             
         }
-        else 
+        else if(params.Genre_id != null) 
+		{
+			this.type = params.Type;
+			this.Genre_id = params.Genre_id;
+			this.DisplayArtistInfo = true;
+		}
+		else 
             this.isArtistView = false;
         
+		
+		
         
         if (params.Search) 
         {
@@ -285,11 +293,15 @@ AlbumsAssistant = Class.create(
         
         if (this.isArtistView == true) 
         {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist_id, offset, limit);
+            AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist_id, null, offset, limit);
         }
-        else 
+        else if(this.type="genres")
+		{
+            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, this.Genre_id, offset, limit);
+        }
+		else 
         {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, offset, limit, this.Search);
+            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, null, offset, limit, this.Search);
         }
         
         Mojo.Log.info("<-- GetMoreAlbums");

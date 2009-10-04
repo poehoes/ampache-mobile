@@ -27,12 +27,16 @@ SongsAssistant = Class.create(
         this.Playlist_id = params.Playlist_id;
         this.Album_id = params.Album_id;
         
-        if ((this.Type == "playlist") || (this.Type == "all-songs") || (this.Type == "search") || (this.Type == "search-global")) 
+        if ((this.Type == "playlist") || (this.Type == "all-songs") || (this.Type == "search") || (this.Type == "search-global") || (this.Type == "genre")) 
         {
             this.DisplayAlbumInfo = true;
         }
         
-        
+		if (params.Genre_id) 
+		{
+			this.Genre_id = params.Genre_id;
+		}
+		
         if (params.Search) 
         {
             this.Search = params.Search;
@@ -164,24 +168,29 @@ SongsAssistant = Class.create(
         if (this.Type == "playlist") 
         {
             this.itemsHelper.ExpectedItems = this.Item.items;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Playlist_id, offset, limit);
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Playlist_id, null, offset, limit);
         }
         else if (this.Type == "album") 
         {
             if (this.Item) 
                 this.itemsHelper.ExpectedItems = this.Item.tracks;
-            AmpacheMobile.ampacheServer.GetSongs(callback, this.Album_id, null, null, offset, limit);
+            AmpacheMobile.ampacheServer.GetSongs(callback, this.Album_id, null, null, null,offset, limit);
         }
         else if ((this.Type == "all-songs") || (this.Type == "search")) 
         {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, offset, limit, this.Search);
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null,offset, limit, this.Search);
         }
         else if (this.Type == "search-global") 
         {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, offset, limit, this.Search, true);
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null,null, offset, limit, this.Search, true);
         }
+		else if(this.Type =="genre")
+		{
+			this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null,this.Genre_id, offset, limit, this.Search, true);
+		}
         
         
         
@@ -226,7 +235,7 @@ SongsAssistant = Class.create(
                 SceneTitle: item.artist,
                 DisplayArtistInfo: false,
                 Artist_id: item.artist_id,
-                ExepectedAlbums: 0
+                ExpectedAlbums: parseInt(AmpacheMobile.ampacheServer.albums),
             });
         }
         
@@ -236,7 +245,7 @@ SongsAssistant = Class.create(
             {
                 SceneTitle: item.artist + " - " + item.album,
                 Type: "album",
-                Album_id: item.album_id
+                
             
             });
         }

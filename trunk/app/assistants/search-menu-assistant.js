@@ -162,7 +162,7 @@ SearchMenuAssistant = Class.create(
                 {
                     SceneTitle: "Search Albums: " + this.searchText,
                     DisplayArtistInfo: true,
-                    ExepectedAlbums: numAlbums,
+                    ExpectedAlbums: numAlbums,
                     Search: this.searchText == "" ? null : this.searchText
                 });
             }

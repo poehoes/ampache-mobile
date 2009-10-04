@@ -16,23 +16,32 @@
 ArtistsAssistant = Class.create(
 {
 
-    initialize: function(params){
+    initialize: function(params)
+    {
         this.SceneTitle = params.SceneTitle;
-		this.ExpectedArtists = params.ExpectedArtists;
+        this.ExpectedArtists = params.ExpectedArtists;
         this.itemsHelper = new ItemsHelper();
-		if(params.Search) {
-			this.Search = params.Search;
-		} 
+        
+        if (params.Genre_id) 
+        {
+            this.Genre_id = params.Genre_id;
+        }
+        
+        if (params.Search) 
+        {
+            this.Search = params.Search;
+        }
     },
     
-    setup: function(){
-         //******************************************************************************************************
-         // Make scrim
-         this.scrim = $("spinner-scrim");
-         this.scrim.hide();
-		
-         //*********************************************************************************************************
-		//  Setup Spinner
+    setup: function()
+    {
+        //******************************************************************************************************
+        // Make scrim
+        this.scrim = $("spinner-scrim");
+        this.scrim.hide();
+        
+        //*********************************************************************************************************
+        //  Setup Spinner
         this.spinnerLAttrs = 
         {
             spinnerSize: 'large'
@@ -43,9 +52,9 @@ ArtistsAssistant = Class.create(
         };
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
-		//*********************************************************************************************************
+        //*********************************************************************************************************
         //  Setup Progress Pill
-		this.PPattr = 
+        this.PPattr = 
         {
             title: this.SceneTitle,
             image: 'images/icons/artists.png'
@@ -86,7 +95,7 @@ ArtistsAssistant = Class.create(
             progressModel: this.artistLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedArtists,
-            SortFunction: null,
+            SortFunction: this.sortAlpha.bind(this),
             MatchFunction: this.IsMatch
         };
         this.itemsHelper.setup(params);
@@ -94,19 +103,54 @@ ArtistsAssistant = Class.create(
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
     },
     
-    GetArtists: function(GotItems, offset, limit){
-        AmpacheMobile.ampacheServer.GetArtists(GotItems, offset, limit, this.Search)
+	
+	sortAlpha: function(a, b)
+    {
+        if (this.Genre_id) //Sorting only necessary for Genre responses
+		{
+			var regExp = /(the|a)\s+/g;
+			var a_fixed = a.name.toLowerCase().replace(regExp, '');;
+			var b_fixed = b.name.toLowerCase().replace(regExp, '');;
+			
+			if (a_fixed == b_fixed) 
+				return 0;
+			
+			if (a_fixed < b_fixed) 
+				return -1;
+			else 
+				return 1
+		}
+		else
+		{
+			return 0;
+		}
+    },
+	
+	
+    GetArtists: function(GotItems, offset, limit)
+    {
+        if (!this.Genre_id) 
+        {
+            AmpacheMobile.ampacheServer.GetArtists(GotItems, null, offset, limit, this.Search)
+        }
+        else 
+        {
+            AmpacheMobile.ampacheServer.GetArtists(GotItems, this.Genre_id, offset, limit, this.Search)
+        }
     },
     
-    IsMatch: function(item, filterString){
+    IsMatch: function(item, filterString)
+    {
         var matchString = item.name;
-        if (matchString.toLowerCase().include(filterString.toLowerCase())) {
+        if (matchString.toLowerCase().include(filterString.toLowerCase())) 
+        {
             return true;
         }
         return false;
     },
     
-    listTapHandler: function(event){
+    listTapHandler: function(event)
+    {
         Mojo.Log.info("--> listTapHandler", event.item.name);
         this.RequestedArtist = event.item;
         this.controller.stageController.pushScene('albums', 
@@ -114,67 +158,53 @@ ArtistsAssistant = Class.create(
             SceneTitle: this.RequestedArtist.name,
             DisplayArtistInfo: false,
             Artist_id: event.item.id,
-			//Artist: this.RequestedArtist,
-            ExepectedAlbums: this.RequestedArtist.albums
+            //Artist: this.RequestedArtist,
+            ExpectedAlbums: this.RequestedArtist.albums
         });
         Mojo.Log.info("<-- listTapHandler");
     },
     
-    TurnOnSpinner: function(){
+    TurnOnSpinner: function()
+    {
         Mojo.Log.info("-----> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
-		this.scrim.show();
+        this.scrim.show();
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOnSpinner");
     },
     
-    TurnOffSpinner: function(){
+    TurnOffSpinner: function()
+    {
         Mojo.Log.info("-----> TurnOffSpinner");
-		this.scrim.hide();
+        this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");
     },
     
-    dividerFunc: function(itemModel){   
-        if (itemModel.name.charAt(0).toLowerCase() == "t"){
-            if (itemModel.name.substring(0, 4).toLowerCase() == "the "){
-                var regExp = /\s+/g;
-                var name = itemModel.name.toLowerCase().replace(regExp, '');
-                return name[3].toUpperCase();
-            }
-            else {
-                return "T";
-            }
-        }
-        else if (itemModel.name.charAt(0).toLowerCase() == "a"){
-            if (itemModel.name.substring(0, 2).toLowerCase() == "a "){
-                var regExp = /\s+/g;
-                var name = itemModel.name.toLowerCase().replace(regExp, '');
-                return name[1].toUpperCase();
-            }
-            else {
-                return "A";
-            }
-        }
-        else {
-            return itemModel.name.charAt(0).toUpperCase();
-        }
+    dividerFunc: function(itemModel)
+    {
+       var regExp = /(the|a)\s+/g;
+	   var dividerText = itemModel.name.toLowerCase().replace(regExp, '');
+	   return dividerText[0].toUpperCase();
     },
     
-    activate: function(event){
+    activate: function(event)
+    {
         this.itemsHelper.Visible = true;
         this.itemsHelper.GetItems();
     },
     
-    deactivate: function(event){
+    deactivate: function(event)
+    {
         this.TurnOffSpinner();
         this.itemsHelper.Visible = false;
     },
     
-    cleanup: function(event){
+    cleanup: function(event)
+    {
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
-		this.itemsHelper=null;
+        this.itemsHelper = null;
     }
 })

@@ -81,23 +81,31 @@ MainmenuAssistant = Class.create(
         }, 
         
         /*
-		{
-            category: $L("bottom"),
-            directory: $L("songs"),
-            name: $L("Songs"),
-            scene: $L("songs"),
-            icon: "images/songs.png",
-            description: $L(AmpacheMobile.ampacheServer.songs.toString())
-        },*/
-        
+         {
+         category: $L("bottom"),
+         directory: $L("songs"),
+         name: $L("Songs"),
+         scene: $L("songs"),
+         icon: "images/songs.png",
+         description: $L(AmpacheMobile.ampacheServer.songs.toString())
+         },*/
         {
+            category: $L("bottom"),
+            directory: $L("genres"),
+            name: $L("Genres"),
+            scene: $L("genres"),
+            description: 0,
+            icon: "images/icons/genres.png"
+        },     
+		{
             category: $L("bottom"),
             directory: $L("playlists"),
             name: $L("Playlists"),
             scene: $L("playlists"),
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
             icon: "images/icons/playlists.png"
-        }        /*{
+        }
+           /*{
          category: $L("bottom"),
          directory: $L("preferences"),
          name: $L("Preferences"),
@@ -153,109 +161,113 @@ MainmenuAssistant = Class.create(
                 this.controller.stageController.setWindowOrientation("up");
             }
         }
-		
-		
-		//*****************************************************************************************************
-		// Search Event
-		this.controller.get('search').observe(Mojo.Event.tap, this.pushSearch.bindAsEventListener(this));
-		
-		
+        
+        
+        //*****************************************************************************************************
+        // Search Event
+        this.controller.get('search').observe(Mojo.Event.tap, this.pushSearch.bindAsEventListener(this));
+        
+        
     },
     
-    pushSearch:function()
-	{
-		 this.controller.stageController.pushScene('search-menu')
-	},
-	
-	
+    pushSearch: function()
+    {
+        this.controller.stageController.pushScene('search-menu')
+    },
+    
+    
     listTapHandler: function(event)
     {
         Mojo.Log.info("--> listTapHandler: " + event.item.scene);
         
-        if (this.getPending == false) 
+        
+        
+        
+        switch (event.item.scene)
         {
-            this.getPending = true;
-            
-            switch (event.item.scene)
-            {
-                case "artists":
-                    
-                    var numArtists = parseInt(AmpacheMobile.ampacheServer.artists);
-                    if (numArtists != 0) 
+            case "artists":
+                
+                var numArtists = parseInt(AmpacheMobile.ampacheServer.artists);
+                if (numArtists != 0) 
+                {
+                    this.controller.stageController.pushScene("artists", 
                     {
-                        this.controller.stageController.pushScene("artists", 
-                        {
-                            SceneTitle: "Artists",
-							ExpectedArtists: numArtists
-                        });
-                    }
-                    this.getPending = false;
-                    //this.TurnOffSpinner("Getting Artists");
-                    break;
-                case "albums":
-                    Mojo.Log.info("Pushing Albums");
-                    var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums);
-                    if (numAlbums != 0) 
-                    {
-                        this.controller.stageController.pushScene('albums', 
-                        {
-                            SceneTitle: "Albums",
-                            DisplayArtistInfo: true,
-                            ExepectedAlbums: numAlbums
-                        //AlbumsList: _albumsList,
-                        });
-                    }
-                    this.getPending = false;
-                    
-                    
-                    //this.TurnOffSpinner("Getting Albums");
-                    break;
-                    
-                case "playlists":
-                    
-                    var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists);
-                    
-                    if (numPlaylists != 0) 
-                    {
-                        Mojo.Log.info("Pushing Playlists");
-                        
-                        this.controller.stageController.pushScene('playlists', 
-                        {
-                            SceneTitle: "Playlists",
-                            ExpectedPlaylists: numPlaylists
-                        });
-                        
-                    }
-                    this.getPending = false;
-                    
-                    //this.TurnOffSpinner("Getting Albums");
-                    
-                    break;
-                    
-                case "songs":
-                    this.controller.stageController.pushScene('songs', 
-                    {
-                        SceneTitle: "Songs",
-                        Type: "all-songs",
-                        Item: event.item
-                    
+                        SceneTitle: "Artists",
+                        ExpectedArtists: numArtists
                     });
-                    break;
+                }
+                this.getPending = false;
+                //this.TurnOffSpinner("Getting Artists");
+                break;
+            case "albums":
+                Mojo.Log.info("Pushing Albums");
+                var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums);
+                if (numAlbums != 0) 
+                {
+                    this.controller.stageController.pushScene('albums', 
+                    {
+                        SceneTitle: "Albums",
+                        DisplayArtistInfo: true,
+                        ExpectedAlbums: numAlbums
+                    //AlbumsList: _albumsList,
+                    });
+                }
+                this.getPending = false;
+                
+                
+                //this.TurnOffSpinner("Getting Albums");
+                break;
+                
+            case "playlists":
+                
+                var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists);
+                
+                if (numPlaylists != 0) 
+                {
+                    Mojo.Log.info("Pushing Playlists");
                     
-                default:
-                    this.getPending = false;
-                    break;
+                    this.controller.stageController.pushScene('playlists', 
+                    {
+                        SceneTitle: "Playlists",
+                        ExpectedPlaylists: numPlaylists
+                    });
                     
-            }
+                }
+                this.getPending = false;
+                
+                //this.TurnOffSpinner("Getting Albums");
+                
+                break;
+                
+            case "songs":
+                this.controller.stageController.pushScene('songs', 
+                {
+                    SceneTitle: "Songs",
+                    Type: "all-songs",
+                    Item: event.item
+                
+                });
+                break;
+                
+            case "genres":
+                
+                this.controller.stageController.pushScene('genres', 
+                {
+                    SceneTitle: "Genres",
+                    Type: "all-genres"
+                });
+                break;
+                
         }
+        
         //this.controller.stageController.assistant.showScene(event.item.directory, event.item.scene)
         
         
         Mojo.Log.info("<-- listTapHandler");
     },
     
-	
-	 // This function will popup a dialog, displaying the message passed in.
+    
+    // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function(title, message)
     {
         this.controller.showAlertDialog(
@@ -273,8 +285,8 @@ MainmenuAssistant = Class.create(
             }]
         });
     },
-	
-	
+    
+    
     TurnOnSpinner: function(spinnerText)
     {
         this.spinnerModel.spinning = true;
@@ -382,7 +394,7 @@ MainmenuAssistant = Class.create(
         //this.AlbumsList = null;
         //this.SongsList = null;
     
-    
+        $('count-Genres').hide();
     },
     
     

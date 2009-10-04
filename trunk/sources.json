@@ -52,5 +52,9 @@
     {
         "source": "app\/assistants\/search-menu-assistant.js",
         "scenes": "search-menu"
+    },
+    {
+        "source": "app\/assistants\/genres-assistant.js",
+        "scenes": "genres"
     }
 ]
