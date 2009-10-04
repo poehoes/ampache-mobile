@@ -182,6 +182,7 @@ ConnectionAssistant = Class.create(
             }
             else 
             {
+				this.PopulateAccountsList(settings.Accounts);
                 this.TurnOnSpinner();
                 this.LoadMainMenu(AmpacheMobile.Account);
                 
