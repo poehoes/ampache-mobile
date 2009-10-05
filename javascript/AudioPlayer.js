@@ -47,7 +47,23 @@ AudioPlayer = Class.create({
 			this.createAudioObj(_controller);
 			this.Controller = _controller;
 			this.AudioPlayers = new Array();
-			this.mediaEvents = this.registerForMediaEvents(this.mediaEventsCallbacks.bind(this));
+			
+			//Setup Headset and Bluetooth Buttons
+			//this.mediaEvents = this.registerForMediaEvents(this.mediaEventsCallbacks.bind(this));
+			this.Controller.serviceRequest('palm://com.palm.keys/headset', {
+                    method:'status',
+                    parameters:{subscribe: true}, 
+					onSuccess: this.handleSingleButton.bind(this),
+					onFailure: this.handleSingleButtonFailure.bind(this)
+                }); 
+             
+            this.Controller.serviceRequest('palm://com.palm.keys/media', {
+                method:'status',
+                parameters:{subscribe: true}, 
+				onSuccess: this.btEventsCallbacks.bind(this), 
+				onFailure: this.btEventsFailure.bind(this)
+           });
+			
 		}
 		Mojo.Log.info("<-- AudioPlayer.prototype.initialize", this.audioObj);
     },
@@ -97,11 +113,15 @@ AudioPlayer = Class.create({
 			this.player.addEventListener("waiting", this.handleAudioEvents.bind(this));
 			this.player.addEventListener("progress", this.handleAudioEvents.bind(this));
 			this.player.addEventListener("durationchange", this.handleAudioEvents.bind(this));
+			
+			
 		}
         Mojo.Log.info("<-- AudioPlayer.prototype.createAudioObj");
     },
     
-    //Handles Bluetooth Commands
+	
+	
+    /*
     mediaEventsCallbacks: function(event){
        Mojo.Log.info("--> AudioPlayer.prototype.mediaEventsCallbacks: "+ event.key);
        switch (event.key) {
@@ -132,6 +152,64 @@ AudioPlayer = Class.create({
 				break;
         }
     },
+	*/
+
+    btEventsCallbacks: function(event)
+	{
+		if (event.state == "up") 
+		{
+			if (event.key == "play") 
+			{
+				this.play();
+			}
+			else if ((event.key == "pause") || (event.key == "stop") ) 
+			{
+				this.Paused = true;
+                this.pause();
+			}
+			else if (event.key == "next") 
+			{
+				this.play_next(true);
+			}
+			else if (event.key == "prev") 
+			{
+				this.play_prev();
+			}
+		}
+	},
+	
+    btEventsFailure: function(event)
+	{
+		Mojo.Controller.errorDialog("Bluetooth Error")
+	},
+	
+	
+	handleSingleButtonFailure: function(event)
+    {
+		Mojo.Controller.errorDialog("Headset Error")
+	},
+	handleSingleButton: function(event)
+	{
+		if (event.state == "single_click") 
+		{
+			 if (!this.Paused) {
+                    this.Paused = true;
+                    this.pause();
+                }
+                else {
+                    this.play();
+                }
+		}
+		else if (event.state == "double_click") 
+		{
+			this.play_next(true);
+		}
+		else if (event.state == "hold") 
+		{
+			this.play_prev();
+		}
+		
+	},
 	
 	registerForMediaEvents: function(callback)
     {
