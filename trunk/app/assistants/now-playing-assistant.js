@@ -266,7 +266,7 @@ NowPlayingAssistant = Class.create(
     
     updateTime: function(current, duration){
         //Mojo.Log.info("-- updateTime secs", current);
-        this.updateCounters(Math.round(current), duration);
+        this.updateCounters(current, duration);
         this.percentage = 0;
         if (duration == 0){
             this.percentage = 0;
@@ -278,22 +278,29 @@ NowPlayingAssistant = Class.create(
         this.controller.modelChanged(this.sliderModel);
     },
     
-    updateCounters: function(current, duration){
-        var remaining = Math.floor(duration - current);
-        this.controller.get('playback-remaining').innerHTML = "-" + this.timeFormatter(remaining);
-        var timeString = this.timeFormatter(current);
+    updateCounters: function(_current, _duration){
+        
+		var current = Math.floor(_current);
+		var duration = Math.floor(_duration);
+		var remaining = Math.floor(duration - current);
+		this.controller.get('playback-remaining').innerHTML = "-" + this.timeFormatter(remaining);
+		var timeString = this.timeFormatter(current);
         this.controller.get('playback-progress').innerHTML = timeString;
     },
     
     timeFormatter: function(secs){
-        //Mojo.Log.info("--> timeFormatter secs", secs);
+        Mojo.Log.error("--> timeFormatter secs: " + secs);
+		
+		
         var hrs = Math.floor(secs / 3600);
         var mins = Math.floor(secs / 60) - hrs * 60;
         secs = secs % 60;
         var displayHours = "";
+		
         if (hrs > 0){
             displayHours = hrs + ":";
         }
+		
         var result = displayHours + ((mins < 10) ? "0" + mins : mins) + ":" + ((secs < 10) ? "0" + secs : secs);
         //Mojo.Log.info("<-- timeFormatter result", result);
         return result;
@@ -349,7 +356,8 @@ NowPlayingAssistant = Class.create(
         Mojo.Log.info("--> progressBarSeek");
         var pos = event.value;
         var secs = Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
-        this.updateCounters(secs, AmpacheMobile.audioPlayer.player.duration);
+        
+		this.updateCounters(secs, AmpacheMobile.audioPlayer.player.duration);
         Mojo.Log.info("<-- progressBarSeek");
     },
     
@@ -392,7 +400,10 @@ NowPlayingAssistant = Class.create(
         }
         else {
             if ($('coverArt').src != song.art) 
-                $('coverArt').src = song.art;
+			{
+				$('coverArt').src = "images/blankalbum.png"
+				$('coverArt').src = song.art;
+			}
         }
         var xofy = (currentIndex + 1) + "/" + playList.length;
         this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();

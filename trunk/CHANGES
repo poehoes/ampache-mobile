@@ -1,3 +1,10 @@
+Version 0.6.0 (Beta) (10/xx/2009)
+    * New Feature: Genre Browser and search
+    * Improvement: Connection Cancel Button
+    * Improvement: Speed improvements to list loading
+    * Bug Fix: Load Account List always
+    * Bug Fix: Filtered Songs list pushed to now playing fixed
+
 Version 0.5.0 (Beta) (09/27/2009)
 	* New Feature: (Global Search) should vastly improve performance if you know what you are looking for.
 	* New Feature: (Dynamic Resizing) Dynamic resizing of now playing screen. Meaning support for the Palm Pixi.  Resizing during notifications. ect.

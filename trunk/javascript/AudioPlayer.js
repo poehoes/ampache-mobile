@@ -605,9 +605,21 @@ AudioPlayer = Class.create({
 	UpdateNowPlayingTime: function() {
 		Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingTime");
 		if (this.NowPlaying != null) {
-			var currentTime = this.player.currentTime;
-			var duration = (this.player.duration.toString()=="NaN") ? 0 : this.player.duration;
-			this.NowPlaying.updateTime(currentTime,duration);
+			var currentTime = 0;
+			if(this.player.currentTime)
+			{
+				currentTime = this.player.currentTime;
+			}
+			var duration = 0;
+            if (this.player.duration ) 
+			{
+				duration = this.player.duration;
+			}
+			
+			if (duration != "Infinity") 
+			{
+				this.NowPlaying.updateTime(currentTime, duration);
+			}
 		}
 		Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
 	},
@@ -687,7 +699,7 @@ AudioPlayer = Class.create({
 	
 	NowPlayingResetTime: function() {
 		if (this.NowPlaying != null) {
-			this.NowPlaying.updateTime(0, 0);
+			this.NowPlaying.updateTime(0,0);
 		}
 	},
 	

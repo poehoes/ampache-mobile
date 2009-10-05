@@ -750,15 +750,16 @@ AmpacheServer = Class.create(
         {
             var offset = [];
             var i = 0;
-            offset[i++] = "offset";
-            offset[i++] = _offset;
-            offset[i++] = "limit";
-            offset[i++] = _limit;
             if (_search != null) 
             {
                 offset[i++] = "filter";
                 offset[i++] = _search;
             }
+			offset[i++] = "offset";
+            offset[i++] = _offset;
+            offset[i++] = "limit";
+            offset[i++] = _limit;
+            
             var path = this.BuildActionString("tags", offset);
         }
         else 
@@ -782,7 +783,7 @@ AmpacheServer = Class.create(
     
     GotTagsCallback: function(transport)
     {
-        Mojo.Log.info(transport.responseText);
+        //Mojo.Log.info(transport.responseText);
         
         
         var TagsList = null
