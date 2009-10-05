@@ -91,20 +91,22 @@ MainmenuAssistant = Class.create(
          },*/
         {
             category: $L("bottom"),
-            directory: $L("genres"),
-            name: $L("Genres"),
-            scene: $L("genres"),
-            description: 0,
-            icon: "images/icons/genres.png"
-        },     
-		{
-            category: $L("bottom"),
             directory: $L("playlists"),
             name: $L("Playlists"),
             scene: $L("playlists"),
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
             icon: "images/icons/playlists.png"
+        },
+		
+		{
+            category: $L("bottom"),
+            directory: $L("genres"),
+            name: $L("Genres"),
+            scene: $L("genres"),
+            description: 0,
+            icon: "images/icons/genres.png"
         }
+		
            /*{
          category: $L("bottom"),
          directory: $L("preferences"),

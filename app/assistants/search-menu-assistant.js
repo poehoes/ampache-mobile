@@ -80,7 +80,8 @@ SearchMenuAssistant = Class.create(
         this.controller.get('searchAlbums').observe(Mojo.Event.tap, this.searchForAlbums.bindAsEventListener(this));
         this.controller.get('searchSongs').observe(Mojo.Event.tap, this.searchForSongs.bindAsEventListener(this));
         this.controller.get('searchPlaylists').observe(Mojo.Event.tap, this.searchForPlaylists.bindAsEventListener(this));
-        this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
+        //this.controller.get('searchGenres').observe(Mojo.Event.tap, this.searchForGenres.bindAsEventListener(this));
+		this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
         
         
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.handleKeyPressEvent.bindAsEventListener(this));
@@ -149,6 +150,7 @@ SearchMenuAssistant = Class.create(
         return retVal;
     },
     
+	
     
     searchForAlbums: function()
     {
@@ -194,6 +196,25 @@ SearchMenuAssistant = Class.create(
         
     },
     
+	searchForGenres: function()
+    {
+        if (this.searchCriteria(3)) 
+        {
+            this.TurnOnSpinner();
+            var numSongs = parseInt(AmpacheMobile.ampacheServer.songs); //using numsongs because there is no num genres (numsongs is worst case)
+                this.controller.stageController.pushScene('genres', 
+                {
+                    SceneTitle: "Search Genres: " + this.searchText,
+                    Search: this.searchText == "" ? null : this.searchText,
+					
+                });
+            
+            
+        }
+        
+        
+    },
+	
     
     searchForSongs: function()
     {
