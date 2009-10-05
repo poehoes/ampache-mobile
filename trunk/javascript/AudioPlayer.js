@@ -455,6 +455,10 @@ AudioPlayer = Class.create({
 			if ((!clicked) || (this.repeatMode != RepeatModeType.no_repeat)) {
 				this.play_finished();
 			}
+			else//last track
+			{
+				this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
+			}
 		}
         Mojo.Log.info("<-- AudioPlayer.prototype.play_next");
     },
@@ -472,6 +476,10 @@ AudioPlayer = Class.create({
 			this.kill_play_change_interval();
             this.play_change_interval =  window.setInterval(this.delayed_play.bind(this), 500);
         }
+		else//first track
+		{
+			this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
+		}
         Mojo.Log.info("<-- AudioPlayer.prototype.play_prev");
     },
     

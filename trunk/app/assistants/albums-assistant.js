@@ -295,7 +295,7 @@ AlbumsAssistant = Class.create(
         {
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist_id, null, offset, limit);
         }
-        else if(this.type="genres")
+        else if(this.type=="genres")
 		{
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, this.Genre_id, offset, limit);
         }
