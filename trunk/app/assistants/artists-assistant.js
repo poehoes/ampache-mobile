@@ -16,25 +16,21 @@
 ArtistsAssistant = Class.create(
 {
 
-    initialize: function(params)
-    {
+    initialize: function(params){
         this.SceneTitle = params.SceneTitle;
         this.ExpectedArtists = params.ExpectedArtists;
         this.itemsHelper = new ItemsHelper();
         
-        if (params.Genre_id) 
-        {
+        if (params.Genre_id){
             this.Genre_id = params.Genre_id;
         }
         
-        if (params.Search) 
-        {
+        if (params.Search){
             this.Search = params.Search;
         }
     },
     
-    setup: function()
-    {
+    setup: function(){
         //******************************************************************************************************
         // Make scrim
         this.scrim = $("spinner-scrim");
@@ -115,39 +111,30 @@ ArtistsAssistant = Class.create(
 			
 			if (a_fixed == b_fixed) 
 				return 0;
-			
 			if (a_fixed < b_fixed) 
 				return -1;
 			else 
 				return 1
 		
     },
-	
-	
-    GetArtists: function(GotItems, offset, limit)
-    {
-        if (!this.Genre_id) 
-        {
+    
+    GetArtists: function(GotItems, offset, limit){
+        if (!this.Genre_id){
             AmpacheMobile.ampacheServer.GetArtists(GotItems, null, offset, limit, this.Search)
-        }
-        else 
-        {
+        }else{
             AmpacheMobile.ampacheServer.GetArtists(GotItems, this.Genre_id, offset, limit, this.Search)
         }
     },
     
-    IsMatch: function(item, filterString)
-    {
+    IsMatch: function(item, filterString){
         var matchString = item.name;
-        if (matchString.toLowerCase().include(filterString.toLowerCase())) 
-        {
+        if (matchString.toLowerCase().include(filterString.toLowerCase())){
             return true;
         }
         return false;
     },
     
-    listTapHandler: function(event)
-    {
+    listTapHandler: function(event){
         Mojo.Log.info("--> listTapHandler", event.item.name);
         this.RequestedArtist = event.item;
         this.controller.stageController.pushScene('albums', 
@@ -161,8 +148,7 @@ ArtistsAssistant = Class.create(
         Mojo.Log.info("<-- listTapHandler");
     },
     
-    TurnOnSpinner: function()
-    {
+    TurnOnSpinner: function(){
         Mojo.Log.info("-----> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
         this.scrim.show();
@@ -171,8 +157,7 @@ ArtistsAssistant = Class.create(
         Mojo.Log.info("<----- TurnOnSpinner");
     },
     
-    TurnOffSpinner: function()
-    {
+    TurnOffSpinner: function(){
         Mojo.Log.info("-----> TurnOffSpinner");
         this.scrim.hide();
         this.spinnerModel.spinning = false;
@@ -180,27 +165,23 @@ ArtistsAssistant = Class.create(
         Mojo.Log.info("<----- TurnOffSpinner");
     },
     
-    dividerFunc: function(itemModel)
-    {
+    dividerFunc: function(itemModel){
        var regExp = /(the|a)\s+/g;
 	   var dividerText = itemModel.name.toLowerCase().replace(regExp, '');
 	   return dividerText[0].toUpperCase();
     },
     
-    activate: function(event)
-    {
+    activate: function(event){
         this.itemsHelper.Visible = true;
         this.itemsHelper.GetItems();
     },
     
-    deactivate: function(event)
-    {
+    deactivate: function(event){
         this.TurnOffSpinner();
         this.itemsHelper.Visible = false;
     },
     
-    cleanup: function(event)
-    {
+    cleanup: function(event){
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
         this.itemsHelper = null;
     }

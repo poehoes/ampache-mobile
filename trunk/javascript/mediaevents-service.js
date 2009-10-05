@@ -3,10 +3,10 @@ function MediaEventsService() {
 
 MediaEventsService.prototype.URI = "palm://com.palm.mediaevents/";
 
-MediaEventsService.prototype._serviceRequest = function(sceneController, uri, params) {
-    if (sceneController) {
+MediaEventsService.prototype._serviceRequest = function(sceneController, uri, params){
+    if (sceneController){
         return sceneController.serviceRequest(uri, params);
-    } else {
+    }else{
         var obj = new Mojo.Service.Request(uri, params);
         return obj;
     }
