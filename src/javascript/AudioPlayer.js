@@ -47,7 +47,6 @@ AudioPlayer = Class.create({
             this.createAudioObj(_controller);
             this.Controller = _controller;
             this.AudioPlayers = new Array();
-            
             //Setup Headset and Bluetooth Buttons
             //this.mediaEvents = this.registerForMediaEvents(this.mediaEventsCallbacks.bind(this));
             this.Controller.serviceRequest('palm://com.palm.keys/headset', {
@@ -63,7 +62,6 @@ AudioPlayer = Class.create({
                 onSuccess: this.btEventsCallbacks.bind(this), 
                 onFailure: this.btEventsFailure.bind(this)
            });
-            
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.initialize", this.audioObj);
     },
@@ -78,8 +76,7 @@ AudioPlayer = Class.create({
                 this.PlayerReady = true;
                 this.player = new Audio();
                 //this.player = AudioTag.extendElement(_controller.get('audioPlayerDiv'), _controller);
-            }
-            else {
+            }else{
                 Mojo.Log.info("Setting up audio for palm");
                 this.inPalmHost = false;
                 this.PlayerReady = false;
@@ -113,14 +110,9 @@ AudioPlayer = Class.create({
             this.player.addEventListener("waiting", this.handleAudioEvents.bind(this));
             this.player.addEventListener("progress", this.handleAudioEvents.bind(this));
             this.player.addEventListener("durationchange", this.handleAudioEvents.bind(this));
-            
-            
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.createAudioObj");
     },
-    
-    
-    
     /*
     mediaEventsCallbacks: function(event){
        Mojo.Log.info("--> AudioPlayer.prototype.mediaEventsCallbacks: "+ event.key);
@@ -153,66 +145,46 @@ AudioPlayer = Class.create({
         }
     },
     */
-
-    btEventsCallbacks: function(event)
-    {
-        if (event.state == "up") 
-        {
-            if (event.key == "play") 
-            {
+    btEventsCallbacks: function(event){
+        if (event.state == "up"){
+            if (event.key == "play"){
                 this.play();
-            }
-            else if ((event.key == "pause") || (event.key == "stop") ) 
-            {
+            }else if ((event.key == "pause") || (event.key == "stop")){
                 this.Paused = true;
                 this.pause();
-            }
-            else if (event.key == "next") 
-            {
+            }else if (event.key == "next"){
                 this.play_next(true);
-            }
-            else if (event.key == "prev") 
-            {
+            }else if (event.key == "prev"){
                 this.play_prev();
             }
         }
     },
     
-    btEventsFailure: function(event)
-    {
-        Mojo.Controller.errorDialog("Bluetooth Error")
+    btEventsFailure: function(event){
+        Mojo.Controller.errorDialog("Bluetooth Error");
     },
     
-    
-    handleSingleButtonFailure: function(event)
-    {
-        Mojo.Controller.errorDialog("Headset Error")
+    handleSingleButtonFailure: function(event){
+        Mojo.Controller.errorDialog("Headset Error");
     },
+
     handleSingleButton: function(event)
     {
-        if (event.state == "single_click") 
-        {
-             if (!this.Paused) {
-                    this.Paused = true;
-                    this.pause();
-                }
-                else {
-                    this.play();
-                }
-        }
-        else if (event.state == "double_click") 
-        {
+        if (event.state == "single_click"){
+            if (!this.Paused) {
+                this.Paused = true;
+                this.pause();
+            }else{
+                this.play();
+            }
+        }else if (event.state == "double_click"){
             this.play_next(true);
-        }
-        else if (event.state == "hold") 
-        {
+        }else if (event.state == "hold"){
             this.play_prev();
         }
-        
     },
     
-    registerForMediaEvents: function(callback)
-    {
+    registerForMediaEvents: function(callback){
         Mojo.Log.info("--> AudioPlayer.prototype.registerForMediaEvents");
         var parameters = {};
         parameters.appName = Mojo.appName;
@@ -231,8 +203,8 @@ AudioPlayer = Class.create({
     
     getStreamInfo: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.getStreamInfo");
-        var info = "Info Unavailable"
-        if (this.player.palm!=null) {
+        var info = "Info Unavailable";
+        if (this.player.palm!=null){
             info = "bitrate estimated: " + this.player.palm.bitrate.audio.estimate + "\r\n";
             info += "bitrate avg: " + this.player.palm.bitrate.audio.average.toString() + "\r\n";
             info += "bitrate max: " + this.player.palm.bitrate.audio.maximum.toString();
@@ -258,13 +230,12 @@ AudioPlayer = Class.create({
         this.markPlayListUnplayed();
         this.playOrderList = this.createOrderList();
         this.shuffleOn=_shuffleOn;
-        if (_shuffleOn) {
+        if (_shuffleOn){
             this.playOrderList.sort(this.randOrd);
             this.playOrderList.sort(this.randOrd);
             this.currentPlayingIndex = 0;
             this.currentPlayingTrack = this.playOrderList[0]
-        }
-        else {
+        }else{
             this.currentPlayingTrack = _startIndex;
             this.currentPlayingIndex = _startIndex;
         }
@@ -296,8 +267,7 @@ AudioPlayer = Class.create({
         return (Math.round(Math.random())-0.5); 
     }, 
     
-    printPlayOrderList:function()
-    {
+    printPlayOrderList:function(){
         Mojo.Log.info("printPlayOrderList: %j", this.playOrderList);
         Mojo.Log.info("currentPlayingTrack: " + this.currentPlayingTrack);
         Mojo.Log.info("currentPlayingIndex: " + this.currentPlayingIndex);
@@ -310,12 +280,12 @@ AudioPlayer = Class.create({
         this.shuffleOn = false;
     },
     
-    toggleShuffleOn:function() {
+    toggleShuffleOn:function(){
         this.playOrderList.sort(this.randOrd);
         this.playOrderList.sort(this.randOrd);
         var i = this.playList.length;
         do{
-            if (this.playOrderList[i] == this.currentPlayingTrack) {
+            if (this.playOrderList[i] == this.currentPlayingTrack){
                 temp = this.playOrderList[0];
                 this.playOrderList[0] =  this.currentPlayingTrack;
                 this.playOrderList[i]= temp;
@@ -343,7 +313,7 @@ AudioPlayer = Class.create({
         }
     },
     
-    getPrevTrack:function() {
+    getPrevTrack:function(){
         if ((this.currentPlayingIndex - 1) > -1) {
             this.currentPlayingIndex--;
             return this.playOrderList[this.currentPlayingIndex];
@@ -357,9 +327,9 @@ AudioPlayer = Class.create({
     //**********************************************************************************************************************
     play: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.play");
-        if (this.PlayerReady == true) { 
+        if (this.PlayerReady == true){ 
             this.internal_play();
-        } else {
+        }else{
             this.RequestedPlayBeforeReady=true;
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.play");
@@ -370,7 +340,6 @@ AudioPlayer = Class.create({
         this.player.pause();
         this.player.empty();
         this.player.src = null;
-        //this.player = null;
     },
     
     pause:function(){
@@ -381,11 +350,11 @@ AudioPlayer = Class.create({
     
     playFinished:false,
     
-    play_finished:function() {
-        this.currentPlayingIndex = 0
+    play_finished:function(){
+        this.currentPlayingIndex = 0;
         this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
         this.Paused=false;
-        switch (this.repeatMode) {
+        switch (this.repeatMode){
             case RepeatModeType.no_repeat:
                 this.playFinished=true;
                 this.stop();
@@ -404,6 +373,7 @@ AudioPlayer = Class.create({
                 break;
         }
     },
+
     play_change_interval:null,
 
     kill_play_change_interval:function(){
@@ -424,14 +394,14 @@ AudioPlayer = Class.create({
             this.stop();
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             //Add a little bit of delay after a next request to allow for rapid song switching.
-            if (clicked) {
+            if (clicked){
                  this.kill_play_change_interval();
                  this.play_change_interval =  window.setInterval(this.delayed_play.bind(this), 500);
             }else{
                 this.internal_play();
             }
         }else{
-            if ((!clicked) || (this.repeatMode != RepeatModeType.no_repeat)) {
+            if ((!clicked) || (this.repeatMode != RepeatModeType.no_repeat)){
                 this.play_finished();
             }else{//last track
                 this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
@@ -463,14 +433,13 @@ AudioPlayer = Class.create({
          this.internal_play();
     },
 
-    play_previous: function(){
-    },
+    play_previous: function(){},
     
     internal_play: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.internal_play");
         this.kill_play_change_interval();
         if ((this.Paused) && (!this.playFinished)){
-            this.player.play()
+            this.player.play();
         }else{
             this.playFinished = false;
             Mojo.Log.info("Starting play of " +
@@ -485,7 +454,7 @@ AudioPlayer = Class.create({
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             this.UpdateNowPlayingShowSpinner(true);
             this.player.src = this.playList[this.currentPlayingTrack].url;
-            this.player.load()
+            this.player.load();
         }
         this.Paused = false;
         //Mojo.Log.info("Audio() URL play of " + 
@@ -499,7 +468,7 @@ AudioPlayer = Class.create({
     streamErrorCodeLookup: function(errorCode){
         //refrence: http://dev.w3.org/html5/spc/Overview.html#dom-mediaerror-media_err_network
      // http://developer.palm.com/index.php?option=com_content&view=article&id=1539
-        var errorString="Unknown Error"
+        var errorString="Unknown Error";
         switch(errorCode){
             case MediaError.MEDIA_ERR_ABORTED:
                 errorString = "The audio stream was aborted by WebOS.  Most often this happens when you do not have a fast enough connection to support an audio stream.";
@@ -522,7 +491,7 @@ AudioPlayer = Class.create({
             case this.MEDIA_ERR_SRC_NOT_SUPPORTED:
                 errorString = "The file is not suitable for streaming";
                 //if (this.debug) {
-                    errorString += "Error Type: MEDIA_ERR_SRC_NOT_SUPPORTED"
+                    errorString += "Error Type: MEDIA_ERR_SRC_NOT_SUPPORTED";
                 //}
                 break;
         }
@@ -530,14 +499,13 @@ AudioPlayer = Class.create({
     },
     
     moreErrorInfo:function(type){
-        var moreInfo = "<br><br><font style='{font-size:smaller;}'><b>Debug Info:</b>"
+        var moreInfo = "<br><br><font style='{font-size:smaller;}'><b>Debug Info:</b>";
         moreInfo += "<br>Error Type: " + type;
         if(this.player.palm != null && this.player.palm.errorDetails != null  && this.player.palm.errorDetails.errorCode != null) {
             var errorDetails = this.player.palm.errorDetails;
             Mojo.Log.info("Error Details: %j", errorDetails);
-            var errorClassString = "Unknown: (0x" + errorDetails.errorClass.toString(16).toUpperCase() + ")"
-            var errorCodeString = "Unknown: (0x" + errorDetails.errorCode.toString(16).toUpperCase() + ")"
-            
+            var errorClassString = "Unknown: (0x" + errorDetails.errorClass.toString(16).toUpperCase() + ")";
+            var errorCodeString = "Unknown: (0x" + errorDetails.errorCode.toString(16).toUpperCase() + ")";
             switch (errorDetails.errorClass) {
                 case 0x50501:
                     errorClassString = "DecodeError(0x50501)";
@@ -548,40 +516,39 @@ AudioPlayer = Class.create({
             }       
             switch (errorDetails.errorCode) {
                 case 1:
-                    errorCodeString = "DecodeErrorFileNotFound(1)"
+                    errorCodeString = "DecodeErrorFileNotFound(1)";
                     break;
                 case 2:
-                    errorCodeString = "DecodeErrorBadParam(2)"
+                    errorCodeString = "DecodeErrorBadParam(2)";
                     break;
                 case 3:
-                    errorCodeString = "DecodeErrorPipeline(3)"
+                    errorCodeString = "DecodeErrorPipeline(3)";
                     break;
                 case 4:
-                    errorCodeString = "DecodeErrorUnsupported(4)"
+                    errorCodeString = "DecodeErrorUnsupported(4)";
                     break;
                 case 5:
-                    errorCodeString = "DecodeErrorNoMemory(5)"
+                    errorCodeString = "DecodeErrorNoMemory(5)";
                     break;
                 case 6:
-                    errorCodeString = "NetworkErrorHttp(6)"
+                    errorCodeString = "NetworkErrorHttp(6)";
                     break;
                 case 7:
-                    errorCodeString = "NetworkErrorRtsp(7)"
+                    errorCodeString = "NetworkErrorRtsp(7)";
                     break;
                 case 8:
-                    errorCodeString = "NetworkErrorMobi(8)"
+                    errorCodeString = "NetworkErrorMobi(8)";
                     break;
                 case 9:
-                    errorCodeString = "NetworkErrorOther(9)"
+                    errorCodeString = "NetworkErrorOther(9)";
                     break;
                 case 12:
-                    errorCodeString = "NetworkErrorPowerDown(12)"
+                    errorCodeString = "NetworkErrorPowerDown(12)";
                     break;
             }
-            
             moreInfo += "<br>Class: " + errorClassString;
             moreInfo += "<br>Code: " + errorCodeString;
-            moreInfo += "<br>Value: 0x" + errorDetails.errorValue.toString(16).toUpperCase()
+            moreInfo += "<br>Value: 0x" + errorDetails.errorValue.toString(16).toUpperCase();
         }
         moreInfo += "<br>Mime: " + this.playList[this.currentPlayingTrack].mime;
         moreInfo += "<br>URL: <a href=" + this.playList[this.currentPlayingTrack].url + ">Stream Link</a></font>";
@@ -654,9 +621,9 @@ AudioPlayer = Class.create({
     // Now Playing updaters
     UpdateNowPlayingTime: function() {
         Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingTime");
-        if (this.NowPlaying != null) {
+        if (this.NowPlaying != null){
             var currentTime = 0;
-            if(this.player.currentTime) {
+            if(this.player.currentTime){
                 currentTime = this.player.currentTime;
             }
             var duration = 0;
@@ -704,56 +671,56 @@ AudioPlayer = Class.create({
         if (this.NowPlaying != null && this.debug) this.NowPlaying.streamDebug(eventText);
     },
     
-    NowPlayingStartPlaybackTimer: function() {
-        Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer")
+    NowPlayingStartPlaybackTimer: function(){
+        Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer");
         if (this.NowPlaying != null && this.timeInterval==null) {
             this.timeInterval = this.NowPlaying.controller.window.setInterval(this.UpdateNowPlayingTime.bind(this), 450);
         }else{
-            Mojo.Log.info("***********************************************************")
+            Mojo.Log.info("***********************************************************");
         }
-        Mojo.Log.info("<-- AudioPlayer.prototype.NowPlayingStartPlaybackTimer")
+        Mojo.Log.info("<-- AudioPlayer.prototype.NowPlayingStartPlaybackTimer");
     },
     
-    NowPlayingStopPlaybackTimer: function() {
-        Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer")
+    NowPlayingStopPlaybackTimer: function(){
+        Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer");
         if ((this.NowPlaying != null)&&  (this.timeInterval!=null)) {
              this.NowPlaying.controller.window.clearInterval(this.timeInterval);
              this.timeInterval =null;
         }
-        Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer")
+        Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer");
     },
     
-    NowPlayingUpdateSongInfo: function(index) {
+    NowPlayingUpdateSongInfo: function(index){
         if (this.NowPlaying != null) this.NowPlaying.NowPlayingDisplaySongInfo(this.playList, index);
     },
     
-    NowPlayingDisplayError:function(message) {
+    NowPlayingDisplayError:function(message){
         if (this.NowPlaying != null) {
             var song = this.playList[this.currentPlayingTrack];
-            this.NowPlaying.streamingError(message, song)
+            this.NowPlaying.streamingError(message, song);
         }
     },
     
-    NowPlayingResetTime: function() {
+    NowPlayingResetTime: function(){
         if (this.NowPlaying != null) this.NowPlaying.updateTime(0,0);
     },
     
-    NowPlayingSetRepeatMode: function() {
+    NowPlayingSetRepeatMode: function(){
         if (this.NowPlaying != null) this.NowPlaying.setRepeatMode(this.repeatMode);
     },
     
     _updateBuffering: function(){
         //Mojo.Log.info("--> AudioPlayer.prototype._updateBuffering")
-        if (this.player.buffered && this.player.buffered.length > 0) {
+        if (this.player.buffered && this.player.buffered.length > 0){
             var startPercentage = (this.player.buffered.start(0) / this.player.duration);
             var endPercentage = (this.player.buffered.end(0) / this.player.duration);
             this.UpdateNowPlayingBuffering(startPercentage, endPercentage);
-            if (this.debug) {
-                var percentage = (Math.round(endPercentage * 10000) / 100)  
+            if (this.debug){
+                var percentage = (Math.round(endPercentage * 10000) / 100);
                 this.NowPlayingStreamDebug("Downloading " + percentage + "%");
             }
         }
-        //Mojo.Log.info("<-- AudioPlayer.prototype._updateBuffering")
+        //Mojo.Log.info("<-- AudioPlayer.prototype._updateBuffering");
     },
 
      setNowPlaying: function(NowPlayingPointer){
@@ -766,4 +733,3 @@ AudioPlayer = Class.create({
         this.NowPlaying =null;     
     }
 });
-

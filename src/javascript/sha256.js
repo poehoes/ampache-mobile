@@ -10,7 +10,6 @@
 function SHA256(s){
 	var chrsz   = 8;
 	var hexcase = 0;
- 
 	function safe_add (x, y) {
 		var lsw = (x & 0xFFFF) + (y & 0xFFFF);
 		var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
@@ -32,11 +31,9 @@ function SHA256(s){
 		var W = new Array(64);
 		var a, b, c, d, e, f, g, h, i, j;
 		var T1, T2;
- 
 		m[l >> 5] |= 0x80 << (24 - l % 32);
 		m[((l + 64 >> 9) << 4) + 15] = l;
- 
-		for ( var i = 0; i<m.length; i+=16 ) {
+		for ( var i = 0; i<m.length; i+=16 ){
 			a = HASH[0];
 			b = HASH[1];
 			c = HASH[2];
@@ -46,13 +43,11 @@ function SHA256(s){
 			g = HASH[6];
 			h = HASH[7];
  
-			for ( var j = 0; j<64; j++) {
+			for ( var j = 0; j<64; j++){
 				if (j < 16) W[j] = m[j + i];
 				else W[j] = safe_add(safe_add(safe_add(Gamma1256(W[j - 2]), W[j - 7]), Gamma0256(W[j - 15])), W[j - 16]);
- 
 				T1 = safe_add(safe_add(safe_add(safe_add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), W[j]);
 				T2 = safe_add(Sigma0256(a), Maj(a, b, c));
- 
 				h = g;
 				g = f;
 				f = e;
@@ -62,7 +57,6 @@ function SHA256(s){
 				b = a;
 				a = safe_add(T1, T2);
 			}
- 
 			HASH[0] = safe_add(a, HASH[0]);
 			HASH[1] = safe_add(b, HASH[1]);
 			HASH[2] = safe_add(c, HASH[2]);
@@ -75,7 +69,7 @@ function SHA256(s){
 		return HASH;
 	}
  
-	function str2binb (str) {
+	function str2binb(str){
 		var bin = Array();
 		var mask = (1 << chrsz) - 1;
 		for(var i = 0; i < str.length * chrsz; i += chrsz) {
@@ -84,21 +78,18 @@ function SHA256(s){
 		return bin;
 	}
  
-	function Utf8Encode(string) {
+	function Utf8Encode(string){
 		string = string.replace(/\r\n/g,"\n");
 		var utftext = "";
  
-		for (var n = 0; n < string.length; n++) {
+		for (var n = 0; n < string.length; n++){
 			var c = string.charCodeAt(n);
- 
-			if (c < 128) {
+			if (c < 128){
 				utftext += String.fromCharCode(c);
-			}
-			else if((c > 127) && (c < 2048)) {
+			}else if((c > 127) && (c < 2048)){
 				utftext += String.fromCharCode((c >> 6) | 192);
 				utftext += String.fromCharCode((c & 63) | 128);
-			}
-			else {
+			}else{
 				utftext += String.fromCharCode((c >> 12) | 224);
 				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 				utftext += String.fromCharCode((c & 63) | 128);
@@ -107,16 +98,15 @@ function SHA256(s){
 		return utftext;
 	}
  
-	function binb2hex (binarray) {
+	function binb2hex (binarray){
 		var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
 		var str = "";
-		for(var i = 0; i < binarray.length * 4; i++) {
+		for(var i = 0; i < binarray.length * 4; i++){
 			str += hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8+4)) & 0xF) +
 			hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8  )) & 0xF);
 		}
 		return str;
 	}
- 
 	s = Utf8Encode(s);
 	return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
 }
