@@ -221,7 +221,6 @@ AmpacheServer = Class.create(
             }
             this._ping();
         }
-        
         Mojo.Log.info("Calling callback function this.ConnectCallback:");
         this.ConnectCallback(returnValue);
         Mojo.Log.info("<-- AmpacheServer.prototype.ConnectCallbackSuccess");
@@ -294,8 +293,8 @@ AmpacheServer = Class.create(
                  i++;
                  } while (i < artistListXML.length)
                  */
-                var n = parseInt(artistListXML.length / 4); // four Stage unloop... semi Duffish
-                if (n > 0){
+                var n = parseInt(artistListXML.length/4); // four Stage unloop... semi Duffish
+                if (n>0){
                     do{
                         ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
                         i++;
@@ -305,12 +304,12 @@ AmpacheServer = Class.create(
                         i++;
                         ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
                         i++;
-                    }while (i < n);
+                    }while(i<n);
                 }
-                if (i < artistListXML.length){
+                if (i<artistListXML.length){
                     do{
                         ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
-                    }while (++i < artistListXML.length);
+                    }while (++i<artistListXML.length);
                 }
             }
         }
@@ -387,8 +386,8 @@ AmpacheServer = Class.create(
                  i++;
                  } while (i < albumListXML.length)
                  */
-                var n = parseInt(albumListXML.length / 4); // four Stage unloop... semi Duffish
-                if (n > 0){
+                var n = parseInt(albumListXML.length/4); // four Stage unloop... semi Duffish
+                if (n>0){
                     do{
                         AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
                         i++;
@@ -398,12 +397,12 @@ AmpacheServer = Class.create(
                         i++;
                         AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
                         i++;
-                    }while (i < n);
+                    }while (i<n);
                 }
-                if (i < albumListXML.length){
+                if (i<albumListXML.length){
                     do{
                         AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
-                    }while (++i < albumListXML.length);
+                    }while (++i<albumListXML.length);
                 }
             }
         }else{
@@ -501,7 +500,7 @@ AmpacheServer = Class.create(
              </root>
              */
             var songsListXML = transport.responseXML.getElementsByTagName("song");
-            var i = 0;
+            var i=0;
             do{
                 var _id = songsListXML[i].getAttribute("id");
                 var _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
@@ -603,7 +602,7 @@ AmpacheServer = Class.create(
                         PlaylistsListXML[i].getElementsByTagName("owner")[0].firstChild.data, 
                         PlaylistsListXML[i].getElementsByTagName("items")[0].firstChild.data, 
                         PlaylistsListXML[i].getElementsByTagName("type")[0].firstChild.data);
-            }while(++i < PlaylistsListXML.length);
+            }while(++i<PlaylistsListXML.length);
         }else{
             Mojo.Controller.errorDialog("Get Playlists failed: " + this.XMLFormattingIssue);
         }
@@ -771,7 +770,6 @@ ArtistModel = Class.create(
         this.albums = _albums;
         this.songs = _songs;
     },
-    
     id: null,
     name: null,
     albums: null,
@@ -817,7 +815,6 @@ AlbumModel = Class.create(
     disc: "",
     art: "",
     description: "",
-    
     sortByYearTitleString: function(){
         //This is just for the sort function of the albums scene
         var year;
@@ -827,8 +824,6 @@ AlbumModel = Class.create(
             year = parseInt(this.year);
         return year + "_" + this.name + "_" + this.disc;
     },
-    
-    
     generateDescription: function(){
         this.description = "";
         if (this.year != "") 
@@ -927,7 +922,6 @@ PlaylistModel = Class.create(
         this.type = _type;
         this.desc = "Songs: " + this.items + " Owner: " + this.owner;
     },
-    
     id: null,
     name: null,
     owner: null,
@@ -984,7 +978,7 @@ TagModel = Class.create(
         this.artists = _artists;
         this.songs = _songs;
         this.videos = _videos;
-        this.playlists = _playlists
+        this.playlists = _playlists;
         this.stream = _stream;
         //this.desc = "Artists: " + this.artists + " Songs: " + this.songs + " Albums: " + this.albums;
         this.desc = "Artists: " + this.artists + " Albums: " + this.albums;
