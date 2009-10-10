@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
-var RepeatModeType = {"no_repeat":0, "repeat_forever":1, "repeat_once":2 }
+var RepeatModeType = {"no_repeat":0, "repeat_forever":1, "repeat_once":2 };
 
 AudioPlayer = Class.create({
     PlayerReady: false,
@@ -42,7 +42,7 @@ AudioPlayer = Class.create({
     
     initialize:function(_controller){
         Mojo.Log.info("--> AudioPlayer.prototype.initialize", _controller);
-        if(this.OneTimeInit==false) {
+        if(this.OneTimeInit==false){
             this.OneTimeInit = true;
             this.createAudioObj(_controller);
             this.Controller = _controller;
