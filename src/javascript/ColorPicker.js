@@ -3,9 +3,7 @@ var CROSSHAIRS_LOCATION = 'images/colorselector/crosshairs.png';
 var HUE_SLIDER_LOCATION = 'images/colorselector/h.png';
 var HUE_SLIDER_ARROWS_LOCATION = 'images/colorselector/position.png';
 var SAT_VAL_SQUARE_LOCATION = 'images/colorselector/sv.png';
-
-
-	function pageCoords(node){
+    function pageCoords(node){
         var x = node.offsetLeft;
         var y = node.offsetTop;
         var parent = node.offsetParent;
@@ -20,12 +18,9 @@ var SAT_VAL_SQUARE_LOCATION = 'images/colorselector/sv.png';
         };
     }
 
-ColorPicker = Class.create({
-
-    // Here are some boring utility functions. The real code comes later.
+ColorPicker = Class.create(
+{   // Here are some boring utility functions. The real code comes later.
     colorPicker:null,
-	
-	
     hexToRgb: function(hex_string, default_){
         if (default_ == undefined) {
             default_ = null;
@@ -34,7 +29,6 @@ ColorPicker = Class.create({
         if (hex_string.substr(0, 1) == '#') {
             hex_string = hex_string.substr(1);
         }
-        
         var r;
         var g;
         var b;
@@ -45,24 +39,22 @@ ColorPicker = Class.create({
             g += g;
             b = hex_string.substr(2, 1);
             b += b;
-        }
-        else 
+        }else{
             if (hex_string.length == 6) {
                 r = hex_string.substr(0, 2);
                 g = hex_string.substr(2, 2);
                 b = hex_string.substr(4, 2);
-            }
-            else {
+            }else{
                 return default_;
             }
+        }
         
         r = parseInt(r, 16);
         g = parseInt(g, 16);
         b = parseInt(b, 16);
         if (isNaN(r) || isNaN(g) || isNaN(b)) {
             return default_;
-        }
-        else {
+        }else{
             return {
                 r: r / 255,
                 g: g / 255,
@@ -80,21 +72,19 @@ ColorPicker = Class.create({
         }
         
         r = r.toString(16);
-        if (r.length == 1) {
-            r = '0' + r;
+        if (r.length == 1){
+            r = '0'+r;
         }
         g = g.toString(16);
-        if (g.length == 1) {
-            g = '0' + g;
+        if (g.length == 1){
+            g = '0'+g;
         }
         b = b.toString(16);
-        if (b.length == 1) {
-            b = '0' + b;
+        if (b.length == 1){
+            b = '0'+b;
         }
-        return ((includeHash ? '#' : '') + r + g + b).toUpperCase();
+        return ((includeHash ?'# :'')+r+g+b).toUpperCase();
     },
-    
-
     
     fixPNG: function(myImage){
         if ((this.version >= 5.5) && (this.version < 7) && (document.body.filters)) {
@@ -103,23 +93,19 @@ ColorPicker = Class.create({
             node.className = myImage.className;
             node.title = myImage.title;
             node.style.cssText = myImage.style.cssText;
-            node.style.setAttribute('filter', "progid:DXImageTransform.Microsoft.AlphaImageLoader" +
-            "(src=\'" +
-            myImage.src +
-            "\', sizingMethod='scale')");
+            node.style.setAttribute('filter', "progid:DXImageTransform.Microsoft.AlphaImageLoader" + "(src=\'" + myImage.src + "\', sizingMethod='scale')");
             node.style.fontSize = '0';
             node.style.width = myImage.width.toString() + 'px';
             node.style.height = myImage.height.toString() + 'px';
             node.style.display = 'inline-block';
             return node;
-        }
-        else {
+        }else{
             return myImage.cloneNode(false);
         }
     },
     
-	/*
-	fixCoords:function (x, y, node){
+    /*
+    fixCoords:function (x, y, node){
             var nodePageCoords = this.pageCoords(node);
             x = (x - nodePageCoords.x) + document.documentElement.scrollLeft;
             y = (y - nodePageCoords.y) + document.documentElement.scrollTop;
@@ -136,8 +122,8 @@ ColorPicker = Class.create({
                 y: y
             };
         },
-	
-	mouseDown:function (ev) {
+    
+    mouseDown:function (ev) {
             var coords = this.fixCoords(ev.clientX, ev.clientY, ev);
             var lastX = coords.x;
             var lastY = coords.y;
@@ -162,8 +148,8 @@ ColorPicker = Class.create({
             if (ev.preventDefault) 
                 ev.preventDefault();
         },
-	
-	node:null,
+    
+    node:null,
     trackDrag: function(node, handler){
        
         
@@ -179,114 +165,102 @@ ColorPicker = Class.create({
         };
     },
     */
-	
-
-	
-	trackDrag: function(node, handler){
-		function fixCoords(x, y){
-			var nodePageCoords = pageCoords(node);
-			x = (x - nodePageCoords.x) + document.documentElement.scrollLeft;
-			y = (y - nodePageCoords.y) + document.documentElement.scrollTop;
-			if (x < 0) 
-				x = 0;
-			if (y < 0) 
-				y = 0;
-			if (x > node.offsetWidth - 1) 
-				x = node.offsetWidth - 1;
-			if (y > node.offsetHeight - 1) 
-				y = node.offsetHeight - 1;
-			return {
-				x: x,
-				y: y
-			};
-		}
-		function mouseDown(ev){
-			
-			console.log("mouseDown");
-			var coords = fixCoords(ev.clientX, ev.clientY);
-			var lastX = coords.x;
-			var lastY = coords.y;
-			handler(coords.x, coords.y, this);
-			
-			var mouseIsDown = true;
-			
-			function moveHandler(ev){
-				console.log("mousemove");
-				var coords = fixCoords(ev.clientX, ev.clientY);
-				if (coords.x != lastX || coords.y != lastY) {
-					lastX = coords.x;
-					lastY = coords.y;
-					handler(coords.x, coords.y, this);
-				}
-			}
-			function upHandler(ev){
-				console.log("-->upHandler");
-				this.myRemoveEventListener(document, 'mouseup', upHandler);
-				this.myRemoveEventListener(document, 'mousemove', moveHandler);
-				this.myAddEventListener(node, 'mousedown', mouseDown.bind(this), mouseDown);
-				mouseIsDown = false;
-				console.log("<--upHandler");
-			}
-			
-			function noDrag(event){
-				if (mouseIsDown) {
-					console.log("Drag Stopped");
-					event.stop();
-				}
-			}
-			
-			this.controller.get('colorPicker').observe(Mojo.Event.dragStart, noDrag.bindAsEventListener(this));	
-			
-			this.myAddEventListener(document, 'mouseup', upHandler.bind(this), upHandler);
-			this.myAddEventListener(document, 'mousemove', moveHandler.bind(this), moveHandler);
-			this.myRemoveEventListener(node, 'mousedown', mouseDown);
-			if (ev.preventDefault) 
-				ev.preventDefault();
-		}
-		this.myAddEventListener(node, 'mousedown', mouseDown.bind(this), mouseDown);
-		node.onmousedown = function(e){
-			return false;
-		};
-		node.onselectstart = function(e){
-			return false;
-		};
-		node.ondragstart = function(e){
-			return false;
-		};
-	},
-
-	
-	
+    
+    trackDrag: function(node, handler){
+        function fixCoords(x, y){
+            var nodePageCoords = pageCoords(node);
+            x = (x - nodePageCoords.x) + document.documentElement.scrollLeft;
+            y = (y - nodePageCoords.y) + document.documentElement.scrollTop;
+            if (x < 0) 
+                x = 0;
+            if (y < 0) 
+                y = 0;
+            if (x > node.offsetWidth - 1) 
+                x = node.offsetWidth - 1;
+            if (y > node.offsetHeight - 1) 
+                y = node.offsetHeight - 1;
+            return {
+                x: x,
+                y: y
+            };
+        }
+        function mouseDown(ev){
+            console.log("mouseDown");
+            var coords = fixCoords(ev.clientX, ev.clientY);
+            var lastX = coords.x;
+            var lastY = coords.y;
+            handler(coords.x, coords.y, this);
+            var mouseIsDown = true;
+            function moveHandler(ev){
+                console.log("mousemove");
+                var coords = fixCoords(ev.clientX, ev.clientY);
+                if (coords.x != lastX || coords.y != lastY) {
+                    lastX = coords.x;
+                    lastY = coords.y;
+                    handler(coords.x, coords.y, this);
+                }
+            }
+            function upHandler(ev){
+                console.log("-->upHandler");
+                this.myRemoveEventListener(document, 'mouseup', upHandler);
+                this.myRemoveEventListener(document, 'mousemove', moveHandler);
+                this.myAddEventListener(node, 'mousedown', mouseDown.bind(this), mouseDown);
+                mouseIsDown = false;
+                console.log("<--upHandler");
+            }
+            function noDrag(event){
+                if (mouseIsDown) {
+                    console.log("Drag Stopped");
+                    event.stop();
+                }
+            }
+            
+            this.controller.get('colorPicker').observe(Mojo.Event.dragStart, noDrag.bindAsEventListener(this)); 
+            this.myAddEventListener(document, 'mouseup', upHandler.bind(this), upHandler);
+            this.myAddEventListener(document, 'mousemove', moveHandler.bind(this), moveHandler);
+            this.myRemoveEventListener(node, 'mousedown', mouseDown);
+            if (ev.preventDefault) 
+                ev.preventDefault();
+        }
+        this.myAddEventListener(node, 'mousedown', mouseDown.bind(this), mouseDown);
+        node.onmousedown = function(e){
+            return false;
+        };
+        node.onselectstart = function(e){
+            return false;
+        };
+        node.ondragstart = function(e){
+            return false;
+        };
+    },
+    
     eventListeners: [],
     
     findEventListener: function(node, event, handler){
         var i;
-		
-		
-        for (i = 0; i < this.eventListeners.length; i++) {
-			var eventListener =  this.eventListeners[i];
-			if (eventListener.node == node) {
-				if (eventListener.event == event) {
-					if (eventListener.handlerFunc == handler) {
-						return i;
-					}
-				}
-			}
-		}
+        for (i = 0; i < this.eventListeners.length; i++){
+            var eventListener =  this.eventListeners[i];
+            if (eventListener.node==node){
+                if (eventListener.event==event){
+                    if (eventListener.handlerFunc == handler){
+                        return i;
+                    }
+                }
+            }
+        }
         return null;
     },
+
     myAddEventListener: function(node, event, handler, handlerFunc){
         if (this.findEventListener(node, event, handlerFunc) != null) {
-            console.log("found:" + event)
-			return;
+            console.log("found:" + event);
+            return;
         }
+        console.log("add listener " + event);
         
-		console.log("add listener " + event)
-		
         if (!node.addEventListener) {
             node.attachEvent('on' + event, handler);
-        }
-        else {
+        }else{
             node.addEventListener(event, handler, false);
         }
         
@@ -294,28 +268,22 @@ ColorPicker = Class.create({
             node: node,
             event: event,
             handler: handler,
-			handlerFunc: handlerFunc,
+            handlerFunc: handlerFunc,
         });
-		
-		console.log("events: " + this.eventListeners.length)
-		
+        console.log("events: " + this.eventListeners.length);
     },
     
     removeEventListenerIndex: function(index){
         var removedListener = this.eventListeners.splice(index,1);
         var eventListener = removedListener[0];
-		
-		console.log("remove listener " + eventListener.event)
-		
-        if (!eventListener.node.removeEventListener) {
+        console.log("remove listener " + eventListener.event);
+        
+        if (!eventListener.node.removeEventListener){
             eventListener.node.detachEvent('on' + eventListener.event, eventListener.handler);
-        }
-        else {
+        }else{
             eventListener.node.removeEventListener(eventListener.event, eventListener.handler, false);
         }
-		
-		console.log("events: " + this.eventListeners.length)
-		
+        console.log("events: " + this.eventListeners.length);
     },
     
     myRemoveEventListener: function(node, event, handler){
@@ -366,8 +334,7 @@ ColorPicker = Class.create({
             red = 0;
             green = 0;
             blue = 0;
-        }
-        else {
+        }else{
             var i = Math.floor(hue * 6);
             var f = (hue * 6) - i;
             var p = value * (1 - saturation);
@@ -423,20 +390,18 @@ ColorPicker = Class.create({
         if (min == max) {
             hue = 0;
             saturation = 0;
-        }
-        else {
+        }else{
             var delta = (max - min);
             saturation = delta / max;
             if (red == max) {
                 hue = (green - blue) / delta;
-            }
-            else 
+            }else{
                 if (green == max) {
                     hue = 2 + ((blue - red) / delta);
-                }
-                else {
+                }else{
                     hue = 4 + ((red - green) / delta);
                 }
+            }
             hue /= 6;
             if (hue < 0) {
                 hue += 1;
@@ -452,27 +417,23 @@ ColorPicker = Class.create({
         };
     },
     
-   
-    
     huePositionImg: null,
     hueSelectorImg: null,
     satValImg: null,
     crossHairsImg: null,
     arVersion: null,
     version: null,
-	ColorChangedCallback:null,
-	controller:null,    
-	
+    ColorChangedCallback:null,
+    controller:null,    
+    
     initialize: function(controller, currentHexColor, colorChangedCallBack){
-		this.controller = controller;
-		this.ColorChangedCallback = colorChangedCallBack;
-		
-		this.currentColor = currentHexColor;
-		
-		this.colorPicker = this;
-		this.arVersion= navigator.appVersion.split("MSIE"),
-        this.version= parseFloat(this.arVersion[1]),
-		
+        this.controller = controller;
+        this.ColorChangedCallback = colorChangedCallBack;
+        this.currentColor = currentHexColor;
+        this.colorPicker = this;
+        this.arVersion= navigator.appVersion.split("MSIE");
+        this.version= parseFloat(this.arVersion[1]);
+        
         // The real code begins here.
         this.huePositionImg = document.createElement('img');
         this.huePositionImg.galleryImg = false;
@@ -503,24 +464,18 @@ ColorPicker = Class.create({
         this.crossHairsImg.style.position = 'absolute';
     },
     
-	inputBox:null,
-	previewDiv:null,
-	colorSelectorDiv:null,
-	satValDiv:null,
-	hueDiv:null, 
-	huePos:null,
-	crossHairs:null,
-	rgb:null,
-	hsv:null,
-	
-
-	
+    inputBox:null,
+    previewDiv:null,
+    colorSelectorDiv:null,
+    satValDiv:null,
+    hueDiv:null, 
+    huePos:null,
+    crossHairs:null,
+    rgb:null,
+    hsv:null,
+    
     makeColorSelector: function(inputBox){
         this.inputBox = inputBox;
-		
-		
-        
-        
         this.colorSelectorDiv = document.createElement('div');
         this.colorSelectorDiv.style.padding = '15px';
         this.colorSelectorDiv.style.position = 'relative';
@@ -531,14 +486,13 @@ ColorPicker = Class.create({
         this.satValDiv.style.position = 'relative';
         this.satValDiv.style.width = '200px';
         this.satValDiv.style.height = '200px';
+        
         var newSatValImg = this.fixPNG(this.satValImg);
         this.satValDiv.appendChild(newSatValImg);
         this.crossHairs = this.crossHairsImg.cloneNode(false);
         this.satValDiv.appendChild(this.crossHairs);
-        
-        this.trackDrag(this.satValDiv, this.satValDragged.bind(this))
+        this.trackDrag(this.satValDiv, this.satValDragged.bind(this));
         this.colorSelectorDiv.appendChild(this.satValDiv);
-        
         this.hueDiv = document.createElement('div');
         this.hueDiv.style.position = 'absolute';
         this.hueDiv.style.left = '230px';
@@ -548,10 +502,8 @@ ColorPicker = Class.create({
         this.huePos = this.fixPNG(this.huePositionImg);
         this.hueDiv.appendChild(this.hueSelectorImg.cloneNode(false));
         this.hueDiv.appendChild(this.huePos);
-        
         this.trackDrag(this.hueDiv, this.hueDragged);
         this.colorSelectorDiv.appendChild(this.hueDiv);
-        
         this.previewDiv = document.createElement('div');
         this.previewDiv.style.height = '50px'
         this.previewDiv.style.width = '50px';
@@ -561,66 +513,56 @@ ColorPicker = Class.create({
         this.previewDiv.style.border = '1px solid black';
         this.colorSelectorDiv.appendChild(this.previewDiv);
         
-        
         this.inputBox.value = this.currentColor;
-		this.myAddEventListener(this.inputBox, 'change', this.inputBoxChanged.bind(this));
+        this.myAddEventListener(this.inputBox, 'change', this.inputBoxChanged.bind(this));
         this.inputBox.size = 8;
         this.inputBox.style.position = 'absolute';
         this.inputBox.style.right = '15px';
         this.inputBox.style.top = (225 + (25 - (this.inputBox.offsetHeight / 2))).toString() + 'px';
-        
-		
-		this.colorSelectorDiv.appendChild(this.inputBox);
-        
-		
-		
+        this.colorSelectorDiv.appendChild(this.inputBox);
         this.inputBoxChanged();
-        
         return this.colorSelectorDiv;
     },
     
-	satValDragged: function (x, y, context){
+    satValDragged: function (x, y, context){
             context.hsv.s = 1 - (y / 199);
             context.hsv.v = (x / 199);
             context.hsvChanged();
     },
 
-	hueDragged: function (x, y, context){
+    hueDragged: function (x, y, context){
             context.hsv.h = y / 199;
             context.hsvChanged();
-     },
-	
-	
-	currentColor:null,
-	
-	colorChanged: function(){
-		var hex = this.rgbToHex(this.rgb.r, this.rgb.g, this.rgb.b);
-		var hueRgb = this.hsvToRgb(this.hsv.h, 1, 1);
-		var hueHex = this.rgbToHex(hueRgb.r, hueRgb.g, hueRgb.b);
-		this.previewDiv.style.background = hex;
-		this.inputBox.value = hex;
-		this.satValDiv.style.background = hueHex;
-		this.crossHairs.style.left = ((this.hsv.v * 199) - 10).toString() + 'px';
-		this.crossHairs.style.top = (((1 - this.hsv.s) * 199) - 10).toString() + 'px';
-		this.huePos.style.top = ((this.hsv.h * 199) - 5).toString() + 'px';
-		
-		this.ColorChangedCallback(this.inputBox.value);
-		this.currentColor = this.inputBox.value;
-		
-	},
-		
+    },
+    
+    currentColor:null,
+    
+    colorChanged: function(){
+        var hex = this.rgbToHex(this.rgb.r, this.rgb.g, this.rgb.b);
+        var hueRgb = this.hsvToRgb(this.hsv.h, 1, 1);
+        var hueHex = this.rgbToHex(hueRgb.r, hueRgb.g, hueRgb.b);
+        this.previewDiv.style.background = hex;
+        this.inputBox.value = hex;
+        this.satValDiv.style.background = hueHex;
+        this.crossHairs.style.left = ((this.hsv.v * 199) - 10).toString() + 'px';
+        this.crossHairs.style.top = (((1 - this.hsv.s) * 199) - 10).toString() + 'px';
+        this.huePos.style.top = ((this.hsv.h * 199) - 5).toString() + 'px';
+        this.ColorChangedCallback(this.inputBox.value);
+        this.currentColor = this.inputBox.value;
+    },
+        
     rgbChanged: function(){
-		this.hsv = this.rgbToHsv(this.rgb.r, this.rgb.g, this.rgb.b);
-		this.colorChanged();
-	},
-	
+        this.hsv = this.rgbToHsv(this.rgb.r, this.rgb.g, this.rgb.b);
+        this.colorChanged();
+    },
+    
     hsvChanged: function(){
-		this.rgb = this.hsvToRgb(this.hsv.h, this.hsv.s, this.hsv.v);
-		this.colorChanged();
-	},
-	
-	
-	inputBoxChanged:function (){
+        this.rgb = this.hsvToRgb(this.hsv.h, this.hsv.s, this.hsv.v);
+        this.colorChanged();
+    },
+    
+    
+    inputBoxChanged:function (){
             this.rgb = this.hexToRgb(this.inputBox.value, {
                 r: 0,
                 g: 0,
@@ -628,7 +570,7 @@ ColorPicker = Class.create({
             });
             this.rgbChanged();
      },
-	
+    
     makeColorSelectors: function(ev){
         var inputNodes = document.getElementsByTagName('input');
         var i;
@@ -643,5 +585,4 @@ ColorPicker = Class.create({
             parent.insertBefore(selector, (prevNode ? prevNode.nextSibling : null));
         }
     },
-
 });
