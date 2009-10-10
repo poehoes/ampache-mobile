@@ -80,7 +80,7 @@ for i in range(len(JAVASCRIPTS)):
 
 
         #find and remove double spaces etc
-        if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t'): 
+        if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
             j=j+1;
             gotoCommentEnd= True 
             while gotoCommentEnd == True:
@@ -88,7 +88,7 @@ for i in range(len(JAVASCRIPTS)):
                     gotoCommentEnd = False
                     commentRemove = False 
                 else:  
-                    if finString[j] != ' ' and finString[j] != '\t':
+                    if finString[j] != ' ' and finString[j] != '\t' and finString[j] != '\n' and finString[j] != '\r':
                         gotoCommentEnd = False
                         j=j-1;
                     else:
@@ -98,8 +98,8 @@ for i in range(len(JAVASCRIPTS)):
         if j >= len(finString):
                 commentRemove = False
         else:
-            #if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
-            if finString != '\t':
+            if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
+            #if finString != '\t':
                 fout.write(finString[j])
             else:
                 fout.write(' ')
