@@ -36,9 +36,9 @@ SearchMenuAssistant = Class.create(
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
         //******************************************************************************************************
-		// Make scrim
-		 this.scrim = $("search-scrim");
-		 this.scrim.hide();
+        // Make scrim
+         this.scrim = $("search-scrim");
+         this.scrim.hide();
         
         //*********************************************************************************************************
         //  Setup Progress Pill
@@ -60,7 +60,7 @@ SearchMenuAssistant = Class.create(
         {
             autoFocus: true,
             autoReplace: false,
-			requiresEnterKey:true,
+            requiresEnterKey:true,
             //textCase: Mojo.Widget.steModeLowerCase,
             enterSubmits: true
         }, this.searchModel = {});
@@ -77,7 +77,7 @@ SearchMenuAssistant = Class.create(
         this.controller.get('searchSongs').observe(Mojo.Event.tap, this.searchForSongs.bindAsEventListener(this));
         this.controller.get('searchPlaylists').observe(Mojo.Event.tap, this.searchForPlaylists.bindAsEventListener(this));
         //this.controller.get('searchGenres').observe(Mojo.Event.tap, this.searchForGenres.bindAsEventListener(this));
-		this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
+        this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
         
         
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.handleKeyPressEvent.bindAsEventListener(this));
@@ -89,10 +89,10 @@ SearchMenuAssistant = Class.create(
         Mojo.Log.info("searchText Changed; value = ", event.value);
         this.searchText = event.value;
         if(event.originalEvent.keyCode){
-			if(event.originalEvent.keyCode == 13){
-				this.searchForGlobal()
-			}
-		}
+            if(event.originalEvent.keyCode === 13){
+                this.searchForGlobal();
+            }
+        }
     },
     
     
@@ -117,14 +117,14 @@ SearchMenuAssistant = Class.create(
     
     searchCriteria: function(numChars){
         var retVal = false;
-        if ((this.searchText != "") && (this.searchText != null)){
+        if ((this.searchText !== "") && (this.searchText !== null)){
             if (this.searchText.length >= numChars){
                 retVal = true;
             }else{
-                this.showDialogBox("Search", "Please enter at least " + numChars + " characters for your search.")
+                this.showDialogBox("Search", "Please enter at least " + numChars + " characters for your search.");
             }
         }else{
-            this.showDialogBox("Search", "Please enter a search string")
+            this.showDialogBox("Search", "Please enter a search string");
         }
         return retVal;
     },
@@ -132,14 +132,14 @@ SearchMenuAssistant = Class.create(
     searchForAlbums: function(){
         if (this.searchCriteria(3)){
             this.TurnOnSpinner();
-			var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums);
-            if (numAlbums != 0){
+            var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
+            if (numAlbums !== 0){
                 this.controller.stageController.pushScene('albums', 
                 {
                     SceneTitle: "Search Albums: " + this.searchText,
                     DisplayArtistInfo: true,
                     ExpectedAlbums: numAlbums,
-                    Search: this.searchText == "" ? null : this.searchText
+                    Search: this.searchText === "" ? null : this.searchText
                 });
             }
         }
@@ -148,44 +148,43 @@ SearchMenuAssistant = Class.create(
     searchForPlaylists: function(){
         if (this.searchCriteria(3)){
             this.TurnOnSpinner();
-			var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists);
-            if (numPlaylists != 0){
+            var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
+            if (numPlaylists !== 0){
                 this.controller.stageController.pushScene('playlists', 
                 {
                     SceneTitle: "Search Playlists: " + this.searchText,
-                    Search: this.searchText == "" ? null : this.searchText,
+                    Search: this.searchText === "" ? null : this.searchText,
                     ExpectedPlaylists: numPlaylists
                 });
             }
         }
     },
     
-	searchForGenres: function(){
+    searchForGenres: function(){
         if (this.searchCriteria(3)){
             this.TurnOnSpinner();
-            var numSongs = parseInt(AmpacheMobile.ampacheServer.songs); //using numsongs because there is no num genres (numsongs is worst case)
+            var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10); //using numsongs because there is no num genres (numsongs is worst case)
                 this.controller.stageController.pushScene('genres', 
                 {
                     SceneTitle: "Search Genres: " + this.searchText,
-                    Search: this.searchText == "" ? null : this.searchText,
+                    Search: this.searchText === "" ? null : this.searchText
                 });
         }
     },
-	
+    
     
     searchForSongs: function(){
         if (this.searchCriteria(3)){
             this.TurnOnSpinner();
-			var numSongs = parseInt(AmpacheMobile.ampacheServer.songs);
+            var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
             this.controller.stageController.pushScene('songs', 
             {
-                SceneTitle: "Search: Songs",
+                SceneTitle: "Search: Songs" + this.searchText,
                 Type: "search",
-                SceneTitle: "Search Albums: " + this.searchText,
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,
                 
-                Search: this.searchText == "" ? null : this.searchText
+                Search: this.searchText === "" ? null : this.searchText
             
             });
         }
@@ -194,16 +193,15 @@ SearchMenuAssistant = Class.create(
     searchForGlobal: function(){
         if (this.searchCriteria(3)){
             this.TurnOnSpinner();
-			var numSongs = parseInt(AmpacheMobile.ampacheServer.songs);
+            var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
             this.controller.stageController.pushScene('songs', 
             {
-                SceneTitle: "Search: Songs",
                 Type: "search-global",
                 SceneTitle: "Global Search: " + this.searchText,
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,
                 
-                Search: this.searchText == "" ? null : this.searchText
+                Search: this.searchText === "" ? null : this.searchText
             
             });
         }
@@ -211,15 +209,15 @@ SearchMenuAssistant = Class.create(
     
     searchForArtists: function(){
         if (this.searchCriteria(3)){
-            var numArtists = parseInt(AmpacheMobile.ampacheServer.artists);
-            if (numArtists != 0){
-				this.TurnOnSpinner();
+            var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
+            if (numArtists !== 0){
+                this.TurnOnSpinner();
                 this.controller.stageController.pushScene("artists", 
                 {
                 
-                    SceneTitle: "Search for: " + this.searchText,
+                    SceneTitle: "Artist Search: " + this.searchText,
                     ExpectedArtists: numArtists,
-                    Search: this.searchText == "" ? null : this.searchText
+                    Search: this.searchText === "" ? null : this.searchText
                 });
             }
         }
@@ -246,13 +244,13 @@ SearchMenuAssistant = Class.create(
     },
     
     TurnOnSpinner: function(spinnerText){
-		this.scrim.show()
-		this.spinnerModel.spinning = true;
+        this.scrim.show();
+        this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
     },
     
     TurnOffSpinner: function(){
-		this.scrim.hide();
+        this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
     },
@@ -262,10 +260,10 @@ SearchMenuAssistant = Class.create(
     },
     
     deactivate: function(event){
-		this.TurnOffSpinner();
+        this.TurnOffSpinner();
     },
     
     cleanup: function(event){
         this.controller.stopListening("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
     }
-})
+});

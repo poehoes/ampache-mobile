@@ -7,7 +7,7 @@ var SAT_VAL_SQUARE_LOCATION = 'images/colorselector/sv.png';
         var x = node.offsetLeft;
         var y = node.offsetTop;
         var parent = node.offsetParent;
-        while (parent != null) {
+        while (parent !== null) {
             x += parent.offsetLeft;
             y += parent.offsetTop;
             parent = parent.offsetParent;
@@ -22,17 +22,17 @@ ColorPicker = Class.create(
 {   // Here are some boring utility functions. The real code comes later.
     colorPicker:null,
     hexToRgb: function(hex_string, default_){
-        if (default_ == undefined) {
+        if (default_ === undefined) {
             default_ = null;
         }
         
-        if (hex_string.substr(0, 1) == '#') {
+        if (hex_string.substr(0, 1) === '#') {
             hex_string = hex_string.substr(1);
         }
         var r;
         var g;
         var b;
-        if (hex_string.length == 3) {
+        if (hex_string.length === 3) {
             r = hex_string.substr(0, 1);
             r += r;
             g = hex_string.substr(1, 1);
@@ -40,7 +40,7 @@ ColorPicker = Class.create(
             b = hex_string.substr(2, 1);
             b += b;
         }else{
-            if (hex_string.length == 6) {
+            if (hex_string.length === 6) {
                 r = hex_string.substr(0, 2);
                 g = hex_string.substr(2, 2);
                 b = hex_string.substr(4, 2);
@@ -67,23 +67,23 @@ ColorPicker = Class.create(
         r = Math.round(r * 255);
         g = Math.round(g * 255);
         b = Math.round(b * 255);
-        if (includeHash == undefined) {
+        if (includeHash === undefined) {
             includeHash = true;
         }
         
         r = r.toString(16);
-        if (r.length == 1){
+        if (r.length === 1){
             r = '0'+r;
         }
         g = g.toString(16);
-        if (g.length == 1){
+        if (g.length === 1){
             g = '0'+g;
         }
         b = b.toString(16);
-        if (b.length == 1){
+        if (b.length === 1){
             b = '0'+b;
         }
-        return ((includeHash ?'# :'')+r+g+b).toUpperCase();
+        return ((includeHash ?'#' :'')+r+g+b).toUpperCase();
     },
     
     fixPNG: function(myImage){
@@ -131,7 +131,7 @@ ColorPicker = Class.create(
             
             function moveHandler(ev){
                 var coords = fixCoords(ev.clientX, ev.clientY);
-                if (coords.x != lastX || coords.y != lastY) {
+                if (coords.x !== lastX || coords.y !== lastY) {
                     lastX = coords.x;
                     lastY = coords.y;
                     handler(coords.x, coords.y);
@@ -171,14 +171,18 @@ ColorPicker = Class.create(
             var nodePageCoords = pageCoords(node);
             x = (x - nodePageCoords.x) + document.documentElement.scrollLeft;
             y = (y - nodePageCoords.y) + document.documentElement.scrollTop;
-            if (x < 0) 
+            if (x < 0) {
                 x = 0;
-            if (y < 0) 
+            }
+            if (y < 0) {
                 y = 0;
-            if (x > node.offsetWidth - 1) 
+            }
+            if (x > node.offsetWidth - 1) {
                 x = node.offsetWidth - 1;
-            if (y > node.offsetHeight - 1) 
+            }
+            if (y > node.offsetHeight - 1) {
                 y = node.offsetHeight - 1;
+            }
             return {
                 x: x,
                 y: y
@@ -194,7 +198,7 @@ ColorPicker = Class.create(
             function moveHandler(ev){
                 console.log("mousemove");
                 var coords = fixCoords(ev.clientX, ev.clientY);
-                if (coords.x != lastX || coords.y != lastY) {
+                if (coords.x !== lastX || coords.y !== lastY) {
                     lastX = coords.x;
                     lastY = coords.y;
                     handler(coords.x, coords.y, this);
@@ -219,8 +223,9 @@ ColorPicker = Class.create(
             this.myAddEventListener(document, 'mouseup', upHandler.bind(this), upHandler);
             this.myAddEventListener(document, 'mousemove', moveHandler.bind(this), moveHandler);
             this.myRemoveEventListener(node, 'mousedown', mouseDown);
-            if (ev.preventDefault) 
+            if (ev.preventDefault) {
                 ev.preventDefault();
+            }
         }
         this.myAddEventListener(node, 'mousedown', mouseDown.bind(this), mouseDown);
         node.onmousedown = function(e){
@@ -240,9 +245,9 @@ ColorPicker = Class.create(
         var i;
         for (i = 0; i < this.eventListeners.length; i++){
             var eventListener =  this.eventListeners[i];
-            if (eventListener.node==node){
-                if (eventListener.event==event){
-                    if (eventListener.handlerFunc == handler){
+            if (eventListener.node === node){
+                if (eventListener.event === event){
+                    if (eventListener.handlerFunc === handler){
                         return i;
                     }
                 }
@@ -252,7 +257,7 @@ ColorPicker = Class.create(
     },
 
     myAddEventListener: function(node, event, handler, handlerFunc){
-        if (this.findEventListener(node, event, handlerFunc) != null) {
+        if (this.findEventListener(node, event, handlerFunc) !== null) {
             console.log("found:" + event);
             return;
         }
@@ -268,7 +273,7 @@ ColorPicker = Class.create(
             node: node,
             event: event,
             handler: handler,
-            handlerFunc: handlerFunc,
+            handlerFunc: handlerFunc
         });
         console.log("events: " + this.eventListeners.length);
     },
@@ -293,7 +298,7 @@ ColorPicker = Class.create(
     cleanupEventListeners: function(){
         var i;
         for (i = this.eventListeners.length; i > 0; i--) {
-            if (this.eventListeners[i] != undefined) {
+            if (this.eventListeners[i] !== undefined) {
                 this.removeEventListenerIndex(i);
             }
         }
@@ -330,7 +335,7 @@ ColorPicker = Class.create(
         var red;
         var green;
         var blue;
-        if (value == 0.0) {
+        if (value === 0.0) {
             red = 0;
             green = 0;
             blue = 0;
@@ -387,16 +392,16 @@ ColorPicker = Class.create(
         var hue;
         var saturation;
         var value = max;
-        if (min == max) {
+        if (min === max) {
             hue = 0;
             saturation = 0;
         }else{
             var delta = (max - min);
             saturation = delta / max;
-            if (red == max) {
+            if (red === max) {
                 hue = (green - blue) / delta;
             }else{
-                if (green == max) {
+                if (green === max) {
                     hue = 2 + ((blue - red) / delta);
                 }else{
                     hue = 4 + ((red - green) / delta);
@@ -505,7 +510,7 @@ ColorPicker = Class.create(
         this.trackDrag(this.hueDiv, this.hueDragged);
         this.colorSelectorDiv.appendChild(this.hueDiv);
         this.previewDiv = document.createElement('div');
-        this.previewDiv.style.height = '50px'
+        this.previewDiv.style.height = '50px';
         this.previewDiv.style.width = '50px';
         this.previewDiv.style.position = 'absolute';
         this.previewDiv.style.top = '225px';
@@ -576,7 +581,7 @@ ColorPicker = Class.create(
         var i;
         for (i = 0; i < inputNodes.length; i++) {
             var node = inputNodes[i];
-            if (node.className != 'color') {
+            if (node.className !== 'color') {
                 continue;
             }
             var parent = node.parentNode;
@@ -584,5 +589,5 @@ ColorPicker = Class.create(
             var selector = this.makeColorSelector(node);
             parent.insertBefore(selector, (prevNode ? prevNode.nextSibling : null));
         }
-    },
+    }
 });

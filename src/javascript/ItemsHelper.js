@@ -15,24 +15,24 @@
  */
 ItemsHelper = Class.create({
     //AmpacheServer:null,
-	
-	
-	offset:0,
-	count:null,
-	LoadingFinished: false,
+    
+    
+    offset:0,
+    count:null,
+    LoadingFinished: false,
     Visible : false,
-	
-	
-	initialize : function(ItemsList)
+    
+    
+    initialize : function(ItemsList)
     {
-        this.ItemsList  = new Array();
+        this.ItemsList = [];
     },
-	
-	
-	setup:function(params)
-	{
-		
-		this.controller = params.controller;
+    
+    
+    setup:function(params)
+    {
+        
+        this.controller = params.controller;
         this.filterList = params.filterList;
         this.getItemsCallback = params.getItemsCallback;
         //this.ItemsList = params.ItemsList;
@@ -42,34 +42,36 @@ ItemsHelper = Class.create({
         this.TurnOffSpinner = params.TurnOffSpinner;
         this.ExpectedItems =params.ExpectedItems;
         this.SortFunction = params.SortFunction;
-		
-		this.listModel = params.listModel;
-		this.MatchFunction = params.MatchFunction;
-		
-		this.PopulateSort = params.PopulateSort;
-		
-	},
-	
-	
-	
-	
-	
-	GetItems:function()
-	{
-		 if ((this.Visible == true) && (this.LoadingFinished == false)) 
-		 {
-		 	this.getItemsCallback(this.GotItems.bind(this), this.offset, this.fetchLimit);
-		 }
-	},
-	
-	
+        
+        this.listModel = params.listModel;
+        this.MatchFunction = params.MatchFunction;
+        
+        this.PopulateSort = params.PopulateSort;
+        
+    },
+    
+    
+    
+    
+    
+    GetItems:function()
+    {
+         if ((this.Visible === true) && (this.LoadingFinished === false)) 
+         {
+            this.getItemsCallback(this.GotItems.bind(this), this.offset, this.fetchLimit);
+         }
+    },
+    
+    
     GotItems: function(_ItemsList)
     {
         
         this.TurnOffSpinner();
-		
-		if(this.PopulateSort) this.PopulateSort(_ItemsList);
-		
+        
+        if(this.PopulateSort) {
+            this.PopulateSort(_ItemsList);
+        }
+        
         for (var i = 0; i < _ItemsList.length; i++) 
         {
         
@@ -84,16 +86,16 @@ ItemsHelper = Class.create({
         this.controller.modelChanged(this.progressModel);
         
         //Sorting Here
-		
-		if (this.SortFunction) 
-		{
-			
-			this.ItemsList.sort(this.SortFunction);
-		}
+        
+        if (this.SortFunction) 
+        {
+            
+            this.ItemsList.sort(this.SortFunction);
+        }
         
         //Add to list   
         
-        if ((this.filterString == "") || (this.filterString == null)) 
+        if ((this.filterString === "") || (this.filterString === null)) 
         {
             this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
         }
@@ -108,7 +110,7 @@ ItemsHelper = Class.create({
         
         
         
-        if (_ItemsList.length != this.fetchLimit) 
+        if (_ItemsList.length  !== this.fetchLimit) 
         {
             this.progressModel.value = 1;
             this.controller.modelChanged(this.progressModel);
@@ -125,43 +127,44 @@ ItemsHelper = Class.create({
         Mojo.Log.info("<-- FinishedGettings");
         
     },
-	
-	ReSortList:function(){
-		//if (this.LoadingFinished) 
-		//{
-			if (this.PopulateSort) 
-				this.PopulateSort(this.ItemsList);
-			
-			if (this.SortFunction) 
-			{
-				this.ItemsList.sort(this.SortFunction);
-			}
-			
-			
-			
-			//Add to list   
-			if ((this.filterString == "") || (this.filterString == null)) 
-			{
-				this.Matches = this.ItemsList;
-				this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
-			}
-			else //list currently has a filter
- 			{
-				this.Matches = this.GetAllMatches(this.filterString);
-				this.filterList.mojo.noticeUpdatedItems(0, this.Matches);
-				this.filterList.mojo.setLength(this.Matches.length);
-				this.filterList.mojo.setCount(this.Matches.length);
-			}
-		//}
-	},
-	
-	
-	
-	GetAllMatches: function(filterString)
+    
+    ReSortList:function(){
+        //if (this.LoadingFinished) 
+        //{
+            if (this.PopulateSort) {
+                this.PopulateSort(this.ItemsList);
+            }
+            
+            if (this.SortFunction) 
+            {
+                this.ItemsList.sort(this.SortFunction);
+            }
+            
+            
+            
+            //Add to list   
+            if ((this.filterString === "") || (this.filterString === null)) 
+            {
+                this.Matches = this.ItemsList;
+                this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
+            }
+            else //list currently has a filter
+            {
+                this.Matches = this.GetAllMatches(this.filterString);
+                this.filterList.mojo.noticeUpdatedItems(0, this.Matches);
+                this.filterList.mojo.setLength(this.Matches.length);
+                this.filterList.mojo.setCount(this.Matches.length);
+            }
+        //}
+    },
+    
+    
+    
+    GetAllMatches: function(filterString)
     {
         var subset = [];
         
-        if (filterString == "") 
+        if (filterString === "") 
         {
             for (var i = 0; i < this.ItemsList.length; i++) 
             {
@@ -174,7 +177,7 @@ ItemsHelper = Class.create({
             for (var i = 0; i < this.ItemsList.length; i++) 
             {
                 if(this.MatchFunction(this.ItemsList[i], filterString))
-				{
+                {
                     subset.push(this.ItemsList[i]);
                 }
             }
@@ -194,10 +197,10 @@ ItemsHelper = Class.create({
         
         
         
-        if ((this.ItemsList) && (this.ItemsList.length != 0)) 
+        if ((this.ItemsList) && (this.ItemsList.length  !== 0)) 
         {
         
-            if ((filterString != this.filterString) || (this.LastFilterLength != this.ItemsList.length)) 
+            if ((filterString  !== this.filterString) || (this.LastFilterLength  !== this.ItemsList.length)) 
             {
                 this.LastFilterLength = this.ItemsList.length;
                 this.Matches = this.GetAllMatches(filterString);
@@ -232,4 +235,4 @@ ItemsHelper = Class.create({
     }
 
 
-})
+});

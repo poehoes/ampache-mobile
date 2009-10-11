@@ -40,12 +40,12 @@ MainmenuAssistant = Class.create(
         this.spinnerAttrs = 
         {
             spinnerSize: 'small'
-        }
+        };
         
         this.spinnerModel = 
         {
             spinning: false
-        }
+        };
         
         this.controller.setupWidget('mainmenu-spinner', this.spinnerAttrs, this.spinnerModel);
         
@@ -97,8 +97,8 @@ MainmenuAssistant = Class.create(
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
             icon: "images/icons/playlists.png"
         },
-		
-		{
+        
+        {
             category: $L("bottom"),
             directory: $L("genres"),
             name: $L("Genres"),
@@ -106,7 +106,7 @@ MainmenuAssistant = Class.create(
             description: 0,
             icon: "images/icons/genres.png"
         }
-		
+        
            /*{
          category: $L("bottom"),
          directory: $L("preferences"),
@@ -136,7 +136,7 @@ MainmenuAssistant = Class.create(
             items: this.mainmenu
         });
         
-        // Watch for taps on the list items	
+        // Watch for taps on the list items 
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
         
@@ -147,7 +147,7 @@ MainmenuAssistant = Class.create(
         
         //****************************************************************************************************
         // Setup Screen Rotation
-        if (AmpacheMobile.settingsManager.settings.AllowRotation == true) 
+        if (AmpacheMobile.settingsManager.settings.AllowRotation === true) 
         {
             /* Allow this stage to rotate */
             if (this.controller.stageController.setWindowOrientation) 
@@ -174,7 +174,7 @@ MainmenuAssistant = Class.create(
     
     pushSearch: function()
     {
-        this.controller.stageController.pushScene('search-menu')
+        this.controller.stageController.pushScene('search-menu');
     },
     
     
@@ -189,8 +189,8 @@ MainmenuAssistant = Class.create(
         {
             case "artists":
                 
-                var numArtists = parseInt(AmpacheMobile.ampacheServer.artists);
-                if (numArtists != 0) 
+                var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
+                if (numArtists !== 0) 
                 {
                     this.controller.stageController.pushScene("artists", 
                     {
@@ -203,8 +203,8 @@ MainmenuAssistant = Class.create(
                 break;
             case "albums":
                 Mojo.Log.info("Pushing Albums");
-                var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums);
-                if (numAlbums != 0) 
+                var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
+                if (numAlbums !== 0) 
                 {
                     this.controller.stageController.pushScene('albums', 
                     {
@@ -222,9 +222,9 @@ MainmenuAssistant = Class.create(
                 
             case "playlists":
                 
-                var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists);
+                var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
                 
-                if (numPlaylists != 0) 
+                if (numPlaylists !== 0) 
                 {
                     Mojo.Log.info("Pushing Playlists");
                     
@@ -315,7 +315,7 @@ MainmenuAssistant = Class.create(
         {
             name: sceneName,
             sceneTemplate: directory + "/" + sceneName + "/" + sceneName + "-scene"
-        })
+        });
         
         Mojo.Log.info("<-- showScene");
     },
@@ -336,7 +336,7 @@ MainmenuAssistant = Class.create(
             SceneTitle: "All Songs",
             //DisplayArtistInfo:false,
             SongsList: _songsList
-        })
+        });
         
         this.TurnOffSpinner();
         Mojo.Log.info("<-- FinishedGettingSongs");
@@ -415,4 +415,4 @@ MainmenuAssistant = Class.create(
     {
         return itemModel.category; // We're using the item's category as the divider label.
     }
-})
+});

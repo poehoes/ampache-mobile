@@ -20,7 +20,7 @@ BackgroundAssistant = Class.create({
     CurrentMode: null,
     
     
-    setup: function(){
+    setup: function () {
     
         this.CurrentSolid = AmpacheMobile.settingsManager.settings.BackgroundSolid;
         this.CurrentColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
@@ -28,10 +28,10 @@ BackgroundAssistant = Class.create({
         this.CurrentOverlay = AmpacheMobile.settingsManager.settings.BackgroundOverlay;
         this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
         
-        if (this.CurrentMode == null) {
-			this.CurrentMode = 0;
-		}
-		
+        if (this.CurrentMode === null) {
+            this.CurrentMode = 0;
+        }
+        
         this.wallpaperTypeModel = {
             value: this.CurrentMode,
             disabled: false
@@ -59,15 +59,14 @@ BackgroundAssistant = Class.create({
         //***************************************************************
         // Included Photo picker
         
-        var photoAttributes = { //noExtractFS : true	//optional, turn off using extractfs to speed up renders.
-};
+        var photoAttributes = { /*//noExtractFS : true    //optional, turn off using extractfs to speed up renders.*/};
         this.photoModel = {
             //backgroundImage : 'images/glacier.png',
-            //background: 'black',		//You can set an image or a color
+            //background: 'black',      //You can set an image or a color
             onLeftFunction: this.wentLeft.bind(this),
             onRightFunction: this.wentRight.bind(this)
         };
-		
+        
         this.controller.setupWidget('myPhotoDiv', photoAttributes, this.photoModel);
         this.myPhotoDivElement = $('myPhotoDiv');
         
@@ -76,14 +75,14 @@ BackgroundAssistant = Class.create({
         
         this.solidImages = [];
         
-		for (var i = 0; i < 7; i++) 
-		{
-			var imgSource = 'images/backgrounds/solids/background' + (i+1) +'.png'
-			this.solidImages[i] = 
-			{
-				source: imgSource
-			};
-		}
+        for (var i = 0; i < 7; i++) 
+        {
+            var imgSource = 'images/backgrounds/solids/background' + (i + 1) + '.png';
+            this.solidImages[i] = 
+            {
+                source: imgSource
+            };
+        }
         
         
         
@@ -125,12 +124,12 @@ BackgroundAssistant = Class.create({
         this.selectorAttributes = {
             label: 'Overlay',
             modelProperty: 'currentOverlay'
-        }
+        };
         
         this.selectorsModel = {
             currentOverlay: this.CurrentOverlay,
             choices: this.Overlays
-        }
+        };
         
         this.overlaySelectorChanged = this.overlaySelectorChanged.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('overlaySelector'), Mojo.Event.propertyChange, this.overlaySelectorChanged);
@@ -153,7 +152,7 @@ BackgroundAssistant = Class.create({
         this.wallpaperTypeChanged();
     },
     
-    imageViewChanged: function(event){
+    imageViewChanged: function (event) {
         /* Do something when the image view changes */
         //this.showDialogBox("Image View Changed", "Flick image left and/or right to see other images.");
     
@@ -164,9 +163,9 @@ BackgroundAssistant = Class.create({
     
     
     // This function will popup a dialog, displaying the message passed in.
-    showDialogBox: function(title, message){
+    showDialogBox: function (title, message) {
         this.controller.showAlertDialog({
-            onChoose: function(value){
+            onChoose: function (value) {
             },
             title: title,
             message: message,
@@ -178,10 +177,11 @@ BackgroundAssistant = Class.create({
         });
     },
     
-    wentLeft: function(event){
+    wentLeft: function (event) {
         this.solidIndex = (this.solidIndex - 1) % this.solidImages.length;
-        if (this.solidIndex == -1) 
+        if (this.solidIndex === -1) {
             this.solidIndex = this.solidImages.length - 1;
+        }
         this.redoSolidImages(this.solidIndex);
         
         this.CurrentMode = 1;
@@ -189,7 +189,7 @@ BackgroundAssistant = Class.create({
         this.UpdateScreen();
     },
     
-    wentRight: function(event){
+    wentRight: function (event) {
         /* Do something when the user flicks to the left 
          * like picking a different image for the right image.
          */
@@ -204,10 +204,11 @@ BackgroundAssistant = Class.create({
     },
     
     
-    redoSolidImages: function(centerIndex){
+    redoSolidImages: function (centerIndex) {
         var leftIndex = (centerIndex - 1) % this.solidImages.length;
-        if (leftIndex == -1) 
+        if (leftIndex === -1) {
             leftIndex = this.solidImages.length - 1;
+        }
         var rightIndex = (centerIndex + 1) % this.solidImages.length;
         
         this.myPhotoDivElement.mojo.leftUrlProvided(this.solidImages[leftIndex].source, this.solidImages[leftIndex].source);
@@ -216,7 +217,7 @@ BackgroundAssistant = Class.create({
     },
     
     
-    ColorChangedCallback: function(hexColor){
+    ColorChangedCallback: function (hexColor) {
         this.CurrentMode = 0;
         this.CurrentColor = hexColor;
         this.UpdateScreen();
@@ -224,14 +225,14 @@ BackgroundAssistant = Class.create({
     },
     
     
-    overlaySelectorChanged: function(event){
+    overlaySelectorChanged: function (event) {
         this.CurrentMode = 0;
         this.CurrentOverlay = event.value;
         this.UpdateScreen();
     },
     
-    UpdateScreen: function(){
-        if (this.CurrentMode == 0) {
+    UpdateScreen: function () {
+        if (this.CurrentMode === 0) {
             this.CurrentImage = this.CurrentOverlay;
         }
         else {
@@ -246,7 +247,7 @@ BackgroundAssistant = Class.create({
     
     
     
-    handleChooseWallpaperImage: function(){
+    handleChooseWallpaperImage: function () {
         Mojo.FilePicker.pickFile({
             onSelect: this.photoSelected.bind(this),
             kinds: ['image']
@@ -254,11 +255,11 @@ BackgroundAssistant = Class.create({
         
     },
     
-    wallpaperTypeChanged: function(event){
+    wallpaperTypeChanged: function (event) {
         Mojo.Log.info('Wallpaper type changed, this.wallpaperTypeModel.value = ' + this.wallpaperTypeModel.value);
         
         // Color
-        if (this.wallpaperTypeModel.value == 0) {
+        if (this.wallpaperTypeModel.value === 0) {
         
             this.controller.get('image-container').style.display = 'none';
             this.controller.get('color-container').style.display = 'block';
@@ -273,7 +274,7 @@ BackgroundAssistant = Class.create({
         
         // Image
         else {
-            if (this.wallpaperTypeModel.value == 1) {
+            if (this.wallpaperTypeModel.value === 1) {
             
                 this.CurrentMode = 1;
                 
@@ -286,21 +287,22 @@ BackgroundAssistant = Class.create({
     },
     
     
-    needToSelectOverlay: function(){
+    needToSelectOverlay: function () {
         var retVal = true;
         for (var i = 0; i < this.Overlays.length; i++) {
-            if (this.Overlays[i].value == this.CurrentImage) 
+            if (this.Overlays[i].value === this.CurrentImage) {
                 retVal = false;
+            }
             
-        };
+        }
         return retVal;
     },
     
     
-    photoSelected: function(results){
+    photoSelected: function (results) {
     
         this.CurrentMode = 1;
-        this.CurrentSolid = results.fullPath.replace(/\s/g,"%20");
+        this.CurrentSolid = results.fullPath.replace(/\s/g, "%20");
         this.UpdateScreen();
         
         
@@ -309,14 +311,14 @@ BackgroundAssistant = Class.create({
     
     
     
-    activate: function(){
+    activate: function () {
         this.redoSolidImages(this.solidIndex);
         this.myPhotoDivElement.mojo.manualSize('320', '200');
         
     },
     
-    saveSettings: function(value){
-        if (value == "yes") {
+    saveSettings: function (value) {
+        if (value === "yes") {
             AmpacheMobile.settingsManager.settings.BackgroundSolid = this.CurrentSolid;
             AmpacheMobile.settingsManager.settings.BackgroundOverlay = this.CurrentOverlay;
             AmpacheMobile.settingsManager.settings.BackgroundColor = this.CurrentColor;
@@ -328,9 +330,9 @@ BackgroundAssistant = Class.create({
     },
     
     
-    handleCommand: function(event){
+    handleCommand: function (event) {
         //test for Mojo.Event.back, not Mojo.Event.command..
-        if (event.type == Mojo.Event.back) {
+        if (event.type === Mojo.Event.back) {
         
             if (this.anyChanges()) {
                 event.preventDefault();
@@ -355,9 +357,9 @@ BackgroundAssistant = Class.create({
         }
     },
     
-    anyChanges: function(){
+    anyChanges: function () {
         var retVal = false;
-        if (AmpacheMobile.settingsManager.settings.BackgroundColor != this.CurrentColor || AmpacheMobile.settingsManager.settings.BackgroundImage != this.CurrentImage) {
+        if (AmpacheMobile.settingsManager.settings.BackgroundColor !== this.CurrentColor || AmpacheMobile.settingsManager.settings.BackgroundImage !== this.CurrentImage) {
             retVal = true;
         }
         return retVal;
@@ -365,7 +367,7 @@ BackgroundAssistant = Class.create({
     
     
     
-    deactivate: function(){
+    deactivate: function () {
         this.controller.get('body_wallpaper').style.background = null;
         this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
         

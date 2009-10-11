@@ -14,7 +14,7 @@
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var PREF_COLOR = '#4c4c4c'
+var PREF_COLOR = '#4c4c4c';
 
 PreferencesAssistant = Class.create(
 {
@@ -63,9 +63,10 @@ PreferencesAssistant = Class.create(
         
         this.UpdateSelectorAccounts();
         
-        var SelectorStartIndex
-        if (this.settingsManager.settings.CurrentAccountIndex == -1) 
+        var SelectorStartIndex;
+        if (this.settingsManager.settings.CurrentAccountIndex === -1) {
             SelectorStartIndex = 0;
+        }
         else if (this.settingsManager.settings.CurrentAccountIndex >= this.settingsManager.settings.Accounts.length) 
         {
             SelectorStartIndex = 0;
@@ -81,7 +82,7 @@ PreferencesAssistant = Class.create(
         {
             currentAccount: this.Accounts[SelectorStartIndex].label,
             choices: this.Accounts
-        }
+        };
         
         
         
@@ -107,44 +108,44 @@ PreferencesAssistant = Class.create(
             falseLabel: 'Off', //if the state is false, what to label the toggleButton; default is Off
             falseValue: false, //if the state is false, , what to set the model[property] to; default if not specific is false],
             fieldName: 'toggle' //name of the field; optional
-        }
+        };
         this.debugModel = 
         {
             value: this.settingsManager.settings.StreamDebug, // Current value of widget, from choices array.
             disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
-        }
+        };
         
         this.controller.setupWidget('stream-debug-toggle', this.debugAttr, this.debugModel);
         this.debug_pressed = this.debugPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         
-		
-		//**********************************************************************************************************************
+        
+        //**********************************************************************************************************************
         // Setup Toggle Rotation 
         this.rotationModel = 
         {
             value: this.settingsManager.settings.AllowRotation, // Current value of widget, from choices array.
             disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
-        }
+        };
         
         this.controller.setupWidget('rotation-toggle', this.debugAttr, this.rotationModel);
         this.rotation_pressed = this.rotationPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
-		
-		
-		
+        
+        
+        
         //********************************************************************************************************
         // Background button setup
         this.button1Attributes = { //disabledProperty: 'disabled',
             //type: 'default'
-        }
+        };
         
         this.button1Model = 
         {
             buttonLabel: "Background Options",
             buttonClass: 'primary'
             //disabled: this.disabled
-        }
+        };
         
         this.controller.setupWidget('backgroundBtn', this.button1Attributes, this.button1Model);
         
@@ -169,7 +170,7 @@ PreferencesAssistant = Class.create(
     debugPressed: function(event)
     {
         //Display the value of the toggle
-        if (event.value == true) 
+        if (event.value === true) 
         {
             this.settingsManager.settings.StreamDebug = true;
         }
@@ -181,21 +182,21 @@ PreferencesAssistant = Class.create(
     },
     
     rotationPressed:function(event)
-	{
-		if (event.value == true) 
+    {
+        if (event.value === true) 
         {
             this.showDialogBox("WARNING", "Close and reopen app for this setting to take effect.");
-			this.settingsManager.settings.AllowRotation = true;
+            this.settingsManager.settings.AllowRotation = true;
         }
         else 
         {
             this.settingsManager.settings.AllowRotation = false;
         }
         this.settingsManager.SaveSettings();
-		
-	},
+        
+    },
     
-	
+    
    
     
     // This function will popup a dialog, displaying the message passed in.
@@ -221,7 +222,7 @@ PreferencesAssistant = Class.create(
     
     UpdateSelectorAccounts: function()
     {
-        this.Accounts = new Array()
+        this.Accounts = [];
         
         this.Accounts[0] = 
         {
@@ -235,17 +236,17 @@ PreferencesAssistant = Class.create(
             {
                 label: this.settingsManager.settings.Accounts[i - 1].AccountName,
                 value: i - 1
-            }
-        };
-            },
+            };
+        }
+    },
     
     
     
     //displays the current state of various selectors
     accountSelectorChanged: function(event)
     {
-        Mojo.Log.info("event %j", event)
-        this.settingsManager.settings.CurrentAccountIndex = parseInt(event.value);
+        Mojo.Log.info("event %j", event);
+        this.settingsManager.settings.CurrentAccountIndex = parseInt(event.value, 10);
         
         this.settingsManager.SaveSettings();
         //this.currentStuff.innerText = $L("Status = ") +this.selectorsModel.currentStatus+ $L(", Transport = ") +this.selectorsModel.currentTransport+", work = "+this.selectorsModel.currentWork;
@@ -317,7 +318,7 @@ PreferencesAssistant = Class.create(
     {
         /* put in event handlers here that should only be in effect when this scene is active. For
          example, key handlers that are observing the document */
-        if (this.newAccount != null) 
+        if (this.newAccount !== null) 
         {
             this.controller.modelChanged(this.accountsModel, this);
             this.settingsManager.SaveSettings();
@@ -356,8 +357,8 @@ PreferencesAssistant = Class.create(
         
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
-		
+        
         Mojo.Event.stopListening(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.PushBackground);
         Mojo.Log.info("<-- PreferencesAssistant.prototype.cleanup");
     }
-})
+});

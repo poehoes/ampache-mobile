@@ -21,7 +21,7 @@ PlaylistsAssistant = Class.create(
     {
         this.SceneTitle = params.SceneTitle;
         this.DisplayArtistInfo = params.DisplayArtistInfo;
-        this.ExpectedPlaylists = params.ExpectedPlaylists
+        this.ExpectedPlaylists = params.ExpectedPlaylists;
         
         this.Search = null;
         if (params.Search) 
@@ -117,7 +117,7 @@ PlaylistsAssistant = Class.create(
     
     GetPlaylists: function(GotItems, offset, limit)
     {
-        AmpacheMobile.ampacheServer.GetPlaylists(GotItems, offset, limit, this.Search)
+        AmpacheMobile.ampacheServer.GetPlaylists(GotItems, offset, limit, this.Search);
     },
     
     
@@ -188,7 +188,7 @@ PlaylistsAssistant = Class.create(
     {
         Mojo.Log.info("--> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
-		this.scrim.show();
+        this.scrim.show();
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- TurnOnSpinner");
@@ -197,7 +197,7 @@ PlaylistsAssistant = Class.create(
     TurnOffSpinner: function()
     {
         Mojo.Log.info("-----> TurnOffSpinner");
-		this.scrim.hide();
+        this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");
@@ -209,5 +209,5 @@ PlaylistsAssistant = Class.create(
     
     
     
-})
+});
 
