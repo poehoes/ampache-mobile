@@ -310,28 +310,28 @@ height: 100%;
 
 
 
-.mainMenuList .mainMenuDesc {
+.mainMenuDesc {
 	color: white;
 	/*margin-top: -10px;*/
 	padding: 0 15px 10px 15px;
 	font-size:small;
 }
 
-.mainMenuList .mainMenuTitle {
+.mainMenuTitle {
 	color: white;
 	margin-top: 10px;
 	padding: 0px 15px 10px 15px;
 }
 
 
-.mainMenuList .mainMenuDesc {
+.mainMenuDesc {
 	color: white;
 	margin-top: -10px;
 	padding: 0 15px 10px 15px;
 	font-size:small;
 }
 
-.mainMenuList .mainMenuTitle {
+.mainMenuTitle {
 	color: white;
 	padding: 0 15px 10px 15px;
 }

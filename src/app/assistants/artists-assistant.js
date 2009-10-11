@@ -142,6 +142,7 @@ ArtistsAssistant = Class.create(
             SceneTitle: this.RequestedArtist.name,
             DisplayArtistInfo: false,
             Artist_id: event.item.id,
+	    numSongs:event.item.songs,
             //Artist: this.RequestedArtist,
             ExpectedAlbums: this.RequestedArtist.albums
         });

@@ -35,6 +35,7 @@ AlbumsAssistant = Class.create(
         this.DisplayArtistInfo = params.DisplayArtistInfo;
         //this.AlbumsList = params.AlbumsList;
         //this.AlbumsList.sort(this.sortfunction);
+	this.numSongs = params.numSongs;
         
         this.ExpectedAlbums = params.ExpectedAlbums;
         
@@ -85,7 +86,11 @@ AlbumsAssistant = Class.create(
         this.scrim = $("spinner-scrim");
         this.scrim.hide();
         
-        
+        //******************************************************************************************************
+	if(this.numSongs)
+	{
+	    $('numSongs').innerHTML = this.numSongs;
+	}
         
         
         this.PPattr = 
@@ -187,7 +192,7 @@ AlbumsAssistant = Class.create(
         
         
         
-        this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
+        this.controller.get('allSongs').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
         
         //var toggleAlpaha = (AlbumSortType.alpha == this.sortType);
         //var toggleYear =(AlbumSortType.year == this.sortType);
@@ -329,11 +334,24 @@ AlbumsAssistant = Class.create(
     {
         Mojo.Log.info("--> handleShuffleAll");
         
+	this.controller.stageController.pushScene('songs', 
+        {
+            SceneTitle: this.SceneTitle,
+            Type: "artist-songs",
+            Artist_id: this.Artist_id,
+	    Expected_items:this.numSongs
+            //Item: event.item
         
+        });
+	
+        /*
         this.TurnOnSpinner("Retrieving<br>Songs");
         AmpacheMobile.ampacheServer.GetSongs(this.FinishedGettingShuffleAll.bind(this), null, this.Artist_id, null);
         this.RequestedArtist = event.item;
-        
+	*/
+	
+	this.Artist_id = param.Artist_id;
+	
         Mojo.Log.info("<-- handleShuffleAll");
     },
     

@@ -26,8 +26,11 @@ SongsAssistant = Class.create(
         
         this.Playlist_id = params.Playlist_id;
         this.Album_id = params.Album_id;
+	this.Artist_id = params.Artist_id;
+	this.Expected_items = params.Expected_items;
         
-        if ((this.Type == "playlist") || (this.Type == "all-songs") || (this.Type == "search") || (this.Type == "search-global") || (this.Type == "genre")) 
+        if ((this.Type == "playlist") || (this.Type == "all-songs") || (this.Type == "search")
+	    || (this.Type == "search-global") || (this.Type == "genre") || this.Type == "artist-songs") 
         {
             this.DisplayAlbumInfo = true;
         }
@@ -73,26 +76,26 @@ SongsAssistant = Class.create(
         
         //*********************************************************************************
         //Setup Sort List
-        if (this.DisplayAlbumInfo == true) 
+        var template = 'songs/listitem';
+	
+	if ((this.DisplayAlbumInfo == true) && (this.Type == "artist-songs"))  
         {
-            var attributes = 
+	    template = 'songs/listitem_w_artist_simple';
+	}
+	else if(this.DisplayAlbumInfo == true)
+	{
+	    template ='songs/listitem_w_artist';
+	}
+	    
+	    
+         var attributes = 
             {
                 filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
-                itemTemplate: 'songs/listitem_w_artist'
+                itemTemplate: template
                 //dividerTemplate: 'artist-albums/divider',
                 //dividerFunction: this.dividerFunc.bind(this),
-            };
-        }
-        else 
-        {
-            var attributes = 
-            {
-                filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
-                itemTemplate: 'songs/listitem'
-                //dividerTemplate: 'artist-albums/divider',
-                //dividerFunction: this.dividerFunc.bind(this),
-            };
-        }
+            };   
+        
         this.listModel = 
         {
             disabled: false,
@@ -181,6 +184,12 @@ SongsAssistant = Class.create(
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null,offset, limit, this.Search);
         }
+	else if(this.Type=="artist-songs")
+	{
+	    
+                this.itemsHelper.ExpectedItems = this.Expected_items;
+	    AmpacheMobile.ampacheServer.GetSongs(callback, null, this.Artist_id, null, null,offset, limit);
+	}
         else if (this.Type == "search-global") 
         {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
