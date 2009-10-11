@@ -127,5 +127,5 @@ for i in range(len(JAVASCRIPTS)):
     fout.write(fin.read())
     fin.close()
     fout.close()
-
+    os.remove(tmpFile)
 
