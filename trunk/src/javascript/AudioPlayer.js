@@ -42,11 +42,11 @@ AudioPlayer = Class.create({
     
     initialize:function(_controller){
         Mojo.Log.info("--> AudioPlayer.prototype.initialize", _controller);
-        if(this.OneTimeInit==false){
+        if(this.OneTimeInit === false){
             this.OneTimeInit = true;
             this.createAudioObj(_controller);
             this.Controller = _controller;
-            this.AudioPlayers = new Array();
+            this.AudioPlayers = [];
             //Setup Headset and Bluetooth Buttons
             //this.mediaEvents = this.registerForMediaEvents(this.mediaEventsCallbacks.bind(this));
             this.Controller.serviceRequest('palm://com.palm.keys/headset', {
@@ -68,7 +68,7 @@ AudioPlayer = Class.create({
     
     createAudioObj: function(_controller){
         Mojo.Log.info("--> AudioPlayer.prototype.createAudioObj");
-        if (this.audioObj == null) {
+        if (!this.player) {
             // use Safari's HTML5 implementation if we are runing on palm host
             if (Mojo.Host.current === Mojo.Host.browser) {
                 Mojo.Log.info("Setting up audio for safari");
@@ -146,15 +146,15 @@ AudioPlayer = Class.create({
     },
     */
     btEventsCallbacks: function(event){
-        if (event.state == "up"){
-            if (event.key == "play"){
+        if (event.state === "up"){
+            if (event.key === "play"){
                 this.play();
-            }else if ((event.key == "pause") || (event.key == "stop")){
+            }else if ((event.key === "pause") || (event.key === "stop")){
                 this.Paused = true;
                 this.pause();
-            }else if (event.key == "next"){
+            }else if (event.key === "next"){
                 this.play_next(true);
-            }else if (event.key == "prev"){
+            }else if (event.key === "prev"){
                 this.play_prev();
             }
         }
@@ -170,16 +170,16 @@ AudioPlayer = Class.create({
 
     handleSingleButton: function(event)
     {
-        if (event.state == "single_click"){
+        if (event.state === "single_click"){
             if (!this.Paused) {
                 this.Paused = true;
                 this.pause();
             }else{
                 this.play();
             }
-        }else if (event.state == "double_click"){
+        }else if (event.state === "double_click"){
             this.play_next(true);
-        }else if (event.state == "hold"){
+        }else if (event.state === "hold"){
             this.play_prev();
         }
     },
@@ -198,13 +198,13 @@ AudioPlayer = Class.create({
 
                 }, true
             );
-        Mojo.Log.info("<-- AudioPlayer.prototype.registerForMediaEvents");
+        //Mojo.Log.info("<-- AudioPlayer.prototype.registerForMediaEvents");
     },
     
     getStreamInfo: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.getStreamInfo");
         var info = "Info Unavailable";
-        if (this.player.palm!=null){
+        if (this.player.palm){
             info = "bitrate estimated: " + this.player.palm.bitrate.audio.estimate + "\r\n";
             info += "bitrate avg: " + this.player.palm.bitrate.audio.average.toString() + "\r\n";
             info += "bitrate max: " + this.player.palm.bitrate.audio.maximum.toString();
@@ -217,8 +217,8 @@ AudioPlayer = Class.create({
         Mojo.Log.info("--> AudioPlayer.prototype.ConnectedToServer");
         //this.playList = newPlayList;
         this.PlayerReady = true;
-        if(this.RequestedPlayBeforeReady==true) {
-            this.RequestedPlayBeforeReady=false;
+        if(this.RequestedPlayBeforeReady === true) {
+            this.RequestedPlayBeforeReady = false;
             this.play();
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.ConnectedToServer");
@@ -234,7 +234,7 @@ AudioPlayer = Class.create({
             this.playOrderList.sort(this.randOrd);
             this.playOrderList.sort(this.randOrd);
             this.currentPlayingIndex = 0;
-            this.currentPlayingTrack = this.playOrderList[0]
+            this.currentPlayingTrack = this.playOrderList[0];
         }else{
             this.currentPlayingTrack = _startIndex;
             this.currentPlayingIndex = _startIndex;
@@ -258,7 +258,8 @@ AudioPlayer = Class.create({
     
     createOrderList:function(){
         //Inititialize an array to randomize;
-        var newList = new Array(); var i=0;
+        var newList = [];
+        var i=0;
         do{ newList[i]=i; }while(++i < this.playList.length);
         return newList;
     },
@@ -285,12 +286,12 @@ AudioPlayer = Class.create({
         this.playOrderList.sort(this.randOrd);
         var i = this.playList.length;
         do{
-            if (this.playOrderList[i] == this.currentPlayingTrack){
+            if (this.playOrderList[i] === this.currentPlayingTrack){
                 temp = this.playOrderList[0];
                 this.playOrderList[0] =  this.currentPlayingTrack;
                 this.playOrderList[i]= temp;
                 break;
-            };
+            }
         }while (--i);
         this.currentPlayingIndex = 0;
         this.printPlayOrderList();
@@ -327,7 +328,7 @@ AudioPlayer = Class.create({
     //**********************************************************************************************************************
     play: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.play");
-        if (this.PlayerReady == true){ 
+        if (this.PlayerReady === true){ 
             this.internal_play();
         }else{
             this.RequestedPlayBeforeReady=true;
@@ -401,7 +402,7 @@ AudioPlayer = Class.create({
                 this.internal_play();
             }
         }else{
-            if ((!clicked) || (this.repeatMode != RepeatModeType.no_repeat)){
+            if ((!clicked) || (this.repeatMode !== RepeatModeType.no_repeat)){
                 this.play_finished();
             }else{//last track
                 this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
@@ -501,7 +502,7 @@ AudioPlayer = Class.create({
     moreErrorInfo:function(type){
         var moreInfo = "<br><br><font style='{font-size:smaller;}'><b>Debug Info:</b>";
         moreInfo += "<br>Error Type: " + type;
-        if(this.player.palm != null && this.player.palm.errorDetails != null  && this.player.palm.errorDetails.errorCode != null) {
+        if(this.player.palm && this.player.palm.errorDetails  && this.player.palm.errorDetails.errorCode) {
             var errorDetails = this.player.palm.errorDetails;
             Mojo.Log.info("Error Details: %j", errorDetails);
             var errorClassString = "Unknown: (0x" + errorDetails.errorClass.toString(16).toUpperCase() + ")";
@@ -577,7 +578,7 @@ AudioPlayer = Class.create({
                 break;
             case "progress":
             case "load":
-                if(this.stalled) this.UpdateNowPlayingShowSpinner(false);
+                if(this.stalled) {this.UpdateNowPlayingShowSpinner(false);}
                 this.stalled =false;
                 this._updateBuffering();
                 break;
@@ -621,7 +622,7 @@ AudioPlayer = Class.create({
     // Now Playing updaters
     UpdateNowPlayingTime: function() {
         Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingTime");
-        if (this.NowPlaying != null){
+        if (this.NowPlaying){
             var currentTime = 0;
             if(this.player.currentTime){
                 currentTime = this.player.currentTime;
@@ -630,7 +631,7 @@ AudioPlayer = Class.create({
             if (this.player.duration){
                 duration = this.player.duration;
             }
-            if (duration != "Infinity"){
+            if (duration !== "Infinity"){
                 this.NowPlaying.updateTime(currentTime, duration);
             }
         }
@@ -639,7 +640,7 @@ AudioPlayer = Class.create({
     
     ClearNowPlayingTime: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.ClearNowPlayingTime");
-        if (this.NowPlaying != null) {
+        if (this.NowPlaying) {
             this.NowPlaying.updateTime(0,0);
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.ClearNowPlayingTime");
@@ -647,33 +648,45 @@ AudioPlayer = Class.create({
 
     UpdateNowPlayingBuffering: function(loaded, total){
         //Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
-        if(this.NowPlaying!=null) this.NowPlaying.updateBuffering(0, total);        
+        if(this.NowPlaying){
+            this.NowPlaying.updateBuffering(0, total);
+        }
         //Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
     },
     
     UpdateNowPlayingShowSpinner:function(_spinnerOn) {
-        if(this.NowPlaying!=null) {
-            if(_spinnerOn==true) this.NowPlaying.showSpinner();
-            else if(_spinnerOn==false) this.NowPlaying.hideSpinner();
+        if(this.NowPlaying) {
+            if(_spinnerOn === true) {
+                this.NowPlaying.showSpinner();
+            }
+            else if(_spinnerOn === false) {
+                this.NowPlaying.hideSpinner();
+            }
             else{}
         }
     },
     
     NowPlayingShowPause:function(){
-        if (this.NowPlaying != null) this.NowPlaying.showPauseButton();
+        if (this.NowPlaying) {
+            this.NowPlaying.showPauseButton();
+        }
     },
     
     NowPlayingShowPlay:function(){
-        if (this.NowPlaying != null) this.NowPlaying.showPlayButton();
+        if (this.NowPlaying) {
+            this.NowPlaying.showPlayButton();
+        }
     },
     
     NowPlayingStreamDebug:function(eventText){
-        if (this.NowPlaying != null && this.debug) this.NowPlaying.streamDebug(eventText);
+        if (this.NowPlaying && this.debug) {
+            this.NowPlaying.streamDebug(eventText);
+        }
     },
     
     NowPlayingStartPlaybackTimer: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer");
-        if (this.NowPlaying != null && this.timeInterval==null) {
+        if (this.NowPlaying && this.timeInterval === null) {
             this.timeInterval = this.NowPlaying.controller.window.setInterval(this.UpdateNowPlayingTime.bind(this), 450);
         }else{
             Mojo.Log.info("***********************************************************");
@@ -683,7 +696,7 @@ AudioPlayer = Class.create({
     
     NowPlayingStopPlaybackTimer: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer");
-        if ((this.NowPlaying != null)&&  (this.timeInterval!=null)) {
+        if ((this.NowPlaying)&&  (this.timeInterval)) {
              this.NowPlaying.controller.window.clearInterval(this.timeInterval);
              this.timeInterval =null;
         }
@@ -691,22 +704,28 @@ AudioPlayer = Class.create({
     },
     
     NowPlayingUpdateSongInfo: function(index){
-        if (this.NowPlaying != null) this.NowPlaying.NowPlayingDisplaySongInfo(this.playList, index);
+        if (this.NowPlaying) {
+            this.NowPlaying.NowPlayingDisplaySongInfo(this.playList, index);
+        }
     },
     
     NowPlayingDisplayError:function(message){
-        if (this.NowPlaying != null) {
+        if (this.NowPlaying) {
             var song = this.playList[this.currentPlayingTrack];
             this.NowPlaying.streamingError(message, song);
         }
     },
     
     NowPlayingResetTime: function(){
-        if (this.NowPlaying != null) this.NowPlaying.updateTime(0,0);
+        if (this.NowPlaying) {
+            this.NowPlaying.updateTime(0,0);
+        }
     },
     
     NowPlayingSetRepeatMode: function(){
-        if (this.NowPlaying != null) this.NowPlaying.setRepeatMode(this.repeatMode);
+        if (this.NowPlaying) {
+            this.NowPlaying.setRepeatMode(this.repeatMode);
+        }
     },
     
     _updateBuffering: function(){

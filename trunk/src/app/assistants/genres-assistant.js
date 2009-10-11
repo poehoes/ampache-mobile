@@ -106,7 +106,7 @@ GenresAssistant = Class.create(
     
     GetTags: function(GotItems, offset, limit)
     {
-        AmpacheMobile.ampacheServer.GetTags(GotItems, offset, limit, this.Search)
+        AmpacheMobile.ampacheServer.GetTags(GotItems, offset, limit, this.Search);
     },
     
     
@@ -144,7 +144,7 @@ GenresAssistant = Class.create(
         };
         
         
-        if (event.item.artists != 0) 
+        if (event.item.artists !== 0) 
         {
             editCmd[i++] = 
             {
@@ -156,7 +156,7 @@ GenresAssistant = Class.create(
             };
         }
         
-        if (event.item.albums != 0) 
+        if (event.item.albums !== 0) 
         {
             editCmd[i++] = 
             {
@@ -173,7 +173,7 @@ GenresAssistant = Class.create(
         
         //}
         
-		/*
+        /*
         if (event.item.playlists != 0) 
         {
             editCmd[i++] = 
@@ -205,7 +205,7 @@ GenresAssistant = Class.create(
         var controller = item._this.controller;
         Mojo.Log.info(event);
         
-        if (event == "pushArtists") 
+        if (event === "pushArtists") 
         {
             controller.stageController.pushScene('artists', 
             {
@@ -215,19 +215,19 @@ GenresAssistant = Class.create(
             });
         }
         
-        if (event == "pushAlbums") 
+        if (event === "pushAlbums") 
         {
             controller.stageController.pushScene('albums', 
             {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genres",
                 Genre_id: item.id,
-				ExpectedAlbums: item.albums
+                ExpectedAlbums: item.albums
             
             });
         }
         
-        if (event == "pushSongs") 
+        if (event === "pushSongs") 
         {
             controller.stageController.pushScene('songs', 
             {
@@ -278,8 +278,8 @@ GenresAssistant = Class.create(
     {
         this.itemsHelper.Visible = true;
         this.itemsHelper.GetItems();
-		
-		
+        
+        
     },
     
     deactivate: function(event)
@@ -321,4 +321,4 @@ GenresAssistant = Class.create(
     }
     
     
-})
+});

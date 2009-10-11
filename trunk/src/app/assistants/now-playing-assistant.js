@@ -108,14 +108,15 @@ NowPlayingAssistant = Class.create(
     FitToWindow: function(){
         var percentate = 0.8;
         var coverArt = $('coverArt');
-        var diff = window.innerHeight - height;
+        //var diff = window.innerHeight - height;
         var height = coverArt.height;
         var option1 = (window.innerHeight - 200);
         
-        if (option1 < 0) 
+        if (option1 < 0) {
             option1 = 0;
+        }
         var option2 = window.innerWidth * percentate;
-        var height = (option1 < option2) ? option1 : option2;
+        height = (option1 < option2) ? option1 : option2;
         coverArt.height = height;
         coverArt.width = height;
         var diff = window.innerHeight - height;
@@ -139,19 +140,20 @@ NowPlayingAssistant = Class.create(
             AmpacheMobile.audioPlayer.play_next(true);
             //this.moveArt();
         }
-        if (event.velocity.x > 1500) 
+        if (event.velocity.x > 1500) {
             AmpacheMobile.audioPlayer.play_prev();
+        }
         Mojo.Log.info("<-- handleFlick");
     },
     
     // All this for double clicking
     doubleClick: function(){
         Mojo.Log.info("--> doubleClick");
-        if (this.click == 1){
+        if (this.click === 1){
             this.togglePausePlay();
         }
         else{
-            this.click = 1
+            this.click = 1;
             this.clickInterval = window.setInterval(this.killlClick.bind(this), 450);
         }
     },
@@ -268,7 +270,7 @@ NowPlayingAssistant = Class.create(
         //Mojo.Log.info("-- updateTime secs", current);
         this.updateCounters(current, duration);
         this.percentage = 0;
-        if (duration == 0){
+        if (duration === 0){
             this.percentage = 0;
         }
         else {
@@ -280,27 +282,27 @@ NowPlayingAssistant = Class.create(
     
     updateCounters: function(_current, _duration){
         
-		var current = Math.floor(_current);
-		var duration = Math.floor(_duration);
-		var remaining = Math.floor(duration - current);
-		this.controller.get('playback-remaining').innerHTML = "-" + this.timeFormatter(remaining);
-		var timeString = this.timeFormatter(current);
+        var current = Math.floor(_current);
+        var duration = Math.floor(_duration);
+        var remaining = Math.floor(duration - current);
+        this.controller.get('playback-remaining').innerHTML = "-" + this.timeFormatter(remaining);
+        var timeString = this.timeFormatter(current);
         this.controller.get('playback-progress').innerHTML = timeString;
     },
     
     timeFormatter: function(secs){
         Mojo.Log.error("--> timeFormatter secs: " + secs);
-		
-		
+        
+        
         var hrs = Math.floor(secs / 3600);
         var mins = Math.floor(secs / 60) - hrs * 60;
         secs = secs % 60;
         var displayHours = "";
-		
+        
         if (hrs > 0){
             displayHours = hrs + ":";
         }
-		
+        
         var result = displayHours + ((mins < 10) ? "0" + mins : mins) + ":" + ((secs < 10) ? "0" + secs : secs);
         //Mojo.Log.info("<-- timeFormatter result", result);
         return result;
@@ -345,8 +347,9 @@ NowPlayingAssistant = Class.create(
          this.pausedFromDrag = false;
          }
          */
-        if (this.sliderIsDragging) 
+        if (this.sliderIsDragging) {
             return;
+        }
         this.sliderIsDragging = true;
         AmpacheMobile.audioPlayer.NowPlayingStopPlaybackTimer();
         Mojo.Log.info("<-- progressBarDragStart");
@@ -357,13 +360,13 @@ NowPlayingAssistant = Class.create(
         var pos = event.value;
         var secs = Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
         
-		this.updateCounters(secs, AmpacheMobile.audioPlayer.player.duration);
+        this.updateCounters(secs, AmpacheMobile.audioPlayer.player.duration);
         Mojo.Log.info("<-- progressBarSeek");
     },
     
     
     updateBuffering: function(startPctg, endPctg){
-        this.sliderModel.progressStart = startPctg
+        this.sliderModel.progressStart = startPctg;
         this.sliderModel.progressEnd = endPctg;
         this.controller.modelChanged(this.sliderModel);
     },
@@ -388,26 +391,26 @@ NowPlayingAssistant = Class.create(
     //  Now Playing Song Info
     //*********************************************************************************************************************************
     NowPlayingDisplaySongInfo: function(playList, currentIndex){
-        var song = playList[currentIndex]
+        var song = playList[currentIndex];
         Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
         this.controller.get('loaded-display').show();
         this.controller.get('songTitle').innerHTML = song.title.escapeHTML();
         //this.controller.get('artist').innerHTML = song.artist.escapeHTML();
         //this.controller.get('album').innerHTML = song.album.escapeHTML();
         this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
-        if ((song.art == null) || (song.art == "")){
-            $('coverArt').src = "images/blankalbum.png"
+        if ((song.art === null) || (song.art === "")){
+            $('coverArt').src = "images/blankalbum.png";
         }
         else {
-            if ($('coverArt').src != song.art) 
-			{
-				$('coverArt').src = "images/blankalbum.png"
-				$('coverArt').src = song.art;
-			}
+            if ($('coverArt').src !== song.art) 
+            {
+                $('coverArt').src = "images/blankalbum.png";
+                $('coverArt').src = song.art;
+            }
         }
         var xofy = (currentIndex + 1) + "/" + playList.length;
         this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
-        var title = "Now Playing"
+        var title = "Now Playing";
         this.controller.get('title').innerHTML = title.escapeHTML();
         Mojo.Log.info("<-- NowPlayingDisplaySongInfo");
     },
@@ -422,7 +425,7 @@ NowPlayingAssistant = Class.create(
                 display = "Downloading Finished";
                 break;
             case "loadstart":
-                display = "Starting Stream"
+                display = "Starting Stream";
                 break;
             case "canplaythrough":
                 display = "Can Play Through";
@@ -444,10 +447,10 @@ NowPlayingAssistant = Class.create(
     },
     
     setMenuControls: function(){
-        var items = new Array();
-        var leftGroup = new Array();
-        leftGroup[0] = this._getShuffleItem()
-        var centerGroup = new Array();
+        var items = [];
+        var leftGroup = [];
+        leftGroup[0] = this._getShuffleItem();
+        var centerGroup = [];
         var playButton = this.playItem;
         var rewindButton = this.rewindItem;
         var forwardButton = this.forwardItem;
@@ -460,7 +463,7 @@ NowPlayingAssistant = Class.create(
             centerGroup[1] = pauseButton;
         }
         centerGroup[2] = forwardButton;
-        var rightGroup = new Array();
+        var rightGroup = [];
         rightGroup[0] = this._getRepeatItem();
         // pad to center the button group
         items[0] = 
@@ -561,13 +564,12 @@ NowPlayingAssistant = Class.create(
     
     showPlayButton: function(){
         this.playing = false;
-        ;
         this.setMenuControls();
     },
     
     handleCommand: function(event){
         Mojo.Log.info("--> handleCommand:", event.command);
-        if (event.type == Mojo.Event.command){
+        if (event.type === Mojo.Event.command){
             switch (event.command){
                 case "forward":
                     AmpacheMobile.audioPlayer.play_next(true);
@@ -582,11 +584,11 @@ NowPlayingAssistant = Class.create(
                 case "stop":
                     break;
                 //case "shuffle-on":
-                //	this.turnOnShuffle();
-                //	break;
+                //  this.turnOnShuffle();
+                //  break;
                 //case "shuffle-off":
-                //	this.turnOffShuffle();
-                //	break;	
+                //  this.turnOffShuffle();
+                //  break;  
                 
                 case "toggleShuffle":
                     this.toggleShuffle();
@@ -625,7 +627,7 @@ NowPlayingAssistant = Class.create(
         var icon;
         var toggleCmd;
         
-        if (this.shuffle == true){
+        if (this.shuffle === true){
             icon = "music-shuffle";
             toggleCmd = 'toggleShuffle';
         }
@@ -647,10 +649,10 @@ NowPlayingAssistant = Class.create(
         var icon;
         var toggleCmd;
         
-        if (this.repeatMode == 0){
+        if (this.repeatMode === 0){
             icon = 'music-repeat';
         }
-        else if (this.repeatMode == 1){
+        else if (this.repeatMode === 1){
             icon = 'music-repeat';
             toggleCmd = 'toggleRepeat';
         }
@@ -677,10 +679,10 @@ NowPlayingAssistant = Class.create(
         this.setMenuControls();
     },
     
-	setRepeatMode:function(mode){
-		 this.repeatMode=mode;
-		 this.setMenuControls();
-	},
+    setRepeatMode:function(mode){
+         this.repeatMode=mode;
+         this.setMenuControls();
+    },
     
     toggleShuffle: function(){
         this.shuffle = !this.shuffle;
@@ -732,4 +734,4 @@ NowPlayingAssistant = Class.create(
     appMenuModel: 
     { visible: true, items: [ { label: "Stream Info", command: "doStreamingInfo-cmd" }, { label: "About...", command: "about-cmd" }]
     }
-})
+});
