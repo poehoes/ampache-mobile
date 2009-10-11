@@ -3,7 +3,8 @@
 #       
 #   dburman 
 #   
-#
+#   ex: python webOS_optimize.py src
+#       results placed in optimize folder
 #-----------------------------------------------------
 
 import glob, os, sys, shutil, fnmatch
