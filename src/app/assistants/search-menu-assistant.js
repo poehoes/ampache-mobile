@@ -15,8 +15,7 @@
  */
 SearchMenuAssistant = Class.create(
 {
-    initialize: function(){
-    },
+    initialize: function(){ },
     
     setup: function(){
         //*****************************************************************************************************
@@ -25,14 +24,8 @@ SearchMenuAssistant = Class.create(
         
         //******************************************************************************************************
         // Setup Spinner
-        this.spinnerLAttrs = 
-        {
-            spinnerSize: 'large'
-        };
-        this.spinnerModel = 
-        {
-            spinning: false
-        };
+        this.spinnerLAttrs = { spinnerSize: 'large' };
+        this.spinnerModel = { spinning: false };
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
         //******************************************************************************************************
@@ -47,12 +40,8 @@ SearchMenuAssistant = Class.create(
             title: "Search",
             image: 'images/icons/search.png'
         };
-        this.searchLoadModel = 
-        {
-            value: 1
-        };
+        this.searchLoadModel = { value: 1 };
         this.controller.setupWidget('searchProgressbar', this.PPattr, this.searchLoadModel);
-        
         
         //***************************************************************************************************************
         // Setup Search Field
@@ -64,8 +53,6 @@ SearchMenuAssistant = Class.create(
             //textCase: Mojo.Widget.steModeLowerCase,
             enterSubmits: true
         }, this.searchModel = {});
-        
-        
         this.controller.listen("search-field", Mojo.Event.propertyChange, this.searchTextChanged.bindAsEventListener(this));
         this.SearchField = this.controller.get("search-field");
         
@@ -78,10 +65,8 @@ SearchMenuAssistant = Class.create(
         this.controller.get('searchPlaylists').observe(Mojo.Event.tap, this.searchForPlaylists.bindAsEventListener(this));
         //this.controller.get('searchGenres').observe(Mojo.Event.tap, this.searchForGenres.bindAsEventListener(this));
         this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
-        
-        
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.handleKeyPressEvent.bindAsEventListener(this));
-               this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.handleKeyPressEvent.bindAsEventListener(this));
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.handleKeyPressEvent.bindAsEventListener(this));
     },
     
     searchText: null,
@@ -95,7 +80,6 @@ SearchMenuAssistant = Class.create(
         }
     },
     
-    
     handleKeyPressEvent: function(event){
          /*
          var eventModel =
@@ -105,7 +89,7 @@ SearchMenuAssistant = Class.create(
          eventChar: String.fromCharCode(event.originalEvent.keyCode)
          };
          */
-            this.SetFocus();
+         this.SetFocus();
         
         // var text = this.SearchField.mojo.getValue();
         // text += String.fromCharCode(event.originalEvent.keyCode);
@@ -183,9 +167,7 @@ SearchMenuAssistant = Class.create(
                 Type: "search",
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,
-                
                 Search: this.searchText === "" ? null : this.searchText
-            
             });
         }
     },
@@ -200,9 +182,7 @@ SearchMenuAssistant = Class.create(
                 SceneTitle: "Global Search: " + this.searchText,
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,
-                
                 Search: this.searchText === "" ? null : this.searchText
-            
             });
         }
     },
@@ -214,7 +194,6 @@ SearchMenuAssistant = Class.create(
                 this.TurnOnSpinner();
                 this.controller.stageController.pushScene("artists", 
                 {
-                
                     SceneTitle: "Artist Search: " + this.searchText,
                     ExpectedArtists: numArtists,
                     Search: this.searchText === "" ? null : this.searchText

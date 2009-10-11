@@ -15,9 +15,7 @@
  */
 MainmenuAssistant = Class.create(
 {
-
-    initialize: function()
-    {
+    initialize: function(){
         /* this is the creator function for your scene assistant object. It will be passed all the 
          additional parameters (after the scene name) that were passed to pushScene. The reference
          to the scene controller (this.controller) has not be established yet, so any initialization
@@ -26,32 +24,14 @@ MainmenuAssistant = Class.create(
         this.ArtistList = null;
         this.AlbumsList = null;
         this.SongsList = null;
-        
     },
     
-    setup: function()
-    {
+    setup: function(){
         Mojo.Log.info("--> setup");
-        
-        
-        
-        
-        
-        this.spinnerAttrs = 
-        {
-            spinnerSize: 'small'
-        };
-        
-        this.spinnerModel = 
-        {
-            spinning: false
-        };
-        
+        this.spinnerAttrs = { spinnerSize: 'small' };
+        this.spinnerModel = { spinning: false };
         this.controller.setupWidget('mainmenu-spinner', this.spinnerAttrs, this.spinnerModel);
-        
-        
         this.mainmenu = [
-        
         /*
          {
          category: $L("top"),
@@ -71,6 +51,7 @@ MainmenuAssistant = Class.create(
             description: $L(AmpacheMobile.ampacheServer.artists.toString()),
             icon: "images/icons/artists.png"
         }, 
+
         {
             category: $L("bottom"),
             directory: $L("albums"),
@@ -139,59 +120,38 @@ MainmenuAssistant = Class.create(
         // Watch for taps on the list items 
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
-        
         Mojo.Log.info("<-- setup");
-        
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
         
         //****************************************************************************************************
         // Setup Screen Rotation
-        if (AmpacheMobile.settingsManager.settings.AllowRotation === true) 
-        {
+        if (AmpacheMobile.settingsManager.settings.AllowRotation === true){
             /* Allow this stage to rotate */
-            if (this.controller.stageController.setWindowOrientation) 
-            {
+            if (this.controller.stageController.setWindowOrientation){
                 this.controller.stageController.setWindowOrientation("free");
             }
-        }
-        else 
-        {
+        }else{
             /* Allow this stage to rotate */
-            if (this.controller.stageController.setWindowOrientation) 
-            {
+            if (this.controller.stageController.setWindowOrientation){
                 this.controller.stageController.setWindowOrientation("up");
             }
         }
         
-        
         //*****************************************************************************************************
         // Search Event
         this.controller.get('search').observe(Mojo.Event.tap, this.pushSearch.bindAsEventListener(this));
-        
-        
     },
     
-    pushSearch: function()
-    {
+    pushSearch: function(){
         this.controller.stageController.pushScene('search-menu');
     },
     
-    
-    listTapHandler: function(event)
-    {
+    listTapHandler: function(event){
         Mojo.Log.info("--> listTapHandler: " + event.item.scene);
-        
-        
-        
-        
-        switch (event.item.scene)
-        {
+        switch (event.item.scene){
             case "artists":
-                
                 var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
-                if (numArtists !== 0) 
-                {
+                if (numArtists !== 0){
                     this.controller.stageController.pushScene("artists", 
                     {
                         SceneTitle: "Artists",
@@ -204,8 +164,7 @@ MainmenuAssistant = Class.create(
             case "albums":
                 Mojo.Log.info("Pushing Albums");
                 var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
-                if (numAlbums !== 0) 
-                {
+                if (numAlbums !== 0){
                     this.controller.stageController.pushScene('albums', 
                     {
                         SceneTitle: "Albums",
@@ -215,32 +174,21 @@ MainmenuAssistant = Class.create(
                     });
                 }
                 this.getPending = false;
-                
-                
                 //this.TurnOffSpinner("Getting Albums");
                 break;
-                
             case "playlists":
-                
                 var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
-                
-                if (numPlaylists !== 0) 
-                {
+                if (numPlaylists !== 0){
                     Mojo.Log.info("Pushing Playlists");
-                    
                     this.controller.stageController.pushScene('playlists', 
                     {
                         SceneTitle: "Playlists",
                         ExpectedPlaylists: numPlaylists
                     });
-                    
                 }
                 this.getPending = false;
-                
                 //this.TurnOffSpinner("Getting Albums");
-                
                 break;
-                
             case "songs":
                 this.controller.stageController.pushScene('songs', 
                 {
@@ -250,28 +198,20 @@ MainmenuAssistant = Class.create(
                 
                 });
                 break;
-                
             case "genres":
-                
                 this.controller.stageController.pushScene('genres', 
                 {
                     SceneTitle: "Genres",
                     Type: "all-genres"
                 });
                 break;
-                
         }
-        
         //this.controller.stageController.assistant.showScene(event.item.directory, event.item.scene)
-        
-        
         Mojo.Log.info("<-- listTapHandler");
     },
     
-    
     // This function will popup a dialog, displaying the message passed in.
-    showDialogBox: function(title, message)
-    {
+    showDialogBox: function(title, message){
         this.controller.showAlertDialog(
         {
             onChoose: function(value)
@@ -288,59 +228,43 @@ MainmenuAssistant = Class.create(
         });
     },
     
-    
-    TurnOnSpinner: function(spinnerText)
-    {
+    TurnOnSpinner: function(spinnerText){
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
     },
     
-    TurnOffSpinner: function()
-    {
+    TurnOffSpinner: function(){
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
     },
-    
     
     /*
      * This function will push a passed in scene.  The reason we are using a special function here is that
      * for file organization purposes we have put the scene files in sub directories & to load them requires that
      * we use the name and sceneTemplate properties when pushing the scenes.
      */
-    showScene: function(sceneName, directory)
-    {
+    showScene: function(sceneName, directory){
         Mojo.Log.info("--> showScene");
-        
         this.controller.stageController.pushScene(
         {
             name: sceneName,
             sceneTemplate: directory + "/" + sceneName + "/" + sceneName + "-scene"
         });
-        
         Mojo.Log.info("<-- showScene");
     },
     
-    
-    
-    
-    FinishedGettingSongs: function(_songsList)
-    {
+    FinishedGettingSongs: function(_songsList){
         Mojo.Log.info("--> FinishedGettingSongs");
-        
         this.SongsList = _songsList;
-        
         this.getPending = false;
-        
         this.controller.stageController.pushScene("songs", 
         {
             SceneTitle: "All Songs",
             //DisplayArtistInfo:false,
             SongsList: _songsList
         });
-        
         this.TurnOffSpinner();
         Mojo.Log.info("<-- FinishedGettingSongs");
-        
     },
     
     /*
@@ -377,42 +301,30 @@ MainmenuAssistant = Class.create(
      
      }
      */
-    activate: function(event)
-    {
+    activate: function(event){
         /* put in event handlers here that should only be in effect when this scene is active. For
-         
-         
          example, key handlers that are observing the document */
         //this.ArtistList = null;
         //this.AlbumsList = null;
         //this.SongsList = null;
-    
         $('count-Genres').hide();
     },
     
-    
-    deactivate: function(event)
-    {
+    deactivate: function(event){
         /* remove any event handlers you added in activate and do any other cleanup that should happen before
-         
-         
-         
          this scene is popped or another scene is pushed on top */
     },
     
-    cleanup: function(event)
-    {
+    cleanup: function(event){
         /* this function should do any cleanup needed before the scene is destroyed as 
          a result of being popped off the scene stack */
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
         this.ArtistList = null;
         this.AlbumsList = null;
         this.SongsList = null;
-        
     },
     
-    dividerFunc: function(itemModel)
-    {
+    dividerFunc: function(itemModel){
         return itemModel.category; // We're using the item's category as the divider label.
     }
 });

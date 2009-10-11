@@ -29,8 +29,8 @@ for root, subFolders, files in os.walk(rootdir):
             JAVASCRIPTS.append(os.path.join(root,file))
         if fnmatch.fnmatch(file, '*.html'):
             HTML.append(os.path.join(root,file))
-print (JAVASCRIPTS)
-print (HTML)
+#print (JAVASCRIPTS)
+#print (HTML)
 
 #JAVASCRIPTS= glob.glob(directoryopt + '*.js')
 #HTML = glob.glob(directoryopt + '*.html')
@@ -128,4 +128,36 @@ for i in range(len(JAVASCRIPTS)):
     fin.close()
     fout.close()
     os.remove(tmpFile)
+
+
+
+i = 0
+for i in range(len(HTML)):
+    print ("processing:", HTML[i])
+    #tmpFile = HTML[i] + '_tmp'
+    fin = open(HTML[i], 'r')
+    finString= fin.read()
+    finString= fin.close()
+    fout = open(HTML[i], 'w')
+    j = 0
+    commentRemove = True
+    #while commentRemove == True:
+       
+        #find and remove comments of the form /* */ 
+    #    if (j + 1) < len(finString) and finString[j] == '/' and finString[j+1] == '*':
+    #        j=j+2;
+    #        gotoCommentEnd= True 
+    #        while gotoCommentEnd == True:
+    #            if j >= len(finString):
+    #                gotoCommentEnd = False
+    #                commentRemove = False 
+    #            else:  
+    #                if finString[j] == '*' and (j+1) < len(finString) and finString[j+1] == '/':
+    #                    gotoCommentEnd = False
+    #                    j=j+1
+    #                    #finString[j+1] = ' '
+    #                j=j+1
+
+    fout.close()
+
 
