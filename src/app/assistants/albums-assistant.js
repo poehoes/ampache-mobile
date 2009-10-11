@@ -35,7 +35,7 @@ AlbumsAssistant = Class.create(
         this.DisplayArtistInfo = params.DisplayArtistInfo;
         //this.AlbumsList = params.AlbumsList;
         //this.AlbumsList.sort(this.sortfunction);
-	this.numSongs = params.numSongs;
+        this.numSongs = params.numSongs;
         
         this.ExpectedAlbums = params.ExpectedAlbums;
         
@@ -47,16 +47,16 @@ AlbumsAssistant = Class.create(
             
         }
         else if(params.Genre_id != null) 
-		{
-			this.type = params.Type;
-			this.Genre_id = params.Genre_id;
-			this.DisplayArtistInfo = true;
-		}
-		else 
+                {
+                        this.type = params.Type;
+                        this.Genre_id = params.Genre_id;
+                        this.DisplayArtistInfo = true;
+                }
+                else 
             this.isArtistView = false;
         
-		
-		
+                
+                
         
         if (params.Search) 
         {
@@ -87,10 +87,10 @@ AlbumsAssistant = Class.create(
         this.scrim.hide();
         
         //******************************************************************************************************
-	if(this.numSongs)
-	{
-	    $('numSongs').innerHTML = this.numSongs;
-	}
+        if(this.numSongs)
+        {
+            $('numSongs').innerHTML = this.numSongs;
+        }
         
         
         this.PPattr = 
@@ -301,10 +301,10 @@ AlbumsAssistant = Class.create(
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist_id, null, offset, limit);
         }
         else if(this.type=="genres")
-		{
+                {
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, this.Genre_id, offset, limit);
         }
-		else 
+                else 
         {
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, null, offset, limit, this.Search);
         }
@@ -334,24 +334,24 @@ AlbumsAssistant = Class.create(
     {
         Mojo.Log.info("--> handleShuffleAll");
         
-	this.controller.stageController.pushScene('songs', 
+        this.controller.stageController.pushScene('songs', 
         {
             SceneTitle: this.SceneTitle,
             Type: "artist-songs",
             Artist_id: this.Artist_id,
-	    Expected_items:this.numSongs
+            Expected_items:this.numSongs
             //Item: event.item
         
         });
-	
+        
         /*
         this.TurnOnSpinner("Retrieving<br>Songs");
         AmpacheMobile.ampacheServer.GetSongs(this.FinishedGettingShuffleAll.bind(this), null, this.Artist_id, null);
         this.RequestedArtist = event.item;
-	*/
-	
-	this.Artist_id = param.Artist_id;
-	
+        */
+        
+        this.Artist_id = param.Artist_id;
+        
         Mojo.Log.info("<-- handleShuffleAll");
     },
     
@@ -461,11 +461,9 @@ AlbumsAssistant = Class.create(
         }
         
         
-        
+        return 0;
     },
-    
-    
-    
+
     sortList: function(a, b)
     {
         switch (this.sortType)
@@ -482,7 +480,7 @@ AlbumsAssistant = Class.create(
                 
                 
         }
-        
+        return 0;
     },
     
     
@@ -582,7 +580,7 @@ AlbumsAssistant = Class.create(
         Mojo.Log.info("--> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
         //this.controller.get('wait-message').innerHTML = message;
-		this.scrim.show();
+                this.scrim.show();
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- ");
@@ -591,7 +589,7 @@ AlbumsAssistant = Class.create(
     TurnOffSpinner: function()
     {
         Mojo.Log.info("-----> TurnOffSpinner");
-		this.scrim.hide();
+                this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");
