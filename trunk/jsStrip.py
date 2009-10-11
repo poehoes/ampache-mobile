@@ -6,7 +6,7 @@
 #
 #-----------------------------------------------------
 
-import glob, os, sys
+import glob, os, sys, shutil, fnmatch
 
 
 if len(sys.argv) > 1:
@@ -14,18 +14,32 @@ if len(sys.argv) > 1:
 else:
     directory = './'
 
-directoryopt = directory + 'optimized/'
+directoryopt = './'+'optimized/'
 
-if not os.path.exists(directoryopt):
-    os.makedirs(directoryopt)
+if os.path.exists(directoryopt):
+    shutil.rmtree(directoryopt)
+shutil.copytree(directory,directoryopt,False)
 
-JAVASCRIPTS= glob.glob(directory + '*.js')
+JAVASCRIPTS = []
+HTML = []
+rootdir = directoryopt 
+for root, subFolders, files in os.walk(rootdir):
+    for file in files:
+        if fnmatch.fnmatch(file, '*.js'):
+            JAVASCRIPTS.append(os.path.join(root,file))
+        if fnmatch.fnmatch(file, '*.html'):
+            HTML.append(os.path.join(root,file))
+print (JAVASCRIPTS)
+print (HTML)
+
+#JAVASCRIPTS= glob.glob(directoryopt + '*.js')
+#HTML = glob.glob(directoryopt + '*.html')
 
 i = 0
 for i in range(len(JAVASCRIPTS)):
     print ("processing:", JAVASCRIPTS[i])
     fin = open(JAVASCRIPTS[i], 'r')
-    tmpFile = directoryopt + JAVASCRIPTS[i]
+    tmpFile = JAVASCRIPTS[i] + '_tmp'
     fout = open(tmpFile, 'w')
     finString= fin.read()
     j = 0
@@ -107,3 +121,11 @@ for i in range(len(JAVASCRIPTS)):
             j=j+1
     fin.close()
     fout.close()
+
+    fin = open(tmpFile, 'r')
+    fout = open(JAVASCRIPTS[i], 'w')
+    fout.write(fin.read())
+    fin.close()
+    fout.close()
+
+
