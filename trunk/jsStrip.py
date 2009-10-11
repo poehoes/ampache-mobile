@@ -37,11 +37,13 @@ for root, subFolders, files in os.walk(rootdir):
 
 i = 0
 for i in range(len(JAVASCRIPTS)):
-    print ("processing:", JAVASCRIPTS[i])
+    print ("processing: JS", JAVASCRIPTS[i])
     fin = open(JAVASCRIPTS[i], 'r')
-    tmpFile = JAVASCRIPTS[i] + '_tmp'
-    fout = open(tmpFile, 'w')
+    #tmpFile = JAVASCRIPTS[i] + '_tmp'
     finString= fin.read()
+    fin.close()
+    #fout = open(tmpFile, 'w')
+    fout = open(JAVASCRIPTS[i], 'w')
     j = 0
     commentRemove = True
     while commentRemove == True:
@@ -60,7 +62,6 @@ for i in range(len(JAVASCRIPTS)):
                         j=j+1
                         #finString[j+1] = ' '
                     j=j+1
-
 
         #find and remove comments of the form // 
         if (j + 1) < len(finString) and finString[j] == '/' and finString[j+1] == '/' and (((j > 0) and finString[j-1] != ':') or j== 0):
@@ -119,45 +120,70 @@ for i in range(len(JAVASCRIPTS)):
                 fout.write(' ')
             #print(j)
             j=j+1
-    fin.close()
     fout.close()
 
-    fin = open(tmpFile, 'r')
-    fout = open(JAVASCRIPTS[i], 'w')
-    fout.write(fin.read())
-    fin.close()
-    fout.close()
-    os.remove(tmpFile)
+    #fin = open(tmpFile, 'r')
+    #fout = open(JAVASCRIPTS[i], 'w')
+    #fout.write(fin.read())
+    #fin.close()
+    #fout.close()
+    #os.remove(tmpFile)
 
 
 
 i = 0
 for i in range(len(HTML)):
-    print ("processing:", HTML[i])
+    print ("processing HTML:", HTML[i])
     #tmpFile = HTML[i] + '_tmp'
     fin = open(HTML[i], 'r')
     finString= fin.read()
-    finString= fin.close()
+    fin.close()
     fout = open(HTML[i], 'w')
     j = 0
-    commentRemove = True
-    #while commentRemove == True:
-       
-        #find and remove comments of the form /* */ 
-    #    if (j + 1) < len(finString) and finString[j] == '/' and finString[j+1] == '*':
-    #        j=j+2;
-    #        gotoCommentEnd= True 
-    #        while gotoCommentEnd == True:
-    #            if j >= len(finString):
-    #                gotoCommentEnd = False
-    #                commentRemove = False 
-    #            else:  
-    #                if finString[j] == '*' and (j+1) < len(finString) and finString[j+1] == '/':
-    #                    gotoCommentEnd = False
-    #                    j=j+1
-    #                    #finString[j+1] = ' '
-    #                j=j+1
+    spacesRemove = True
+    while spacesRemove == True:
+        #only write things between < > 
+        if ((j+1)<len(finString) and finString[j] == '<'): 
+            gotoTagEnd= True 
+            while gotoTagEnd == True:
+                if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
+                    fout.write(finString[j])
+                else:
+                    fout.write(' ')
+                j=j+1;
+                if j >= len(finString):
+                    gotoTagEnd = False
+                    spacesRemove = False 
+                else:  
+                    if finString[j] == '>': 
+                        gotoTagEnd = False
+                        fout.write(finString[j])
+                        j=j+1
 
+
+        if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
+            j=j+1;
+            gotoTagEnd= True 
+            while gotoTagEnd == True:
+                if j >= len(finString):
+                    gotoTagEnd = False
+                    spacesRemove = False 
+                else:  
+                    if finString[j] != ' ' and finString[j] != '\t' and finString[j] != '\n' and finString[j] != '\r':
+                        gotoTagEnd = False
+                        j=j-1;
+                    else:
+                        j=j+1
+
+        if j >= len(finString):
+            spacesRemove = False
+        else:
+            if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
+            #if finString != '\t':
+                fout.write(finString[j])
+            else:
+                fout.write(' ')
+            j=j+1
     fout.close()
 
 
