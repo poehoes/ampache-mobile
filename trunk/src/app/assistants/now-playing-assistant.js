@@ -274,8 +274,7 @@ NowPlayingAssistant = Class.create(
         this.percentage = 0;
         if (duration === 0){
             this.percentage = 0;
-        }
-        else {
+        }else{
             this.percentage = (current / duration) * 100;
         }
         this.sliderModel.value = this.percentage;
@@ -283,7 +282,6 @@ NowPlayingAssistant = Class.create(
     },
     
     updateCounters: function(_current, _duration){
-        
         var current = Math.floor(_current);
         var duration = Math.floor(_duration);
         var remaining = Math.floor(duration - current);
@@ -294,17 +292,13 @@ NowPlayingAssistant = Class.create(
     
     timeFormatter: function(secs){
         Mojo.Log.error("--> timeFormatter secs: " + secs);
-        
-        
         var hrs = Math.floor(secs / 3600);
         var mins = Math.floor(secs / 60) - hrs * 60;
         secs = secs % 60;
         var displayHours = "";
-        
         if (hrs > 0){
             displayHours = hrs + ":";
         }
-        
         var result = displayHours + ((mins < 10) ? "0" + mins : mins) + ":" + ((secs < 10) ? "0" + secs : secs);
         //Mojo.Log.info("<-- timeFormatter result", result);
         return result;
@@ -318,7 +312,6 @@ NowPlayingAssistant = Class.create(
         this.sliderIsDragging = false;
         var pos = this.sliderModel.value;
         var percentage = (pos / 100);
-        
         //Not yet supporting restaring the download from a new spot
         var secs = (this.sliderModel.progressEnd < percentage) ? AmpacheMobile.audioPlayer.player.currentTime : Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
         AmpacheMobile.audioPlayer.player.currentTime = secs;
@@ -361,7 +354,6 @@ NowPlayingAssistant = Class.create(
         Mojo.Log.info("--> progressBarSeek");
         var pos = event.value;
         var secs = Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
-        
         this.updateCounters(secs, AmpacheMobile.audioPlayer.player.duration);
         Mojo.Log.info("<-- progressBarSeek");
     },
@@ -402,10 +394,8 @@ NowPlayingAssistant = Class.create(
         this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
         if ((!song.art) || (song.art === "")){
             $('coverArt').src = "images/blankalbum.png";
-        }
-        else {
-            if ($('coverArt').src !== song.art) 
-            {
+        }else{
+            if ($('coverArt').src !== song.art){
                 $('coverArt').src = "images/blankalbum.png";
                 $('coverArt').src = song.art;
             }
@@ -460,26 +450,16 @@ NowPlayingAssistant = Class.create(
         centerGroup[0] = rewindButton;
         if (!this.playing){
             centerGroup[1] = playButton;
-        }
-        else {
+        }else{
             centerGroup[1] = pauseButton;
         }
         centerGroup[2] = forwardButton;
         var rightGroup = [];
         rightGroup[0] = this._getRepeatItem();
         // pad to center the button group
-        items[0] = 
-        {
-            items: leftGroup
-        };
-        items[1] = 
-        {
-            items: centerGroup
-        };
-        items[2] = 
-        {
-            items: rightGroup
-        };
+        items[0] = { items: leftGroup };
+        items[1] = { items: centerGroup };
+        items[2] = { items: rightGroup };
         this.cmdMenuModel.items = items;
         this.controller.modelChanged(this.cmdMenuModel);
         //if (enableRewFast) 
@@ -624,16 +604,14 @@ NowPlayingAssistant = Class.create(
     /**
      * Returns the proper shuffle command item for use as an item in the command list
      */
-    _getShuffleItem: function()
-    {
+    _getShuffleItem: function(){
         var icon;
         var toggleCmd;
         
         if (this.shuffle === true){
             icon = "music-shuffle";
             toggleCmd = 'toggleShuffle';
-        }
-        else {
+        }else{
             icon = "music-shuffle";
         }
         return {
@@ -650,15 +628,12 @@ NowPlayingAssistant = Class.create(
         //var repeatMode = this.musicPlayer.getRepeatMode();
         var icon;
         var toggleCmd;
-        
         if (this.repeatMode === 0){
             icon = 'music-repeat';
-        }
-        else if (this.repeatMode === 1){
+        }else if (this.repeatMode === 1){
             icon = 'music-repeat';
             toggleCmd = 'toggleRepeat';
-        }
-        else {
+        }else{
             icon = 'music-repeat-one';
             toggleCmd = 'toggleRepeat';
         }
@@ -669,7 +644,6 @@ NowPlayingAssistant = Class.create(
                 icon: icon
             }]
         };
-        
         //return {icon: icon, command:'toggleRepeat'};
     },
     
@@ -690,50 +664,35 @@ NowPlayingAssistant = Class.create(
         this.shuffle = !this.shuffle;
         if (this.shuffle){
             AmpacheMobile.audioPlayer.toggleShuffleOn();
-        }
-        else{
+        }else{
             AmpacheMobile.audioPlayer.toggleShuffleOff();
         }
         this.setMenuControls();
     },
     
-    playItem: 
-    { icon: 'music-play', command: 'play' },
+    playItem: { icon: 'music-play', command: 'play' },
    
-    playItemDisabled: 
-    { icon: 'music-play-disabled', command: 'playItemDisabled' },
+    playItemDisabled: { icon: 'music-play-disabled', command: 'playItemDisabled' },
    
-    pauseItem: 
-    { icon: 'music-pause', command: 'pause' },
+    pauseItem: { icon: 'music-pause', command: 'pause' },
 
-    stopItem: 
-    { icon: 'music-stop', command: 'stop' },
+    stopItem: { icon: 'music-stop', command: 'stop' },
    
-    shuffleOnItem: 
-    { toggleCmd: "toggleShuffle", items: [ { command: 'shuffle-off', icon: 'music-shuffle' }] },
+    shuffleOnItem: { toggleCmd: "toggleShuffle", items: [ { command: 'shuffle-off', icon: 'music-shuffle' }] },
     
-    shuffleOffItem: 
-    { toggleCmd: null, icon: 'music-shuffle', command: 'shuffle-on' },
+    shuffleOffItem: { toggleCmd: null, icon: 'music-shuffle', command: 'shuffle-on' },
     
-    forwardItem: 
-    { icon: 'music-forward', command: 'forward' },
+    forwardItem: { icon: 'music-forward', command: 'forward' },
     
-    forwardItemDisabled: 
-    { icon: 'music-forward-disabled', command: 'forwardItemDisabled' },
+    forwardItemDisabled: { icon: 'music-forward-disabled', command: 'forwardItemDisabled' },
     
-    rewindItem: 
-    { icon: 'music-rewind', command: 'rewind' },
+    rewindItem: { icon: 'music-rewind', command: 'rewind' },
     
-    rewindItemDisabled: 
-    { icon: 'music-rewind-disabled', command: 'rewindItemDisabled' },
+    rewindItemDisabled: { icon: 'music-rewind-disabled', command: 'rewindItemDisabled' },
     
-    repeatItem: 
-    { icon: 'music-repeat', command: 'repeat' },
+    repeatItem: { icon: 'music-repeat', command: 'repeat' },
     
-    appMenuAttr: 
-    { omitDefaultItems: true },
+    appMenuAttr: { omitDefaultItems: true },
 
-    appMenuModel: 
-    { visible: true, items: [ { label: "Stream Info", command: "doStreamingInfo-cmd" }, { label: "About...", command: "about-cmd" }]
-    }
+    appMenuModel: { visible: true, items: [ { label: "Stream Info", command: "doStreamingInfo-cmd" }, { label: "About...", command: "about-cmd" }] }
 });

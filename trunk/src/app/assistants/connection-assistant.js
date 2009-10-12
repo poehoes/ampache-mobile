@@ -23,7 +23,6 @@ ConnectionAssistant = Class.create(
     
     setup: function(){
         Mojo.Log.info("--> setup");
-        
         //******************************************************************************************************
         // Make scrim
         this.scrim = $("connect-scrim");
@@ -43,10 +42,8 @@ ConnectionAssistant = Class.create(
             ]
         };
         this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuProps);
-        
         //AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
         //Mojo.Log.info("Audio Player Created Bitches");
-        
         AmpacheMobile.settingsManager = new SettingsManager("AmpacheMobileData");
         this.settingsManager = AmpacheMobile.settingsManager;
         this.Accounts = [];
@@ -67,7 +64,6 @@ ConnectionAssistant = Class.create(
         };
         this.controller.setupWidget('selectorList', this.innerListAttrs, this.accountsModel);
         this.controller.listen('selectorList', Mojo.Event.listTap, this.listTapHandler.bindAsEventListener(this));
-        
         /* use Mojo.View.render to render view templates and add them to the scene, if needed. */
         /* setup widgets here */
         this.spinnerLAttrs = 
@@ -87,7 +83,6 @@ ConnectionAssistant = Class.create(
         Mojo.Log.info("<-- setup");
     },
     
-    
     TurnOnSpinner: function(){
         Mojo.Log.info("--> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
@@ -98,7 +93,6 @@ ConnectionAssistant = Class.create(
         Mojo.Log.info("<-- TurnOnSpinner");
     },
     
-    
     TurnOffSpinner: function(){
         Mojo.Log.info("--> TurnOffSpinner");
         this.controller.setMenuVisible(Mojo.Menu.commandMenu, false);
@@ -107,7 +101,6 @@ ConnectionAssistant = Class.create(
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- TurnOffSpinner");
     },
-    
     
     listTapHandler: function(event){
         this.TurnOnSpinner();
@@ -122,12 +115,9 @@ ConnectionAssistant = Class.create(
         this.controller.stageController.pushScene("preferences", params);
     },
     
-    
     GotSettings: function(settings){
         Mojo.Log.info("--> GotSettings");
-        
         this.TurnOffSpinner();
-        
         if (!settings){
             Mojo.Log.info("No Settings Case");
             AmpacheMobile.settingsManager.CreateSettings();
@@ -165,7 +155,6 @@ ConnectionAssistant = Class.create(
         Mojo.Log.info("--> handleLaunch");
         Mojo.Log.info("<-- handleLaunch");
     },
-    
     
     ConnectionCallback: function(connectResult, source){
         Mojo.Log.info("--> ConnectionCallback");
@@ -326,7 +315,6 @@ ConnectionAssistant = Class.create(
                 AmpacheMobile.ampacheServer.ConnectCancel();
                 this.TurnOffSpinner();
         }
-        
         
         /*switch (event.command){
             case "cmdCancel":

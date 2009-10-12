@@ -17,13 +17,10 @@
     You should have received a copy of the GNU General Public License
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-
 html, body {
 height: 100%;
 margin: 0;
 padding: 0;
-
 }
 
 a:link {
@@ -53,7 +50,6 @@ COLOR: grey;
         margin: 1px -2px 0px -2px;
 }
 
-
 .ProgressPillHeader
 {
   line-height: 48px;
@@ -74,14 +70,11 @@ COLOR: grey;
   padding: 0px;
   font-weight: bold;
   cursor: default;
-
-  
 }
 
 #headerProgress
 {
-        z-index:-1;     
-        
+    z-index:-1;     
 }
 
 
@@ -98,41 +91,38 @@ height: 100%;
 }*/
 
 .customBackgroundSolid{
-background-size: 100%;
-z-index: -1;
-opacity:0.5;
-position: fixed;
-top: 0px;
-left: 0px;
-width: 320px;
-height: 480px;
+    background-size: 100%;
+    z-index: -1;
+    opacity:0.5;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 320px;
+    height: 480px;
 }
 
 .customBackgroundImage{
-background: url(../images/background_alpha.png) top left repeat;
-background-size: 100%;
-z-index: -1;
-position: fixed;
-top: 0px;
-left: 0px;
-width: 100%;
-height: 100%;
+    background: url(../images/background_alpha.png) top left repeat;
+    background-size: 100%;
+    z-index: -1;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
 }
-
-
-
 
 .ampacheMobileTitle
 {
-        color: white;
-        padding: 5px 15px 5px 15px;
+    color: white;
+    padding: 5px 15px 5px 15px;
 }
 
 .ampacheMobileDesc {
-        color: white;
-        margin-top: -10px;
-        padding: 0 15px 10px 15px;
-        font-size:small;
+    color: white;
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
 }
 
 .shuffleRow{
@@ -143,25 +133,26 @@ height: 100%;
 }
 .shuffleLeft
 {
-        float:left;     
-}
-.shuffleAllText
-{
-        vertical-align:bottom;
-        margin:15px 0px 0px 15px
-}
-.shuffleAllIcon
-{
-        
-        margin:10px 0px 0px 10px
+    float:left;     
 }
 
+.shuffleAllText
+{
+    vertical-align:bottom;
+    margin:15px 0px 0px 15px
+}
+
+.shuffleAllIcon
+{
+    margin:10px 0px 0px 10px
+}
 
 .songsMenuLeft
 {
     float:left;
     width:90%;
 }
+
 .songsMenuRight
 {
     position:absolute;
@@ -175,26 +166,25 @@ height: 100%;
     margin:5px 5px 5px 0px;
     height:40px;
     width:40px;
-    
 }
-
 
 .mainMenuLeft
 {
-        float:left;
-        width:80%;
+    float:left;
+    width:80%;
 }
+
 .mainMenuRight
 {
-        position:absolute;
-        right:5px;
-        /*float:right;
-        width:20%;*/
+    position:absolute;
+    right:5px;
+    /*float:right;
+    width:20%;*/
 }
 
 .mainMenuClear
 {
-        float:none;
+    float:none;
 }
 
 .mainMenuIcon
@@ -202,175 +192,159 @@ height: 100%;
     margin:5px 20px 5px 0px;
     height:40px;
     width:40px;
-    
 }
-
 
 .extended-alpha
 {
-        position:relative;
-        top:-12px;
-        left:-480px;
-        
+    position:relative;
+    top:-12px;
+    left:-480px;
 }
 
 .extend-alpha
 {
-        position:relative;
+    position:relative;
     left:480px;
     width:100%; 
-        margin-bottom:10px;
-        z-index:-1;
-        background: url(../images/thick-border.png) repeat-x bottom;
+    margin-bottom:10px;
+    z-index:-1;
+    background: url(../images/thick-border.png) repeat-x bottom;
 }
-
-
-
-
 
 .shuffleRight
 {
-        float:right;
-        margin-right:20px;
+    float:right;
+    margin-right:20px;
 }
 .shuffleClear
 {
-        float:none;
-}
-.shuffleIcon
-{
-         background-image: url(../images/big-shuffle.png); 
+    float:none;
 }
 
+.shuffleIcon
+{
+    background-image: url(../images/big-shuffle.png); 
+}
 
 .albumLeft
 {
-        float:left;
-        width:85%;
+    float:left;
+    width:85%;
 }
+
 .albumRight
 {
-        float:right;
-        width:15%;
+    float:right;
+    width:15%;
 }
 
 .albumClear
 {
-        float:none;
+    float:none;
 }
 
 .listArt
 {
-        margin: 3px 10px 3px 3px
+    margin: 3px 10px 3px 3px
 }
 
 .centerSpinner{
-        position:fixed;
-        left: 96px;
-        top: 120px;
-        z-index: 98001;
+    position:fixed;
+    left: 96px;
+    top: 120px;
+    z-index: 98001;
 }
 
 .nowPlayingSpinner{
-        position:fixed
-        z-index: 10;
+    position:fixed
+    z-index: 10;
 }
-
 
 .spinner-message
 {
-        position:absolute;
-        /*left: 20%;*/
+    position:absolute;
+    /*left: 20%;*/
     width:inherit;
-        top: 128px;
-
+    top: 128px;
     font-size:smaller;
-        text-align:center;
-        color:white;
+    text-align:center;
+    color:white;
 }
 
 #overlaySelector
 {
-        color:white;
+    color:white;
 }
 
-
 #AccountList .AccountName {
-        color: white;
-        padding: 0 15px 10px 15px;
+    color: white;
+    padding: 0 15px 10px 15px;
 }
 
 #AccountList .ServerURL {
-        color: white;
-        margin-top: -10px;
-        padding: 0 15px 10px 15px;
-        font-size:small;
+    color: white;
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
 }
 
-
-
-
 .mainMenuDesc {
-        color: white;
-        /*margin-top: -10px;*/
-        padding: 0 15px 10px 15px;
-        font-size:small;
+    color: white;
+    /*margin-top: -10px;*/
+    padding: 0 15px 10px 15px;
+    font-size:small;
 }
 
 .mainMenuTitle {
-        color: white;
-        margin-top: 10px;
-        padding: 0px 15px 10px 15px;
+    color: white;
+    margin-top: 10px;
+    padding: 0px 15px 10px 15px;
 }
 
-
 .mainMenuDesc {
-        color: white;
-        margin-top: -10px;
-        padding: 0 15px 10px 15px;
-        font-size:small;
+    color: white;
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
 }
 
 .mainMenuTitle {
-        color: white;
-        padding: 0 15px 10px 15px;
+    color: white;
+    padding: 0 15px 10px 15px;
 }
 
- .artistTitle
+.artistTitle
 {
-        color: white;
-        padding: 5px 15px 5px 15px;
+    color: white;
+    padding: 5px 15px 5px 15px;
 }
 
- .songTitle
+.songTitle
 {
-        color: white;
-        padding: 5px 15px 5px 15px;
+    color: white;
+    padding: 5px 15px 5px 15px;
 
 }
+
 .songDesc {
-        color: white;
-        margin-top: -10px;
-        padding: 0 15px 10px 15px;
-        font-size:small;
+    color: white;
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
 }
-
-
 
 #albumsFilterList .artistAlbumTitle
 {
-        color: white;
-        padding: 0 15px 10px 15px;
+    color: white;
+    padding: 0 15px 10px 15px;
 }
+
 #albumsFilterList .artistAlbumDesc {
-        color: white;
-        margin-top: -10px;
-        padding: 0 15px 10px 15px;
-        font-size:small;
+    color: white;
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
 }
-
-
-
 
 /*Streaming Static and Live Styles
 Copyright 2009 Palm, Inc.  All rights reserved.
@@ -380,18 +354,14 @@ Copyright 2009 Palm, Inc.  All rights reserved.
 .palm-menu.view-menu.palm-default,
 .palm-menu.command-menu.palm-default,
 .palm-menu .palm-menu-fade {
-                background: none !important;
+    background: none !important;
 }
 
 body.wallpaper,
 body.palm-default {
   /*background: url(../images/background.png) 0 0 fixed no-repeat; */
-  background-size: 100%;
+    background-size: 100%;
 }
-
-
-
-
 
 /*
 .music-streaming .stream-buffering-icon {
@@ -400,15 +370,10 @@ body.palm-default {
                 margin: 0px auto 0 auto;
 }
 
-
-
-
 .music-streaming .stream-buffered-icon {
                 width:  240px;
                 height: 240px;
                 margin: 0 auto;
-
-                
 }
 */
 
@@ -429,82 +394,75 @@ body.palm-default {
         color: white;
 }*/
 
-
-
 .music-streaming .title-left
 {
-        color: white;
-        font-size:small;
+    color: white;
+    font-size:small;
 }
 
 .music-streaming .stream-debug {
-                margin: -15px 5px 5px 5px;
-                color: white;
-                font-size:small;
-                font-weight:bold;
-                width:100%;
-                text-align:center;
+    margin: -15px 5px 5px 5px;
+    color: white;
+    font-size:small;
+    font-weight:bold;
+    width:100%;
+    text-align:center;
 }
 
-
 .music-streaming .artist-album-title {
-padding: 0px 5px 5px 5px;
-                color: white;
-                font-size:small;
-                font-weight:bold;
-                width:100%;
-                text-align:center;
+    padding: 0px 5px 5px 5px;
+    color: white;
+    font-size:small;
+    font-weight:bold;
+    width:100%;
+    text-align:center;
 }
 
 .music-streaming .stream-title {
-                padding: 5px 5px 0px 5px;
-                color: white;
-                font-size:medium;
-                font-weight:bold;
-                width:100%;
-                text-align:center;
+    padding: 5px 5px 0px 5px;
+    color: white;
+    font-size:medium;
+    font-weight:bold;
+    width:100%;
+    text-align:center;
 }
 
 .music-streaming .stream-info {
-        margin-top:-10px;
+    margin-top:-10px;
 }
 
 .music-streaming .stream-info .elapsed,
 .music-streaming .stream-info .duration {
-                font-size: 14px;
-                vertical-align: middle;
-                color: #FFF;
+    font-size: 14px;
+    vertical-align: middle;
+    color: #FFF;
 }
 
 .music-streaming .stream-info .elapsed {
-                text-align: left;
+    text-align: left;
 }
 
 .music-streaming .stream-info .elapsed,
 .music-streaming .stream-info .duration {
-                font-size: 14px;
-                display: table-cell;
-                text-align: center;
-                width: 20%;
+    font-size: 14px;
+    display: table-cell;
+    text-align: center;
+    width: 20%;
 }
 
 .buffering-animation-container {
-  position: relative;
-  width: 128px;
-  height: 167px;
-  margin: 0px auto;
-  padding-top: 95px;
+    position: relative;
+    width: 128px;
+    height: 167px;
+    margin: 0px auto;
+    padding-top: 95px;
 }
-
 
 .stream-buffer-bar {
-  width: 200px;
+    width: 200px;
 }
 
-
-
 .palm-menu-icon.music-shuffle { background-image: url(../images/player/shuffle.png); }
-
 .palm-menu-icon.music-forward { background-image: url(../images/player/forward.png); }
 .palm-menu-icon.music-play { background-image: url(../images/player/play.png); }
 .palm-menu-icon.music-rewind { background-image: url(../images/player/backward.png); }
@@ -513,8 +471,6 @@ padding: 0px 5px 5px 5px;
 .palm-menu-icon.music-rewind-disabled { background-image: url(../images/player/menu-icon-music-rewind-disabled.png); }
 .palm-menu-icon.music-pause { background-image: url(../images/player/pause.png); }
 .palm-menu-icon.music-stop { background-image: url(../images/player/menu-icon-music-stop.png); }
-
-
 .palm-menu-icon.music-repeat-one { background-image: url(../images/player/menu-icon-music-repeat-one.png); }
 .palm-menu-icon.music-repeat { background-image: url(../images/player/menu-icon-music-repeat.png); }
 
@@ -524,28 +480,8 @@ padding: 0px 5px 5px 5px;
                 background: none;
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* @override http://172.16.110.131:8888/com.palm.app.musicplayer/stylesheets/music-player.css 
 Copyright 2009 Palm, Inc.  All rights reserved.
-
 */
 
 /*
@@ -803,8 +739,6 @@ img.art-thumbnail {
         height: 7px;
         background: url(../images/thick-border.png) repeat-x bottom;
 }
-
-
 /*
 .music-landing .icon { width: 65px;}
 .icon.artists { background: url(../images/artists-icon.png) center center no-repeat;}
@@ -1363,25 +1297,25 @@ img.album-art {
 } */
 
 .palm-header .toggle-view-icon {
-  width: 30px;
-  height: 48px;
-  float: left;
+    width: 30px;
+    height: 48px;
+    float: left;
 }
 
 .palm-header .toggle-view-icon.list {
-  background: url(../images/list-view-header-icon.png) left center no-repeat;
+    background: url(../images/list-view-header-icon.png) left center no-repeat;
 }
 
 .palm-header .toggle-view-icon.album {
-  background: url(../images/album-view-header-icon.png) left center no-repeat;
+    background: url(../images/album-view-header-icon.png) left center no-repeat;
 }
 
 .palm-header .song-x-of-y {
-  font-size: 14px;
-  color: #999;
-  float: right;
-  margin-right: 15px;
-  text-align: right;
+    font-size: 14px;
+    color: #999;
+    float: right;
+    margin-right: 15px;
+    text-align: right;
 }
 
 /* 
@@ -1389,56 +1323,52 @@ img.album-art {
  */
 
 .toggle-inlay {
-        float: right;
-        width: 120px;
-        height: 50px;
-        margin-right: -3px;
-        margin-left: -26px;
+    float: right;
+    width: 120px;
+    height: 50px;
+    margin-right: -3px;
+    margin-left: -26px;
 }
 .toggle-list-view,
 .toggle-album-view {
-        float: right;
-        height: 50px;
-        width: 50px;
-        margin: 0px;
-        border-width: 0 25px;
-        -webkit-box-sizing: border-box;
+    float: right;
+    height: 50px;
+    width: 50px;
+    margin: 0px;
+    border-width: 0 25px;
+    -webkit-box-sizing: border-box;
 }
 .toggle-list-view > img,
 .toggle-album-view > img {
-        margin: 9px 0px 0px -18px;
+    margin: 9px 0px 0px -18px;
 }
 .toggle-list-view > img {
-  margin-left: -12px;
+    margin-left: -12px;
 }
-
 .toggle-list-view {
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-album-view {          
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-list-view.depressed { 
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
 }                             
 .toggle-album-view.depressed {
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
 }
-
 .toggle-list-view.selected  {
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-album-view.selected {          
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-list-view.depressed.selected { 
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
 }                             
 .toggle-album-view.depressed.selected {
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
+    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
 }
-
-
 
 .palm-alpha-divider.black-glass {
     background: url(../images/alpha-divider-black-glass.png) center left no-repeat;
@@ -1450,33 +1380,30 @@ img.album-art {
     margin-top: -4px;
 }
 
-
-
-
 .palm-divider.labeled .left {
-  height: 20px;
-  background: url(../images/thick-border.png) repeat-x center;/*url(../images/palm-divider-line.png) right center no-repeat*/;
+    height: 20px;
+    background: url(../images/thick-border.png) repeat-x center;/*url(../images/palm-divider-line.png) right center no-repeat*/;
 }
 
 .palm-divider.labeled .right {
-  margin-top: 50px;
-  background: url(../images/thick-border.png) repeat-x left;/*url(../images/palm-divider-line.png) left center no-repeat;*/
+    margin-top: 50px;
+    background: url(../images/thick-border.png) repeat-x left;/*url(../images/palm-divider-line.png) left center no-repeat;*/
 }
 
 .palm-divider .label {
-  color: #FFFFFF;
-  text-shadow: #000000 0px 1px 0px;
+    color: #FFFFFF;
+    text-shadow: #000000 0px 1px 0px;
 }
 
 /*
 .palm-divider.labeled.black-glass.left
 {
-        height: 7px;
-        background: url(../images/thick-border.png) repeat-x;
+height: 7px;
+background: url(../images/thick-border.png) repeat-x;
 }
 
-  .right
-{
-        height: 7px;
-        background: url(../images/thick-border.png) repeat-x;
+    .right
+    {
+    height: 7px;
+    background: url(../images/thick-border.png) repeat-x;
 }*/

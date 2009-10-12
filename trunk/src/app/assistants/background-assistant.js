@@ -18,9 +18,7 @@ BackgroundAssistant = Class.create({
     CurrentColor: null,
     CurrentImage: null,
     CurrentMode: null,
-    
-    
-    setup: function () {
+    setup: function (){
     
         this.CurrentSolid = AmpacheMobile.settingsManager.settings.BackgroundSolid;
         this.CurrentColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
@@ -66,15 +64,11 @@ BackgroundAssistant = Class.create({
             onLeftFunction: this.wentLeft.bind(this),
             onRightFunction: this.wentRight.bind(this)
         };
-        
         this.controller.setupWidget('myPhotoDiv', photoAttributes, this.photoModel);
         this.myPhotoDivElement = $('myPhotoDiv');
-        
         this.imageViewChanged = this.imageViewChanged.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('myPhotoDiv'), Mojo.Event.imageViewChanged, this.imageViewChanged);
-        
         this.solidImages = [];
-        
         for (var i = 0; i < 7; i++) 
         {
             var imgSource = 'images/backgrounds/solids/background' + (i + 1) + '.png';
@@ -293,7 +287,6 @@ BackgroundAssistant = Class.create({
             if (this.Overlays[i].value === this.CurrentImage) {
                 retVal = false;
             }
-            
         }
         return retVal;
     },
@@ -365,14 +358,9 @@ BackgroundAssistant = Class.create({
         return retVal;
     },
     
-    
-    
     deactivate: function () {
         this.controller.get('body_wallpaper').style.background = null;
         this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
-        
         Mojo.Event.stopListening(this.controller.get('myPhotoDiv'), Mojo.Event.imageViewChanged, this.imageViewChanged);
-        
     }
-    
 });

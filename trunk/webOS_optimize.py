@@ -38,7 +38,7 @@ for root, subFolders, files in os.walk(rootdir):
 
 i = 0
 for i in range(len(JAVASCRIPTS)):
-    print ("processing: JS", JAVASCRIPTS[i])
+    print ("processing JS:", JAVASCRIPTS[i])
     fin = open(JAVASCRIPTS[i], 'r')
     #tmpFile = JAVASCRIPTS[i] + '_tmp'
     finString= fin.read()
