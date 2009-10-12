@@ -133,7 +133,8 @@ SongsAssistant = Class.create(
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: null,
             SortFunction: null,
-            MatchFunction: this.IsMatch
+            MatchFunction: this.IsMatch,
+            IndexBusted: (this.Type === "search-global") ? true : false
         
         };
         this.itemsHelper.setup(params);
@@ -218,7 +219,41 @@ SongsAssistant = Class.create(
     
     handleShuffleAll: function (event)
     {
-        if (this.itemsHelper.ItemsList.length > 0) 
+        if ((this.itemsHelper.filterString === "") || (!this.itemsHelper.filterString)) 
+            {//Not Filtered
+            if (this.itemsHelper.ItemsList.length > 0)
+            {
+                this.controller.stageController.pushScene('now-playing', 
+                {
+                    playList: this.itemsHelper.ItemsList,
+                    startIndex: 0,
+                    shuffle: true
+                });
+                }
+            }
+            else 
+            {   //Filtered
+                var filteredCmd = [
+                    {
+                        label: "Shuffle Only Filtered Songs",
+                        command: "pushFilteredShuffle"
+                    }, 
+                    {
+                        label: "Shuffle All Songs",
+                        command: "pushSongsShuflle"
+                    }
+                ];
+                
+                this.controller.popupSubmenu(
+                    {
+                        onChoose: this.popupHandler.bind(this),
+                        placeNear: $('shuffleAll'),
+                        items: filteredCmd
+                    });
+            }
+        
+        
+        /*if (this.itemsHelper.ItemsList.length > 0) 
         {
             this.controller.stageController.pushScene('now-playing', 
             {
@@ -226,15 +261,20 @@ SongsAssistant = Class.create(
                 startIndex: 0,
                 shuffle: true
             });
-        }
+        }*/
     },
     
     
     popupHandler: function (event)
     {
         var item = this;
-        
-        var controller = item._this.controller;
+        if(item._this) {
+            var controller = item._this.controller;
+        }
+        else
+        {
+            var controller = this.controller;
+        }
         var playList;
         var index;
         Mojo.Log.info(event);
@@ -277,6 +317,27 @@ SongsAssistant = Class.create(
                 playList: playList,
                 startIndex: index,
                 shuffle: false
+            });
+        }
+        else if (event === "pushFilteredShuffle")
+        {
+            playList = this.itemsHelper.GetAllMatches(this.itemsHelper.filterString);
+            controller.stageController.pushScene('now-playing', 
+            {
+            
+                playList: playList,
+                startIndex: 0,
+                shuffle: true
+            });
+        }
+        else if (event === "pushSongsShuffle")
+        {
+            playList = this.itemsHelper.ItemsList;
+            controller.stageController.pushScene('now-playing', 
+            {
+                playList: playList,
+                startIndex: 0,
+                shuffle: true
             });
         }
     },
@@ -360,6 +421,8 @@ SongsAssistant = Class.create(
         
         Mojo.Log.info("<-- listTapHandler");
     },
+    
+    
     
     
     dividerFunc: function (itemModel)
