@@ -20,14 +20,8 @@
 
 /*  AppAssistant - AmpacheMobile
 */    
-
-//  ---------------------------------------------------------------
-//    GLOBALS
-//  ---------------------------------------------------------------
-
 //  AmpacheMobile namespace
 AmpacheMobile = {};
-
 AmpacheMobile.MenuAttr = {omitDefaultItems: true};
 
 AmpacheMobile.MenuModel = {
@@ -41,10 +35,10 @@ AmpacheMobile.MenuModel = {
 };
 
 function AppAssistant(appController){
-    Mojo.Log.info("--> AppAssistant Constructor");
     //Creating Audio Player
     //AmpacheMobile.AppController = appController;
     //AppAssistant.audioPlayer = new AudioPlayer(appController);
+    Mojo.Log.info("--> AppAssistant Constructor");
     var browser = navigator.appName;
     Mojo.Log.info("<-- AppAssistant Constructor");
 };
