@@ -470,7 +470,7 @@ AmpacheServer = Class.create(
         Mojo.Log.info(transport.responseText);
         var SongsList = null;
         if (transport.responseXML){
-            SongsList = [];
+            SongsList = new Array();
             /*
              <root>
              <song id="3180">
@@ -563,7 +563,7 @@ AmpacheServer = Class.create(
         }else{
             Mojo.Controller.errorDialog("Get songs failed: " + this.XMLFormattingIssue);
         }
-        
+        this.SongsRequest = null;
         Mojo.Log.info("Calling callback");
         this.GetSongsCallback(SongsList);
         Mojo.Log.info("<-- AmpacheServer.prototype.GotSongsCallbackInternal");

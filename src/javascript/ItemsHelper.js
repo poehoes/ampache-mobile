@@ -48,6 +48,7 @@ ItemsHelper = Class.create({
         
         this.PopulateSort = params.PopulateSort;
         
+        this.IndexBusted = params.IndexBusted;
     },
     
     
@@ -110,7 +111,7 @@ ItemsHelper = Class.create({
         
         
         
-        if (_ItemsList.length  !== this.fetchLimit) 
+        if ((_ItemsList.length  !== this.fetchLimit) || this.IndexBusted) 
         {
             this.progressModel.value = 1;
             this.controller.modelChanged(this.progressModel);
