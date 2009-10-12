@@ -83,11 +83,11 @@ for i in range(len(JAVASCRIPTS)):
                     commentRemove = False 
                 else:  
                     if finString[j] == ')':
-                        if (j + 1) < len(finString) and finString[j+1] == ';':
+                        if (((j + 1) < len(finString)) and (finString[j+1] == ';')):
                             j=j+1
                         gotoCommentEnd = False
-                    else:
-                        j=j+1
+                    #else:
+                    j=j+1
 
         #find and remove double spaces etc
         if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
@@ -103,6 +103,10 @@ for i in range(len(JAVASCRIPTS)):
                         j=j-1;
                     else:
                         j=j+1
+
+
+        # TODO remove spaces around :,=,*,+,-,{,},;,',',/,(,) that are not inside " "
+
 
         if j >= len(finString):
             commentRemove = False
