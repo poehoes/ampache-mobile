@@ -1,49 +1,43 @@
 #-----------------------------------------------------
 #   JavaScript Minimizer for Mojo : Python 3.1
 #       
-#   dburman 
+#   Author: dburman 
 #   
 #   ex: python webOS_optimize.py src
-#       results placed in optimize folder
+#       results placed in ./optimized folder
 #-----------------------------------------------------
-
 import glob, os, sys, shutil, fnmatch
-
 
 if len(sys.argv) > 1:
     directory = sys.argv[1] + '/'
 else:
     directory = './'
 
-directoryopt = './'+'optimized/'
+rootdir = './'+'optimized/'
+# Copy (Replace) directory to optimized folder, might not replace if directory is RO
+if os.path.exists(rootdir):
+    shutil.rmtree(rootdir)
+shutil.copytree(directory,rootdir,False)
 
-if os.path.exists(directoryopt):
-    shutil.rmtree(directoryopt)
-shutil.copytree(directory,directoryopt,False)
-
+# Find all JS and HTML files and put the respective paths into lists 
 JAVASCRIPTS = []
 HTML = []
-rootdir = directoryopt 
 for root, subFolders, files in os.walk(rootdir):
     for file in files:
         if fnmatch.fnmatch(file, '*.js'):
             JAVASCRIPTS.append(os.path.join(root,file))
         if fnmatch.fnmatch(file, '*.html'):
             HTML.append(os.path.join(root,file))
-#print (JAVASCRIPTS)
-#print (HTML)
 
-#JAVASCRIPTS= glob.glob(directoryopt + '*.js')
-#HTML = glob.glob(directoryopt + '*.html')
-
+#----------------------------------------------------------------------
+#  JS FILE Process List
+#----------------------------------------------------------------------
 i = 0
 for i in range(len(JAVASCRIPTS)):
     print ("processing JS:", JAVASCRIPTS[i])
     fin = open(JAVASCRIPTS[i], 'r')
-    #tmpFile = JAVASCRIPTS[i] + '_tmp'
     finString= fin.read()
     fin.close()
-    #fout = open(tmpFile, 'w')
     fout = open(JAVASCRIPTS[i], 'w')
     j = 0
     commentRemove = True
@@ -110,9 +104,8 @@ for i in range(len(JAVASCRIPTS)):
                     else:
                         j=j+1
 
-
         if j >= len(finString):
-                commentRemove = False
+            commentRemove = False
         else:
             if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
             #if finString != '\t':
@@ -123,19 +116,12 @@ for i in range(len(JAVASCRIPTS)):
             j=j+1
     fout.close()
 
-    #fin = open(tmpFile, 'r')
-    #fout = open(JAVASCRIPTS[i], 'w')
-    #fout.write(fin.read())
-    #fin.close()
-    #fout.close()
-    #os.remove(tmpFile)
-
-
-
+#----------------------------------------------------------------------
+#  HTML FILE Process List
+#----------------------------------------------------------------------
 i = 0
 for i in range(len(HTML)):
     print ("processing HTML:", HTML[i])
-    #tmpFile = HTML[i] + '_tmp'
     fin = open(HTML[i], 'r')
     finString= fin.read()
     fin.close()
@@ -144,14 +130,13 @@ for i in range(len(HTML)):
     spacesRemove = True
     while spacesRemove == True:
         #only write things between < > 
-        #TODO remove <!-- --> comments
         if ((j+1)<len(finString) and finString[j] == '<'): 
             gotoTagEnd= True 
             while gotoTagEnd == True:
+                #TODO remove <!-- --> comments
+                # write everything between tabs except these
                 if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
                     fout.write(finString[j])
-                #else:
-                #    fout.write(' ')
                 j=j+1;
                 if j >= len(finString):
                     gotoTagEnd = False
@@ -161,6 +146,8 @@ for i in range(len(HTML)):
                         gotoTagEnd = False
                         #fout.write(finString[j])
                         #j=j+1
+
+        # remove multiple whitespaces from untagged data
         if (j + 1)<len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
             j=j+1;
             gotoTagEnd= True 
@@ -184,8 +171,4 @@ for i in range(len(HTML)):
             #else:
             #    fout.write(' ')
             j=j+1
-
-
     fout.close()
-
-
