@@ -17,9 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 body.wallpaper,
 body.palm-default {
-  background: none;
-  background-size: 100%;
+    background: none;
+    background-size: 100%;
 }

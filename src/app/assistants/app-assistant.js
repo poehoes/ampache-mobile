@@ -18,9 +18,6 @@
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
-
 /*  AppAssistant - AmpacheMobile
 */    
 
@@ -30,7 +27,6 @@
 
 //  AmpacheMobile namespace
 AmpacheMobile = {};
-
 
 AmpacheMobile.MenuAttr = {omitDefaultItems: true};
 
@@ -44,45 +40,21 @@ AmpacheMobile.MenuModel = {
     ]
 };
 
-
-
-
-function AppAssistant(appController) {
+function AppAssistant(appController){
     Mojo.Log.info("--> AppAssistant Constructor");
-    
     //Creating Audio Player
     //AmpacheMobile.AppController = appController;
     //AppAssistant.audioPlayer = new AudioPlayer(appController);
-    
-    
     var browser = navigator.appName;
-    
     Mojo.Log.info("<-- AppAssistant Constructor");
-    
-}
+};
 
-
-
-
-AppAssistant.prototype.setup = function () 
-{
+AppAssistant.prototype.setup = function(){
     Mojo.Log.info("Enter AppAssistant.prototype.setup");
-    
-    
     Mojo.Log.info("Exit AppAssistant.prototype.setup");
 };
 
-
-
 AppAssistant.prototype.handleLaunch = function (launchParams) {
     Mojo.Log.info("--> AppAssistant.prototype.handleLaunch");
-    
     Mojo.Log.info("<-- AppAssistant.prototype.handleLaunch");
-    
 };
-
-
-
-    
-    
-    
