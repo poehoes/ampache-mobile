@@ -128,13 +128,13 @@ ConnectionAssistant = Class.create(
         
         this.TurnOffSpinner();
         
-        if (settings === null){
+        if (!settings){
             Mojo.Log.info("No Settings Case");
             AmpacheMobile.settingsManager.CreateSettings();
             this.pushPreferences(AmpacheMobile.settingsManager);
         }else{
             AmpacheMobile.Account = AmpacheMobile.settingsManager.GetCurrentAccount(this.controller.stageController);
-            if (AmpacheMobile.Account === null){
+            if (!AmpacheMobile.Account){
                 Mojo.Log.info("Updating Accounts List");
                 if (AmpacheMobile.settingsManager.settings.Accounts.length === 0){
                     this.pushPreferences(AmpacheMobile.settingsManager);
@@ -178,7 +178,7 @@ ConnectionAssistant = Class.create(
             var apiVersion = parseInt(AmpacheMobile.ampacheServer.api,10);
             if (apiVersion >= 350001){
                 Mojo.Log.info("Pushing Main Menu", connectResult);
-                if (this.controller.stageController !== null){
+                if (this.controller.stageController){
                     this.controller.stageController.pushScene("mainmenu");
                 }else{
                     this.controller.pushScene("mainmenu");
@@ -268,7 +268,7 @@ ConnectionAssistant = Class.create(
     LoadMainMenu: function(account){
         /* put in event handlers here that should only be in effect when this scene is active. For
          example, key handlers that are observing the document */
-        if (account !== null){
+        if (account){
         
             if ((account.ServerURL === "") || (account.Password === "") || (account.UserName === "")){
                 Mojo.Log.info("Try to load preferences");
@@ -288,12 +288,12 @@ ConnectionAssistant = Class.create(
         Mojo.Log.info("--> activate");
         this.TurnOffSpinner();
         
-        if (AmpacheMobile.settingsManager.settings !== null){
+        if (AmpacheMobile.settingsManager.settings){
             this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts, true);
             this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
         }
         
-        if ((AmpacheMobile.ampacheServer !== null) && (AmpacheMobile.ampacheServer.pingTimer !== null)){
+        if ((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.pingTimer)){
             AmpacheMobile.ampacheServer.disconnect();
         }
         Mojo.Log.info("<-- activate");

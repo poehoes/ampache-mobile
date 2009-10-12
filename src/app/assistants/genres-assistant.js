@@ -284,8 +284,8 @@ GenresAssistant = Class.create(
     
     deactivate: function(event)
     {
-        this.TurnOffSpinner();
         this.itemsHelper.Visible = false;
+        AmpacheMobile.ampacheServer.GetTagsCancel();
     },
     
     cleanup: function(event)

@@ -36,20 +36,7 @@ AmpacheServer = Class.create(
     playlists: "",
     videos: "",
     XMLFormattingIssue: "Error requesting data from Ampache.  Possible Reasons: Songs with Unicode information.",
-    /*'<?xml version="1.0" encoding="UTF-8" ?> 
-     <root>
-     <auth><![CDATA[41990ad6edb665ded1a9878726650567]]></auth>
-     <api><![CDATA[350001]]></api>
-     <update><![CDATA[1969-12-31T18:00:00-06:00]]></update>
-     <add><![CDATA[1969-12-31T18:00:00-06:00]]></add>
-     <clean><![CDATA[1969-12-31T18:00:00-06:00]]></clean>
-     <songs><![CDATA[15745]]></songs>
-     <albums><![CDATA[1165]]></albums>
-     <artists><![CDATA[384]]></artists>
-     <playlists><![CDATA[0]]></playlists>
-     <videos><![CDATA[1]]></videos>
-     </root> ';
-     */
+
     initialize: function(url, username, password){
         Mojo.Log.info("Enter AmpacheServer.prototype.initialize", url, username, password);
         //this.phpPath = '/server/xml.server.php?action=';
@@ -180,20 +167,7 @@ AmpacheServer = Class.create(
         if (transport.responseText === ""){
             returnValue = "Error: Empty response";
         }
-        /*'<?xml version="1.0" encoding="UTF-8" ?> 
-         <root>
-         <auth><![CDATA[41990ad6edb665ded1a9878726650567]]></auth>
-         <api><![CDATA[350001]]></api>
-         <update><![CDATA[1969-12-31T18:00:00-06:00]]></update>
-         <add><![CDATA[1969-12-31T18:00:00-06:00]]></add>
-         <clean><![CDATA[1969-12-31T18:00:00-06:00]]></clean>
-         <songs><![CDATA[15745]]></songs>
-         <albums><![CDATA[1165]]></albums>
-         <artists><![CDATA[384]]></artists>
-         <playlists><![CDATA[0]]></playlists>
-         <videos><![CDATA[1]]></videos>
-         </root> ';
-         */
+
         if (transport.responseXML){
             Mojo.Log.info("responseXML exits");
             var response = transport.responseXML;
@@ -243,31 +217,31 @@ AmpacheServer = Class.create(
         if (typeof this.GetArtistsCallback !== "function") {
             this.GetArtistsCallback = new Function(func);
         }
-        if ((_offset) && (_limit)){
-            var offset = [];
-            var i = 0;
-            var type = "artists";
-            offset[i++] = "offset";
-            offset[i++] = _offset;
-            offset[i++] = "limit";
-            offset[i++] = _limit;
-            
-            if (_TagID){
-                offset[i++] = "filter";
-                offset[i++] = _TagID;
-                type = "tag_artists";
-            }
-
-            if (_search){
-                offset[4] = "filter";
-                offset[5] = _search;
-            }
-            path = this.BuildActionString(type, offset);
-        }else{
-            path = this.BuildActionString("artists");
+        
+        var offset = [];
+        var i = 0;
+        var type = "artists";
+        offset[i++] = "offset";
+        offset[i++] = _offset;
+        offset[i++] = "limit";
+        offset[i++] = _limit;
+        
+        if ((_search!== null)&& (_search!== undefined)){
+            offset[4] = "filter";
+            offset[5] = _search;
         }
         
-        var request = new Ajax.Request(path, 
+        if (_TagID){
+            offset[i++] = "filter";
+            offset[i++] = _TagID;
+            type = "tag_artists";
+        }
+
+
+        path = this.BuildActionString(type, offset);
+        
+        
+        this.ArtistRequest = new Ajax.Request(path, 
         {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
@@ -279,6 +253,10 @@ AmpacheServer = Class.create(
             onFailure: this.GotArtistsCallback.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
+    },
+    
+    GetArtistsCancel: function(){
+        this.ArtistRequest.abort();
     },
     
     GotArtistsCallback: function(transport){
@@ -348,16 +326,16 @@ AmpacheServer = Class.create(
             type = "tag_albums";
         }
         
-        if ((_offset) && (_limit)){
-            filter[i++] = "offset";
-            filter[i++] = _offset;
-            filter[i++] = "limit";
-            filter[i++] = _limit;
-            if (_search){
-                filter[i++] = "filter";
-                filter[i++] = _search;
-            }
+        
+        filter[i++] = "offset";
+        filter[i++] = _offset;
+        filter[i++] = "limit";
+        filter[i++] = _limit;
+        if (_search){
+            filter[i++] = "filter";
+            filter[i++] = _search;
         }
+        
         var path = this.BuildActionString(type, filter);
         this.GetAlbumsInteractiveIndex = 0;
         this.TotalAlbums = 0;
@@ -373,6 +351,10 @@ AmpacheServer = Class.create(
             onFailure: this.GotAlbumsCallback.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetAlbums");
+    },
+    
+    GetAlbumsCancel: function(){
+        this.GetAlbumsRequest.abort();
     },
     
     GotAlbumsCallback: function(transport){
@@ -454,18 +436,18 @@ AmpacheServer = Class.create(
             type = "songs";
         }
         
-        if ((_offset) && (_limit)){
-            filter[i++] = "offset";
-            filter[i++] = _offset;
-            filter[i++] = "limit";
-            filter[i++] = _limit;
-            if (_search){
-                filter[i++] = "filter";
-                filter[i++] = _search;
-            }
+        
+        filter[i++] = "offset";
+        filter[i++] = _offset;
+        filter[i++] = "limit";
+        filter[i++] = _limit;
+        if (_search){
+            filter[i++] = "filter";
+            filter[i++] = _search;
         }
+        
         path = this.BuildActionString(type, filter);
-        var request = new Ajax.Request(path, 
+        this.SongsRequest = new Ajax.Request(path, 
         {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
@@ -477,6 +459,10 @@ AmpacheServer = Class.create(
             onFailure: this.GotSongsCallbackInternal.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetSongs");
+    },
+    
+    GetSongsCancel: function(){
+        this.SongsRequest.abort();
     },
     
     GotSongsCallbackInternal: function(transport){
@@ -528,7 +514,7 @@ AmpacheServer = Class.create(
             var _art;
             var newSong;
             
-            do{
+            while (i < songsListXML.length){
                 _id = songsListXML[i].getAttribute("id");
                 _title = songsListXML[i].getElementsByTagName("title")[0].firstChild.data;
                 try{
@@ -572,7 +558,8 @@ AmpacheServer = Class.create(
                 
                 newSong = new SongModel(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime);
                 SongsList[i] = newSong;
-            }while (++i < songsListXML.length);
+                i++;
+            }
         }else{
             Mojo.Controller.errorDialog("Get songs failed: " + this.XMLFormattingIssue);
         }
@@ -593,22 +580,20 @@ AmpacheServer = Class.create(
         if (typeof this.GetPlaylistsCallback !== "function") {
             this.GetPlaylistsCallback = new Function(func);
         }
-        if ((_offset) && (_limit)){
-            var offset = [];
-            var i = 0;
-            offset[i++] = "offset";
-            offset[i++] = _offset;
-            offset[i++] = "limit";
-            offset[i++] = _limit;
-            if (_search){
-                offset[i++] = "filter";
-                offset[i++] = _search;
-            }
-            path = this.BuildActionString("playlists", offset);
-        }else{
-            path = this.BuildActionString("playlists");
+        
+        var offset = [];
+        var i = 0;
+        offset[i++] = "offset";
+        offset[i++] = _offset;
+        offset[i++] = "limit";
+        offset[i++] = _limit;
+        if (_search){
+            offset[i++] = "filter";
+            offset[i++] = _search;
         }
-        var request = new Ajax.Request(path, 
+        path = this.BuildActionString("playlists", offset);
+ 
+        this.PlaylistRequest = new Ajax.Request(path, 
         {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
@@ -622,6 +607,10 @@ AmpacheServer = Class.create(
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
     },
     
+    GetPlaylistsCancel: function(){
+        this.PlaylistRequest.abort();
+    },
+    
     GotPlaylistsCallback: function(transport){
         Mojo.Log.info(transport.responseText);
         var PlaylistsList = null;
@@ -629,13 +618,15 @@ AmpacheServer = Class.create(
             PlaylistsList = [];
             var PlaylistsListXML = transport.responseXML.getElementsByTagName("playlist");
             var i=0; 
-            do{ 
+            while(i<PlaylistsListXML.length)
+            {
                 PlaylistsList[i] = new PlaylistModel(PlaylistsListXML[i].getAttribute("id"),
-                        PlaylistsListXML[i].getElementsByTagName("name")[0].firstChild.data, 
-                        PlaylistsListXML[i].getElementsByTagName("owner")[0].firstChild.data, 
-                        PlaylistsListXML[i].getElementsByTagName("items")[0].firstChild.data, 
-                        PlaylistsListXML[i].getElementsByTagName("type")[0].firstChild.data);
-            }while(++i<PlaylistsListXML.length);
+                PlaylistsListXML[i].getElementsByTagName("name")[0].firstChild.data, 
+                PlaylistsListXML[i].getElementsByTagName("owner")[0].firstChild.data, 
+                PlaylistsListXML[i].getElementsByTagName("items")[0].firstChild.data, 
+                PlaylistsListXML[i].getElementsByTagName("type")[0].firstChild.data);
+                i++;
+            }
         }else{
             Mojo.Controller.errorDialog("Get Playlists failed: " + this.XMLFormattingIssue);
         }
@@ -652,22 +643,20 @@ AmpacheServer = Class.create(
         if (typeof this.GetTagsCallback !== "function") {
             this.GetTagsCallback = new Function(func);
         }
-        if ((_offset) && (_limit)){
-            var offset = [];
-            var i = 0;
-            if (_search){
-                offset[i++] = "filter";
-                offset[i++] = _search;
-            }
-            offset[i++] = "offset";
-            offset[i++] = _offset;
-            offset[i++] = "limit";
-            offset[i++] = _limit;
-            path = this.BuildActionString("tags", offset);
-        }else{
-            path = this.BuildActionString("tags");
+        
+        var offset = [];
+        var i = 0;
+        if (_search){
+            offset[i++] = "filter";
+            offset[i++] = _search;
         }
-        var request = new Ajax.Request(path, 
+        offset[i++] = "offset";
+        offset[i++] = _offset;
+        offset[i++] = "limit";
+        offset[i++] = _limit;
+        path = this.BuildActionString("tags", offset);
+        
+        this.TagsRequest = new Ajax.Request(path, 
         {
             method: 'get',
             evalJSON: false, //to enforce parsing JSON if there is JSON response
@@ -679,6 +668,10 @@ AmpacheServer = Class.create(
             onFailure: this.GotTagsCallback.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
+    },
+    
+    GetTagsCancel: function(){
+        this.TagsRequest.abort();
     },
     
     GotTagsCallback: function(transport){
@@ -702,7 +695,7 @@ AmpacheServer = Class.create(
             TagsList = [];
             var TagsListXML = transport.responseXML.getElementsByTagName("tag");
             var i=0;
-            do{
+            while(i<TagsListXML.length){
                 var _id = TagsListXML[i].getAttribute("id");
                 var _name = TagsListXML[i].getElementsByTagName("name")[0].firstChild.data;
                 var _albums = TagsListXML[i].getElementsByTagName("albums")[0].firstChild.data;
@@ -712,7 +705,8 @@ AmpacheServer = Class.create(
                 var _playlists = TagsListXML[i].getElementsByTagName("playlists")[0].firstChild.data;
                 var _stream = TagsListXML[i].getElementsByTagName("stream")[0].firstChild.data;
                 TagsList[i] = new TagModel(_id, _name, _albums, _artists, _songs, _videos, _playlists, _stream);
-            }while(++i<TagsListXML.length);
+                i++;
+            }
         }else{
             Mojo.Controller.errorDialog("Get Tags failed: " + this.XMLFormattingIssue);
         }

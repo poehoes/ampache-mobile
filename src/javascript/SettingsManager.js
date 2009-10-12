@@ -98,40 +98,40 @@ SettingsManager = Class.create(
         console.log("***************Success Get Happened");
         this.settings = settings;
         this.PopulateMissingDefaults();
-        if (GetSettingsSuccessCallback !== null) {
+        if (GetSettingsSuccessCallback) {
             GetSettingsSuccessCallback(this.settings);
         }
         GetSettingsSuccessCallback = null;
     },
     
     PopulateMissingDefaults: function(){
-        if (this.settings !== null){
-            if (this.settings.BackgroundColor === null){
+        if (this.settings){
+            if (!this.settings.BackgroundColor){
                 this.settings.BackgroundColor = DEFAULT_COLOR;
             }
-            if (this.settings.BackgroundImage === null){
+            if (!this.settings.BackgroundImage){
                 this.settings.BackgroundImage = DEFAULT_IMAGE;
             }
-            if (this.settings.StreamDebug === null){
+            if (!this.settings.StreamDebug){
                 this.settings.StreamDebug = false;
             }
-            if (this.settings.BackgroundMode === null){
+            if (!this.settings.BackgroundMode){
                 this.settings.BackgroundMode = 0;
             }
-            if (this.settings.AlbumsSort === null){
+            if (!this.settings.AlbumsSort){
                 this.settings.AlbumsSort = 0;
             }
-            if (this.settings.AllowRotation === null){
+            if (!this.settings.AllowRotation){
                 this.settings.AllowRotation = DEFAULT_ROTATION;
             }
             this.settings.Version = Mojo.Controller.appInfo.version;
             
             for (i=0; i<this.settings.Accounts.length; i++){
-                if (this.settings.Accounts[i].FetchSize === null){
+                if (!this.settings.Accounts[i].FetchSize){
                     this.settings.Accounts[i].FetchSize = DEFAULT_FETCH_SIZE;
                 }
                 
-                if (this.settings.Accounts[i].ExtraCoverArt === null){
+                if (!this.settings.Accounts[i].ExtraCoverArt){
                     this.settings.Accounts[i].ExtraCoverArt = false;
                 }
             }
@@ -142,7 +142,7 @@ SettingsManager = Class.create(
     GetSettingsFailureCallback: null,
     GetSettingsFailure: function(){
         console.log("***************Failure Get Happened");
-        if (GetSettingsFailureCallback  !== null) {
+        if (GetSettingsFailureCallback ) {
             GetSettingsFailureCallback();
         }
         GetSettingsFailureCallback = null;
@@ -152,12 +152,12 @@ SettingsManager = Class.create(
         this.depot.add("AppSettings", this.settings, function()
         {
             console.log("***************Success SaveSettings Happened");
-            if (OnSuccess  !== null) {
+            if (OnSuccess ) {
                 OnSuccess();
             }
         }, function(){
             console.log("***************Failure SaveSettings Happened");
-            if (OnFailure  !== null) {
+            if (OnFailure ) {
                 OnFailure();
             }
         });

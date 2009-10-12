@@ -95,7 +95,7 @@ ItemsHelper = Class.create({
         
         //Add to list   
         
-        if ((this.filterString === "") || (this.filterString === null)) 
+        if ((this.filterString === "") || (!this.filterString)) 
         {
             this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
         }
@@ -143,7 +143,7 @@ ItemsHelper = Class.create({
             
             
             //Add to list   
-            if ((this.filterString === "") || (this.filterString === null)) 
+            if ((this.filterString === "") || (!this.filterString)) 
             {
                 this.Matches = this.ItemsList;
                 this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);

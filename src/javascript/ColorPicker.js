@@ -7,7 +7,7 @@ var SAT_VAL_SQUARE_LOCATION = 'images/colorselector/sv.png';
         var x = node.offsetLeft;
         var y = node.offsetTop;
         var parent = node.offsetParent;
-        while (parent !== null) {
+        while (parent) {
             x += parent.offsetLeft;
             y += parent.offsetTop;
             parent = parent.offsetParent;
@@ -257,7 +257,7 @@ ColorPicker = Class.create(
     },
 
     myAddEventListener: function(node, event, handler, handlerFunc){
-        if (this.findEventListener(node, event, handlerFunc) !== null) {
+        if (this.findEventListener(node, event, handlerFunc)) {
             console.log("found:" + event);
             return;
         }

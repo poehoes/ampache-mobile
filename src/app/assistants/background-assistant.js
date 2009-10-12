@@ -28,7 +28,7 @@ BackgroundAssistant = Class.create({
         this.CurrentOverlay = AmpacheMobile.settingsManager.settings.BackgroundOverlay;
         this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
         
-        if (this.CurrentMode === null) {
+        if (!this.CurrentMode) {
             this.CurrentMode = 0;
         }
         

@@ -182,8 +182,8 @@ ArtistsAssistant = Class.create(
     },
     
     deactivate: function (event) {
-        this.TurnOffSpinner();
         this.itemsHelper.Visible = false;
+        AmpacheMobile.ampacheServer.GetArtistsCancel();
     },
     
     cleanup: function (event) {

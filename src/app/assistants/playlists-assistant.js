@@ -166,8 +166,8 @@ PlaylistsAssistant = Class.create(
     
     deactivate: function(event)
     {
-        this.TurnOffSpinner();
         this.itemsHelper.Visible = false;
+        AmpacheMobile.ampacheServer.GetPlaylistsCancel();
     },
     
     cleanup: function(event)

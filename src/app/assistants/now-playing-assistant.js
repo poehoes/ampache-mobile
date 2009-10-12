@@ -13,9 +13,11 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-//*********************************************************************************************************************************
-//                                Scene Functions
-//*********************************************************************************************************************************
+/*
+// *********************************************************************************************************************************
+//  Scene Functions
+// *********************************************************************************************************************************
+ */
 NowPlayingAssistant = Class.create(
 {
     initialize: function(params){
@@ -398,7 +400,7 @@ NowPlayingAssistant = Class.create(
         //this.controller.get('artist').innerHTML = song.artist.escapeHTML();
         //this.controller.get('album').innerHTML = song.album.escapeHTML();
         this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
-        if ((song.art === null) || (song.art === "")){
+        if ((!song.art) || (song.art === "")){
             $('coverArt').src = "images/blankalbum.png";
         }
         else {

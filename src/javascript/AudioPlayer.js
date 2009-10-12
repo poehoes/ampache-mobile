@@ -686,7 +686,7 @@ AudioPlayer = Class.create({
     
     NowPlayingStartPlaybackTimer: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer");
-        if (this.NowPlaying && this.timeInterval === null) {
+        if (this.NowPlaying && !this.timeInterval) {
             this.timeInterval = this.NowPlaying.controller.window.setInterval(this.UpdateNowPlayingTime.bind(this), 450);
         }else{
             Mojo.Log.info("***********************************************************");
