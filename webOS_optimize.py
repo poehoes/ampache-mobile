@@ -65,7 +65,7 @@ for i in range(len(JAVASCRIPTS)):
                     j=j+1
 
         #find and remove comments of the form // 
-        if (j + 1) < len(finString) and finString[j] == '/' and finString[j+1] == '/' and (((j > 0) and finString[j-1] != ':') or j== 0):
+        if (j + 1) < len(finString) and finString[j] == '/' and finString[j+1] == '/' and (((j > 0) and finString[j-1] != ':') or j==0):
             j=j+2;
             gotoCommentEnd= True 
             while gotoCommentEnd == True:
@@ -76,8 +76,8 @@ for i in range(len(JAVASCRIPTS)):
                     if finString[j] == '\n' or finString[j] == '\r':
                         gotoCommentEnd = False
                         #finString[j+1] = ' '
-                    #else:
-                    j=j+1
+                    else:
+                        j=j+1
 
         # find and remove Mojo.Log....) messages
         if (j + 8) < len(finString) and finString[j] == 'M' and finString[j+1] == 'o'  and finString[j+2] == 'j' and finString[j+3] == 'o' and finString[j+4] == '.' and finString[j+5] == 'L' and finString[j+6] == 'o' and finString[j+7] == 'g':
@@ -92,8 +92,8 @@ for i in range(len(JAVASCRIPTS)):
                         if (j + 1) < len(finString) and finString[j+1] == ';':
                             j=j+1
                         gotoCommentEnd = False
-                    j=j+1
-
+                    else:
+                        j=j+1
 
         #find and remove double spaces etc
         if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
@@ -144,13 +144,14 @@ for i in range(len(HTML)):
     spacesRemove = True
     while spacesRemove == True:
         #only write things between < > 
+        #TODO remove <!-- --> comments
         if ((j+1)<len(finString) and finString[j] == '<'): 
             gotoTagEnd= True 
             while gotoTagEnd == True:
                 if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
                     fout.write(finString[j])
-                else:
-                    fout.write(' ')
+                #else:
+                #    fout.write(' ')
                 j=j+1;
                 if j >= len(finString):
                     gotoTagEnd = False
@@ -158,11 +159,9 @@ for i in range(len(HTML)):
                 else:  
                     if finString[j] == '>': 
                         gotoTagEnd = False
-                        fout.write(finString[j])
-                        j=j+1
-
-
-        if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
+                        #fout.write(finString[j])
+                        #j=j+1
+        if (j + 1)<len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
             j=j+1;
             gotoTagEnd= True 
             while gotoTagEnd == True:
@@ -182,9 +181,11 @@ for i in range(len(HTML)):
             if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
             #if finString != '\t':
                 fout.write(finString[j])
-            else:
-                fout.write(' ')
+            #else:
+            #    fout.write(' ')
             j=j+1
+
+
     fout.close()
 
 
