@@ -150,12 +150,12 @@ AccountAssistant = Class.create(
     {
         var retVal = true;
         this.FailureReason = "Unknown Failure";
-        if ((account.AccountName === null) || (account.AccountName === "")) 
+        if ((!account.AccountName) || (account.AccountName === "")) 
         {
             this.FailureReason = "No acccount name entered ";
             retVal = false;
         }
-        if ((account.ServerURL === null) || (account.ServerURL === "")) 
+        if ((!account.ServerURL) || (account.ServerURL === "")) 
         {
             this.FailureReason = "No Server URL entered ";
             retVal = false;
@@ -172,7 +172,7 @@ AccountAssistant = Class.create(
         
         
         
-        if ((account.UserName === null) || (account.UserName === "")) 
+        if ((!account.UserName) || (account.UserName === "")) 
         {
             this.FailureReason = "No user name entered ";
             retVal = false;

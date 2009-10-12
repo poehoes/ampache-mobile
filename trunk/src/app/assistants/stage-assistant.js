@@ -18,10 +18,11 @@
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+/*
 //  ---------------------------------------------------------------
-//    GLOBALS
+//  GLOBALS
 //  ---------------------------------------------------------------
+*/
 
 //  AmpacheMobile namespace
 AmpacheMobile = {};

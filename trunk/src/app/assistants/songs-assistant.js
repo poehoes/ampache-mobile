@@ -323,7 +323,7 @@ SongsAssistant = Class.create(
         else 
         {
                         
-            if ((this.itemsHelper.filterString === "") || (this.itemsHelper.filterString === null)) 
+            if ((this.itemsHelper.filterString === "") || (!this.itemsHelper.filterString)) 
             {//Not Filtered
                 var playList = this.itemsHelper.ItemsList;
                 this.controller.stageController.pushScene('now-playing', 
@@ -409,6 +409,7 @@ SongsAssistant = Class.create(
     deactivate: function (event)
     {
         this.itemsHelper.Visible = false;
+        AmpacheMobile.ampacheServer.GetSongsCancel();
     },
     
     

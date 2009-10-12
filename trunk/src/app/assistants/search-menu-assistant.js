@@ -101,7 +101,7 @@ SearchMenuAssistant = Class.create(
     
     searchCriteria: function(numChars){
         var retVal = false;
-        if ((this.searchText !== "") && (this.searchText !== null)){
+        if ((this.searchText !== "") && (this.searchText)){
             if (this.searchText.length >= numChars){
                 retVal = true;
             }else{
@@ -120,7 +120,7 @@ SearchMenuAssistant = Class.create(
             if (numAlbums !== 0){
                 this.controller.stageController.pushScene('albums', 
                 {
-                    SceneTitle: "Search Albums: " + this.searchText,
+                    SceneTitle: "Album Search: " + this.searchText,
                     DisplayArtistInfo: true,
                     ExpectedAlbums: numAlbums,
                     Search: this.searchText === "" ? null : this.searchText
@@ -136,7 +136,7 @@ SearchMenuAssistant = Class.create(
             if (numPlaylists !== 0){
                 this.controller.stageController.pushScene('playlists', 
                 {
-                    SceneTitle: "Search Playlists: " + this.searchText,
+                    SceneTitle: "Playlist Search: " + this.searchText,
                     Search: this.searchText === "" ? null : this.searchText,
                     ExpectedPlaylists: numPlaylists
                 });
@@ -150,7 +150,7 @@ SearchMenuAssistant = Class.create(
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10); //using numsongs because there is no num genres (numsongs is worst case)
                 this.controller.stageController.pushScene('genres', 
                 {
-                    SceneTitle: "Search Genres: " + this.searchText,
+                    SceneTitle: "Genre Search: " + this.searchText,
                     Search: this.searchText === "" ? null : this.searchText
                 });
         }
@@ -163,7 +163,7 @@ SearchMenuAssistant = Class.create(
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
             this.controller.stageController.pushScene('songs', 
             {
-                SceneTitle: "Search: Songs" + this.searchText,
+                SceneTitle: "Song Search: " + this.searchText,
                 Type: "search",
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,

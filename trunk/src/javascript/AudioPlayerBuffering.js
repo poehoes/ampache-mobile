@@ -126,7 +126,7 @@ AudioPlayer = Class.create({
     createAudioObj: function(_controller){
         Mojo.Log.info("--> AudioPlayer.prototype.createAudioObj");
         
-        if (this.AudioPlayers == null) {
+        if (!this.AudioPlayers) {
 			this.AudioPlayers = new Array();	
 			
 			// use Safari's HTML5 implementation if we are runing on palm host

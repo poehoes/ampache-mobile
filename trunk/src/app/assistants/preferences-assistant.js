@@ -318,7 +318,7 @@ PreferencesAssistant = Class.create(
     {
         /* put in event handlers here that should only be in effect when this scene is active. For
          example, key handlers that are observing the document */
-        if (this.newAccount !== null) 
+        if (this.newAccount) 
         {
             this.controller.modelChanged(this.accountsModel, this);
             this.settingsManager.SaveSettings();

@@ -35,12 +35,14 @@ AlbumsAssistant = Class.create({
 
         this.ExpectedAlbums = params.ExpectedAlbums;
 
-        if (params.Artist_id !== null) {
+        this.isArtistView = false;
+        
+        if (params.Artist_id) {
             //this.Artist = params.Artist;
             this.isArtistView = true;
             this.Artist_id = params.Artist_id;
 
-        } else if (params.Genre_id !== null) {
+        } else if (params.Genre_id) {
             this.type = params.Type;
             this.Genre_id = params.Genre_id;
             this.DisplayArtistInfo = true;
@@ -72,6 +74,10 @@ AlbumsAssistant = Class.create({
         //******************************************************************************************************
         if (this.numSongs) {
             $('numSongs').innerHTML = this.numSongs;
+        }
+        else
+        {
+            $('songsPill').hide();
         }
 
         this.PPattr = {
@@ -255,7 +261,7 @@ AlbumsAssistant = Class.create({
             SceneTitle: this.SceneTitle,
             Type: "artist-songs",
             Artist_id: this.Artist_id,
-            Expected_items: this.numSongs
+            Expected_items: this.numSongs ? this.numSongs : AmpacheMobile.ampacheServer.songs
             //Item: event.item
         });
 
@@ -425,7 +431,7 @@ AlbumsAssistant = Class.create({
 
         //AmpacheMobile.ampacheServer.GetAlbumsCancel();
         this.itemsHelper.Visible = false;
-
+        AmpacheMobile.ampacheServer.GetAlbumsCancel();
         Mojo.Log.info("<-- deactivate");
 
     },
