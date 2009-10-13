@@ -20,6 +20,7 @@ if os.path.exists(rootdir):
 shutil.copytree(directory,rootdir,False)
 
 # Find all JS and HTML files and put the respective paths into lists 
+JAVASCRIPTS_NOSPACEAROUND =['=','*','+','-','{','}',';',',','(',')']
 JAVASCRIPTS = []
 HTML = []
 for root, subFolders, files in os.walk(rootdir):
@@ -91,29 +92,42 @@ for i in range(len(JAVASCRIPTS)):
 
         #find and remove double spaces etc
         if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
-            j=j+1;
+            j=j+1
             gotoCommentEnd= True 
             while gotoCommentEnd == True:
                 if j >= len(finString):
                     gotoCommentEnd = False
                     commentRemove = False 
-                else:  
+                else:
                     if finString[j] != ' ' and finString[j] != '\t' and finString[j] != '\n' and finString[j] != '\r':
                         gotoCommentEnd = False
-                        j=j-1;
+                        k=0
+                        for k in range(len(JAVASCRIPTS_NOSPACEAROUND)):
+                            if finString[j] == JAVASCRIPTS_NOSPACEAROUND[k]:
+                                j=j+1
+                                break
+                        j=j-1
                     else:
                         j=j+1
-
-
-        # TODO remove spaces around :,=,*,+,-,{,},;,',',/,(,) that are not inside " "
-
-
+        
         if j >= len(finString):
             commentRemove = False
         else:
             if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
             #if finString != '\t':
                 fout.write(finString[j])
+                k=0
+                for k in range(len(JAVASCRIPTS_NOSPACEAROUND)):
+                    if finString[j] == JAVASCRIPTS_NOSPACEAROUND[k]:
+                        gotoCommentEnd= True
+                        k=len(JAVASCRIPTS_NOSPACEAROUND)
+                        while gotoCommentEnd == True:
+                            if (j + 1)< len(finString) and (finString[j+1] == ' ' or finString[j+1] == '\t' or finString[j+1] == '\n' or finString[j+1] == '\r'):
+                                j=j+1
+                            else:
+                                gotoCommentEnd = False
+                                
+
             else:
                 fout.write(' ')
             #print(j)
