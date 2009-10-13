@@ -1,12 +1,9 @@
 #-----------------------------------------------------
-#   JavaScript Minimizer for Mojo : Python 3.1
+#   Package Release
 #       
-#   Author: dburman 
-#   
-#   ex: python webOS_optimize.py src
-#       results placed in ./optimized folder
+#   Author: bgeiser
 #-----------------------------------------------------
-import glob, os, sys, shutil, fnmatch, subprocess
+import shutil, subprocess
 
 
 
@@ -25,3 +22,4 @@ package = subprocess.Popen(package_cmd, shell=True, stdout=subprocess.PIPE)
 package.wait()
 
 shutil.rmtree('./temp')
+shutil.rmtree('./optimized')
