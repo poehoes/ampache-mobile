@@ -20,7 +20,7 @@ if os.path.exists(rootdir):
 shutil.copytree(directory,rootdir,False)
 
 # Find all JS and HTML files and put the respective paths into lists 
-JAVASCRIPTS_NOSPACEAROUND =['=','*','+','-','{','}',';',':',',','(',')']
+JAVASCRIPTS_NOSPACEAROUND =['=','*','+','-','{','}',';',':',',','(',')','!','[',']','/']
 JAVASCRIPTS = []
 HTML = []
 for root, subFolders, files in os.walk(rootdir):
