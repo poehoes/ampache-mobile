@@ -13,11 +13,12 @@ if len(sys.argv) > 1:
 else:
     directory = './'
 
-rootdir = './'+'optimized/'
+rootdir = directory 
+#rootdir = './'+'optimized/'
 # Copy (Replace) directory to optimized folder, might not replace if directory is RO
-if os.path.exists(rootdir):
-    shutil.rmtree(rootdir)
-shutil.copytree(directory,rootdir,False)
+#if os.path.exists(rootdir):
+#    shutil.rmtree(rootdir)
+#shutil.copytree(directory,rootdir,False)
 
 # Find all JS and HTML files and put the respective paths into lists 
 JAVASCRIPTS_NOSPACEAROUND =['=','*','+','-','{','}',';',':',',','(',')','!','[',']','/']
