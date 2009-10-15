@@ -17,9 +17,9 @@ optimize = subprocess.Popen(optimizecmd, shell=True, stdout=subprocess.PIPE)
 optimize.wait()
 #print optimize.returncode
 
-package_cmd = "palm-package optimized"
+package_cmd = "palm-package temp"
 package = subprocess.Popen(package_cmd, shell=True, stdout=subprocess.PIPE)
 package.wait()
 
 shutil.rmtree('./temp')
-shutil.rmtree('./optimized')
+#shutil.rmtree('./optimized')
