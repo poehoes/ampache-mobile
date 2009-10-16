@@ -1,12 +1,12 @@
 {
-	"id": "com.palm.ampachemobile",
-	"version": "0.6.0",
-	"vendor": "Ampache Mobile Project",
+    "id": "com.palm.ampachemobile",
+    "version": "0.6.1",
+    "vendor": "Ampache Mobile Project",
     "keywords": ["Audio", "Music", "Songs"],
     "type": "web",
-	"main": "index.html",
-	"title": "Ampache Mobile",
-	"icon": "icon.png",
-	"theme": "palm-dark"
+    "main": "index.html",
+    "title": "Ampache Mobile",
+    "icon": "icon.png",
+    "theme": "palm-dark"
     
 }
