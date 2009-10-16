@@ -12,6 +12,7 @@ Version 0.6.0 (Beta) (10/15/2009)
     * Bug Fix: Filtered Songs list pushed to now playing fixed
     * Bug Fix: Found bug in ampache global search, added work around
     * Bug fix: Fixed problem if you pressed next at the last item your song would fail to load
+    * Bug fix: Infinity NaN:NaN in now playing should be gone now, pesky bug
 
 Version 0.5.0 (Beta) (09/27/2009)
     * New Feature: (Global Search) should vastly improve performance if you know what you are looking for.
