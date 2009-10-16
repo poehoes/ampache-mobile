@@ -18,6 +18,7 @@
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
 var RepeatModeType = {"no_repeat":0, "repeat_forever":1, "repeat_once":2 };
+var STALL_RETRY_TIME = "20000";
 
 AudioPlayer = Class.create({
     PlayerReady: false,
@@ -39,6 +40,8 @@ AudioPlayer = Class.create({
     AudioPlayers:null,
     nPlayers:2,
     mediaEvents:null,
+    
+    stallTimer:null,
     
     initialize:function(_controller){
         Mojo.Log.info("--> AudioPlayer.prototype.initialize", _controller);
@@ -375,6 +378,14 @@ AudioPlayer = Class.create({
         }
     },
 
+    kill_stall_timer:function()
+    {
+        window.clearInterval(this.stallTimer);
+        this.stallTimer=null;
+    },
+    
+    
+
     play_change_interval:null,
 
     kill_play_change_interval:function(){
@@ -558,15 +569,22 @@ AudioPlayer = Class.create({
     
     handleAudioEvents: function(event){
         Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
-        //Mojo.Log.error("------> AudioPlayer.prototype.handleAudioEvents AudioEvent: %j", event);
-        //Mojo.Log.info("handeAudioEvent: " + event.type);
+        
+        
+        if(this.stallTimer)
+        {
+            this.kill_stall_timer();
+        }
+        
         this.NowPlayingStreamDebug(event.type);
+        
         switch (event.type) {
             case "canplay":
                 this.UpdateNowPlayingShowSpinner(false);
                 this.player.play();
                 break;
             case "stalled":
+                this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
                 this.UpdateNowPlayingShowSpinner(true);
                 this.stalled =true;
                 break;

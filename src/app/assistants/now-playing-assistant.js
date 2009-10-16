@@ -90,7 +90,7 @@ NowPlayingAssistant = Class.create(
         slider.observe(Mojo.Event.sliderDragStart, this.progressBarDragStart.bind(this));
         slider.observe(Mojo.Event.sliderDragEnd, this.progressBarDragEnd.bind(this));
         
-        this.controller.get('playback-display').observe(Mojo.Event.dragStart, this.noDrag.bindAsEventListener(this));
+        this.controller.get('now-playing').observe(Mojo.Event.dragStart, this.noDrag.bindAsEventListener(this));
         this.controller.get('playback-display').observe(Mojo.Event.flick, this.handleFlick.bindAsEventListener(this));
         this.controller.get('playback-display').observe(Mojo.Event.tap, this.doubleClick.bindAsEventListener(this));
         
