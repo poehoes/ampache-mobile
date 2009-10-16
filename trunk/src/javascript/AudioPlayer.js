@@ -631,7 +631,7 @@ AudioPlayer = Class.create({
             if (this.player.duration){
                 duration = this.player.duration;
             }
-            if (duration !== "Infinity"){
+            if (duration != "Infinity"){
                 this.NowPlaying.updateTime(currentTime, duration);
             }
         }
