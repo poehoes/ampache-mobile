@@ -58,7 +58,8 @@ MainmenuAssistant = Class.create(
             name: $L("Albums"),
             scene: $L("albums"),
             description: $L(AmpacheMobile.ampacheServer.albums.toString()),
-            icon: "images/icons/albums.png"
+            icon: "images/icons/albums.png",
+            displayCount:""
         }, 
         
         /*
@@ -76,7 +77,8 @@ MainmenuAssistant = Class.create(
             name: $L("Playlists"),
             scene: $L("playlists"),
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
-            icon: "images/icons/playlists.png"
+            icon: "images/icons/playlists.png",
+            displayCount:""
         },
         
         {
@@ -85,7 +87,17 @@ MainmenuAssistant = Class.create(
             name: $L("Genres"),
             scene: $L("genres"),
             description: 0,
-            icon: "images/icons/genres.png"
+            icon: "images/icons/genres.png",
+            displayCount:"none"
+        },
+         {
+            category: $L("bottom"),
+            directory: $L("random"),
+            name: $L("Random"),
+            scene: $L("random"),
+            description: 0,
+            icon: "images/icons/random.png",
+            displayCount:"none"
         }
         
            /*{
@@ -140,6 +152,8 @@ MainmenuAssistant = Class.create(
         //*****************************************************************************************************
         // Search Event
         this.controller.get('search').observe(Mojo.Event.tap, this.pushSearch.bindAsEventListener(this));
+        
+
     },
     
     pushSearch: function(){
@@ -202,6 +216,13 @@ MainmenuAssistant = Class.create(
                 this.controller.stageController.pushScene('genres', 
                 {
                     SceneTitle: "Genres",
+                    Type: "all-genres"
+                });
+                break;
+            case "random":
+                this.controller.stageController.pushScene('random', 
+                {
+                    SceneTitle: "Random",
                     Type: "all-genres"
                 });
                 break;
@@ -302,17 +323,9 @@ MainmenuAssistant = Class.create(
      }
      */
     activate: function(event){
-        /* put in event handlers here that should only be in effect when this scene is active. For
-         example, key handlers that are observing the document */
-        //this.ArtistList = null;
-        //this.AlbumsList = null;
-        //this.SongsList = null;
-        $('count-Genres').hide();
     },
     
     deactivate: function(event){
-        /* remove any event handlers you added in activate and do any other cleanup that should happen before
-         this scene is popped or another scene is pushed on top */
     },
     
     cleanup: function(event){

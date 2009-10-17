@@ -29,7 +29,7 @@ SongsAssistant = Class.create(
         this.Artist_id = params.Artist_id;
         this.Expected_items = params.Expected_items;
         
-        if ((this.Type === "playlist") || (this.Type === "all-songs") || (this.Type === "search") || (this.Type === "search-global") || (this.Type === "genre") || this.Type === "artist-songs") 
+        if ((this.Type==="random")||(this.Type === "playlist") || (this.Type === "all-songs") || (this.Type === "search") || (this.Type === "search-global") || (this.Type === "genre") || this.Type === "artist-songs") 
         {
             this.DisplayAlbumInfo = true;
         }
@@ -131,7 +131,7 @@ SongsAssistant = Class.create(
             listModel: this.listModel,
             progressModel: this.songLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
-            ExpectedItems: null,
+            ExpectedItems: this.Expected_items,
             SortFunction: null,
             MatchFunction: this.IsMatch,
             IndexBusted: (this.Type === "search-global") ? true : false
@@ -168,7 +168,13 @@ SongsAssistant = Class.create(
     GetSongs: function (callback, offset, limit)
     {
     
-        if (this.Type === "playlist") 
+        if(this.Type==="random")
+        {
+            this.itemsHelper.fetchLimit = 1;
+            var random = Math.floor(Math.random()* parseInt(AmpacheMobile.ampacheServer.songs, 10));
+            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, random, 1);
+        }
+        else if (this.Type === "playlist") 
         {
             this.itemsHelper.ExpectedItems = this.Item.items;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Playlist_id, null, offset, limit);
@@ -201,6 +207,7 @@ SongsAssistant = Class.create(
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, this.Genre_id, offset, limit, this.Search, true);
         }
+        
         
         
         

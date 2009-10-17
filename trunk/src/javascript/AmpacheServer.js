@@ -256,7 +256,9 @@ AmpacheServer = Class.create(
     },
     
     GetArtistsCancel: function(){
-        this.ArtistRequest.abort();
+        if(this.ArtistRequest){
+            this.ArtistRequest.abort();
+        }
     },
     
     GotArtistsCallback: function(transport){
@@ -298,7 +300,9 @@ AmpacheServer = Class.create(
         {
             Mojo.Controller.errorDialog("Get Artists failed: " + this.XMLFormattingIssue);
         }
+        
         this.GetArtistsCallback(ArtistList);
+        this.ArtistRequest = null;
     },
     
     //******************************************************************************************/
@@ -354,7 +358,10 @@ AmpacheServer = Class.create(
     },
     
     GetAlbumsCancel: function(){
-        this.GetAlbumsRequest.abort();
+        if(this.GetAlbumsRequest)
+        {
+            this.GetAlbumsRequest.abort();
+        }
     },
     
     GotAlbumsCallback: function(transport){
@@ -398,6 +405,7 @@ AmpacheServer = Class.create(
         if (AlbumList){
             this.GetAlbumsCallback(AlbumList);
         }
+        this.GetAlbumsRequest=null;
         Mojo.Log.info("<-- AmpacheServer.prototype.GotAlbumsCallback");
     },
     
@@ -462,7 +470,10 @@ AmpacheServer = Class.create(
     },
     
     GetSongsCancel: function(){
-        this.SongsRequest.abort();
+        if(this.SongsRequest)
+        {
+            this.SongsRequest.abort();
+        }
     },
     
     GotSongsCallbackInternal: function(transport){
@@ -608,7 +619,10 @@ AmpacheServer = Class.create(
     },
     
     GetPlaylistsCancel: function(){
-        this.PlaylistRequest.abort();
+        if(this.PlaylistRequest)
+        {
+            this.PlaylistRequest.abort();
+        }
     },
     
     GotPlaylistsCallback: function(transport){
@@ -631,6 +645,7 @@ AmpacheServer = Class.create(
             Mojo.Controller.errorDialog("Get Playlists failed: " + this.XMLFormattingIssue);
         }
         this.GetPlaylistsCallback(PlaylistsList);
+        this.PlaylistRequest=null;
     },
     
     //********************************************************************************************
@@ -671,7 +686,10 @@ AmpacheServer = Class.create(
     },
     
     GetTagsCancel: function(){
-        this.TagsRequest.abort();
+        if(this.TagsRequest )
+        {
+            this.TagsRequest.abort();
+        }
     },
     
     GotTagsCallback: function(transport){
@@ -711,6 +729,7 @@ AmpacheServer = Class.create(
             Mojo.Controller.errorDialog("Get Tags failed: " + this.XMLFormattingIssue);
         }
         this.GetTagsCallback(TagsList);
+        this.TagsRequest =null;
     },
     
     /********************************************************************************************/

@@ -104,6 +104,9 @@ NowPlayingAssistant = Class.create(
         //this.musicPlayer = AmpacheMobile.audioPlayer.player;
         window.onresize = this.FitToWindow;
         this.FitToWindow();
+        
+        $('coverArt').src = "images/blankalbum.png";
+        
         Mojo.Log.info("<-- setup");
     },
     
