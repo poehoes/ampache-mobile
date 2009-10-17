@@ -31,18 +31,23 @@ AlbumsAssistant = Class.create({
         this.DisplayArtistInfo = params.DisplayArtistInfo;
         //this.AlbumsList = params.AlbumsList;
         //this.AlbumsList.sort(this.sortfunction);
+        this.type = params.Type;
         this.numSongs = params.numSongs;
 
         this.ExpectedAlbums = params.ExpectedAlbums;
 
         this.isArtistView = false;
         
-        if (params.Artist_id) {
+        
+        if (this.type === "random") {
+            this.DisplayArtistInfo = true;
+            this.Artist_id = params.Artist_id;
+        }
+        else if (params.Artist_id) {
             //this.Artist = params.Artist;
             this.isArtistView = true;
             this.Artist_id = params.Artist_id;
-
-        } else if (params.Genre_id) {
+        } else if ((params.Genre_id)){
             this.type = params.Type;
             this.Genre_id = params.Genre_id;
             this.DisplayArtistInfo = true;
@@ -114,8 +119,8 @@ AlbumsAssistant = Class.create({
             listAttributes = {
                 filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
                 itemTemplate: 'albums/listitem_w_artist',
-                dividerTemplate: 'albums/divider',
-                dividerFunction: this.dividerFunc.bind(this)
+                dividerTemplate: (this.type !== "random") ? 'albums/divider' : null,
+                dividerFunction: (this.type !== "random") ? this.dividerFunc.bind(this) : null
 
             };
 
@@ -206,7 +211,7 @@ AlbumsAssistant = Class.create({
             progressModel: this.albumLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedAlbums,
-            SortFunction: this.sortList.bind(this),
+            SortFunction: (this.type !== "random") ? this.sortList.bind(this) : null,
             MatchFunction: this.IsMatch,
             PopulateSort: this.AddSortToItems.bind(this)
 
@@ -229,11 +234,17 @@ AlbumsAssistant = Class.create({
     GetAlbums: function (GotItems, offset, limit) {
         Mojo.Log.info("--> GetMoreAlbums");
 
-        if (this.isArtistView === true) {
+        if (this.type === "random") {
+            this.itemsHelper.fetchLimit = 1;
+            var random = Math.floor(Math.random()* parseInt(AmpacheMobile.ampacheServer.albums, 10));
+            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, null,random, 1, null);
+        }
+        else if (this.isArtistView === true) {
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist_id, null, offset, limit);
         } else if (this.type === "genres") {
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, this.Genre_id, offset, limit);
-        } else {
+        }
+        else {
             AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, null, offset, limit, this.Search);
         }
 

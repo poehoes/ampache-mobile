@@ -111,17 +111,20 @@ ItemsHelper = Class.create({
         
         
         
-        if ((_ItemsList.length  !== this.fetchLimit) || this.IndexBusted) 
+        if ((this.ItemsList.length>=this.ExpectedItems) || (_ItemsList.length  !== this.fetchLimit) || this.IndexBusted)
         {
             this.progressModel.value = 1;
             this.controller.modelChanged(this.progressModel);
             this.LoadingFinished = true;
         }
+        
         else 
         {
             this.offset = this.ItemsList.length;
             this.GetItems();
         }
+        
+        
         
         
         Mojo.Log.info("Progress: " + progress);

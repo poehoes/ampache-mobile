@@ -20,6 +20,7 @@ ArtistsAssistant = Class.create(
         this.SceneTitle = params.SceneTitle;
         this.ExpectedArtists = params.ExpectedArtists;
         this.itemsHelper = new ItemsHelper();
+        this.type = params.type;
         
         if (params.Genre_id) {
             this.Genre_id = params.Genre_id;
@@ -67,7 +68,7 @@ ArtistsAssistant = Class.create(
         {
             itemTemplate: 'artists/listitem',
             dividerTemplate: 'artists/divider',
-            dividerFunction: this.dividerFunc.bind(this),
+            dividerFunction: (this.type==="random") ?null : this.dividerFunc.bind(this),
             filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper)
         };
         this.listModel = 
@@ -122,7 +123,13 @@ ArtistsAssistant = Class.create(
     },
     
     GetArtists: function (GotItems, offset, limit) {
-        if (!this.Genre_id) {
+        if(this.type==="random")
+        {
+            this.itemsHelper.fetchLimit = 1;
+            var random = Math.floor(Math.random()* parseInt(AmpacheMobile.ampacheServer.artists, 10));
+            AmpacheMobile.ampacheServer.GetArtists(GotItems, null, random, 1, null);
+        }
+        else if (!this.Genre_id) {
             AmpacheMobile.ampacheServer.GetArtists(GotItems, null, offset, limit, this.Search);
         }
         else {
