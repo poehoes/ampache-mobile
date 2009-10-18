@@ -822,7 +822,7 @@ ArtistModel = Class.create(
     id: null,
     name: null,
     albums: null,
-    songs: null
+    songs: null,
 });
 
 /*

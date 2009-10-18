@@ -29,6 +29,16 @@ initialize: function(){ },
         this.spinnerModel = { spinning: false };
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
+                // Setup Spinner
+        this.spinnerSAttrs = { spinnerSize: 'small' };
+        this.centerSpinnerModel = { spinning: true };
+        this.controller.setupWidget('center-album-spinner', this.spinnerSAttrs, this.centerSpinnerModel);
+        this.leftSpinnerModel = { spinning: true };
+        this.controller.setupWidget('left-album-spinner', this.spinnerSAttrs, this.leftSpinnerModel);
+        this.rightSpinnerModel = { spinning: true };
+        this.controller.setupWidget('right-album-spinner', this.spinnerSAttrs, this.rightSpinnerModel);
+        
+        
         //******************************************************************************************************
         // Make scrim
          this.scrim = $("search-scrim");
@@ -45,7 +55,7 @@ initialize: function(){ },
         this.controller.setupWidget('randomProgressbar', this.PPattr, this.searchLoadModel);
         
         
-        
+        this.tempArt = "images/blankalbum.png";
         
         //*****************************************************************************************************
         // Search Event
@@ -54,10 +64,179 @@ initialize: function(){ },
         this.controller.get('randomSongs').observe(Mojo.Event.tap, this.randomSongs.bindAsEventListener(this));
         //this.controller.get('searchPlaylists').observe(Mojo.Event.tap, this.searchForPlaylists.bindAsEventListener(this));
   
+  
+        //*******************************************************************************************************
+        // Random Album Selector
+        var photoAttributes = {
+            limitZoom:true    
+            //noExtractFS : true
+        };
+        
+        this.photoModel = {
+            //backgroundImage : 'images/glacier.png',
+            //background: 'black',      //You can set an image or a color
+            onLeftFunction: this.wentLeft.bind(this),
+            onRightFunction: this.wentRight.bind(this)
+        };
+        this.controller.setupWidget('myPhotoDiv', photoAttributes, this.photoModel);
+        this.myPhotoDivElement = $('myPhotoDiv');
+        
+        this.controller.get('myPhotoDiv').observe(Mojo.Event.tap, this.pushAlbum.bindAsEventListener(this));
 
+        
+        this.fetching = "center";
+        this.GetRandomAlbum();
     },
     
+    pushAlbum:function(){
+            this.controller.stageController.pushScene('songs', {
+            SceneTitle: this.center.artist + " - " + this.center.name,
+            Type: "album",
+            Album_id: this.center.id,
+            Item: this.center
 
+        });
+    },
+    
+    center_stale:true,
+    right_stale:true,
+    left_stale:true,
+    
+    center:null,
+    right:null,
+    left:null,
+    fetching:null,
+    
+    
+    UpdateText:function()
+    {
+        this.controller.get('albumArtist').innerHTML = this.center.artist.escapeHTML() + " - " + this.center.name.escapeHTML();
+    },
+    
+    
+    AlbumSpinner: function(spinner, OnOff){
+        var model;
+        
+        switch(spinner)
+        {
+            case "center":
+                model = this.centerSpinnerModel;
+                break;
+            case "left":
+                model = this.leftSpinnerModel;
+                break;
+            case "right":
+                model = this.rightSpinnerModel;
+                break;
+            
+        }
+        
+        model.spinning = OnOff;
+        this.controller.modelChanged(model);
+    },
+    
+    GetRandomAlbum:function()
+    {
+        this.AlbumSpinner(this.fetching, true);
+        //this.TurnOnSpinner();
+        var random = Math.floor(Math.random()* parseInt(AmpacheMobile.ampacheServer.albums, 10));
+        AmpacheMobile.ampacheServer.GetAlbums(this.GotRandomAlbum.bind(this), null, null,random, 1, null);
+    },
+    
+    GotRandomAlbum:function(album)
+    {
+        var params = this.myPhotoDivElement.mojo.getCurrentParams();
+        
+        switch(this.fetching)
+        {
+            case "center":
+                
+                this.center = album[0];
+                //this.myPhotoDivElement.mojo.centerUrlProvided(this.tempArt, this.tempArt);
+                this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.center.art);
+                this.center_stale=false;
+                this.UpdateText();
+                this.AlbumSpinner("center", false);
+                break;
+            case "left":
+                this.left = album[0];
+                this.myPhotoDivElement.mojo.leftUrlProvided(this.tempArt, this.tempArt);
+                //this.myPhotoDivElement.mojo.leftUrlProvided(this.left.art, this.left.art);
+                this.left_stale=false;
+                this.AlbumSpinner("left", false);
+                break;
+            case "right":
+                this.right = album[0];
+                this.myPhotoDivElement.mojo.rightUrlProvided(this.tempArt, this.tempArt);
+                //this.myPhotoDivElement.mojo.rightUrlProvided(this.right.art, this.right.art);
+                this.right_stale=false;
+                this.AlbumSpinner("right", false);
+                break;
+            default:
+                //this.TurnOffSpinner();
+                break;
+        }
+        
+        if(this.center_stale)
+        {
+            Mojo.Log.info("Fetching Center");
+            this.fetching = "center";
+            this.GetRandomAlbum();
+        }
+        else if(this.right_stale)
+        {
+            Mojo.Log.info("Fetching right");
+            this.fetching = "right";
+            this.GetRandomAlbum();
+        }
+        else if(this.left_stale)
+        {
+            Mojo.Log.info("Fetching left");
+            this.fetching = "left";
+            this.GetRandomAlbum();
+        }
+        
+        if(!this.center_stale && !this.right_stale && !this.left_stale)
+        {
+            //this.TurnOffSpinner();
+        }
+        
+        
+    },
+    
+    
+    imageViewChanged: function (event) {
+        /* Do something when the image view changes */
+        this.showDialogBox("Image View Changed", "Flick image left and/or right to see other images.");
+    
+        //this.CurrentMode = 1;
+        //this.CurrentImage = event.url;
+        //this.UpdateScreen();
+    },
+    
+    wentLeft: function (event) {
+        this.left_stale = true;
+        
+        this.right = this.center;
+        this.center=this.left;
+        this.fetching = "left";
+        this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.center.art);
+                
+        this.UpdateText();
+        
+        this.GetRandomAlbum();
+    },
+    
+    wentRight: function (event) {
+        this.right_stale = true;
+        this.left = this.center;
+        this.center = this.right;
+        this.fetching = "right";
+        this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.center.art);
+                
+        this.UpdateText();
+        this.GetRandomAlbum();
+    },
     
     
     
@@ -150,6 +329,9 @@ initialize: function(){ },
         });
     },
     
+    
+    
+    
     TurnOnSpinner: function(spinnerText){
         this.scrim.show();
         this.spinnerModel.spinning = true;
@@ -164,6 +346,7 @@ initialize: function(){ },
     
     activate: function(event){
         
+        //this.myPhotoDivElement.mojo.manualSize('200', '200');
     },
     
     deactivate: function(event){

@@ -114,14 +114,16 @@ AlbumsAssistant = Class.create({
 
         this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
 
+        
+
+
         var listAttributes;
         if (this.DisplayArtistInfo === true) {
             listAttributes = {
                 filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
-                itemTemplate: 'albums/listitem_w_artist',
+                itemTemplate: (this.type === "random") ? 'albums/listitem_w_artist_art' : 'albums/listitem_w_artist',
                 dividerTemplate: (this.type !== "random") ? 'albums/divider' : null,
                 dividerFunction: (this.type !== "random") ? this.dividerFunc.bind(this) : null
-
             };
 
             /*
