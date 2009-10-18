@@ -292,43 +292,45 @@ initialize: function(){ },
     
     popupHandler: function(event)
     {
-        var item = this;
-        
-        var controller = item._this.controller;
-        var command = event.split("-");
-        var numItems = parseInt(command[1], 10);
-        
-        if (command[0] === "artists") 
+        if(event)
         {
-            controller.stageController.pushScene("artists", 
+            var item = this;
+            
+            var controller = item._this.controller;
+            var command = event.split("-");
+            var numItems = parseInt(command[1], 10);
+            
+            if (command[0] === "artists") 
             {
-                SceneTitle: numItems + " Random Artists",
-                ExpectedArtists: numItems,
-                type:"random"
-            });
-        }
-        
-        else if (command[0] === "albums") 
-        {
-            controller.stageController.pushScene('albums', 
+                controller.stageController.pushScene("artists", 
+                {
+                    SceneTitle: numItems + " Random Artists",
+                    ExpectedArtists: numItems,
+                    type:"random"
+                });
+            }
+            
+            else if (command[0] === "albums") 
             {
-                SceneTitle: numItems +" Random Albums",
-                Type: "random",
-                ExpectedAlbums: numItems
-            });
-        }
-        
-        else if (command[0] === "songs") 
-        {
-            controller.stageController.pushScene('songs', 
+                controller.stageController.pushScene('albums', 
+                {
+                    SceneTitle: numItems +" Random Albums",
+                    Type: "random",
+                    ExpectedAlbums: numItems
+                });
+            }
+            
+            else if (command[0] === "songs") 
             {
-                SceneTitle: numItems + " Random Songs",
-                Type: "random",
-                DisplayArtistInfo: true,
-                Expected_items: numItems
-            });
+                controller.stageController.pushScene('songs', 
+                {
+                    SceneTitle: numItems + " Random Songs",
+                    Type: "random",
+                    DisplayArtistInfo: true,
+                    Expected_items: numItems
+                });
+            }
         }
-        
     },
     
 

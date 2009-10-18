@@ -121,7 +121,7 @@ AlbumsAssistant = Class.create({
         if (this.DisplayArtistInfo === true) {
             listAttributes = {
                 filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
-                itemTemplate: (this.type === "random") ? 'albums/listitem_w_artist_art' : 'albums/listitem_w_artist',
+                itemTemplate: ((this.type === "random") && AmpacheMobile.Account.ExtraCoverArt) ? 'albums/listitem_w_artist_art' : 'albums/listitem_w_artist',
                 dividerTemplate: (this.type !== "random") ? 'albums/divider' : null,
                 dividerFunction: (this.type !== "random") ? this.dividerFunc.bind(this) : null
             };
