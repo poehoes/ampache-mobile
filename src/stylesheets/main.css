@@ -243,10 +243,48 @@ height: 100%;
     float:none;
 }
 
+.center-text{
+    text-align:center;
+}
+.small-font{
+    font-size:small;
+}
+
 .listArt
 {
     margin: 3px 10px 3px 3px
 }
+
+.random-album-spinner
+{
+    position:absolute;
+    z-index: 5;
+    top:150px;
+}
+
+.spinner-center{
+    left: 150px;
+}
+
+
+
+.spinner-right{
+    left: 265px;
+    
+}
+
+.spinner-left
+{
+   
+}
+
+
+.spinner-arrow{
+
+    z-index: 4;
+}
+
+
 
 .centerSpinner{
     position:fixed;
@@ -256,7 +294,7 @@ height: 100%;
 }
 
 .nowPlayingSpinner{
-    position:fixed
+    position:fixed;
     z-index: 10;
 }
 
@@ -285,6 +323,19 @@ height: 100%;
     color: white;
     margin-top: -10px;
     padding: 0 15px 10px 15px;
+    font-size:small;
+}
+
+.OneLineTitle {
+    color: white;
+    padding: 5px 15px 5px 15px;
+    
+}
+
+.OneLineDesc {
+    text-align:right;
+    color: white;
+    padding: 0px 15px 5px 15px;
     font-size:small;
 }
 
