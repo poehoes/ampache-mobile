@@ -57,13 +57,46 @@ initialize: function(){ },
         
         this.tempArt = "images/blankalbum.png";
         
-        //*****************************************************************************************************
-        // Search Event
-        this.controller.get('randomArtists').observe(Mojo.Event.tap, this.randomArtists.bindAsEventListener(this));
-        this.controller.get('randomAlbum').observe(Mojo.Event.tap, this.randomAlbums.bindAsEventListener(this));
-        this.controller.get('randomSongs').observe(Mojo.Event.tap, this.randomSongs.bindAsEventListener(this));
-        //this.controller.get('searchPlaylists').observe(Mojo.Event.tap, this.searchForPlaylists.bindAsEventListener(this));
-  
+        this.randomMenu = [
+       
+        {
+            type: $L("artists"),
+            name: $L("Artists"),
+            icon: "images/icons/artists.png",
+            items: ["1","5","10","20"]
+            
+        }, 
+
+        {
+            type: $L("albums"),
+            name: $L("Albums"),
+            icon: "images/icons/albums.png",
+            items: ["1","5","10","20"]
+        }, 
+        
+        {
+            type: $L("songs"),
+            name: $L("Songs"),
+            icon: "images/icons/songs.png",
+            items: ["10","25","50","100", "200"]
+            
+        }
+        
+       
+        ];
+        
+        
+        this.controller.setupWidget('randomMenuList', 
+        {
+            itemTemplate: 'random/listitem'
+        }, 
+        {
+            items: this.randomMenu
+        });
+        
+        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('randomMenuList'), Mojo.Event.listTap, this.listTapHandler);
+        
   
         //*******************************************************************************************************
         // Random Album Selector
@@ -73,8 +106,6 @@ initialize: function(){ },
         };
         
         this.photoModel = {
-            //backgroundImage : 'images/glacier.png',
-            //background: 'black',      //You can set an image or a color
             onLeftFunction: this.wentLeft.bind(this),
             onRightFunction: this.wentRight.bind(this)
         };
@@ -89,7 +120,7 @@ initialize: function(){ },
     },
     
     pushAlbum:function(){
-            this.controller.stageController.pushScene('songs', {
+        this.controller.stageController.pushScene('songs', {
             SceneTitle: this.center.artist + " - " + this.center.name,
             Type: "album",
             Album_id: this.center.id,
@@ -204,15 +235,7 @@ initialize: function(){ },
         
     },
     
-    
-    imageViewChanged: function (event) {
-        /* Do something when the image view changes */
-        this.showDialogBox("Image View Changed", "Flick image left and/or right to see other images.");
-    
-        //this.CurrentMode = 1;
-        //this.CurrentImage = event.url;
-        //this.UpdateScreen();
-    },
+
     
     wentLeft: function (event) {
         this.left_stale = true;
@@ -240,54 +263,76 @@ initialize: function(){ },
     
     
     
-    randomGenerator:function(numberOfItems)
+    listTapHandler: function(event)
     {
-        return Math.floor(Math.random()*numberOfItems);
-    },
     
-    numRandomArtists:5,
-    randomArtists: function(){
-       
-        //this.TurnOnSpinner();
-        this.controller.stageController.pushScene("artists", 
-        {
-            SceneTitle: this.numRandomArtists + " Random Artists",
-            ExpectedArtists: this.numRandomArtists,
-            type:"random"
-        });
-            
+        var item = event.item;
+        item._this = this;
         
-    },
-    
-    numRandomAlbums:5,
-    randomAlbums: function(){
-        //this.TurnOnSpinner();
-        //Math.floor(Math.random()* parseInt(AmpacheMobile.ampacheServer.albums, 10));
-        //var randomAlbum = this.randomGenerator(parseInt(AmpacheMobile.ampacheServer.albums, 10));
-        this.controller.stageController.pushScene('albums', 
-        {
-            SceneTitle: this.numRandomAlbums +" Random Albums",
-            Type: "random",
-            ExpectedAlbums: this.numRandomAlbums
-            
-        });
+        var items = [];
         
-    },
-    
-    numRandomSongs:30,
-    randomSongs: function(){
-        //this.TurnOnSpinner();
-        this.controller.stageController.pushScene('songs', 
+        for(i=0;i<event.item.items.length;i++)
         {
-            SceneTitle: this.numRandomSongs + " Random Songs",
-            Type: "random",
-            DisplayArtistInfo: true,
-            Expected_items: this.numRandomSongs
+            items[i] ={
+                label: event.item.items[i] + " " + event.item.name,
+                command: event.item.type + "-" + event.item.items[i]
+            };
+        }
+        
+        this.controller.popupSubmenu(
+        {
+            onChoose: this.popupHandler.bind(item),
+            placeNear: event.originalEvent.target,
+            items: items
         });
         
     },
     
     
+    
+    popupHandler: function(event)
+    {
+        var item = this;
+        
+        var controller = item._this.controller;
+        var command = event.split("-");
+        var numItems = parseInt(command[1], 10);
+        
+        if (command[0] === "artists") 
+        {
+            controller.stageController.pushScene("artists", 
+            {
+                SceneTitle: numItems + " Random Artists",
+                ExpectedArtists: numItems,
+                type:"random"
+            });
+        }
+        
+        else if (command[0] === "albums") 
+        {
+            controller.stageController.pushScene('albums', 
+            {
+                SceneTitle: numItems +" Random Albums",
+                Type: "random",
+                ExpectedAlbums: numItems
+            });
+        }
+        
+        else if (command[0] === "songs") 
+        {
+            controller.stageController.pushScene('songs', 
+            {
+                SceneTitle: numItems + " Random Songs",
+                Type: "random",
+                DisplayArtistInfo: true,
+                Expected_items: numItems
+            });
+        }
+        
+    },
+    
+
+    /*
     searchForPlaylists: function(){
         if (this.searchCriteria(3)){
             this.TurnOnSpinner();
@@ -302,16 +347,8 @@ initialize: function(){ },
             }
         }
     },
-    
+    */
 
-    
-
-    
-
-    
-
-    
-    
     
     // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function(title, message){
