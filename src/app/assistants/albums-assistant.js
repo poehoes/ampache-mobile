@@ -213,7 +213,7 @@ AlbumsAssistant = Class.create({
             progressModel: this.albumLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedAlbums,
-            SortFunction: ((this.type !== "random") &&((this.sortType)!=AlbumSortType.artist)) ? this.sortList.bind(this) : null,
+            SortFunction: ((this.type !== "random") &&((this.sortType) !== AlbumSortType.alpha)) ? this.sortList.bind(this) : null,
             MatchFunction: this.IsMatch,
             PopulateSort: this.AddSortToItems.bind(this)
 
