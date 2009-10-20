@@ -213,7 +213,7 @@ AlbumsAssistant = Class.create({
             progressModel: this.albumLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedAlbums,
-            SortFunction: ((this.type !== "random") &&((this.sortType) !== AlbumSortType.alpha)) ? this.sortList.bind(this) : null,
+            SortFunction: ((this.type !== "random") &&(this.sortType !== AlbumSortType.alpha)) ? this.sortList.bind(this) : null,
             MatchFunction: this.IsMatch,
             PopulateSort: this.AddSortToItems.bind(this)
 
@@ -300,6 +300,7 @@ AlbumsAssistant = Class.create({
         switch (event.command) {
         case "doSort-year":
             if (this.sortType !== AlbumSortType.year) {
+                this.itemsHelper.SortFunction = this.sortList.bind(this)
                 this.sortType = AlbumSortType.year;
                 reSortList = true;
             }
@@ -307,6 +308,7 @@ AlbumsAssistant = Class.create({
             break;
         case "doSort-alpha":
             if (this.sortType !== AlbumSortType.alpha) {
+                this.itemsHelper.SortFunction = this.sortList.bind(this)
                 this.sortType = AlbumSortType.alpha;
                 reSortList = true;
             }
@@ -314,6 +316,7 @@ AlbumsAssistant = Class.create({
             break;
         case "doSort-artist":
             if (this.sortType !== AlbumSortType.artist) {
+                this.itemsHelper.SortFunction = this.sortList.bind(this)
                 this.sortType = AlbumSortType.artist;
                 reSortList = true;
             }
