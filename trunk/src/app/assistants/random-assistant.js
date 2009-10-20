@@ -183,23 +183,20 @@ initialize: function(){ },
             case "center":
                 
                 this.center = album[0];
-                //this.myPhotoDivElement.mojo.centerUrlProvided(this.tempArt, this.tempArt);
-                this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.center.art);
+                this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.tempArt);
                 this.center_stale=false;
                 this.UpdateText();
                 this.AlbumSpinner("center", false);
                 break;
             case "left":
                 this.left = album[0];
-                this.myPhotoDivElement.mojo.leftUrlProvided(this.tempArt, this.tempArt);
-                //this.myPhotoDivElement.mojo.leftUrlProvided(this.left.art, this.left.art);
+                this.myPhotoDivElement.mojo.leftUrlProvided(this.left.art, this.tempArt);
                 this.left_stale=false;
                 this.AlbumSpinner("left", false);
                 break;
             case "right":
                 this.right = album[0];
-                this.myPhotoDivElement.mojo.rightUrlProvided(this.tempArt, this.tempArt);
-                //this.myPhotoDivElement.mojo.rightUrlProvided(this.right.art, this.right.art);
+                this.myPhotoDivElement.mojo.rightUrlProvided(this.right.art, this.tempArt);
                 this.right_stale=false;
                 this.AlbumSpinner("right", false);
                 break;
@@ -239,14 +236,10 @@ initialize: function(){ },
     
     wentLeft: function (event) {
         this.left_stale = true;
-        
         this.right = this.center;
         this.center=this.left;
         this.fetching = "left";
-        this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.center.art);
-                
         this.UpdateText();
-        
         this.GetRandomAlbum();
     },
     
@@ -255,8 +248,6 @@ initialize: function(){ },
         this.left = this.center;
         this.center = this.right;
         this.fetching = "right";
-        this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.center.art);
-                
         this.UpdateText();
         this.GetRandomAlbum();
     },
