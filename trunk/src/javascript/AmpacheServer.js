@@ -35,7 +35,7 @@ AmpacheServer = Class.create(
     artists: "",
     playlists: "",
     videos: "",
-    XMLFormattingIssue: "Error requesting data from Ampache.  Possible Reasons: Songs with Unicode information.",
+    XMLFormattingIssue: "This happens due to songs with invalid characters information. <br><br> Look in the Ampache Web Interface for characters like  <img src='images/illegal_chars.png'/>.",
 
     initialize: function(url, username, password){
         Mojo.Log.info("Enter AmpacheServer.prototype.initialize", url, username, password);
@@ -43,6 +43,7 @@ AmpacheServer = Class.create(
         this.URL = url;
         this.UserName = username;
         this.Password = password;
+        this.parser = new DOMParser();
         Mojo.Log.info("Exit AmpacheServer.prototype.initialize");
     },
     
@@ -207,6 +208,70 @@ AmpacheServer = Class.create(
         Mojo.Log.info("Exit AmpacheServer.prototype.TestConnectionCallbackFailure");
     },
     
+    
+    EscapeXML:function(xml)
+    {
+        return xml.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt; ");
+        
+    },
+    
+    
+    ProblemFinder:function(xmlResponse, type)
+    {
+        try{
+            foundProblem = false;
+            
+            var footer = "</"+type+">";
+            
+            
+            var parts = xmlResponse.split("<root>");
+            var header = parts[0];
+            var parts = parts[1].split("</root>");
+            var elements = parts[0].replace(/\s+$/, '').split(footer);
+            for(var i=0; (i<elements.length-1) && !foundProblem ;i++)
+            {
+                //Valid Chars = #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+                
+                var element =  header + "<root>" + elements[i] + footer + "</root>";
+                    
+                //if(element.match(/[\x01-\x08]/))
+                if(element.match(/[\x01-\x08]/) ||element.match(/[\x0B-\x0C]/)||element.match(/[\x0E-\x1F]/))
+                {
+                       
+                    this.ShowErrorAlert("Look for characters like this in the Ampache WebUI: <img src='images/illegal_chars.png'/><br><br><b>corrupt "+type+":</b>" + this.EscapeXML(elements[i] + footer) );
+                    foundProblem = true;
+                }
+            }
+        }
+        catch(err)
+        {
+            Mojo.Controller.errorDialog("Caught Error: " + err.message);
+            //foundProblem = true;
+        }
+        
+        if(!foundProblem)
+        {
+            this.ShowErrorAlert(this.XMLFormattingIssue);
+        }
+        
+    },
+    
+    ShowErrorAlert:function(string)
+    {
+        var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+        controller.showAlertDialog(
+                                          {
+            allowHTMLMessage : true,
+            title: $L("XML Processing Error"),
+            message: $L(string),
+            choices:[
+            {label:$L('Ok'), type:'primary'}  
+            ]
+        });
+  
+    },
+    
+    
     //******************************************************************************************/
     //Get All Artist information 
     GetArtistsCallback: null,
@@ -240,7 +305,7 @@ AmpacheServer = Class.create(
 
         path = this.BuildActionString(type, offset);
         
-        
+        try{
         this.ArtistRequest = new Ajax.Request(path, 
         {
             method: 'get',
@@ -252,6 +317,11 @@ AmpacheServer = Class.create(
             onSuccess: this.GotArtistsCallback.bind(this),
             onFailure: this.GotArtistsCallback.bind(this)
         });
+        }
+        catch(err)
+        {
+            Mojo.Controller.errorDialog("Get "+ type+" failed: " + err.message);
+        }
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
     },
     
@@ -261,9 +331,14 @@ AmpacheServer = Class.create(
         }
     },
     
+    
+    
     GotArtistsCallback: function(transport){
         Mojo.Log.info(transport.responseText);
         var ArtistList = null;
+        
+        
+        
         if (transport.responseXML){
             ArtistList = [];
             var artistListXML = transport.responseXML.getElementsByTagName("artist");
@@ -279,14 +354,32 @@ AmpacheServer = Class.create(
                 var n = parseInt(artistListXML.length/4, 10); // four Stage unloop... semi Duffish
                 if (n>0){
                     do{
-                        ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
-                        i++;
-                        ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
-                        i++;
-                        ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
-                        i++;
-                        ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
-                        i++;
+                        try
+                        {
+                            ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                            i++;
+                            ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                            i++;
+                            ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                            i++;
+                            ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), artistListXML[i].getElementsByTagName("name")[0].firstChild.data, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                            i++;
+                        }
+                        catch (err)
+                        {
+                            var name = artistListXML[i].getElementsByTagName("name");
+                            if(name)
+                            {
+                               var  _name = artistListXML[i].getElementsByTagName("name")[0].firstChild.data;
+                            }
+                            else
+                            {
+                                var _name = "";
+                            }
+                            ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), _name, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
+                            i++;
+                                                        
+                        }
                     }while(i<n);
                 }
                 if (i<artistListXML.length){
@@ -298,7 +391,8 @@ AmpacheServer = Class.create(
         }
         else 
         {
-            Mojo.Controller.errorDialog("Get Artists failed: " + this.XMLFormattingIssue);
+            this.ProblemFinder(transport.responseText, "artist");
+            //Mojo.Controller.errorDialog("Get Artists failed: " + this.XMLFormattingIssue);
         }
         
         this.GetArtistsCallback(ArtistList);
@@ -398,8 +492,10 @@ AmpacheServer = Class.create(
                     }while (++i<albumListXML.length);
                 }
             }
-        }else{
-            Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);
+        }
+        else{
+            this.ProblemFinder(transport.responseText, "album");
+            //Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);
         }
         Mojo.Log.info("Processed " + AlbumList.length + " albums");
         if (AlbumList){
@@ -572,7 +668,8 @@ AmpacheServer = Class.create(
                 i++;
             }
         }else{
-            Mojo.Controller.errorDialog("Get songs failed: " + this.XMLFormattingIssue);
+            this.ProblemFinder(transport.responseText, "song");
+            //Mojo.Controller.errorDialog("Get songs failed: " + this.XMLFormattingIssue);
         }
         this.SongsRequest = null;
         Mojo.Log.info("Calling callback");
@@ -642,7 +739,8 @@ AmpacheServer = Class.create(
                 i++;
             }
         }else{
-            Mojo.Controller.errorDialog("Get Playlists failed: " + this.XMLFormattingIssue);
+            this.ProblemFinder(transport.responseText, "playlist");
+            //Mojo.Controller.errorDialog("Get Playlists failed: " + this.XMLFormattingIssue);
         }
         this.GetPlaylistsCallback(PlaylistsList);
         this.PlaylistRequest=null;
@@ -726,7 +824,8 @@ AmpacheServer = Class.create(
                 i++;
             }
         }else{
-            Mojo.Controller.errorDialog("Get Tags failed: " + this.XMLFormattingIssue);
+            this.ProblemFinder(transport.responseText, "tag");
+            //Mojo.Controller.errorDialog("Get Tags failed: " + this.XMLFormattingIssue);
         }
         this.GetTagsCallback(TagsList);
         this.TagsRequest =null;
@@ -822,7 +921,7 @@ ArtistModel = Class.create(
     id: null,
     name: null,
     albums: null,
-    songs: null,
+    songs: null
 });
 
 /*
