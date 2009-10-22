@@ -209,6 +209,14 @@ AmpacheServer = Class.create(
     },
     
     
+    CleanupIllegalXML:function(transport)
+    {
+        text = transport.responseText;
+        text.replace(/[^\x0009\x000A\x000D\x0020-\xD7FF\xE000-\xFFFD]/, ' ');
+        transport.responseXML = parser.parseFromString(text,"text/xml");
+        return transport;
+    },
+    
     EscapeXML:function(xml)
     {
         return xml.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt; ");
@@ -337,6 +345,10 @@ AmpacheServer = Class.create(
         Mojo.Log.info(transport.responseText);
         var ArtistList = null;
         
+        if(!transport.responseXML)
+        {
+            transport = this.CleanupIllegalXML(transport);
+        }
         
         
         if (transport.responseXML){
@@ -460,9 +472,17 @@ AmpacheServer = Class.create(
     
     GotAlbumsCallback: function(transport){
         Mojo.Log.info("--> AmpacheServer.prototype.GotAlbumsCallback");
-        var xmlDoc = transport.responseXML;
+        
+        if(!transport.responseXML)
+        {
+            transport = this.CleanupIllegalXML(transport);
+        }
+        
+        
+        
         var AlbumList = null;
-        if (xmlDoc){
+        if (transport.responseXML){
+            var xmlDoc = transport.responseXML;
             AlbumList = [];
             var albumListXML = xmlDoc.getElementsByTagName("album");
             if (albumListXML.length > 0){
@@ -576,6 +596,11 @@ AmpacheServer = Class.create(
         Mojo.Log.info("--> AmpacheServer.prototype.GotSongsCallbackInternal");
         Mojo.Log.info(transport.responseText);
         var SongsList = null;
+        
+        if(!transport.responseXML)
+        {
+            transport = this.CleanupIllegalXML(transport);
+        }
         if (transport.responseXML){
             SongsList = new Array();
             /*
@@ -725,6 +750,12 @@ AmpacheServer = Class.create(
     GotPlaylistsCallback: function(transport){
         Mojo.Log.info(transport.responseText);
         var PlaylistsList = null;
+        
+        if(!transport.responseXML)
+        {
+            transport = this.CleanupIllegalXML(transport);
+        }
+        
         if (transport.responseXML){
             PlaylistsList = [];
             var PlaylistsListXML = transport.responseXML.getElementsByTagName("playlist");
@@ -807,6 +838,12 @@ AmpacheServer = Class.create(
          </root>
          *
          */
+        
+        if(!transport.responseXML)
+        {
+            transport = this.CleanupIllegalXML(transport);
+        }
+        
         if (transport.responseXML){
             TagsList = [];
             var TagsListXML = transport.responseXML.getElementsByTagName("tag");
