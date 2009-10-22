@@ -101,7 +101,9 @@ initialize: function(){ },
         //*******************************************************************************************************
         // Random Album Selector
         var photoAttributes = {
-            limitZoom:true    
+            limitZoom:true,
+            highResolutionLoadTimeout:0
+
             //noExtractFS : true
         };
         
