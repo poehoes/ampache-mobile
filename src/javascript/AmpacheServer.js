@@ -211,8 +211,9 @@ AmpacheServer = Class.create(
     
     CleanupIllegalXML:function(transport)
     {
+        this.ProblemFinder(transport.responseText); //Alert Users to Issue
         text = transport.responseText;
-        text.replace(/[^\x0009\x000A\x000D\x0020-\xD7FF\xE000-\xFFFD]/, ' ');
+        text.replace(/[^\x0009\x000A\x000D\x0020-\xD7FF\xE000-\xFFFD]/g, ' ');
         transport.responseXML = parser.parseFromString(text,"text/xml");
         return transport;
     },
@@ -242,10 +243,8 @@ AmpacheServer = Class.create(
                 
                 var element =  header + "<root>" + elements[i] + footer + "</root>";
                     
-                //if(element.match(/[\x01-\x08]/))
-                if(element.match(/[\x01-\x08]/) ||element.match(/[\x0B-\x0C]/)||element.match(/[\x0E-\x1F]/))
+                if(element.match(/[^\x0009\x000A\x000D\x0020-\xD7FF\xE000-\xFFFD]/))
                 {
-                       
                     this.ShowErrorAlert("Look for characters like this in the Ampache WebUI: <img src='images/illegal_chars.png'/><br><br><b>corrupt "+type+":</b>" + this.EscapeXML(elements[i] + footer) );
                     foundProblem = true;
                 }
@@ -268,15 +267,38 @@ AmpacheServer = Class.create(
     {
         var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
         controller.showAlertDialog(
-                                          {
+            {
+            onChoose: this.EmailError.bind(string),
             allowHTMLMessage : true,
             title: $L("XML Processing Error"),
             message: $L(string),
             choices:[
-            {label:$L('Ok'), type:'primary'}  
+            {label:$L('Ok'), value:'ok', type:'primary'},
+            {label:$L('E-Mail Report'), value:'email', type:'secondary'}
             ]
         });
   
+    },
+    
+    EmailError:function(event)
+    {
+        if(event === 'email')
+        {
+            errorString = this;
+            var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+            controller.serviceRequest( 'palm://com.palm.applicationManager',
+                {
+                    method: 'open',
+                    parameters: {
+                        id: 'com.palm.app.email',
+                        params: {
+                            summary: 'Ampache Mobile XML Processing Error',
+                            text:errorString
+                        }
+                    }
+                }
+            )
+        }
     },
     
     
