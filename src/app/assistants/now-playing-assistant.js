@@ -44,7 +44,7 @@ NowPlayingAssistant = Class.create(
                 this.repeatMode = AmpacheMobile.audioPlayer.repeatMode;
                 this.pauseStopItem = this.pauseItem;
                 this.shuffle = params.shuffle || AmpacheMobile.audioPlayer.shuffleOn;
-                AmpacheMobile.audioPlayer.enqueuePlayList(params.playList, this.shuffle)
+                AmpacheMobile.audioPlayer.enqueuePlayList(params.playList, this.shuffle);
                 break;
             
         }

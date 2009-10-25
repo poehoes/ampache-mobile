@@ -227,7 +227,7 @@ SongsAssistant = Class.create(
             else
             {   //Filtered
                 var i = 0;
-                var filteredCmd = []
+                var filteredCmd = [];
     
                  if(this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.PlayListPending===true))
                 {
@@ -460,7 +460,7 @@ SongsAssistant = Class.create(
             {
             
                 var i = 0;
-                var filteredCmd = []
+                var filteredCmd = [];
                 item = event.item;
                 item._this = this;
                 item._event = event;
