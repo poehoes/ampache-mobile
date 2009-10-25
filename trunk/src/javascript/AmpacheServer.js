@@ -303,7 +303,7 @@ AmpacheServer = Class.create(
                         }
                     }
                 }
-            )
+            );
         }
     },
     
@@ -1015,7 +1015,7 @@ AlbumModel = Class.create(
         //Mojo.Log.info("--> AlbumModel constructor " + _name);
         this.id = _id;
         this.artist = _artist;
-        this.artist_id = _artist_id,
+        this.artist_id = _artist_id;
         this.name = _name;
         this.tracks = _tracks;
         this.year = _year;
