@@ -55,24 +55,7 @@ SongsAssistant = Class.create(
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
         
-        ////******************************************************************************************************
-        //// Make scrim
-        //this.scrim = $("spinner-scrim");
-        //this.scrim.hide();
-        //
-        ////********************************************************************************
-        ////Setup Loading Progress Pill
-        //this.PPattr = 
-        //{
-        //    title: this.SceneTitle,
-        //    image: 'images/icons/songs.png'
-        //};
-        //this.songLoadModel = 
-        //{
-        //    value: 0
-        //};
-        //this.controller.setupWidget('songProgressbar', this.PPattr, this.songLoadModel);
-        
+
         
         
         //*********************************************************************************
@@ -103,23 +86,8 @@ SongsAssistant = Class.create(
             items: this.itemsHelper.ItemsList
         };
         this.controller.setupWidget('songsList', attributes, this.listModel);
-        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
-        //this.holdHandler = this.holdEvent.bindAsEventListener(this);
-        //Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
-        
-        
-        ////******************************************************************************************************
-        //// Setup Spinner
-        //this.spinnerLAttrs = 
-        //{
-        //    spinnerSize: 'large'
-        //};
-        //this.spinnerModel = 
-        //{
-        //    spinning: false
-        //};
-        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+
+
         
         
         //*********************************************************************************************************
@@ -141,19 +109,23 @@ SongsAssistant = Class.create(
         };
         this.itemsHelper.setup(params);
         
-        
-        
-        this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
         
-        //this.TurnOnSpinner("Retrieving<br>Songs");
+        //**********************************************************************
+        // Events
+        this.shuffleHandler = this.handleShuffleAll.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('shuffleAll'), Mojo.Event.tap, this.shuffleHandler);
         
-        
+        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
+
     },
     
     cleanup: function (event)
     {
         Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.controller.get('shuffleAll'), Mojo.Event.tap, this.shuffleHandler);
+        this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
     

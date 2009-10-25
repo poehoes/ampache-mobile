@@ -38,38 +38,6 @@ PlaylistsAssistant = Class.create(
     setup: function()
     {
     
-        //******************************************************************************************************
-        // Make scrim
-        //this.scrim = $("spinner-scrim");
-        //this.scrim.hide();
-        
-        //*********************************************************************************************************
-        //  Setup Progress Pill
-        /*this.PPattr = 
-        {
-            title: this.SceneTitle,
-            image: 'images/icons/playlists.png'
-        };
-        this.playlistLoadModel = 
-        {
-            value: 0
-        };
-        */this.controller.setupWidget('playlistProgressbar', this.PPattr, this.playlistLoadModel);
-        
-        
-        //*********************************************************************************************************
-        //  Setup Spinner
-        //this.spinnerLAttrs = 
-        //{
-        //    spinnerSize: 'large'
-        //};
-        //this.spinnerModel = 
-        //{
-        //    spinning: false
-        //};
-        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
-        //
-        
         
         //*********************************************************************************************************
         //  Setup Filter List
@@ -86,8 +54,7 @@ PlaylistsAssistant = Class.create(
             items: this.itemsHelper.ItemsList
         };
         this.controller.setupWidget('playlistFilterList', this.listAttributes, this.listModel);
-        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('playlistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+
         
         
         //*********************************************************************************************************
@@ -110,7 +77,24 @@ PlaylistsAssistant = Class.create(
         
         
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        //this.TurnOnSpinner();
+        
+        //*********************************************************************************************************
+        // Events
+        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('playlistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+
+    },
+    
+    cleanup: function(event)
+    {
+    
+        Mojo.Log.info("--> cleanup");
+        
+        Mojo.Event.stopListening(this.controller.get('playlistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        this.itemsHelper.cleanup();
+        this.itemsHelper = null;
+        Mojo.Log.info("<-- cleanup");
+        
         
     },
     
@@ -168,39 +152,6 @@ PlaylistsAssistant = Class.create(
     deactivate: function(event)
     {
         this.itemsHelper.Deactivate();
-    },
-    
-    cleanup: function(event)
-    {
-    
-        Mojo.Log.info("--> cleanup");
-        
-        
-        Mojo.Event.stopListening(this.controller.get('playlistFilterList'), Mojo.Event.listTap, this.listTapHandler);
-        
-        Mojo.Log.info("<-- cleanup");
-        
-        
-    },
-    
-    
-    TurnOnSpinner: function()
-    {
-        Mojo.Log.info("--> TurnOnSpinner");
-        CenterSpinner($('large-activity-spinner'));
-        this.scrim.show();
-        this.spinnerModel.spinning = true;
-        this.controller.modelChanged(this.spinnerModel);
-        Mojo.Log.info("<-- TurnOnSpinner");
-    },
-    
-    TurnOffSpinner: function()
-    {
-        Mojo.Log.info("-----> TurnOffSpinner");
-        this.scrim.hide();
-        this.spinnerModel.spinning = false;
-        this.controller.modelChanged(this.spinnerModel);
-        Mojo.Log.info("<----- TurnOffSpinner");
     }
     
     

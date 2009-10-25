@@ -52,9 +52,7 @@ PreferencesAssistant = Class.create(
         
         };
         this.controller.setupWidget('innerList', this.innerListAttrs, this.accountsModel);
-        this.controller.listen('innerList', Mojo.Event.listTap, this.listTapHandler.bindAsEventListener(this));
-        this.controller.listen('innerList', Mojo.Event.listAdd, this.listAddHandler.bindAsEventListener(this));
-        this.controller.listen('innerList', Mojo.Event.listDelete, this.listDeleteHandler.bindAsEventListener(this));
+
         
         
         
@@ -86,8 +84,7 @@ PreferencesAssistant = Class.create(
         
         
         
-        this.accountSelectorChanged = this.accountSelectorChanged.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
+
         this.controller.setupWidget('accountSelector', 
         {
             label: 'Account',
@@ -100,7 +97,7 @@ PreferencesAssistant = Class.create(
         
         //**********************************************************************************************************************
         //Setup Stream Debug Toggle
-        // Setup toggle widget and an observer for when it is changed
+        // Setup toggle widget and  listen  for when it is changed
         this.debugAttr = 
         {
             trueLabel: 'On',//if the state is true, what to label the toggleButton; default is 'On'
@@ -116,8 +113,7 @@ PreferencesAssistant = Class.create(
         };
         
         this.controller.setupWidget('stream-debug-toggle', this.debugAttr, this.debugModel);
-        this.debug_pressed = this.debugPressed.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
+
         
         
         //**********************************************************************************************************************
@@ -129,8 +125,7 @@ PreferencesAssistant = Class.create(
         };
         
         this.controller.setupWidget('rotation-toggle', this.debugAttr, this.rotationModel);
-        this.rotation_pressed = this.rotationPressed.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
+
         
         
         
@@ -149,15 +144,48 @@ PreferencesAssistant = Class.create(
         
         this.controller.setupWidget('backgroundBtn', this.button1Attributes, this.button1Model);
         
-        Mojo.Event.listen(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.PushBackground.bind(this));
+        //Events
+        this.listTapFunction = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('innerList'), Mojo.Event.listTap, this.listTapFunction);
         
+        this.listAddFunction = this.listAddHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('innerList'), Mojo.Event.listAdd, this.listAddFunction);
         
+        this.listDeleteFunction = this.listDeleteHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
+        
+        this.accountSelectorChanged = this.accountSelectorChanged.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
+        
+        this.debug_pressed = this.debugPressed.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
+        
+        this.pushBackGroundHandler = this.PushBackground.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.pushBackGroundHandler);
+        
+        this.rotation_pressed = this.rotationPressed.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
         
         
         
     },
     
+        cleanup: function(event)
+    {
     
+        Mojo.Log.info("--> PreferencesAssistant.prototype.cleanup");
+        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listTap, this.listTapFunction);
+        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listAdd, this.listAddFunction);
+        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
+        Mojo.Event.stopListening(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
+        
+        
+        Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
+        Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
+        
+        Mojo.Event.stopListening(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.pushBackGroundHandler);
+        Mojo.Log.info("<-- PreferencesAssistant.prototype.cleanup");
+    },
     
     
     
@@ -343,22 +371,7 @@ PreferencesAssistant = Class.create(
          this scene is popped or another scene is pushed on top */
         this.settingsManager.SaveSettings();
         
-    },
-    
-    cleanup: function(event)
-    {
-    
-        Mojo.Log.info("--> PreferencesAssistant.prototype.cleanup");
-        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listTap, this.listTapHandler);
-        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listAdd, this.listAddHandler);
-        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteHandler);
-        Mojo.Event.stopListening(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
-        
-        
-        Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
-        Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
-        
-        Mojo.Event.stopListening(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.PushBackground);
-        Mojo.Log.info("<-- PreferencesAssistant.prototype.cleanup");
     }
+    
+
 });

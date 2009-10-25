@@ -53,20 +53,47 @@ SearchMenuAssistant = Class.create(
             //textCase: Mojo.Widget.steModeLowerCase,
             enterSubmits: true
         }, this.searchModel = {});
-        this.controller.listen("search-field", Mojo.Event.propertyChange, this.searchTextChanged.bindAsEventListener(this));
         this.SearchField = this.controller.get("search-field");
         
         
         //*****************************************************************************************************
         // Search Event
-        this.controller.get('searchArtists').observe(Mojo.Event.tap, this.searchForArtists.bindAsEventListener(this));
-        this.controller.get('searchAlbums').observe(Mojo.Event.tap, this.searchForAlbums.bindAsEventListener(this));
-        this.controller.get('searchSongs').observe(Mojo.Event.tap, this.searchForSongs.bindAsEventListener(this));
-        this.controller.get('searchPlaylists').observe(Mojo.Event.tap, this.searchForPlaylists.bindAsEventListener(this));
-        //this.controller.get('searchGenres').observe(Mojo.Event.tap, this.searchForGenres.bindAsEventListener(this));
-        this.controller.get('searchGlobal').observe(Mojo.Event.tap, this.searchForGlobal.bindAsEventListener(this));
-        this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.handleKeyPressEvent.bindAsEventListener(this));
-        this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.handleKeyPressEvent.bindAsEventListener(this));
+        this.searchTextChanged =  this.searchTextChanged.bindAsEventListener(this);
+        this.controller.listen("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
+        
+        this.artistSearchHandler = this.searchForArtists.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('searchArtists'), Mojo.Event.tap,  this.artistSearchHandler);
+        
+        this.albumSearchHandler = this.searchForAlbums.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('searchAlbums'), Mojo.Event.tap, this.albumSearchHandler);
+        
+        this.songsSearchHandler = this.searchForSongs.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('searchSongs'), Mojo.Event.tap, this.songsSearchHandler);
+        
+        this.plSearchHandler = this.searchForPlaylists.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('searchPlaylists'), Mojo.Event.tap, this.plSearchHandler);
+        
+        //this.genresSearchHandler = this.searchForGenres.bindAsEventListener(this);
+        //this.controller.listen(this.controller.get('searchGenres'), Mojo.Event.tap, this.genresSearchHandler);
+        
+        this.globalSearchHandler = this.searchForGlobal.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('searchGlobal'), Mojo.Event.tap, this.globalSearchHandler);
+        
+        this.keypressHandler = this.handleKeyPressEvent.bindAsEventListener(this);
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
+    },
+    
+    cleanup: function(event){
+        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
+        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
+        this.controller.stopListening("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
+        this.controller.stopListening(this.controller.get('searchArtists'), Mojo.Event.tap,  this.artistSearchHandler);
+        this.controller.stopListening(this.controller.get('searchAlbums'), Mojo.Event.tap, this.albumSearchHandler);
+        this.controller.stopListening(this.controller.get('searchSongs'), Mojo.Event.tap, this.songsSearchHandler);
+        this.controller.stopListening(this.controller.get('searchPlaylists'), Mojo.Event.tap, this.plSearchHandler);
+        //this.controller.stopListening(this.controller.get('searchGenres'), Mojo.Event.tap, this.genresSearchHandler);
+        this.controller.stopListening(this.controller.get('searchGlobal'), Mojo.Event.tap, this.globalSearchHandler);
     },
     
     searchText: null,
@@ -250,11 +277,9 @@ SearchMenuAssistant = Class.create(
         {
                 type:"display"
         });
-    },
-    
-    
-    
-    cleanup: function(event){
-        this.controller.stopListening("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
     }
+    
+    
+    
+
 });

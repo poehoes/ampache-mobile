@@ -135,10 +135,9 @@ MainmenuAssistant = Class.create(
             items: this.mainmenu
         });
         
-        // Watch for taps on the list items 
-        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
-        Mojo.Log.info("<-- setup");
+        
+
+
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
         
         //****************************************************************************************************
@@ -155,12 +154,30 @@ MainmenuAssistant = Class.create(
             }
         }
         
+        // Menu Tap Event
+        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
+        
         //*****************************************************************************************************
         // Search Event
-        this.controller.get('search').observe(Mojo.Event.tap, this.pushSearch.bindAsEventListener(this));
+        this.searchTapHandler = this.pushSearch.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
         
 
     },
+    
+    cleanup: function(event){
+        /* this function should do any cleanup needed before the scene is destroyed as 
+         a result of being popped off the scene stack */
+        Mojo.Log.info("--> ArtistsAssistant.prototype.cleanup");
+        Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
+        
+        AmpacheMobile.audioPlayer.PlayListPending = false;
+        AmpacheMobile.ampacheServer.StopPing();
+        Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
+    },
+    
     
     pushSearch: function(){
         this.controller.stageController.pushScene('search-menu');
@@ -394,17 +411,7 @@ MainmenuAssistant = Class.create(
         }
     },
     
-    cleanup: function(event){
-        /* this function should do any cleanup needed before the scene is destroyed as 
-         a result of being popped off the scene stack */
-        Mojo.Log.info("--> ArtistsAssistant.prototype.cleanup");
-        Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
-        
-        AmpacheMobile.audioPlayer.PlayListPending = false;
-        AmpacheMobile.ampacheServer.StopPing();
-        Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
-    },
-    
+
     dividerFunc: function(itemModel){
         return itemModel.category; // We're using the item's category as the divider label.
     }

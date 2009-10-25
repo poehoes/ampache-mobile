@@ -102,15 +102,7 @@ NowPlayingAssistant = Class.create(
         Mojo.Log.info("Setup slider");
         this.controller.setupWidget('sliderdiv', sliderAttributes, this.sliderModel);
         
-        Mojo.Log.info("Setup listeners");
-        var slider = this.controller.get('sliderdiv');
-        slider.observe(Mojo.Event.propertyChange, this.progressBarSeek.bind(this));
-        slider.observe(Mojo.Event.sliderDragStart, this.progressBarDragStart.bind(this));
-        slider.observe(Mojo.Event.sliderDragEnd, this.progressBarDragEnd.bind(this));
-        
-        this.controller.get('now-playing').observe(Mojo.Event.dragStart, this.noDrag.bindAsEventListener(this));
-        this.controller.get('playback-display').observe(Mojo.Event.flick, this.handleFlick.bindAsEventListener(this));
-        this.controller.get('playback-display').observe(Mojo.Event.tap, this.doubleClick.bindAsEventListener(this));
+
         
         this.updateBuffering(0, 0);
         
@@ -141,7 +133,39 @@ NowPlayingAssistant = Class.create(
         window.onresize = this.FitToWindow;
         this.FitToWindow();
         
+        
+        //***************************************************************************************
+        //Events
+        this.slider = this.controller.get('sliderdiv');
+        
+        this.seekHandler = this.progressBarSeek.bindAsEventListener(this);
+        Mojo.Event.listen(this.slider, Mojo.Event.propertyChange, this.seekHandler);
+        
+        this.dragStartHandler = this.progressBarDragStart.bindAsEventListener(this);
+        Mojo.Event.listen(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
+        
+        this.dragEndHandler = this.progressBarDragEnd.bindAsEventListener(this);
+        Mojo.Event.listen(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
+        
+        this.noDragHandler = this.noDrag.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler );
+        
+        this.flickHandler = this.handleFlick.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
+        
+        this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
+        
         Mojo.Log.info("<-- setup");
+    },
+    
+    cleanup: function(event){
+        Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
+        Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
+        Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
+        Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler );
+        Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
+        Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
     },
     
     FitToWindow: function(){
@@ -308,8 +332,7 @@ NowPlayingAssistant = Class.create(
         Mojo.Log.info("--> activate");
     },
     
-    cleanup: function(event){
-    },
+
     
     updateTime: function(current, duration){
         //Mojo.Log.info("-- updateTime secs", current);
