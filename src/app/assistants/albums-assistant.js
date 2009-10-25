@@ -71,12 +71,21 @@ AlbumsAssistant = Class.create({
 
         Mojo.Log.info("--> setup");
 
-        //******************************************************************************************************
-        // Make scrim
-        this.scrim = $("spinner-scrim");
-        this.scrim.hide();
+        var title = this.controller.get('title');
+        title.innerHTML = this.SceneTitle;
 
+
+
+
+
+        ////******************************************************************************************************
+        //// Make scrim
+        //this.scrim = $("spinner-scrim");
+        //this.scrim.hide();
+        //
+        
         //******************************************************************************************************
+        // Setup numSongs pill
         if (this.numSongs) {
             $('numSongs').innerHTML = this.numSongs;
         }
@@ -84,17 +93,19 @@ AlbumsAssistant = Class.create({
         {
             $('songsPill').hide();
         }
-
-        this.PPattr = {
-            title: this.SceneTitle,
-            image: 'images/icons/albums.png'
-        };
-        this.albumLoadModel = {
-            //iconPath: "action-icon",
-            value: 0
-            //disabled : false
-        };
-        this.controller.setupWidget('albumProgressbar', this.PPattr, this.albumLoadModel);
+        //
+        //this.PPattr = {
+        //    title: this.SceneTitle,
+        //    image: 'images/icons/albums.png'
+        //};
+        //this.albumLoadModel = {
+        //    //iconPath: "action-icon",
+        //    value: 0
+        //    //disabled : false
+        //};
+        
+        
+        //this.controller.setupWidget('albumProgressbar', this.PPattr, this.albumLoadModel);
 
         //this.controller.get('title').update(this.SceneTitle);
 
@@ -103,16 +114,16 @@ AlbumsAssistant = Class.create({
             this.controller.get('shuffleForArtist').hide();
         }
 
-        /* setup widgets here */
-        this.spinnerLAttrs = {
-            spinnerSize: 'large'
-        };
-
-        this.spinnerModel = {
-            spinning: false
-        };
-
-        this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+        ///* setup widgets here */
+        //this.spinnerLAttrs = {
+        //    spinnerSize: 'large'
+        //};
+        //
+        //this.spinnerModel = {
+        //    spinning: false
+        //};
+        //
+        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
 
         
 
@@ -201,16 +212,16 @@ AlbumsAssistant = Class.create({
 
         this.controller.setupWidget(Mojo.Menu.appMenu, appMenuAttr, this.appMenuModel);
 
-        this.TurnOnSpinner("Retrieving<br>Albums");
+        //this.TurnOnSpinner("Retrieving<br>Albums");
 
         var params = {
             controller: this.controller,
-            TurnOffSpinner: this.TurnOffSpinner.bind(this),
+            //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('albumsFilterList'),
             getItemsCallback: this.GetAlbums.bind(this),
             //ItemsList :this.AlbumList,
-            listModel: this.listModel,
-            progressModel: this.albumLoadModel,
+            //listModel: this.listModel,
+            //progressModel: this.albumLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedAlbums,
             SortFunction: ((this.type !== "random") &&(this.sortType !== AlbumSortType.alpha)) ? this.sortList.bind(this) : null,
@@ -294,6 +305,9 @@ AlbumsAssistant = Class.create({
     },
 
     handleCommand: function (event) {
+        
+        this.itemsHelper.handleCommand(event);
+        
         var reSortList = false;
         this.prevSortType = this.sortType;
 
@@ -322,7 +336,10 @@ AlbumsAssistant = Class.create({
             }
             event.stopPropagation();
             break;
+        
         }
+        
+        
 
         if (reSortList) // && this.itemsHelper.LoadingFinished)
         {
@@ -432,24 +449,11 @@ AlbumsAssistant = Class.create({
     },
 
     activate: function (event) {
-
-        Mojo.Log.info("--> activate");
-
-        this.itemsHelper.Visible = true;
-        this.itemsHelper.GetItems();
-
-        Mojo.Log.info("<-- activate");
+        this.itemsHelper.Activate();
     },
 
     deactivate: function (event) {
-
-        Mojo.Log.info("--> deactivate");
-
-        //AmpacheMobile.ampacheServer.GetAlbumsCancel();
-        this.itemsHelper.Visible = false;
-        AmpacheMobile.ampacheServer.GetAlbumsCancel();
-        Mojo.Log.info("<-- deactivate");
-
+        this.itemsHelper.Deactivate();
     },
 
     cleanup: function (event) {

@@ -40,6 +40,8 @@ AudioPlayer = Class.create({
     AudioPlayers:null,
     nPlayers:2,
     mediaEvents:null,
+    //Paused:true,
+    PlayListPending:false,
     
     stallTimer:null,
     
@@ -82,11 +84,12 @@ AudioPlayer = Class.create({
             }else{
                 Mojo.Log.info("Setting up audio for palm");
                 this.inPalmHost = false;
-                this.PlayerReady = false;
-                this.player = AudioTag.extendElement(_controller.get('audioPlayerDiv'), _controller);
-                //this.player.palm.audioClass = "media";
+                this.PlayerReady = true;
+                this.player = new Audio();
+                //this.player = AudioTag.extendElement(_controller.get('audioPlayerDiv'), _controller);
+                this.player.palm.audioClass = "media";
                 this.player.mojo.audioClass = "media";
-                this.player.addEventListener("x-palm-connect", this.ConnectedToServer.bind(this));
+                this.player.addEventListener("x-palm-connect", this.handleAudioEvents.bind(this));
                 this.player.addEventListener("x-palm-disconnect", this.handleAudioEvents.bind(this));
                 this.player.addEventListener("x-palm-render-mode", this.handleAudioEvents.bind(this));
                 //this.player.addEventListener("x-palm-success", this.handleAudioEvents.bind(this));
@@ -100,11 +103,11 @@ AudioPlayer = Class.create({
             this.player.addEventListener("ended", this.handleAudioEvents.bind(this));
             this.player.addEventListener("canplay", this.handleAudioEvents.bind(this));
             this.player.addEventListener("canplaythrough", this.handleAudioEvents.bind(this));
-            this.player.addEventListener("canshowfirstframe", this.handleAudioEvents.bind(this));
+            //this.player.addEventListener("canshowfirstframe", this.handleAudioEvents.bind(this));
             this.player.addEventListener("emptied", this.handleAudioEvents.bind(this));
             this.player.addEventListener("load", this.handleAudioEvents.bind(this));
-            this.player.addEventListener("loadedfirstframe", this.handleAudioEvents.bind(this));
-            this.player.addEventListener("loadedmetadata", this.handleAudioEvents.bind(this));
+            //this.player.addEventListener("loadedfirstframe", this.handleAudioEvents.bind(this));
+            //this.player.addEventListener("loadedmetadata", this.handleAudioEvents.bind(this));
             this.player.addEventListener("loadstart", this.handleAudioEvents.bind(this));
             this.player.addEventListener("seeked", this.handleAudioEvents.bind(this));
             this.player.addEventListener("seeking", this.handleAudioEvents.bind(this));
@@ -229,6 +232,7 @@ AudioPlayer = Class.create({
     
     addPlayList:function(newPlayList, _shuffleOn, _startIndex){
         Mojo.Log.info("--> AudioPlayer.prototype.addPlayList");
+        this.PlayListPending = true;
         this.playList = newPlayList;
         this.markPlayListUnplayed();
         this.playOrderList = this.createOrderList();
@@ -342,7 +346,7 @@ AudioPlayer = Class.create({
     stop: function(){
         this.NowPlayingStopPlaybackTimer();
         this.player.pause();
-        this.player.empty();
+        //this.player.empty();
         this.player.src = null;
     },
     
@@ -353,19 +357,20 @@ AudioPlayer = Class.create({
     },
     
     playFinished:false,
-    
     play_finished:function(){
         this.currentPlayingIndex = 0;
         this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
         this.Paused=false;
         switch (this.repeatMode){
             case RepeatModeType.no_repeat:
+                this.PlayListPending = false;
                 this.playFinished=true;
                 this.stop();
                 this.NowPlayingShowPlay();
                 this.UpdateNowPlayingBuffering(0, 0);
                 this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
                 this.NowPlayingResetTime();
+                this.TurnOffNowPlayingButton();
                 break;
             case RepeatModeType.repeat_forever:
                 this.internal_play();
@@ -376,6 +381,13 @@ AudioPlayer = Class.create({
                 this.internal_play();
                 break;
         }
+    },
+
+    TurnOffNowPlayingButton:function()
+    {
+        var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+        var button = controller.get('now-playing-button');
+        button.style.display = 'none';
     },
 
     kill_stall_timer:function()
@@ -403,7 +415,7 @@ AudioPlayer = Class.create({
         if (this.currentPlayingTrack > -1){
             this.Paused = false;
             this.stop();
-            this.stop();
+            //this.stop();
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             //Add a little bit of delay after a next request to allow for rapid song switching.
             if (clicked){
@@ -632,6 +644,20 @@ AudioPlayer = Class.create({
                 this.play_next(false);
                 this.NowPlayingStopPlaybackTimer();
                 break;
+            case "x-palm-connect":
+                this.PlayerReady = true;
+                break;
+            case "loadstart":
+            case "canplaythrough":
+            case "seeked":
+            case "seeking":
+            case "waiting":
+            case "emptied":
+                break;
+            default:
+                this.streamingError("Event:" + event.type);
+                break;
+            
         }
         Mojo.Log.info("<------ AudioPlayer.prototype.handleAudioEvents AudioEvent:",event.type);
     },
@@ -728,11 +754,73 @@ AudioPlayer = Class.create({
     },
     
     NowPlayingDisplayError:function(message){
-        if (this.NowPlaying) {
-            var song = this.playList[this.currentPlayingTrack];
-            this.NowPlaying.streamingError(message, song);
-        }
+        
+
+        
+        //if (this.NowPlaying) {
+        
+        
+            //var song = this.playList[this.currentPlayingTrack];
+            this.streamingError(message, null);
+         //}
     },
+    
+    onStreamingErrorDismiss: function(value){
+        Mojo.Log.info("--> onErrorDialogDismiss value: " + value);
+        switch (value) {
+            case "retry":
+                break;
+            case "palm-attempt":
+                var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+                controller.serviceRequest('palm://com.palm.applicationManager', 
+                {
+                    method: 'open',
+                    parameters: 
+                    {
+                        target: this.errorSong.url
+                    }
+                /*
+                 onSuccess: function(status){
+                 $('area-to-update').update(Object.toJSON(status));
+                 },
+                 onFailure: function(status){
+                 $('area-to-update').update(Object.toJSON(status));
+                 },
+                 onComplete: function(){
+                 this.getButton = myassistant.controller.get('LaunchAudioButton');
+                 this.getButton.mojo.deactivate();
+                 }*/
+                });
+                break;
+        }
+        this.errorSong = null;
+        Mojo.Log.info("<-- onErrorDialogDismiss");
+    },
+    streamingError: function(errorText, song){
+        //this.errorSong = song;
+        var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+        controller.showAlertDialog(
+        {
+            onChoose: this.onStreamingErrorDismiss.bind(this),
+            title: $L("Streaming Error"),
+            message: errorText,
+            choices: [
+            {
+                label: 'OK',
+                value: "retry",
+                type: 'primary'
+            }            /*{
+             label: 'Let Palm Try',
+             value: "palm-attempt",
+             type: 'secondary'
+             
+             }*/
+            ],
+            allowHTMLMessage: true
+        });
+    },
+    
+    
     
     NowPlayingResetTime: function(){
         if (this.NowPlaying) {
@@ -762,11 +850,25 @@ AudioPlayer = Class.create({
 
      setNowPlaying: function(NowPlayingPointer){
         Mojo.Log.info("<-- AudioPlayer.prototype.setNowPlaying loaded");
-        this.NowPlaying = NowPlayingPointer; 
+        this.NowPlaying = NowPlayingPointer;
+        this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
+        this._updateBuffering();
+        this.UpdateNowPlayingTime();
+
+        if(this.Paused===false)
+        {
+            this.NowPlayingStartPlaybackTimer();
+            this.NowPlayingShowPause();
+        }
+        else
+        {
+            this.NowPlayingShowPlay();
+        }
         Mojo.Log.info("--> AudioPlayer.prototype.setNowPlaying loaded");
     },
     
     clearNowPlaying: function(){
-        this.NowPlaying =null;     
+        this.NowPlayingStopPlaybackTimer();
+        this.NowPlaying = null;
     }
 });

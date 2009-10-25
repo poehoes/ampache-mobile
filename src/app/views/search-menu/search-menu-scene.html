@@ -1,8 +1,19 @@
 <div id="main" class="palm-dark">
-    <div x-mojo-element="ProgressPill" id="searchProgressbar" class="ProgressPillHeader"></div>
-    <div class="palm-header-spacer"></div>
-    <div id="search-scrim" class="palm-scrim"></div>
-    <div x-mojo-element="Spinner" id="large-activity-spinner" class='centerSpinner'><span id="wait-message" class="spinner-message">Searching</span></div>
+    <div id="header" class="palm-header left truncating-text">
+        <div class="palm-header-wrapper">
+            <div id='now-playing-button' class="now-playing-button" x-mojo-tap-highlight="immediate">
+                <div class="now-playing-wrapper">
+                    <span x-mojo-loc=''>Now Playing</span>
+                </div>
+            </div>
+            <div class='header-body'>
+                <div class='icon'><img class="icon-img" src='images/icons/search.png'/></div>
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>Search</div>
+            </div>
+        </div>
+    </div>  
+    <div id="spacerDiv" class="music-header-spacer"></div>
+    
     <div id="search-group" class="palm-group unlabeled palm-dark mainMenuList">
         <div id="search-list" class="palm-list">
             <div class="palm-row first">

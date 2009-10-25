@@ -29,35 +29,35 @@ GenresAssistant = Class.create(
     
     setup: function()
     {
-        //******************************************************************************************************
-        // Make scrim
-        this.scrim = $("spinner-scrim");
-        this.scrim.hide();
-        
-        //*********************************************************************************************************
-        //  Setup Spinner
-        this.spinnerLAttrs = 
-        {
-            spinnerSize: 'large'
-        };
-        this.spinnerModel = 
-        {
-            spinning: false
-        };
-        this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
-        
-        //*********************************************************************************************************
-        //  Setup Progress Pill
-        this.PPattr = 
-        {
-            title: this.SceneTitle,
-            image: 'images/icons/genres.png'
-        };
-        this.listLoadModel = 
-        {
-            value: 0
-        };
-        this.controller.setupWidget('ProgressBar', this.PPattr, this.listLoadModel);
+        ////******************************************************************************************************
+        //// Make scrim
+        //this.scrim = $("spinner-scrim");
+        //this.scrim.hide();
+        //
+        ////*********************************************************************************************************
+        ////  Setup Spinner
+        //this.spinnerLAttrs = 
+        //{
+        //    spinnerSize: 'large'
+        //};
+        //this.spinnerModel = 
+        //{
+        //    spinning: false
+        //};
+        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+        //
+        ////*********************************************************************************************************
+        ////  Setup Progress Pill
+        //this.PPattr = 
+        //{
+        //    title: this.SceneTitle,
+        //    image: 'images/icons/genres.png'
+        //};
+        //this.listLoadModel = 
+        //{
+        //    value: 0
+        //};
+        //this.controller.setupWidget('ProgressBar', this.PPattr, this.listLoadModel);
         
         
         //*********************************************************************************************************
@@ -84,11 +84,11 @@ GenresAssistant = Class.create(
         var params = 
         {
             controller: this.controller,
-            TurnOffSpinner: this.TurnOffSpinner.bind(this),
+            //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('genreFilterList'),
             getItemsCallback: this.GetTags.bind(this),
             listModel: this.listModel,
-            progressModel: this.listLoadModel,
+            //progressModel: this.listLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: 0,
             SortFunction: null,
@@ -99,7 +99,7 @@ GenresAssistant = Class.create(
         
         
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        this.TurnOnSpinner();
+        //this.TurnOnSpinner();
         
         
     },
@@ -121,7 +121,9 @@ GenresAssistant = Class.create(
     },
     
     
-    
+    handleCommand: function (event) {
+        this.itemsHelper.handleCommand(event);
+    },
     
     
     
@@ -274,18 +276,12 @@ GenresAssistant = Class.create(
     },
     
     
-    activate: function(event)
-    {
-        this.itemsHelper.Visible = true;
-        this.itemsHelper.GetItems();
-        
-        
+    activate: function (event) {
+        this.itemsHelper.Activate();
     },
-    
-    deactivate: function(event)
-    {
-        this.itemsHelper.Visible = false;
-        AmpacheMobile.ampacheServer.GetTagsCancel();
+
+    deactivate: function (event) {
+        this.itemsHelper.Deactivate();
     },
     
     cleanup: function(event)

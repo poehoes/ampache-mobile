@@ -1,65 +1,48 @@
-<div id="main" class="albums palm-dark">
-    <!--
-    <div  class="palm-header left">
-    <span class="truncating-text" id="title" x-mojo-loc=''></span>
-    <div x-mojo-element="Spinner" id="albums-spinner" class='tinySpinner'></div>
-    </div>
-    -->
-    <div id="spinner-scrim" class="palm-scrim">
-    </div>
-    <div x-mojo-element="Spinner" id="large-activity-spinner" class='centerSpinner'>
-        <div class="spinner-message">
-            Retrieving
-            <br>
-            Data
+<div id="ampache-main" class="palm-dark">
+    
+    <div id="header" class="palm-header left truncating-text">
+        <div class="palm-header-wrapper">
+            <div id='now-playing-button' class="now-playing-button" x-mojo-tap-highlight="immediate">
+                <div class="now-playing-wrapper">
+                    <span x-mojo-loc=''>Now Playing</span>
+                </div>
+            </div>
+            <div class='header-body'>
+                <div class='icon'><img class="icon-img" src='images/icons/albums.png'/></div>
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''></div>
+            </div>
         </div>
-    </div>
-    <div class='customBackground'>
-    </div>
-    <div x-mojo-element="ProgressPill" id="albumProgressbar" class="ProgressPillHeader">
-    </div>
-    <div class="palm-header-spacer">
-    </div>
+    </div>  
+    
+    <div id="spacerDiv" class="music-header-spacer"></div>
+    <div id="scrim" class="palm-scrim"></div>
     
     <div id="shuffleForArtist">
-        <!--<div id="shuffleAll" class="shuffle-all-list-item palm-row single" x-mojo-tap-highlight="momentary">
+        <div id="allSongs" class="palm-row multi-line" id='#{name}_example' x-Mojo-tap-highlight="momentary">
             <div class="palm-row-wrapper">
-                <div class="shuffleLeft shuffleAllText">
-                    <div class="truncating-text" x-mojo-loc=''>
-                        Shuffle All
+                <div class="mainMenuLeft">
+                    <div class="mainMenuTitle">
+                        All Songs
                     </div>
                 </div>
-                <div class="shuffleLeft shuffleAllIcon">
-                    <img src="images/icons/shuffle.png" id="coverArt">
-                    </img>
+                <div class="mainMenuRight">
+                    <img class="mainMenuIcon" src="images/icons/songs.png"/>
+                </div>
+                <div class="mainMenuClear">
+                </div>
+                <div id="songsPill" class="count-pill-container single-art">
+                    <div id="numSongs" class="count-pill-wrapper">
+                        0
+                    </div>
                 </div>
             </div>
-        </div>-->
-        <div id="allSongs" class="palm-row multi-line" id='#{name}_example' x-Mojo-tap-highlight="momentary">
-    <div class="palm-row-wrapper">
-        <div class="mainMenuLeft">
-            <div class="mainMenuTitle">
-                All Songs
-            </div>
         </div>
-        <div class="mainMenuRight">
-            <img class="mainMenuIcon" src="images/icons/songs.png">
-            </img>
-        </div>
-        <div class="mainMenuClear">
-        </div>
-        <div id="songsPill" class="count-pill-container single-art">
-            <div id="numSongs" class="count-pill-wrapper">
-                0
-            </div>
-        </div>
+        
+        <div id="thick-border" class="thick-bottom-border" style="display:block;"></div>
     </div>
-</div>
-        <div id="spacerDiv" class="music-alpha-divider-spacer" style="display:none;">
-        </div>
-        <div id="thick-border" class="thick-bottom-border" style="display:block;">
-        </div>
-    </div>
+    
     <div id="albumsFilterList" x-mojo-element="FilterList">
     </div>
+    
+    
 </div>

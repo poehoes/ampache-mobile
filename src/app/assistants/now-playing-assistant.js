@@ -23,18 +23,36 @@ NowPlayingAssistant = Class.create(
     initialize: function(params){
         Mojo.Log.info("--> NowPlayingAssistant.prototype.constuctor");
         //this.playList = params.playList;
-        this.playList = params.playList;
-        this.startIndex = params.startIndex;
-        this.shuffle = params.shuffle;
+        this.type = params.type;
         this.pauseStopItem = this.pauseItem;
-        this.repeatMode = 0;
+        
+        switch(params.type)
+        {
+            case "display":
+                this.repeatMode = AmpacheMobile.audioPlayer.repeatMode;
+                this.shuffle = AmpacheMobile.audioPlayer.shuffleOn;
+                this.pauseStopItem = this.pauseItem;
+                break;
+            case "enqueue":
+            case "new":
+                this.playList = params.playList;
+                this.startIndex = params.startIndex;
+                this.shuffle = params.shuffle;
+                
+                this.repeatMode = 0;
+                break;
+            
+                break;
+        }
+        
+
         Mojo.Log.info("<-- NowPlayingAssistant.prototype.constuctor");
     },
     
     setup: function(){
         Mojo.Log.info("--> setup");
         this.playing = false;
-        this.NowPlayingDisplaySongInfo(this.playList, this.startIndex);
+        if(this.type === "new" )this.NowPlayingDisplaySongInfo(this.playList, this.startIndex);
         this.controller.setupWidget(Mojo.Menu.appMenu, this.appMenuAttr, this.appMenuModel);
         this.cmdMenuModel = 
         {
@@ -96,16 +114,32 @@ NowPlayingAssistant = Class.create(
         
         this.updateBuffering(0, 0);
         
-        //Setup audio player
-        AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
-        AmpacheMobile.audioPlayer.addPlayList(this.playList, this.shuffle, this.startIndex);
-        //AmpacheMobile.audioPlayer.setCurrentTrack(this.startIndex);
-        AmpacheMobile.audioPlayer.setNowPlaying(this);
-        //this.musicPlayer = AmpacheMobile.audioPlayer.player;
+        if(this.type!=="display")
+        {
+            //Setup audio player
+            //AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
+           
+            AmpacheMobile.audioPlayer.addPlayList(this.playList, this.shuffle, this.startIndex);
+            
+             if(AmpacheMobile.audioPlayer.player.paused === false)
+            {
+                AmpacheMobile.audioPlayer.stop();
+            }
+            
+            //AmpacheMobile.audioPlayer.setCurrentTrack(this.startIndex);
+            //AmpacheMobile.audioPlayer.setNowPlaying(this);
+            //this.musicPlayer = AmpacheMobile.audioPlayer.player;
+            
+            
+            $('coverArt').src = "images/blankalbum.png";
+        }
+        else
+        {
+            
+        }
+        
         window.onresize = this.FitToWindow;
         this.FitToWindow();
-        
-        $('coverArt').src = "images/blankalbum.png";
         
         Mojo.Log.info("<-- setup");
     },
@@ -253,16 +287,22 @@ NowPlayingAssistant = Class.create(
      */
     activate: function(event){
         Mojo.Log.info("--> activate");
-        AmpacheMobile.audioPlayer.play();
         AmpacheMobile.audioPlayer.setNowPlaying(this);
-        this.showPlayButton();
+        
+        if(this.type !== "display")
+        {
+            AmpacheMobile.audioPlayer.play();
+        }
+    
+        
+        
         AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
         Mojo.Log.info("<-- activate");
     },
 
     deactivate: function(event){
         Mojo.Log.info("<-- activate");
-        AmpacheMobile.audioPlayer.stop();
+        //AmpacheMobile.audioPlayer.stop();
         AmpacheMobile.audioPlayer.clearNowPlaying();
         window.onresize = null;
         Mojo.Log.info("--> activate");
@@ -294,7 +334,7 @@ NowPlayingAssistant = Class.create(
     },
     
     timeFormatter: function(secs){
-        Mojo.Log.error("--> timeFormatter secs: " + secs);
+        Mojo.Log.info("--> timeFormatter secs: " + secs);
         var hrs = Math.floor(secs / 3600);
         var mins = Math.floor(secs / 60) - hrs * 60;
         secs = secs % 60;

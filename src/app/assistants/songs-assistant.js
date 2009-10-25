@@ -52,24 +52,26 @@ SongsAssistant = Class.create(
     setup: function ()
     {
     
-    
-        //******************************************************************************************************
-        // Make scrim
-        this.scrim = $("spinner-scrim");
-        this.scrim.hide();
+        var title = this.controller.get('title');
+        title.innerHTML = this.SceneTitle;
         
-        //********************************************************************************
-        //Setup Loading Progress Pill
-        this.PPattr = 
-        {
-            title: this.SceneTitle,
-            image: 'images/icons/songs.png'
-        };
-        this.songLoadModel = 
-        {
-            value: 0
-        };
-        this.controller.setupWidget('songProgressbar', this.PPattr, this.songLoadModel);
+        ////******************************************************************************************************
+        //// Make scrim
+        //this.scrim = $("spinner-scrim");
+        //this.scrim.hide();
+        //
+        ////********************************************************************************
+        ////Setup Loading Progress Pill
+        //this.PPattr = 
+        //{
+        //    title: this.SceneTitle,
+        //    image: 'images/icons/songs.png'
+        //};
+        //this.songLoadModel = 
+        //{
+        //    value: 0
+        //};
+        //this.controller.setupWidget('songProgressbar', this.PPattr, this.songLoadModel);
         
         
         
@@ -103,21 +105,21 @@ SongsAssistant = Class.create(
         this.controller.setupWidget('songsList', attributes, this.listModel);
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
-        this.holdHandler = this.holdEvent.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
+        //this.holdHandler = this.holdEvent.bindAsEventListener(this);
+        //Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
         
         
-        //******************************************************************************************************
-        // Setup Spinner
-        this.spinnerLAttrs = 
-        {
-            spinnerSize: 'large'
-        };
-        this.spinnerModel = 
-        {
-            spinning: false
-        };
-        this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+        ////******************************************************************************************************
+        //// Setup Spinner
+        //this.spinnerLAttrs = 
+        //{
+        //    spinnerSize: 'large'
+        //};
+        //this.spinnerModel = 
+        //{
+        //    spinning: false
+        //};
+        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
         
         
         //*********************************************************************************************************
@@ -142,15 +144,23 @@ SongsAssistant = Class.create(
         
         
         this.controller.get('shuffleAll').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
-        
-        
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
         
-        this.TurnOnSpinner("Retrieving<br>Songs");
+        //this.TurnOnSpinner("Retrieving<br>Songs");
         
         
     },
     
+    cleanup: function (event)
+    {
+        Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
+        this.itemsHelper = null;
+    },
+    
+    
+    handleCommand: function (event) {
+        this.itemsHelper.handleCommand(event);
+    },
     
     holdEvent: function (event)
     {
@@ -232,6 +242,7 @@ SongsAssistant = Class.create(
             {
                 this.controller.stageController.pushScene('now-playing', 
                 {
+                    type:"new",
                     playList: this.itemsHelper.ItemsList,
                     startIndex: 0,
                     shuffle: true
@@ -300,7 +311,11 @@ SongsAssistant = Class.create(
             controller.stageController.pushScene('songs', 
             {
                 SceneTitle: item.artist + " - " + item.album,
-                Type: "album"
+                Type: "album",
+                Album_id: item.album_id,
+                Expected_items: parseInt(AmpacheMobile.ampacheServer.songs, 10),
+                Item: event.item
+                
             });
         }
         else if (event === "pushFiltered")
@@ -309,7 +324,7 @@ SongsAssistant = Class.create(
             index = item._event.index;
             controller.stageController.pushScene('now-playing', 
             {
-            
+                type:"new",
                 playList: playList,
                 startIndex: index,
                 shuffle: false
@@ -321,6 +336,7 @@ SongsAssistant = Class.create(
             index = item._this.FindIndex(item.id);
             controller.stageController.pushScene('now-playing', 
             {
+                type:"new",
                 playList: playList,
                 startIndex: index,
                 shuffle: false
@@ -331,7 +347,7 @@ SongsAssistant = Class.create(
             playList = this.itemsHelper.GetAllMatches(this.itemsHelper.filterString);
             controller.stageController.pushScene('now-playing', 
             {
-            
+                type:"new",
                 playList: playList,
                 startIndex: 0,
                 shuffle: true
@@ -342,6 +358,7 @@ SongsAssistant = Class.create(
             playList = this.itemsHelper.ItemsList;
             controller.stageController.pushScene('now-playing', 
             {
+                type:"new",
                 playList: playList,
                 startIndex: 0,
                 shuffle: true
@@ -349,6 +366,28 @@ SongsAssistant = Class.create(
         }
     },
     
+    /*
+    GoToNowPlayingStage:function()
+    {
+
+        var appController = Mojo.Controller.getAppController();
+        var cardStage = appController.getStageController("NowPlayingStage")
+ 
+        if(cardStage) {
+            cardStage.popScenesTo();
+            cardStage.pushScene("now-playing");
+            cardStage.activate();
+        }
+        else {
+            var pushCard = function(stageController){
+                stageController.pushScene("now-playing");
+            };
+            // Specify the stage type with the last property.
+            appController.createStageWithCallback({name: "NowPlayingStage", lightweight: true}, pushCard, "card");
+        }
+ 
+    },
+    */
     FindIndex : function (id)
     {
         for (var i = 0; i < this.itemsHelper.ItemsList.length; i++) {
@@ -396,6 +435,7 @@ SongsAssistant = Class.create(
                 var playList = this.itemsHelper.ItemsList;
                 this.controller.stageController.pushScene('now-playing', 
                     {
+                        type:"new",
                         playList: playList,
                         startIndex: event.index,
                         shuffle: false
@@ -467,28 +507,19 @@ SongsAssistant = Class.create(
     },
     
     
-    activate: function (event)
+    activate: function(event)
     {
-        this.itemsHelper.Visible = true;
-        this.itemsHelper.GetItems();
+        this.itemsHelper.Activate();
+    },
+    
+    deactivate: function(event)
+    {
+        this.itemsHelper.Deactivate();
     },
     
     
     
-    
-    deactivate: function (event)
-    {
-        this.itemsHelper.Visible = false;
-        AmpacheMobile.ampacheServer.GetSongsCancel();
-    },
-    
-    
-    
-    cleanup: function (event)
-    {
-        Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
-        this.itemsHelper = null;
-    },
+
     
     TurnOnSpinner: function (message)
     {

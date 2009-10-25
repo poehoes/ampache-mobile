@@ -22,26 +22,26 @@ SearchMenuAssistant = Class.create(
         // Setup Menu
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
         
-        //******************************************************************************************************
-        // Setup Spinner
-        this.spinnerLAttrs = { spinnerSize: 'large' };
-        this.spinnerModel = { spinning: false };
-        this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
-        
-        //******************************************************************************************************
-        // Make scrim
-         this.scrim = $("search-scrim");
-         this.scrim.hide();
-        
-        //*********************************************************************************************************
-        //  Setup Progress Pill
-        this.PPattr = 
-        {
-            title: "Search",
-            image: 'images/icons/search.png'
-        };
-        this.searchLoadModel = { value: 1 };
-        this.controller.setupWidget('searchProgressbar', this.PPattr, this.searchLoadModel);
+        ////******************************************************************************************************
+        //// Setup Spinner
+        //this.spinnerLAttrs = { spinnerSize: 'large' };
+        //this.spinnerModel = { spinning: false };
+        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+        //
+        ////******************************************************************************************************
+        //// Make scrim
+        // this.scrim = $("search-scrim");
+        // this.scrim.hide();
+        //
+        ////*********************************************************************************************************
+        ////  Setup Progress Pill
+        //this.PPattr = 
+        //{
+        //    title: "Search",
+        //    image: 'images/icons/search.png'
+        //};
+        //this.searchLoadModel = { value: 1 };
+        //this.controller.setupWidget('searchProgressbar', this.PPattr, this.searchLoadModel);
         
         //***************************************************************************************************************
         // Setup Search Field
@@ -115,7 +115,6 @@ SearchMenuAssistant = Class.create(
     
     searchForAlbums: function(){
         if (this.searchCriteria(3)){
-            this.TurnOnSpinner();
             var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
             if (numAlbums !== 0){
                 this.controller.stageController.pushScene('albums', 
@@ -131,7 +130,6 @@ SearchMenuAssistant = Class.create(
     
     searchForPlaylists: function(){
         if (this.searchCriteria(3)){
-            this.TurnOnSpinner();
             var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
             if (numPlaylists !== 0){
                 this.controller.stageController.pushScene('playlists', 
@@ -146,7 +144,6 @@ SearchMenuAssistant = Class.create(
     
     searchForGenres: function(){
         if (this.searchCriteria(3)){
-            this.TurnOnSpinner();
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10); //using numsongs because there is no num genres (numsongs is worst case)
                 this.controller.stageController.pushScene('genres', 
                 {
@@ -159,7 +156,6 @@ SearchMenuAssistant = Class.create(
     
     searchForSongs: function(){
         if (this.searchCriteria(3)){
-            this.TurnOnSpinner();
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
             this.controller.stageController.pushScene('songs', 
             {
@@ -174,7 +170,6 @@ SearchMenuAssistant = Class.create(
     
     searchForGlobal: function(){
         if (this.searchCriteria(3)){
-            this.TurnOnSpinner();
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
             this.controller.stageController.pushScene('songs', 
             {
@@ -191,7 +186,6 @@ SearchMenuAssistant = Class.create(
         if (this.searchCriteria(3)){
             var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
             if (numArtists !== 0){
-                this.TurnOnSpinner();
                 this.controller.stageController.pushScene("artists", 
                 {
                     SceneTitle: "Artist Search: " + this.searchText,
@@ -236,11 +230,29 @@ SearchMenuAssistant = Class.create(
     
     activate: function(event){
         this.controller.get("search-field").mojo.focus();
+        // Now Playing Button
+        var button = this.controller.get('now-playing-button');
+        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block' : 'none';
+        this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
+        Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
     },
     
     deactivate: function(event){
-        this.TurnOffSpinner();
+
+        
+        Mojo.Event.stopListening(this.controller.get('now-playing-button'), Mojo.Event.tap, this.npTapHandler);
     },
+    
+    
+    showNowPlaying:function()
+    {
+       Mojo.Controller.stageController.pushScene('now-playing', 
+        {
+                type:"display"
+        });
+    },
+    
+    
     
     cleanup: function(event){
         this.controller.stopListening("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
