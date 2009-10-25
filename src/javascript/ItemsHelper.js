@@ -69,7 +69,7 @@ ItemsHelper = Class.create({
             label: $L('Stop'),
             icon: 'load-search',
             command: 'stop'
-        }
+        };
 
         this.cmdMenuModel = {
             visible: true,
@@ -161,7 +161,7 @@ ItemsHelper = Class.create({
         }
         
         //Update Progress
-        this.percentDone = this.ItemsList.length / this.ExpectedItems
+        this.percentDone = this.ItemsList.length / this.ExpectedItems;
         //var progress = this.ItemsList.length / this.ExpectedItems;
         //this.progressModel.value = progress;
         //this.controller.modelChanged(this.progressModel);
@@ -536,7 +536,7 @@ ItemsHelper = Class.create({
             icon[0].setStyle({'background-position': "0px -" + (image * 48) + "px"});
         }
         this.currLoadProgressImage = image;
-    },
+    }
 
 
 });

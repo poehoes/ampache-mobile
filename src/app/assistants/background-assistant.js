@@ -160,7 +160,7 @@ BackgroundAssistant = Class.create({
     {
         Mojo.Event.stopListening(this.controller.get('wallpaperType'), Mojo.Event.propertyChange, this.wallPaperChangeHandler);
         Mojo.Event.stopListening(this.controller.get('btnChooseWallpaperImage'), Mojo.Event.tap, this.chooseWallpaerHandler);
-        Mojo.Event.stopListening(this.controller.get('overlaySelector'), Mojo.Event.propertyChange, this.overlaySelectorChanged)
+        Mojo.Event.stopListening(this.controller.get('overlaySelector'), Mojo.Event.propertyChange, this.overlaySelectorChanged);
     },
     
     imageViewChanged: function (event) {

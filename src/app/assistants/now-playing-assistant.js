@@ -42,7 +42,6 @@ NowPlayingAssistant = Class.create(
                 this.repeatMode = 0;
                 break;
             
-                break;
         }
         
 
@@ -52,7 +51,10 @@ NowPlayingAssistant = Class.create(
     setup: function(){
         Mojo.Log.info("--> setup");
         this.playing = false;
-        if(this.type === "new" )this.NowPlayingDisplaySongInfo(this.playList, this.startIndex);
+        if(this.type === "new" )
+        {
+            this.NowPlayingDisplaySongInfo(this.playList, this.startIndex);
+        }
         this.controller.setupWidget(Mojo.Menu.appMenu, this.appMenuAttr, this.appMenuModel);
         this.cmdMenuModel = 
         {

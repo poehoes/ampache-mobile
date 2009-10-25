@@ -95,11 +95,11 @@ SongsAssistant = Class.create(
         var params = 
         {
             controller: this.controller,
-            TurnOffSpinner: this.TurnOffSpinner.bind(this),
+            //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('songsList'),
             getItemsCallback: this.GetSongs.bind(this),
             listModel: this.listModel,
-            progressModel: this.songLoadModel,
+            //progressModel: this.songLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.Expected_items,
             SortFunction: null,
@@ -487,31 +487,8 @@ SongsAssistant = Class.create(
     deactivate: function(event)
     {
         this.itemsHelper.Deactivate();
-    },
-    
-    
-    
-
-    
-    TurnOnSpinner: function (message)
-    {
-        Mojo.Log.info("--> TurnOnSpinner");
-        CenterSpinner($('large-activity-spinner'));
-        //this.controller.get('wait-message').innerHTML = message;
-        this.scrim.show();
-        this.spinnerModel.spinning = true;
-        this.controller.modelChanged(this.spinnerModel);
-        Mojo.Log.info("<-- ");
-    },
-    
-    TurnOffSpinner: function ()
-    {
-        Mojo.Log.info("-----> TurnOffSpinner");
-        this.scrim.hide();
-        this.spinnerModel.spinning = false;
-        this.controller.modelChanged(this.spinnerModel);
-        Mojo.Log.info("<----- TurnOffSpinner");
     }
+    
 });
 
 

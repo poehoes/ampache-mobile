@@ -41,7 +41,7 @@ function AppAssistant(appController){
     Mojo.Log.info("--> AppAssistant Constructor");
     var browser = navigator.appName;
     Mojo.Log.info("<-- AppAssistant Constructor");
-};
+}
 
 AppAssistant.prototype.setup = function(){
     Mojo.Log.info("Enter AppAssistant.prototype.setup");

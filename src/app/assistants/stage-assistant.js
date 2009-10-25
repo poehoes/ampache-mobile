@@ -99,7 +99,7 @@ function CenterSpinner(spinner)
 {
     spinner.style.left = (window.innerWidth/2-64) + "px";
     spinner.style.top = (window.innerHeight/2-64) + "px";
-};
+}
 
 
 
