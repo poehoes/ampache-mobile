@@ -179,7 +179,7 @@ ItemsHelper = Class.create({
         
         //Add to list   
         
-        if ((this.filterString === "") || (!this.filterString)) 
+        if (!this.IsFiltered()) 
         {
             this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
         }
@@ -215,6 +215,16 @@ ItemsHelper = Class.create({
         
     },
     
+    IsFiltered:function()
+    {
+        if ((this.filterString === "") || (!this.filterString)) 
+        {
+            return false;
+        }
+        return true;
+    },
+    
+    
     ReSortList:function(){
         //if (this.LoadingFinished) 
         //{
@@ -230,7 +240,7 @@ ItemsHelper = Class.create({
             
             
             //Add to list   
-            if ((this.filterString === "") || (!this.filterString)) 
+            if (!this.IsFiltered()) 
             {
                 this.Matches = this.ItemsList;
                 this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);

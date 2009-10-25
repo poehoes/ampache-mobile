@@ -230,16 +230,22 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<-- AudioPlayer.prototype.ConnectedToServer");
     },
     
-    addPlayList:function(newPlayList, _shuffleOn, _startIndex){
+    newPlayList:function(newPlayList, _shuffleOn, _startIndex){
         Mojo.Log.info("--> AudioPlayer.prototype.addPlayList");
+        this.stop();
         this.PlayListPending = true;
-        this.playList = newPlayList;
+        this.playList = []
+        for(var i = 0;i<newPlayList.length;i++)
+        {
+                this.playList[i] = newPlayList[i];
+        }
+        newPlayList;
         this.markPlayListUnplayed();
         this.playOrderList = this.createOrderList();
         this.shuffleOn=_shuffleOn;
         if (_shuffleOn){
             this.playOrderList.sort(this.randOrd);
-            this.playOrderList.sort(this.randOrd);
+            //this.playOrderList.sort(this.randOrd);
             this.currentPlayingIndex = 0;
             this.currentPlayingTrack = this.playOrderList[0];
         }else{
@@ -247,6 +253,24 @@ AudioPlayer = Class.create({
             this.currentPlayingIndex = _startIndex;
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.addPlayList");
+    },
+    
+    enqueuePlayList:function(newPlayList, _shuffleOn)
+    {
+        if(this.playList)
+        {
+            //Combine lists
+            var originalSize = this.playList.length;
+            for(var i = 0;i<newPlayList.length;i++)
+            {
+                this.playList[originalSize + i] = newPlayList[i];
+                this.playOrderList[originalSize + i] = originalSize + i;
+            }
+            if (_shuffleOn || this.shuffleOn===true){
+                this.toggleShuffleOn();
+            }
+            
+        }
     },
     
     setCurrentTrack: function(index){
@@ -284,12 +308,12 @@ AudioPlayer = Class.create({
     toggleShuffleOff:function(){
         this.playOrderList=this.createOrderList();
         this.currentPlayingIndex = this.currentPlayingTrack;
-        this.printPlayOrderList();
+        //this.printPlayOrderList();
         this.shuffleOn = false;
     },
     
     toggleShuffleOn:function(){
-        this.playOrderList.sort(this.randOrd);
+        //this.playOrderList.sort(this.randOrd);
         this.playOrderList.sort(this.randOrd);
         var i = this.playList.length;
         do{
@@ -301,7 +325,7 @@ AudioPlayer = Class.create({
             }
         }while (--i);
         this.currentPlayingIndex = 0;
-        this.printPlayOrderList();
+        //this.printPlayOrderList();
         this.shuffleOn = true;
     },
     
@@ -345,9 +369,14 @@ AudioPlayer = Class.create({
     
     stop: function(){
         this.NowPlayingStopPlaybackTimer();
-        this.player.pause();
-        //this.player.empty();
-        this.player.src = null;
+        if(this.player.src)
+        {
+            
+            this.pause();
+            this.Paused = null;
+            this.player.src = null;
+            this.playFinished = true;
+        }
     },
     
     pause:function(){
@@ -409,7 +438,7 @@ AudioPlayer = Class.create({
     
     play_next:function(clicked){
         Mojo.Log.info("--> AudioPlayer.prototype.play_next");
-        this.printPlayOrderList();
+        //this.printPlayOrderList();
         //this.playList[this.currentPlayingTrack].played = true;
         this.currentPlayingTrack = this.getNextTrack();
         if (this.currentPlayingTrack > -1){
@@ -436,7 +465,7 @@ AudioPlayer = Class.create({
     
     play_prev: function(){
         Mojo.Log.info("--> AudioPlayer.prototype.play_prev");
-        this.printPlayOrderList();
+        //this.printPlayOrderList();
         //this.playList[this.currentPlayingTrack].played = true;
         this.currentPlayingTrack = this.getPrevTrack();
         if (this.currentPlayingTrack  > -1) {
