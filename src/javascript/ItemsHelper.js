@@ -99,11 +99,16 @@ ItemsHelper = Class.create({
         this.spacerDiv = this.controller.get('spacerDiv');
         this.scrim = this.controller.get('scrim');
         
-        this.filterList.observe(Mojo.Event.filterImmediate, this.handleFilterChange.bind(this));
+        this.filterChange = this.handleFilterChange.bind(this);
+        Mojo.Event.listen(this.filterList, Mojo.Event.filterImmediate, this.filterChange);
         
         
     },
     
+    cleanup:function()
+    {
+        Mojo.Event.stopListening(this.filterList, Mojo.Event.filterImmediate, this.filterChange);
+    },
     
     GotoLoadingMode:function()
     {

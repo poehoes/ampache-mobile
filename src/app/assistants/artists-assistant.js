@@ -32,44 +32,12 @@ ArtistsAssistant = Class.create(
     },
     
     setup: function () {
-        //**********************************************************************
-
         
+        //**********************************************************************
+        // Set title
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
-        //button.style.display = AppAssistant.showNowPlaying ? 'block' : 'none';
-        
-        
-        
-        ////******************************************************************************************************
-        //// Make scrim
-        ////this.scrim = $("spinner-scrim");
-        ////this.scrim.hide();
-        //
-        ////*********************************************************************************************************
-        ////  Setup Spinner
-        //this.spinnerLAttrs = 
-        //{
-        //    spinnerSize: 'large'
-        //};
-        //this.spinnerModel = 
-        //{
-        //    spinning: false
-        //};
-        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
-        //
-        ////*********************************************************************************************************
-        ////  Setup Progress Pill
-        //this.PPattr = 
-        //{
-        //    title: this.SceneTitle,
-        //    image: 'images/icons/artists.png'
-        //};
-        //this.artistLoadModel = 
-        //{
-        //    value: 0
-        //};
-        //this.controller.setupWidget('artistProgressbar', this.PPattr, this.artistLoadModel);
+
         
         //*********************************************************************************************************
         //  Setup Filter List
@@ -86,8 +54,7 @@ ArtistsAssistant = Class.create(
             items: this.itemsHelper.ItemsList
         };
         this.controller.setupWidget('artistFilterList', attributesFilter, this.listModel);
-        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+
         
         //*********************************************************************************************************
         // Items Helper
@@ -108,10 +75,20 @@ ArtistsAssistant = Class.create(
             MatchFunction: this.IsMatch
         };
         this.itemsHelper.setup(params);
-        //this.TurnOnSpinner();
+        
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
+        
+        //***************************************************************************************
+        //Events
+        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
     },
     
+    cleanup: function (event) {
+        Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        this.itemsHelper.cleanup();
+        this.itemsHelper = null;
+    },
     
     sortAlpha: function (a, b)
     {
@@ -209,10 +186,7 @@ ArtistsAssistant = Class.create(
     deactivate: function(event)
     {
         this.itemsHelper.Deactivate();
-    },
-    
-    cleanup: function (event) {
-        Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
-        this.itemsHelper = null;
     }
+    
+
 });

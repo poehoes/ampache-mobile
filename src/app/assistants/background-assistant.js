@@ -45,14 +45,14 @@ BackgroundAssistant = Class.create({
             }]
         }, this.wallpaperTypeModel);
         
-        this.controller.get('wallpaperType').observe(Mojo.Event.propertyChange, this.wallpaperTypeChanged.bind(this));
+        
         
         this.controller.setupWidget("btnChooseWallpaperImage", this.attributes = {}, this.model = {
             label: "Image From Device",
             disabled: false
         });
         
-        this.controller.get('btnChooseWallpaperImage').observe(Mojo.Event.tap, this.handleChooseWallpaperImage.bind(this));
+
         
         //***************************************************************
         // Included Photo picker
@@ -144,6 +144,23 @@ BackgroundAssistant = Class.create({
         
         
         this.wallpaperTypeChanged();
+        
+        
+        this.wallPaperChangeHandler = this.wallpaperTypeChanged.bind(this);
+        Mojo.Event.listen(this.controller.get('wallpaperType'), Mojo.Event.propertyChange, this.wallPaperChangeHandler);
+       
+        this.chooseWallpaerHandler = this.handleChooseWallpaperImage.bind(this);
+        Mojo.Event.listen(this.controller.get('btnChooseWallpaperImage'), Mojo.Event.tap, this.chooseWallpaerHandler);
+       
+        this.overlaySelectorChanged = this.overlaySelectorChanged.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('overlaySelector'), Mojo.Event.propertyChange, this.overlaySelectorChanged);
+    },
+    
+    cleanup:function(event)
+    {
+        Mojo.Event.stopListening(this.controller.get('wallpaperType'), Mojo.Event.propertyChange, this.wallPaperChangeHandler);
+        Mojo.Event.stopListening(this.controller.get('btnChooseWallpaperImage'), Mojo.Event.tap, this.chooseWallpaerHandler);
+        Mojo.Event.stopListening(this.controller.get('overlaySelector'), Mojo.Event.propertyChange, this.overlaySelectorChanged)
     },
     
     imageViewChanged: function (event) {

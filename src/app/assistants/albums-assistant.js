@@ -70,19 +70,11 @@ AlbumsAssistant = Class.create({
     setup: function () {
 
         Mojo.Log.info("--> setup");
-
+        //**********************************************************************
+        // Set Scene Menu Title
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
 
-
-
-
-
-        ////******************************************************************************************************
-        //// Make scrim
-        //this.scrim = $("spinner-scrim");
-        //this.scrim.hide();
-        //
         
         //******************************************************************************************************
         // Setup numSongs pill
@@ -93,41 +85,13 @@ AlbumsAssistant = Class.create({
         {
             $('songsPill').hide();
         }
-        //
-        //this.PPattr = {
-        //    title: this.SceneTitle,
-        //    image: 'images/icons/albums.png'
-        //};
-        //this.albumLoadModel = {
-        //    //iconPath: "action-icon",
-        //    value: 0
-        //    //disabled : false
-        //};
-        
-        
-        //this.controller.setupWidget('albumProgressbar', this.PPattr, this.albumLoadModel);
 
-        //this.controller.get('title').update(this.SceneTitle);
-
-        //Mojo.Log.info("Setting up albums for:", this.ArtistInfo.name);
         if (!this.isArtistView) {
             this.controller.get('shuffleForArtist').hide();
         }
-
-        ///* setup widgets here */
-        //this.spinnerLAttrs = {
-        //    spinnerSize: 'large'
-        //};
-        //
-        //this.spinnerModel = {
-        //    spinning: false
-        //};
-        //
-        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
-
         
-
-
+        
+        
         var listAttributes;
         if (this.DisplayArtistInfo === true) {
             listAttributes = {
@@ -165,10 +129,7 @@ AlbumsAssistant = Class.create({
 
         this.controller.setupWidget('albumsFilterList', listAttributes, this.listModel);
 
-        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
 
-        this.controller.get('allSongs').observe(Mojo.Event.tap, this.handleShuffleAll.bindAsEventListener(this));
 
         //var toggleAlpaha = (AlbumSortType.alpha == this.sortType);
         //var toggleYear =(AlbumSortType.year == this.sortType);
@@ -232,9 +193,28 @@ AlbumsAssistant = Class.create({
 
         this.itemsHelper.setup(params);
 
+        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
+
+        this.allSongsHandler = this.handleShuffleAll.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('allSongs'), Mojo.Event.tap, this.allSongsHandler);
+
         Mojo.Log.info("<-- setup");
 
     },
+
+    cleanup: function (event) {
+
+        Mojo.Log.info("--> cleanup");
+
+        Mojo.Event.stopListening(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.controller.get('allSongs'), Mojo.Event.tap, this.allSongsHandler);
+        this.itemsHelper.cleanup();
+        this.itemsHelper = null;
+        Mojo.Log.info("<-- cleanup");
+
+    },
+
 
     IsMatch: function (item, filterString) {
         var matchString = item.name + " " + item.artist;
@@ -456,33 +436,25 @@ AlbumsAssistant = Class.create({
         this.itemsHelper.Deactivate();
     },
 
-    cleanup: function (event) {
 
-        Mojo.Log.info("--> cleanup");
 
-        Mojo.Event.stopListening(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
-        this.itemsHelper = null;
-        Mojo.Log.info("<-- cleanup");
-
-    },
-
-    TurnOnSpinner: function (message) {
-        Mojo.Log.info("--> TurnOnSpinner");
-        CenterSpinner($('large-activity-spinner'));
-        //this.controller.get('wait-message').innerHTML = message;
-        this.scrim.show();
-        this.spinnerModel.spinning = true;
-        this.controller.modelChanged(this.spinnerModel);
-        Mojo.Log.info("<-- ");
-    },
-
-    TurnOffSpinner: function () {
-        Mojo.Log.info("-----> TurnOffSpinner");
-        this.scrim.hide();
-        this.spinnerModel.spinning = false;
-        this.controller.modelChanged(this.spinnerModel);
-        Mojo.Log.info("<----- TurnOffSpinner");
-    },
+    //TurnOnSpinner: function (message) {
+    //    Mojo.Log.info("--> TurnOnSpinner");
+    //    CenterSpinner($('large-activity-spinner'));
+    //    //this.controller.get('wait-message').innerHTML = message;
+    //    this.scrim.show();
+    //    this.spinnerModel.spinning = true;
+    //    this.controller.modelChanged(this.spinnerModel);
+    //    Mojo.Log.info("<-- ");
+    //},
+    //
+    //TurnOffSpinner: function () {
+    //    Mojo.Log.info("-----> TurnOffSpinner");
+    //    this.scrim.hide();
+    //    this.spinnerModel.spinning = false;
+    //    this.controller.modelChanged(this.spinnerModel);
+    //    Mojo.Log.info("<----- TurnOffSpinner");
+    //},
 
     // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function (title, message) {
