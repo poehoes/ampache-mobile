@@ -33,13 +33,18 @@ NowPlayingAssistant = Class.create(
                 this.shuffle = AmpacheMobile.audioPlayer.shuffleOn;
                 this.pauseStopItem = this.pauseItem;
                 break;
-            case "enqueue":
-            case "new":
+            case "play":
                 this.playList = params.playList;
                 this.startIndex = params.startIndex;
                 this.shuffle = params.shuffle;
-                
                 this.repeatMode = 0;
+                AmpacheMobile.audioPlayer.newPlayList(this.playList, this.shuffle, this.startIndex);
+                break;
+            case "enqueue":
+                this.repeatMode = AmpacheMobile.audioPlayer.repeatMode;
+                this.pauseStopItem = this.pauseItem;
+                this.shuffle = params.shuffle || AmpacheMobile.audioPlayer.shuffleOn;
+                AmpacheMobile.audioPlayer.enqueuePlayList(params.playList, this.shuffle)
                 break;
             
         }
@@ -51,7 +56,7 @@ NowPlayingAssistant = Class.create(
     setup: function(){
         Mojo.Log.info("--> setup");
         this.playing = false;
-        if(this.type === "new" )
+        if(this.type === "play" )
         {
             this.NowPlayingDisplaySongInfo(this.playList, this.startIndex);
         }
@@ -110,21 +115,6 @@ NowPlayingAssistant = Class.create(
         
         if(this.type!=="display")
         {
-            //Setup audio player
-            //AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
-           
-            AmpacheMobile.audioPlayer.addPlayList(this.playList, this.shuffle, this.startIndex);
-            
-             if(AmpacheMobile.audioPlayer.player.paused === false)
-            {
-                AmpacheMobile.audioPlayer.stop();
-            }
-            
-            //AmpacheMobile.audioPlayer.setCurrentTrack(this.startIndex);
-            //AmpacheMobile.audioPlayer.setNowPlaying(this);
-            //this.musicPlayer = AmpacheMobile.audioPlayer.player;
-            
-            
             $('coverArt').src = "images/blankalbum.png";
         }
         else
@@ -315,9 +305,13 @@ NowPlayingAssistant = Class.create(
         Mojo.Log.info("--> activate");
         AmpacheMobile.audioPlayer.setNowPlaying(this);
         
-        if(this.type !== "display")
+        if(this.type === "play")
         {
             AmpacheMobile.audioPlayer.play();
+        }
+        else if(this.type==="enqueue")
+        {
+            this.setMenuControls();
         }
     
         
