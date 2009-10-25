@@ -234,7 +234,7 @@ AudioPlayer = Class.create({
         Mojo.Log.info("--> AudioPlayer.prototype.addPlayList");
         this.stop();
         this.PlayListPending = true;
-        this.playList = []
+        this.playList = [];
         for(var i = 0;i<newPlayList.length;i++)
         {
                 this.playList[i] = newPlayList[i];
