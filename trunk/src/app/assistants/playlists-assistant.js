@@ -40,12 +40,12 @@ PlaylistsAssistant = Class.create(
     
         //******************************************************************************************************
         // Make scrim
-        this.scrim = $("spinner-scrim");
-        this.scrim.hide();
+        //this.scrim = $("spinner-scrim");
+        //this.scrim.hide();
         
         //*********************************************************************************************************
         //  Setup Progress Pill
-        this.PPattr = 
+        /*this.PPattr = 
         {
             title: this.SceneTitle,
             image: 'images/icons/playlists.png'
@@ -54,21 +54,21 @@ PlaylistsAssistant = Class.create(
         {
             value: 0
         };
-        this.controller.setupWidget('playlistProgressbar', this.PPattr, this.playlistLoadModel);
+        */this.controller.setupWidget('playlistProgressbar', this.PPattr, this.playlistLoadModel);
         
         
         //*********************************************************************************************************
         //  Setup Spinner
-        this.spinnerLAttrs = 
-        {
-            spinnerSize: 'large'
-        };
-        this.spinnerModel = 
-        {
-            spinning: false
-        };
-        this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
-        
+        //this.spinnerLAttrs = 
+        //{
+        //    spinnerSize: 'large'
+        //};
+        //this.spinnerModel = 
+        //{
+        //    spinning: false
+        //};
+        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+        //
         
         
         //*********************************************************************************************************
@@ -95,11 +95,11 @@ PlaylistsAssistant = Class.create(
         var params = 
         {
             controller: this.controller,
-            TurnOffSpinner: this.TurnOffSpinner.bind(this),
+            //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('playlistFilterList'),
             getItemsCallback: this.GetPlaylists.bind(this),
             listModel: this.listModel,
-            progressModel: this.playlistLoadModel,
+            //progressModel: this.playlistLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedPlaylists,
             SortFunction: null,
@@ -110,7 +110,7 @@ PlaylistsAssistant = Class.create(
         
         
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        this.TurnOnSpinner();
+        //this.TurnOnSpinner();
         
     },
     
@@ -134,7 +134,9 @@ PlaylistsAssistant = Class.create(
     
     
     
-    
+    handleCommand: function (event) {
+        this.itemsHelper.handleCommand(event);
+    },
     
     
     listTapHandler: function(event)
@@ -160,14 +162,12 @@ PlaylistsAssistant = Class.create(
     
     activate: function(event)
     {
-        this.itemsHelper.Visible = true;
-        this.itemsHelper.GetItems();
+        this.itemsHelper.Activate();
     },
     
     deactivate: function(event)
     {
-        this.itemsHelper.Visible = false;
-        AmpacheMobile.ampacheServer.GetPlaylistsCancel();
+        this.itemsHelper.Deactivate();
     },
     
     cleanup: function(event)

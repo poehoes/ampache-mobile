@@ -39,20 +39,20 @@ initialize: function(){ },
         this.controller.setupWidget('right-album-spinner', this.spinnerSAttrs, this.rightSpinnerModel);
         
         
-        //******************************************************************************************************
-        // Make scrim
-         this.scrim = $("search-scrim");
-         this.scrim.hide();
-        
-        //*********************************************************************************************************
-        //  Setup Progress Pill
-        this.PPattr = 
-        {
-            title: "Random",
-            image: 'images/icons/random.png'
-        };
-        this.searchLoadModel = { value: 1 };
-        this.controller.setupWidget('randomProgressbar', this.PPattr, this.searchLoadModel);
+        ////******************************************************************************************************
+        //// Make scrim
+        // this.scrim = $("search-scrim");
+        // this.scrim.hide();
+        //
+        ////*********************************************************************************************************
+        ////  Setup Progress Pill
+        //this.PPattr = 
+        //{
+        //    title: "Random",
+        //    image: 'images/icons/random.png'
+        //};
+        //this.searchLoadModel = { value: 1 };
+        //this.controller.setupWidget('randomProgressbar', this.PPattr, this.searchLoadModel);
         
         
         this.tempArt = "images/blankalbum.png";
@@ -100,35 +100,92 @@ initialize: function(){ },
   
         //*******************************************************************************************************
         // Random Album Selector
-        var photoAttributes = {
+         this.attributes = {
             limitZoom:true,
-            highResolutionLoadTimeout:0
-
-            //noExtractFS : true
+            highResolutionLoadTimeout:0.1
         };
         
         this.photoModel = {
             onLeftFunction: this.wentLeft.bind(this),
             onRightFunction: this.wentRight.bind(this)
         };
-        this.controller.setupWidget('myPhotoDiv', photoAttributes, this.photoModel);
+        this.controller.setupWidget('myPhotoDiv', this.attributes, this.photoModel);
         this.myPhotoDivElement = $('myPhotoDiv');
         
-        this.controller.get('myPhotoDiv').observe(Mojo.Event.tap, this.pushAlbum.bindAsEventListener(this));
 
+        this.pushAlbumHandler = this.pushAlbum.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('myPhotoDiv'), Mojo.Event.tap, this.pushAlbumHandler);
+        
+        //this.pushArtistHandler = this.pushArtist.bindAsEventListener(this);
+        //Mojo.Event.listen(this.controller.get('myPhotoDiv'), Mojo.Event.tap, this.pushArtistHandler);
         
         this.fetching = "center";
         this.GetRandomAlbum();
     },
     
-    pushAlbum:function(){
-        this.controller.stageController.pushScene('songs', {
-            SceneTitle: this.center.artist + " - " + this.center.name,
-            Type: "album",
-            Album_id: this.center.id,
-            Item: this.center
+    handleCommand: function (event) {
+        if(event.command==="zoom")
+        {
+            
+        }
+        //this.itemsHelper.handleCommand(event);
+    },
+    
+    cleanup: function(event){
+        Mojo.Event.stopListening(this.controller.get('randomMenuList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.controller.get('myPhotoDiv'), Mojo.Event.tap, this.pushAlbumHandler);
+        //Mojo.Event.stopListening(this.controller.get('myPhotoDiv'), Mojo.Event.tap, this.pushArtistHandler);
+    },
+    
 
-        });
+    pushHandler:function(event){
+        
+        switch(event)
+        {
+            case "pushAlbum":
+                this.controller.stageController.pushScene('songs', {
+                    SceneTitle: this.center.artist + " - " + this.center.name,
+                    Type: "album",
+                    Album_id: this.center.id,
+                    Item: this.center
+                });
+            break;
+            
+            case "pushArtist":
+                this.controller.stageController.pushScene('albums', {
+                    SceneTitle: this.center.artist,
+                    DisplayArtistInfo: false,
+                    Artist_id: this.center.artist_id,
+                    ExpectedAlbums: parseInt(AmpacheMobile.ampacheServer.albums, 10)
+                });
+            break;
+        }
+    },
+    
+    pushAlbum:function(event){
+        
+
+            var editCmd = [{
+                    label: this.center.name,
+                    command: "pushAlbum",
+                    secondaryIconPath: "images/icons/albums.png"
+                }, 
+                {
+                    label: this.center.artist,
+                    command: "pushArtist",
+                    secondaryIconPath: "images/icons/artists.png"
+
+                }];
+            
+            this.controller.popupSubmenu(
+            {
+                onChoose: this.pushHandler.bind(this),
+                placeNear: this.myPhotoDivElement,
+                items: editCmd
+            });
+        
+        
+
     },
     
     center_stale:true,
@@ -376,16 +433,30 @@ initialize: function(){ },
         this.controller.modelChanged(this.spinnerModel);
     },
     
+    
     activate: function(event){
-        
-        //this.myPhotoDivElement.mojo.manualSize('200', '200');
+        // Now Playing Button
+        var button = this.controller.get('now-playing-button');
+        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block' : 'none';
+        this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
+        Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
     },
     
     deactivate: function(event){
-        this.TurnOffSpinner();
+
+        
+        Mojo.Event.stopListening(this.controller.get('now-playing-button'), Mojo.Event.tap, this.npTapHandler);
     },
     
-    cleanup: function(event){
+    
+    showNowPlaying:function()
+    {
+       Mojo.Controller.stageController.pushScene('now-playing', 
+        {
+                type:"display"
+        });
     }
+    
+
     
 });

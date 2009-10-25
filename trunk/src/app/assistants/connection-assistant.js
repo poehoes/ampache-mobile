@@ -23,6 +23,11 @@ ConnectionAssistant = Class.create(
     
     setup: function(){
         Mojo.Log.info("--> setup");
+        
+        AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
+        //AmpacheMobile.mediaEventsService = new MediaEventsService();
+        //AmpacheMobile.mediaEventsService.markAppForeground();
+        
         //******************************************************************************************************
         // Make scrim
         this.scrim = $("connect-scrim");
@@ -42,8 +47,7 @@ ConnectionAssistant = Class.create(
             ]
         };
         this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuProps);
-        //AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
-        //Mojo.Log.info("Audio Player Created Bitches");
+        
         AmpacheMobile.settingsManager = new SettingsManager("AmpacheMobileData");
         this.settingsManager = AmpacheMobile.settingsManager;
         this.Accounts = [];

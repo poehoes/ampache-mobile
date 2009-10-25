@@ -32,35 +32,44 @@ ArtistsAssistant = Class.create(
     },
     
     setup: function () {
-        //******************************************************************************************************
-        // Make scrim
-        this.scrim = $("spinner-scrim");
-        this.scrim.hide();
+        //**********************************************************************
+
         
-        //*********************************************************************************************************
-        //  Setup Spinner
-        this.spinnerLAttrs = 
-        {
-            spinnerSize: 'large'
-        };
-        this.spinnerModel = 
-        {
-            spinning: false
-        };
-        this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+        var title = this.controller.get('title');
+        title.innerHTML = this.SceneTitle;
+        //button.style.display = AppAssistant.showNowPlaying ? 'block' : 'none';
         
-        //*********************************************************************************************************
-        //  Setup Progress Pill
-        this.PPattr = 
-        {
-            title: this.SceneTitle,
-            image: 'images/icons/artists.png'
-        };
-        this.artistLoadModel = 
-        {
-            value: 0
-        };
-        this.controller.setupWidget('artistProgressbar', this.PPattr, this.artistLoadModel);
+        
+        
+        ////******************************************************************************************************
+        //// Make scrim
+        ////this.scrim = $("spinner-scrim");
+        ////this.scrim.hide();
+        //
+        ////*********************************************************************************************************
+        ////  Setup Spinner
+        //this.spinnerLAttrs = 
+        //{
+        //    spinnerSize: 'large'
+        //};
+        //this.spinnerModel = 
+        //{
+        //    spinning: false
+        //};
+        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
+        //
+        ////*********************************************************************************************************
+        ////  Setup Progress Pill
+        //this.PPattr = 
+        //{
+        //    title: this.SceneTitle,
+        //    image: 'images/icons/artists.png'
+        //};
+        //this.artistLoadModel = 
+        //{
+        //    value: 0
+        //};
+        //this.controller.setupWidget('artistProgressbar', this.PPattr, this.artistLoadModel);
         
         //*********************************************************************************************************
         //  Setup Filter List
@@ -86,19 +95,20 @@ ArtistsAssistant = Class.create(
         
         var params = 
         {
+            type:"artists",
             controller: this.controller,
-            TurnOffSpinner: this.TurnOffSpinner.bind(this),
+            //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('artistFilterList'),
             getItemsCallback: this.GetArtists.bind(this),
-            listModel: this.listModel,
-            progressModel: this.artistLoadModel,
+            //listModel: this.listModel,
+            //progressModel: this.artistLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedArtists,
             SortFunction: sorting,
             MatchFunction: this.IsMatch
         };
         this.itemsHelper.setup(params);
-        this.TurnOnSpinner();
+        //this.TurnOnSpinner();
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
     },
     
@@ -160,6 +170,10 @@ ArtistsAssistant = Class.create(
         Mojo.Log.info("<-- listTapHandler");
     },
     
+    handleCommand: function (event) {
+        this.itemsHelper.handleCommand(event);
+    },
+/*
     TurnOnSpinner: function () {
         Mojo.Log.info("-----> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
@@ -176,21 +190,25 @@ ArtistsAssistant = Class.create(
         this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<----- TurnOffSpinner");
     },
-    
+*/
     dividerFunc: function (itemModel) {
         var regExp = /(the|a)\s+/g;
         var dividerText = itemModel.name.toLowerCase().replace(regExp, '');
+        if(dividerText[0].match(/[0-9]/))
+        {
+            return "#";
+        }
         return dividerText[0].toUpperCase();
     },
     
-    activate: function (event) {
-        this.itemsHelper.Visible = true;
-        this.itemsHelper.GetItems();
+    activate: function(event)
+    {
+        this.itemsHelper.Activate();
     },
     
-    deactivate: function (event) {
-        this.itemsHelper.Visible = false;
-        AmpacheMobile.ampacheServer.GetArtistsCancel();
+    deactivate: function(event)
+    {
+        this.itemsHelper.Deactivate();
     },
     
     cleanup: function (event) {

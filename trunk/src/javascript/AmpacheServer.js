@@ -115,13 +115,19 @@ AmpacheServer = Class.create(
         Mojo.Log.info("--> AmpacheServer.prototype._pingCallback");
         Mojo.Log.info(transport.responseText);
         var ping = new PingModel(transport.responseXML);
+        this.StopPing();
+        this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining);
+        Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
+    },
+    
+    StopPing:function()
+    {
         if (this.pingTimer){
             window.clearInterval(this.pingTimer);
             this.pingTimer = null;
         }
-        this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining);
-        Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
     },
+    
     
     disconnect: function(){
         Mojo.Log.info("--> AmpacheServer.prototype.disconnect");
@@ -515,22 +521,25 @@ AmpacheServer = Class.create(
                  i++;
                  } while (i < albumListXML.length)
                  */
+                
+                
+                
                 var n = parseInt(albumListXML.length/4, 10); // four Stage unloop... semi Duffish
                 if (n>0){
                     do{
-                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].getAttribute("id"), albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
                         i++;
-                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].getAttribute("id"), albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
                         i++;
-                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].getAttribute("id"), albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
                         i++;
-                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].getAttribute("id"), albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
                         i++;
                     }while (i<n);
                 }
                 if (i<albumListXML.length){
                     do{
-                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
+                        AlbumList[i] = new AlbumModel(albumListXML[i].getAttribute("id"), albumListXML[i].getElementsByTagName("name")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].firstChild.data, albumListXML[i].getElementsByTagName("artist")[0].getAttribute("id"), albumListXML[i].getElementsByTagName("tracks")[0].firstChild.data, albumListXML[i].getElementsByTagName("year")[0].firstChild.data, albumListXML[i].getElementsByTagName("disk")[0].firstChild.data, albumListXML[i].getElementsByTagName("art")[0].firstChild.data);
                     }while (++i<albumListXML.length);
                 }
             }
@@ -1002,10 +1011,11 @@ ArtistModel = Class.create(
  */
 AlbumModel = Class.create(
 {
-    initialize: function(_id, _name, _artist, _tracks, _year, _disc, _art){
+    initialize: function(_id, _name, _artist, _artist_id, _tracks, _year, _disc, _art){
         //Mojo.Log.info("--> AlbumModel constructor " + _name);
         this.id = _id;
         this.artist = _artist;
+        this.artist_id = _artist_id,
         this.name = _name;
         this.tracks = _tracks;
         this.year = _year;
@@ -1017,6 +1027,7 @@ AlbumModel = Class.create(
     id: "",
     name: "",
     artist: "",
+    artist_id: null,
     tracks: "",
     year: "",
     disc: "",

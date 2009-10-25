@@ -28,6 +28,12 @@ MainmenuAssistant = Class.create(
     
     setup: function(){
         Mojo.Log.info("--> setup");
+        
+        var title = this.controller.get('title');
+        title.innerHTML = AmpacheMobile.Account.AccountName;
+    
+        
+        
         this.spinnerAttrs = { spinnerSize: 'small' };
         this.spinnerModel = { spinning: false };
         this.controller.setupWidget('mainmenu-spinner', this.spinnerAttrs, this.spinnerModel);
@@ -323,18 +329,80 @@ MainmenuAssistant = Class.create(
      }
      */
     activate: function(event){
+        // Now Playing Button
+        var button = this.controller.get('now-playing-button');
+        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block' : 'none';
+        this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
+        Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
     },
     
     deactivate: function(event){
+
+        Mojo.Log.info("--> ArtistsAssistant.prototype.deactivate");
+        Mojo.Event.stopListening(this.controller.get('now-playing-button'), Mojo.Event.tap, this.npTapHandler);
+        Mojo.Log.info("<-- ArtistsAssistant.prototype.deactivate");
+    },
+    
+    
+    showNowPlaying:function()
+    {
+       Mojo.Controller.stageController.pushScene('now-playing', 
+        {
+                type:"display"
+        });
+    },
+    
+    stopMusic: function(value){
+        
+        if (value === "stopMusic"){
+            if(AmpacheMobile.audioPlayer.PlayListPending===true)
+            {
+                AmpacheMobile.audioPlayer.stop();
+            }
+            this.controller.stageController.popScene(null);
+        }
+    },
+    
+    
+    handleCommand: function(event){
+        //test for Mojo.Event.back, not Mojo.Event.command..
+
+        if (event.type === Mojo.Event.back){
+            if(AmpacheMobile.audioPlayer.PlayListPending===true)
+            {
+                event.preventDefault();
+                event.stopPropagation();
+                this.controller.showAlertDialog(
+                {
+                    onChoose: this.stopMusic,
+                    title: $L("Are you sure?"),
+                    message: "Going back will close your current now playing list and stop your music.",
+                    choices: [
+                        {
+                            label: $L('Cancel'),
+                            value: 'ok',
+                            type: 'primary'
+                        }, 
+                        {
+                            label: $L('Stop Music'),
+                            value: 'stopMusic',
+                            type: 'negative'
+                        }
+                    ]
+                });
+            }
+        }
     },
     
     cleanup: function(event){
         /* this function should do any cleanup needed before the scene is destroyed as 
          a result of being popped off the scene stack */
+        Mojo.Log.info("--> ArtistsAssistant.prototype.cleanup");
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
-        this.ArtistList = null;
-        this.AlbumsList = null;
-        this.SongsList = null;
+        
+        AmpacheMobile.audioPlayer.PlayListPending = false;
+        AmpacheMobile.ampacheServer.StopPing();
+        Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
     },
     
     dividerFunc: function(itemModel){

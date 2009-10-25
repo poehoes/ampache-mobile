@@ -38,7 +38,7 @@ AmpacheMobile.EmptyResponseErrorHelp ="Phone not connecting to Ampache." + "<br>
 function StageAssistant(stageController){
     //AmpacheMobile.stageController = stageController;
     //AmpacheMobile.audioPlayer = new AudioPlayer(stageController);
-    AmpacheMobile.mediaEventsService = new MediaEventsService();
+    //AmpacheMobile.mediaEventsService = new MediaEventsService();
 }
 
 StageAssistant.appMenuAttr = {omitDefaultItems: true};
