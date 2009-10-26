@@ -17,7 +17,7 @@ SongsAssistant = Class.create(
 {
 
 
-    initialize: function (params)
+    initialize: function(params)
     {
         this.SceneTitle = params.SceneTitle;
         this.Type = params.Type;
@@ -29,7 +29,7 @@ SongsAssistant = Class.create(
         this.Artist_id = params.Artist_id;
         this.Expected_items = params.Expected_items;
         
-        if ((this.Type==="random")||(this.Type === "playlist") || (this.Type === "all-songs") || (this.Type === "search") || (this.Type === "search-global") || (this.Type === "genre") || this.Type === "artist-songs") 
+        if ((this.Type === "random") || (this.Type === "playlist") || (this.Type === "all-songs") || (this.Type === "search") || (this.Type === "search-global") || (this.Type === "genre") || this.Type === "artist-songs") 
         {
             this.DisplayAlbumInfo = true;
         }
@@ -38,7 +38,7 @@ SongsAssistant = Class.create(
         {
             this.Genre_id = params.Genre_id;
         }
-                
+        
         if (params.Search) 
         {
             this.Search = params.Search;
@@ -49,36 +49,36 @@ SongsAssistant = Class.create(
         AmpacheMobile.clickedLink = false;
     },
     
-    setup: function ()
+    setup: function()
     {
     
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
         
-
+        
         
         
         //*********************************************************************************
         //Setup Sort List
         var template = 'songs/listitem';
         
-        if ((this.DisplayAlbumInfo === true) && (this.Type === "artist-songs"))  
+        if ((this.DisplayAlbumInfo === true) && (this.Type === "artist-songs")) 
         {
             template = 'songs/listitem_w_artist_simple';
         }
-        else if (this.DisplayAlbumInfo === true)
+        else if (this.DisplayAlbumInfo === true) 
         {
             template = 'songs/listitem_w_artist';
         }
-            
-            
+        
+        
         var attributes = 
         {
             filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
             itemTemplate: template
             //dividerTemplate: 'artist-albums/divider',
             //dividerFunction: this.dividerFunc.bind(this),
-        };   
+        };
         
         this.listModel = 
         {
@@ -86,8 +86,8 @@ SongsAssistant = Class.create(
             items: this.itemsHelper.ItemsList
         };
         this.controller.setupWidget('songsList', attributes, this.listModel);
-
-
+        
+        
         
         
         //*********************************************************************************************************
@@ -118,10 +118,10 @@ SongsAssistant = Class.create(
         
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
-
+        
     },
     
-    cleanup: function (event)
+    cleanup: function(event)
     {
         Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('shuffleAll'), Mojo.Event.tap, this.shuffleHandler);
@@ -130,30 +130,31 @@ SongsAssistant = Class.create(
     },
     
     
-    handleCommand: function (event) {
+    handleCommand: function(event)
+    {
         this.itemsHelper.handleCommand(event);
     },
     
-    holdEvent: function (event)
+    holdEvent: function(event)
     {
         event.stop();
         //alert(event.count);
     },
     
     
-    pushArtist: function (id)
+    pushArtist: function(id)
     {
         //alert(id);
     },
     
     
-    GetSongs: function (callback, offset, limit)
+    GetSongs: function(callback, offset, limit)
     {
     
-        if(this.Type==="random")
+        if (this.Type === "random") 
         {
             this.itemsHelper.fetchLimit = 1;
-            var random = Math.floor(Math.random()* parseInt(AmpacheMobile.ampacheServer.songs, 10));
+            var random = Math.floor(Math.random() * parseInt(AmpacheMobile.ampacheServer.songs, 10));
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, random, 1);
         }
         else if (this.Type === "playlist") 
@@ -163,7 +164,8 @@ SongsAssistant = Class.create(
         }
         else if (this.Type === "album") 
         {
-            if (this.Item) {
+            if (this.Item) 
+            {
                 this.itemsHelper.ExpectedItems = this.Item.tracks;
             }
             AmpacheMobile.ampacheServer.GetSongs(callback, this.Album_id, null, null, null, offset, limit);
@@ -173,9 +175,9 @@ SongsAssistant = Class.create(
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, offset, limit, this.Search);
         }
-        else if (this.Type === "artist-songs")
+        else if (this.Type === "artist-songs") 
         {
-            
+        
             this.itemsHelper.ExpectedItems = this.Expected_items;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, this.Artist_id, null, null, offset, limit);
         }
@@ -184,7 +186,7 @@ SongsAssistant = Class.create(
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, offset, limit, this.Search, true);
         }
-        else if (this.Type === "genre")
+        else if (this.Type === "genre") 
         {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, this.Genre_id, offset, limit, this.Search, true);
@@ -195,7 +197,7 @@ SongsAssistant = Class.create(
         
     },
     
-    IsMatch: function (item, filterString)
+    IsMatch: function(item, filterString)
     {
         var matchString = item.title + " " + item.artist + " " + item.album;
         if (matchString.toLowerCase().include(filterString.toLowerCase())) 
@@ -206,96 +208,97 @@ SongsAssistant = Class.create(
     },
     
     
-    handleShuffleAll: function (event)
+    handleShuffleAll: function(event)
     {
-        if(!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending===false))
+        if (!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === false)) 
         {
         
         
-            if (this.itemsHelper.ItemsList.length > 0)
+            if (this.itemsHelper.ItemsList.length > 0) 
             {
-                this.controller.stageController.pushScene('now-playing', 
+                this.controller.stageController.pushScene(
                 {
-                    type:"play",
+                    transition: AmpacheMobile.Transition,
+                    name: "now-playing"
+                }, 
+                {
+                    type: "play",
                     playList: this.itemsHelper.ItemsList,
                     startIndex: 0,
                     shuffle: true
                 });
-                }
+            }
         }
         
-            else
-            {   //Filtered
-                var i = 0;
-                var filteredCmd = [];
-    
-                 if(this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.PlayListPending===true))
-                {
-                    filteredCmd[i++] ={
-                            label: "Shuffle All Songs",
-                            command: "play-songs-shuffle"
-                    };
-                }
-                
-                if (this.itemsHelper.IsFiltered())
-                {
-                    //Filtered
-                    filteredCmd[i++] ={
-                        label: "Shuffle Filtered Songs",
-                        command: "play-filtered-shuffle"
-                    };
-                }
-                
-                if(this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending===true))
-                {
-                    filteredCmd[i++] = {
-                        label: "Enqueue Filtered Shuffled",
-                        command: "enqueue-filtered-shuffle"
-                    };
-                }
-                
-                if(AmpacheMobile.audioPlayer.PlayListPending===true)
-                {
-                    filteredCmd[i++] ={
-                        label: "Enqueue All Shuffled",
-                        command: "enqueue-songs-shuffle"
-                    };
-                }
-                
-                
-                this.controller.popupSubmenu(
-                    {
-                        onChoose: this.popupHandler.bind(this),
-                        placeNear: $('shuffleAll'),
-                        items: filteredCmd
-                    });
-            }
-        
-        
-        /*if (this.itemsHelper.ItemsList.length > 0) 
-        {
-            this.controller.stageController.pushScene('now-playing', 
+        else 
+        { //Filtered
+            var i = 0;
+            var filteredCmd = [];
+            
+            if (this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.PlayListPending === true)) 
             {
-                playList: this.itemsHelper.ItemsList,
-                startIndex: 0,
-                shuffle: true
+                filteredCmd[i++] = 
+                {
+                    label: "Shuffle All Songs",
+                    command: "play-songs-shuffle"
+                };
+            }
+            
+            if (this.itemsHelper.IsFiltered()) 
+            {
+                //Filtered
+                filteredCmd[i++] = 
+                {
+                    label: "Shuffle Filtered Songs",
+                    command: "play-filtered-shuffle"
+                };
+            }
+            
+            if (this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === true)) 
+            {
+                filteredCmd[i++] = 
+                {
+                    label: "Enqueue Filtered Shuffled",
+                    command: "enqueue-filtered-shuffle"
+                };
+            }
+            
+            if (AmpacheMobile.audioPlayer.PlayListPending === true) 
+            {
+                filteredCmd[i++] = 
+                {
+                    label: "Enqueue All Shuffled",
+                    command: "enqueue-songs-shuffle"
+                };
+            }
+            
+            
+            this.controller.popupSubmenu(
+            {
+                onChoose: this.popupHandler.bind(this),
+                placeNear: $('shuffleAll'),
+                items: filteredCmd
             });
-        }*/
+        }
+        
+        
+        
     },
     
     
-    popupHandler: function (event)
+    popupHandler: function(event)
     {
-        if(event)
+        if (event) 
         {
             var item = this;
             var obj;
             var controller;
-            if(item._this) {
+            if (item._this) 
+            {
                 controller = item._this.controller;
                 obj = item._this;
             }
-            else
+            else 
             {
                 controller = this.controller;
                 obj = this;
@@ -304,40 +307,40 @@ SongsAssistant = Class.create(
             var index;
             Mojo.Log.info(event);
             
-            var type ="unknown";
-            if(event.match("play"))
+            var type = "unknown";
+            if (event.match("play")) 
             {
                 type = "play";
             }
-            else if(event.match("enqueue"))
+            else if (event.match("enqueue")) 
             {
                 type = "enqueue";
             }
             
             var index = 0;
             var shuffled = false;
-            if(event.match("shuffle"))
+            if (event.match("shuffle")) 
             {
                 shuffled = true;
             }
             
             
-            if((type!=="play") &&  shuffled===false)
+            if ((type !== "play") && shuffled === false) 
             {
                 index = obj.FindIndex(item.id);
             }
-            else if((type!=="enqueue") && shuffled ===false)
+            else if ((type !== "enqueue") && shuffled === false) 
             {
                 index = item._event.index;
             }
             
-            if(type!=="unknown")
+            if (type !== "unknown") 
             {
-                if(event.match("filtered"))
+                if (event.match("filtered")) 
                 {
                     playList = obj.itemsHelper.GetAllMatches(obj.itemsHelper.filterString);
                 }
-                else
+                else 
                 {
                     playList = obj.itemsHelper.ItemsList;
                 }
@@ -346,7 +349,11 @@ SongsAssistant = Class.create(
             
             if (event === "pushArtist") 
             {
-                controller.stageController.pushScene('albums', 
+                controller.stageController.pushScene(
+                {
+                    transition: AmpacheMobile.Transition,
+                    name: "albums"
+                }, 
                 {
                     SceneTitle: item.artist,
                     DisplayArtistInfo: false,
@@ -356,21 +363,29 @@ SongsAssistant = Class.create(
             }
             else if (event === "pushAlbum") 
             {
-                controller.stageController.pushScene('songs', 
+                controller.stageController.pushScene(
+                {
+                    transition: AmpacheMobile.Transition,
+                    name: "songs"
+                }, 
                 {
                     SceneTitle: item.artist + " - " + item.album,
                     Type: "album",
                     Album_id: item.album_id,
                     Expected_items: parseInt(AmpacheMobile.ampacheServer.songs, 10),
                     Item: event.item
-                    
+                
                 });
             }
-            else if (type !=="unknown")
+            else if (type !== "unknown") 
             {
-                if(playList.length!=0)
+                if (playList.length != 0) 
                 {
-                    controller.stageController.pushScene('now-playing', 
+                    controller.stageController.pushScene(
+                    {
+                        transition: AmpacheMobile.Transition,
+                        name: "now-playing"
+                    }, 
                     {
                         type: type,
                         playList: playList,
@@ -382,32 +397,12 @@ SongsAssistant = Class.create(
         }
     },
     
-    /*
-    GoToNowPlayingStage:function()
+    
+    FindIndex: function(id)
     {
-
-        var appController = Mojo.Controller.getAppController();
-        var cardStage = appController.getStageController("NowPlayingStage")
- 
-        if(cardStage) {
-            cardStage.popScenesTo();
-            cardStage.pushScene("now-playing");
-            cardStage.activate();
-        }
-        else {
-            var pushCard = function(stageController){
-                stageController.pushScene("now-playing");
-            };
-            // Specify the stage type with the last property.
-            appController.createStageWithCallback({name: "NowPlayingStage", lightweight: true}, pushCard, "card");
-        }
- 
-    },
-    */
-    FindIndex : function (id)
-    {
-        for (var i = 0; i < this.itemsHelper.ItemsList.length; i++) {
-            if (this.itemsHelper.ItemsList[i].id === id)
+        for (var i = 0; i < this.itemsHelper.ItemsList.length; i++) 
+        {
+            if (this.itemsHelper.ItemsList[i].id === id) 
             {
                 return i;
             }
@@ -415,7 +410,7 @@ SongsAssistant = Class.create(
         return 0;
     },
     
-    listTapHandler: function (event)
+    listTapHandler: function(event)
     {
         Mojo.Log.info("--> listTapHandler");
         
@@ -425,16 +420,17 @@ SongsAssistant = Class.create(
         {
             item = event.item;
             item._this = this;
-            var editCmd = [{
-                    label: event.item.artist,
-                    command: "pushArtist",
-                    secondaryIconPath: "images/icons/artists.png"
-                }, 
-                {
-                    label: event.item.album,
-                    command: "pushAlbum",
-                    secondaryIconPath: "images/icons/albums.png"
-                }];
+            var editCmd = [
+            {
+                label: event.item.artist,
+                command: "pushArtist",
+                secondaryIconPath: "images/icons/artists.png"
+            }, 
+            {
+                label: event.item.album,
+                command: "pushAlbum",
+                secondaryIconPath: "images/icons/albums.png"
+            }];
             
             this.controller.popupSubmenu(
             {
@@ -445,18 +441,22 @@ SongsAssistant = Class.create(
         }
         else 
         {
-            if(!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending===false))
+            if (!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === false)) 
             {
                 var playList = this.itemsHelper.ItemsList;
-                    this.controller.stageController.pushScene('now-playing', 
-                    {
-                        type:"play",
-                        playList: playList,
-                        startIndex: event.index,
-                        shuffle: false
-                    });
+                this.controller.stageController.pushScene(
+                {
+                    transition: AmpacheMobile.Transition,
+                    name: "now-playing"
+                }, 
+                {
+                    type: "play",
+                    playList: playList,
+                    startIndex: event.index,
+                    shuffle: false
+                });
             }
-            else
+            else 
             {
             
                 var i = 0;
@@ -464,35 +464,39 @@ SongsAssistant = Class.create(
                 item = event.item;
                 item._this = this;
                 item._event = event;
-    
-                if(this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.PlayListPending===true))
+                
+                if (this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.PlayListPending === true)) 
                 {
-                    filteredCmd[i++] ={
-                            label: "Play All Songs",
-                            command: "play-songs"
+                    filteredCmd[i++] = 
+                    {
+                        label: "Play All Songs",
+                        command: "play-songs"
                     };
                 }
                 
-                if (this.itemsHelper.IsFiltered())
+                if (this.itemsHelper.IsFiltered()) 
                 {
                     //Filtered
-                    filteredCmd[i++] ={
+                    filteredCmd[i++] = 
+                    {
                         label: "Play Filtered Songs",
                         command: "play-filtered"
                     };
                 }
                 
-                if(this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending===true))
+                if (this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === true)) 
                 {
-                    filteredCmd[i++] = {
+                    filteredCmd[i++] = 
+                    {
                         label: "Enqueue Filtered Songs",
                         command: "enqueue-filtered"
                     };
                 }
                 
-                if(AmpacheMobile.audioPlayer.PlayListPending===true)
+                if (AmpacheMobile.audioPlayer.PlayListPending === true) 
                 {
-                    filteredCmd[i++] ={
+                    filteredCmd[i++] = 
+                    {
                         label: "Enqueue All Songs",
                         command: "enqueue-songs"
                     };
@@ -501,20 +505,20 @@ SongsAssistant = Class.create(
                 
                 this.controller.popupSubmenu(
                 {
-                        onChoose: this.popupHandler.bind(item),
-                        placeNear: event.originalEvent.target,
-                        items: filteredCmd
+                    onChoose: this.popupHandler.bind(item),
+                    placeNear: event.originalEvent.target,
+                    items: filteredCmd
                 });
             }
-           
             
-          
-               
-                
             
-
             
-
+            
+            
+            
+            
+            
+            
         }
         
         Mojo.Log.info("<-- listTapHandler");
@@ -523,7 +527,7 @@ SongsAssistant = Class.create(
     
     
     
-    dividerFunc: function (itemModel)
+    dividerFunc: function(itemModel)
     {
         //Mojo.Log.info("--> dividerFunc");
         
@@ -550,7 +554,7 @@ SongsAssistant = Class.create(
     
     
     //This function will sort the album list by year and then alphabetically within the year
-    sortfunction: function (a, b)
+    sortfunction: function(a, b)
     {
     
         var retvalue = 0;

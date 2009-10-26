@@ -1,3 +1,13 @@
+Version 0.7.0 (Beta 1) (10/25/2009)
+    * New Feature: Random Music
+	* New Feature: Now Playing, now playing screen will now continue playing after navigating away from the now playing page
+		o Any list of songs can be enqueued onto the end of the current playlist
+	* New Feature: Redesign of progress indicator for loading content, works the same as the web browser and you can cancel while loading at any point.
+	* New Feature: Added the ability to e-mail the xml from problem tracks with corrupted tags to enable easier debug
+	* Improvement: Auto restart stalled stream after 20 seconds of stalled state.
+	* Bug Fix: Added code to remove bad characters resulting in "unicode error"
+	
+
 Version 0.6.0 (Beta) (10/15/2009)
     * New Feature: Genre Browser
     * Performance Improvement: Entire app has been optimized using dburmans new optimizer, should make it snappier

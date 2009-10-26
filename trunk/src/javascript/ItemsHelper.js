@@ -21,6 +21,7 @@ ItemsHelper = Class.create({
     count:null,
     LoadingFinished: false,
     Visible : false,
+    percentDone:0,
     
     
     initialize : function(ItemsList)
@@ -54,8 +55,9 @@ ItemsHelper = Class.create({
         
         this.reloadModel = {
             label: $L('Reload'),
-            icon: 'refresh',
-            command: 'refresh'
+            //icon: 'forward',
+            iconPath:"images/icons/download.png",
+            command: 'finish-loading'
             };
 
         this.stopModel = {
@@ -123,7 +125,7 @@ ItemsHelper = Class.create({
     GotoRefreshMode:function()
     {
         this.cmdMenuModel.items.pop(this.stopModel);
-        //this.cmdMenuModel.items.push(this.reloadModel);
+        this.cmdMenuModel.items.push(this.reloadModel);
         this.controller.modelChanged(this.cmdMenuModel);
     },
     
@@ -197,7 +199,7 @@ ItemsHelper = Class.create({
         if ((this.ItemsList.length>=this.ExpectedItems) || (_ItemsList.length  !== this.fetchLimit) || this.IndexBusted)
         {
             this.percentDone = 1;
-            this.GotoRefreshMode();
+            this.controller.setMenuVisible(Mojo.Menu.commandMenu, false);
             this.LoadingFinished = true;
         }
         
@@ -290,6 +292,13 @@ ItemsHelper = Class.create({
                 {
                     this.GotoRefreshMode();
                 }
+                break;
+            case "finish-loading":
+                this.GotoLoadingMode();
+                this.currLoadProgressImage = 0;
+                this.loadProgress(this.percentDone * 100);
+                this.GetItems();
+                break;
         }
     },
     
@@ -390,17 +399,14 @@ ItemsHelper = Class.create({
     
     Activate:function()
     {
+        this.Visible = true;
+        
         if(this.percentDone === 0)
         {
             this.waitingAnimation.start();
+            this.GetItems();
         }
-        else if(this.percentDone < 1)
-        {
-            this.cmdMenuModel.items.push(this.stopModel);
-            this.controller.modelChanged(this.cmdMenuModel);
-            this.currLoadProgressImage = 0;
-            this.loadProgress(this.percentDone*100);
-        }
+        
         
         // Now Playing Button
         var button = this.controller.get('now-playing-button');
@@ -408,8 +414,8 @@ ItemsHelper = Class.create({
         this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
         
-        this.Visible = true;
-        this.GetItems();
+        
+        //this.GetItems();
     },
     
     showNowPlaying:function()
