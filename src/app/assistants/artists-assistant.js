@@ -135,7 +135,11 @@ ArtistsAssistant = Class.create(
     listTapHandler: function (event) {
         Mojo.Log.info("--> listTapHandler", event.item.name);
         this.RequestedArtist = event.item;
-        this.controller.stageController.pushScene('albums', 
+        this.controller.stageController.pushScene(
+        {
+            transition: AmpacheMobile.Transition,
+            name: "albums"
+        }, 
         {
             SceneTitle: this.RequestedArtist.name,
             DisplayArtistInfo: false,

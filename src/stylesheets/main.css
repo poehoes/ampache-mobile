@@ -63,7 +63,10 @@ COLOR: grey;
 }
 
 
-
+.progress-widget-width {
+    width: 200px;
+    text-align:left;
+}
 
 
 .customBackgroundSolid{
@@ -472,9 +475,10 @@ body.palm-default {
     padding-top: 95px;
 }
 
+/*
 .stream-buffer-bar {
     width: 200px;
-}
+}*/
 
 
 .palm-menu-icon.load-progress {
@@ -564,6 +568,56 @@ body.palm-default {
 .palm-menu-icon.load-progress.progress-25 {
                 background-position: 0px -1200px;       
 }
+
+
+.palm-menu-icon.buffering {
+                background-image: url(../images/progress-spinner.png);
+                width: 32px;
+                height: 32px;
+                left: -16px;
+                /*margin-top: -8px;*/
+}
+.palm-menu-icon.buffering.progress-0 {
+                background-position: 0px 0px;
+}
+.palm-menu-icon.buffering.progress-1 {
+                background-position: 0px -32px;
+}
+.palm-menu-icon.buffering.progress-2 {
+                background-position: 0px -64px;
+}
+.palm-menu-icon.buffering.progress-3 {
+                background-position: 0px -96px;
+}
+.palm-menu-icon.buffering.progress-4 {
+                background-position: 0px -128px;
+}
+.palm-menu-icon.buffering.progress-5 {
+                background-position: 0px -160px;
+}
+.palm-menu-icon.buffering.progress-6 {
+                background-position: 0px -192px;
+}
+.palm-menu-icon.buffering.progress-7 {
+                background-position: 0px -224px;
+}
+.palm-menu-icon.buffering.progress-8 {
+                background-position: 0px -256px;
+}
+.palm-menu-icon.buffering.progress-9 {
+                background-position: 0px -288px;
+}
+.palm-menu-icon.buffering.progress-10 {
+                background-position: 0px -320px;
+}
+.palm-menu-icon.buffering.progress-11 {
+                background-position: 0px -352px;
+}
+.palm-menu-icon.buffering.progress-12 {
+                background-position: 0px -384px;
+}
+
+
 
 
 .palm-menu-icon.load-search {

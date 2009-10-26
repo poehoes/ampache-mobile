@@ -18,6 +18,7 @@ ConnectionAssistant = Class.create(
     initialize: function(params) {
         Mojo.Log.info("--> ConnectionAssistant Constructor");
         this.ConnctionPending = false;
+        AmpacheMobile.Transition = Mojo.Transition.none;
         Mojo.Log.info("<-- ConnectionAssistant Constructor");
     },
     
@@ -116,7 +117,10 @@ ConnectionAssistant = Class.create(
         {
             settingsManager: AmpacheMobile.settingsManager
         };
-        this.controller.stageController.pushScene("preferences", params);
+        this.controller.stageController.pushScene({
+            transition: AmpacheMobile.Transition,
+            name: "preferences"
+        }, params);
     },
     
     GotSettings: function(settings){
@@ -160,6 +164,24 @@ ConnectionAssistant = Class.create(
         Mojo.Log.info("<-- handleLaunch");
     },
     
+    pushMainMenu:function()
+    {
+        if (this.controller.stageController){
+            this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "mainmenu"
+            });
+        }
+        else{
+            this.controller.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "mainmenu"
+            });
+        }
+        
+    },
+    
+    
     ConnectionCallback: function(connectResult, source){
         Mojo.Log.info("--> ConnectionCallback");
         Mojo.Log.info("ConnectionCallback Got Connection info", connectResult);
@@ -171,11 +193,7 @@ ConnectionAssistant = Class.create(
             var apiVersion = parseInt(AmpacheMobile.ampacheServer.api,10);
             if (apiVersion >= 350001){
                 Mojo.Log.info("Pushing Main Menu", connectResult);
-                if (this.controller.stageController){
-                    this.controller.stageController.pushScene("mainmenu");
-                }else{
-                    this.controller.pushScene("mainmenu");
-                }
+                this.pushMainMenu();
             }else{//Incorrect API
                 html = true;
                 DisplayMessage = "Error: You are connecting to an incompatible version of Ampache<br><br> You are using API Version: " + AmpacheMobile.ampacheServer.api +

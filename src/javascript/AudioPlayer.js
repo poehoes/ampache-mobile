@@ -117,6 +117,9 @@ AudioPlayer = Class.create({
             this.player.addEventListener("progress", this.handleAudioEvents.bind(this));
             this.player.addEventListener("durationchange", this.handleAudioEvents.bind(this));
         }
+        
+        this.player.autoplay = false;
+        
         Mojo.Log.info("<-- AudioPlayer.prototype.createAudioObj");
     },
     /*
@@ -625,9 +628,9 @@ AudioPlayer = Class.create({
                 this.player.play();
                 break;
             case "stalled":
-                this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
-                this.UpdateNowPlayingShowSpinner(true);
-                this.stalled =true;
+                //this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
+                //this.UpdateNowPlayingShowSpinner(true);
+                //this.stalled =true;
                 break;
             case "durationchange":
                  this.UpdateNowPlayingTime();
@@ -719,10 +722,10 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<-- AudioPlayer.prototype.ClearNowPlayingTime");
     },
 
-    UpdateNowPlayingBuffering: function(loaded, total){
+    UpdateNowPlayingBuffering: function(start, end){
         //Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
         if(this.NowPlaying){
-            this.NowPlaying.updateBuffering(0, total);
+            this.NowPlaying.updateBuffering(start, end);
         }
         //Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
     },

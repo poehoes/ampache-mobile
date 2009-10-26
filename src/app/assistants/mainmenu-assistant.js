@@ -180,7 +180,11 @@ MainmenuAssistant = Class.create(
     
     
     pushSearch: function(){
-        this.controller.stageController.pushScene('search-menu');
+        this.controller.stageController.pushScene(
+        {
+            transition: AmpacheMobile.Transition,
+            name: "search-menu"
+        });
     },
     
     listTapHandler: function(event){
@@ -189,7 +193,11 @@ MainmenuAssistant = Class.create(
             case "artists":
                 var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
                 if (numArtists !== 0){
-                    this.controller.stageController.pushScene("artists", 
+                    this.controller.stageController.pushScene(
+                    {
+                        transition: AmpacheMobile.Transition,
+                        name: "artists"
+                    }, 
                     {
                         SceneTitle: "Artists",
                         ExpectedArtists: numArtists
@@ -202,7 +210,11 @@ MainmenuAssistant = Class.create(
                 Mojo.Log.info("Pushing Albums");
                 var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
                 if (numAlbums !== 0){
-                    this.controller.stageController.pushScene('albums', 
+                    this.controller.stageController.pushScene(
+                    {
+                        transition: AmpacheMobile.Transition,
+                        name: "albums"
+                    }, 
                     {
                         SceneTitle: "Albums",
                         DisplayArtistInfo: true,
@@ -217,7 +229,11 @@ MainmenuAssistant = Class.create(
                 var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
                 if (numPlaylists !== 0){
                     Mojo.Log.info("Pushing Playlists");
-                    this.controller.stageController.pushScene('playlists', 
+                    this.controller.stageController.pushScene(
+                    {
+                        transition: AmpacheMobile.Transition,
+                        name: "playlists"
+                    },
                     {
                         SceneTitle: "Playlists",
                         ExpectedPlaylists: numPlaylists
@@ -227,8 +243,13 @@ MainmenuAssistant = Class.create(
                 //this.TurnOffSpinner("Getting Albums");
                 break;
             case "songs":
-                this.controller.stageController.pushScene('songs', 
+                this.controller.stageController.pushScene(
+                    {
+                        transition: AmpacheMobile.Transition,
+                        name: "songs"
+                    }, 
                 {
+                    
                     SceneTitle: "Songs",
                     Type: "all-songs",
                     Item: event.item
@@ -236,14 +257,22 @@ MainmenuAssistant = Class.create(
                 });
                 break;
             case "genres":
-                this.controller.stageController.pushScene('genres', 
+                this.controller.stageController.pushScene(
+                {
+                    transition: AmpacheMobile.Transition,
+                    name: "genres"
+                },
                 {
                     SceneTitle: "Genres",
                     Type: "all-genres"
                 });
                 break;
             case "random":
-                this.controller.stageController.pushScene('random', 
+                this.controller.stageController.pushScene(
+                {
+                    transition: AmpacheMobile.Transition,
+                    name: "random"
+                },
                 {
                     SceneTitle: "Random",
                     Type: "all-genres"
@@ -297,54 +326,9 @@ MainmenuAssistant = Class.create(
         Mojo.Log.info("<-- showScene");
     },
     
-    FinishedGettingSongs: function(_songsList){
-        Mojo.Log.info("--> FinishedGettingSongs");
-        this.SongsList = _songsList;
-        this.getPending = false;
-        this.controller.stageController.pushScene("songs", 
-        {
-            SceneTitle: "All Songs",
-            //DisplayArtistInfo:false,
-            SongsList: _songsList
-        });
-        this.TurnOffSpinner();
-        Mojo.Log.info("<-- FinishedGettingSongs");
-    },
     
-    /*
-     FinishedGettingArtists: function(_artistList){
-     Mojo.Log.info("--> FinishedGettingArtists");
-     
-     this.ArtistList = _artistList;
-     
-     this.getPending = false;
-     
-     this.controller.stageController.pushScene("artists", {
-     artistList: _artistList
-     })
-     
-     this.TurnOffSpinner();
-     Mojo.Log.info("<-- FinishedGettingArtists");
-     
-     }
-     FinishedGettingAlbums: function(_albumsList){
-     Mojo.Log.info("--> ArtistsAssistant.prototype.FinishedGettingAlbums");
-     
-     this.AlbumsList = _albumsList;
-     
-     //this.GetArtistsPending = false;
-     this.getPending = false;
-     
-     this.controller.stageController.pushScene('albums', {
-     SceneTitle: "All Albums",
-     DisplayArtistInfo:true,
-     AlbumsList: _albumsList,
-     });
-     this.TurnOffSpinner();
-     Mojo.Log.info("<-- ArtistsAssistant.prototype.FinishedGettingAlbums");
-     
-     }
-     */
+    
+
     activate: function(event){
         // Now Playing Button
         var button = this.controller.get('now-playing-button');
@@ -363,7 +347,11 @@ MainmenuAssistant = Class.create(
     
     showNowPlaying:function()
     {
-       Mojo.Controller.stageController.pushScene('now-playing', 
+        Mojo.Controller.stageController.pushScene(
+        {
+            transition: AmpacheMobile.Transition,
+            name: "now-playing"
+        }, 
         {
                 type:"display"
         });

@@ -76,9 +76,7 @@ NowPlayingAssistant = Class.create(
             value: 0,
             maxValue: 100,
             minValue: 0,
-            progress: 0,
-            property: "updating"
-        
+            progress: 0
         };
         
         Mojo.Log.info("Setup spinnnerAttrs");
@@ -103,15 +101,25 @@ NowPlayingAssistant = Class.create(
             sliderProperty: 'value',
             progressStartProperty: 'progressStart',
             progressProperty: 'progressEnd',
-            round: true,
-            updateInterval: 0.4
+            round: false,
+            updateInterval: 0.1
         };
         Mojo.Log.info("Setup slider");
         this.controller.setupWidget('sliderdiv', sliderAttributes, this.sliderModel);
-        
-
-        
         this.updateBuffering(0, 0);
+
+        this.loadingModel = {
+            label: $L('Stop'),
+            icon: 'buffering',
+            command: 'pause'
+        };
+        details = {
+            controller: this.controller,
+            model: this.loadingModel,
+            frameHeight:32
+        }
+        this.loadingAnimation = new PageSearchAnimation(details);
+        
         
         if(this.type!=="display")
         {
@@ -148,16 +156,21 @@ NowPlayingAssistant = Class.create(
         this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
         
+        
+        
         Mojo.Log.info("<-- setup");
     },
     
     cleanup: function(event){
+        this.slider = this.controller.get('sliderdiv');
         Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
         Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
         Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
         Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler );
         Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
         Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
+        this.loadingAnimation.stop();
+        this.loadingAnimation=null;
     },
     
     FitToWindow: function(){
@@ -325,6 +338,7 @@ NowPlayingAssistant = Class.create(
         //AmpacheMobile.audioPlayer.stop();
         AmpacheMobile.audioPlayer.clearNowPlaying();
         window.onresize = null;
+        
         Mojo.Log.info("--> activate");
     },
     
@@ -375,8 +389,22 @@ NowPlayingAssistant = Class.create(
         var pos = this.sliderModel.value;
         var percentage = (pos / 100);
         //Not yet supporting restaring the download from a new spot
-        var secs = (this.sliderModel.progressEnd < percentage) ? AmpacheMobile.audioPlayer.player.currentTime : Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
-        AmpacheMobile.audioPlayer.player.currentTime = secs;
+        
+        var secs = AmpacheMobile.audioPlayer.player.currentTime;
+        var duration = AmpacheMobile.audioPlayer.player.duration;
+        if((duration)&&(duration!==0)){
+            var secs = Math.round((pos / 100) * duration);
+        }
+        
+        //var secs = (this.sliderModel.progressEnd < percentage) ? AmpacheMobile.audioPlayer.player.currentTime : Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
+        try{
+            AmpacheMobile.audioPlayer.player.currentTime = secs;
+        }
+        
+        catch (e) {
+            Mojo.Log.error("Error setting currentTime: %j", e);
+        }
+        
         AmpacheMobile.audioPlayer.NowPlayingStartPlaybackTimer();
         /*
          if (this.pausedFromDrag) {
@@ -407,6 +435,8 @@ NowPlayingAssistant = Class.create(
         if (this.sliderIsDragging) {
             return;
         }
+        //AmpacheMobile.audioPlayer.player.pause();
+        
         this.sliderIsDragging = true;
         AmpacheMobile.audioPlayer.NowPlayingStopPlaybackTimer();
         Mojo.Log.info("<-- progressBarDragStart");
@@ -416,12 +446,15 @@ NowPlayingAssistant = Class.create(
         Mojo.Log.info("--> progressBarSeek");
         var pos = event.value;
         var secs = Math.round((pos / 100) * AmpacheMobile.audioPlayer.player.duration);
+        //AmpacheMobile.audioPlayer.player.currentTime = event.value * AmpacheMobile.audioPlayer.player.duration;
+        //AmpacheMobile.audioPlayer.player.play();
         this.updateCounters(secs, AmpacheMobile.audioPlayer.player.duration);
         Mojo.Log.info("<-- progressBarSeek");
     },
     
     
-    updateBuffering: function(startPctg, endPctg){
+    updateBuffering: function(startPctg, endPctg)
+    {
         this.sliderModel.progressStart = startPctg;
         this.sliderModel.progressEnd = endPctg;
         this.controller.modelChanged(this.sliderModel);
@@ -432,14 +465,27 @@ NowPlayingAssistant = Class.create(
     //*********************************************************************************************************************************
     showSpinner: function(){
         Mojo.Log.info("--> showSpinner");
-        this.spinnerModel.spinning = true;
-        this.controller.modelChanged(this.spinnerModel);
+        
+        this.cmdMenuModel.items[1].items[1]=this.loadingModel;
+        this.controller.modelChanged(this.cmdMenuModel);
+        this.loadingAnimation.start();
+        //this.spinnerModel.spinning = true;
+        //this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- showSpinner");
     },
     hideSpinner: function(){
         Mojo.Log.info("--> hideSpinner");
-        this.spinnerModel.spinning = false;
-        this.controller.modelChanged(this.spinnerModel);
+        this.loadingAnimation.stop();
+        
+        if (!this.playing){
+            this.cmdMenuModel.items[1].items[1] = this.playItem;;
+        }else{
+            this.cmdMenuModel.items[1].items[1] = this.pauseStopItem;
+        }
+        
+        this.controller.modelChanged(this.cmdMenuModel);
+        //this.spinnerModel.spinning = false;
+        //this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- hideSpinner");
     },
     
@@ -731,6 +777,9 @@ NowPlayingAssistant = Class.create(
         }
         this.setMenuControls();
     },
+    
+    
+
     
     playItem: { icon: 'music-play', command: 'play' },
    

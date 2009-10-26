@@ -247,7 +247,11 @@ AlbumsAssistant = Class.create({
     listTapHandler: function (event) {
         Mojo.Log.info("--> listTapHandler");
 
-        this.controller.stageController.pushScene('songs', {
+        this.controller.stageController.pushScene(
+                                                  {
+                        transition: AmpacheMobile.Transition,
+                        name: "songs"
+                    },  {
             SceneTitle: event.item.artist + " - " + event.item.name,
             Type: "album",
             Album_id: event.item.id,
@@ -261,7 +265,12 @@ AlbumsAssistant = Class.create({
     handleShuffleAll: function (event) {
         Mojo.Log.info("--> handleShuffleAll");
 
-        this.controller.stageController.pushScene('songs', {
+        this.controller.stageController.pushScene(
+            {
+                        transition: AmpacheMobile.Transition,
+                        name: "songs"
+            },
+            {
             SceneTitle: this.SceneTitle,
             Type: "artist-songs",
             Artist_id: this.Artist_id,
