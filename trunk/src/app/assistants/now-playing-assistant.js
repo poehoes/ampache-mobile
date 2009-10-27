@@ -26,6 +26,10 @@ NowPlayingAssistant = Class.create(
         this.type = params.type;
         this.pauseStopItem = this.pauseItem;
         
+        
+        StageAssistant.appMenuModel.items[1].disabled=false;
+
+        
         switch(params.type)
         {
             case "display":
@@ -704,6 +708,8 @@ NowPlayingAssistant = Class.create(
                         }]
                     });
                     break;
+                case "delete-np-cmd" :
+                    this.controller.stageController.popScene();
             }
         }
         Mojo.Log.info("<-- handleCommand:", event.command);
@@ -805,5 +811,10 @@ NowPlayingAssistant = Class.create(
     
     appMenuAttr: { omitDefaultItems: true },
 
-    appMenuModel: { visible: true, items: [ { label: "Stream Info", command: "doStreamingInfo-cmd" }, { label: "About...", command: "about-cmd" }] }
+    appMenuModel: { visible: true,
+        items: [
+            { label: "Stream Info", command: "doStreamingInfo-cmd" },
+            { label: "Delete Now Playing", command: "delete-np-cmd" },
+            { label: "About...", command: "about-cmd" }]
+        }
 });

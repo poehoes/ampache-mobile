@@ -161,6 +161,7 @@ AlbumsAssistant = Class.create({
                 label: "Preferences...",
                 command: "doPref-cmd"
             },
+            {label: "Delete Now Playing", disabled:!AmpacheMobile.audioPlayer.PlayListPending, command: "delete-np-cmd" },
             {
                 label: "Sort",
                 items: this.sortItems
@@ -325,6 +326,9 @@ AlbumsAssistant = Class.create({
             }
             event.stopPropagation();
             break;
+        case "delete-np-cmd" :
+            this.appMenuModel.items[1].disabled = true;
+            break;
         
         }
         
@@ -439,6 +443,7 @@ AlbumsAssistant = Class.create({
 
     activate: function (event) {
         this.itemsHelper.Activate();
+        this.appMenuModel.items[1].disabled = !AmpacheMobile.audioPlayer.PlayListPending;
     },
 
     deactivate: function (event) {

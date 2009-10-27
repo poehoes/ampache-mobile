@@ -47,6 +47,7 @@ StageAssistant.appMenuModel = {
     items: [
         //{label: "Test Connection", command: "doTest-cmd"},
         {label: "Preferences...",  command: "doPref-cmd" },
+        {label: "Delete Now Playing", disabled:true, command: "delete-np-cmd" },
         {label: "About...", command: "about-cmd"}
     ]
 };
@@ -89,6 +90,18 @@ StageAssistant.prototype.handleCommand = function(event){
                         value: ""
                     }]
                 });
+                break;
+            case "delete-np-cmd" :
+                if(AmpacheMobile.audioPlayer.PlayListPending===true)
+                {
+                    AmpacheMobile.audioPlayer.stop();
+                    AmpacheMobile.audioPlayer.PlayListPending = false;
+                    var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+                    var button = controller.get('now-playing-button');
+                    button.style.display = 'none';
+                    StageAssistant.appMenuModel.items[1].disabled=true;
+                    
+                }
                 break;
         }
     }
