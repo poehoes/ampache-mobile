@@ -119,19 +119,103 @@ SongsAssistant = Class.create(
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
         
+        this.holdHandler = this.listHeld.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
     },
+    
     
     cleanup: function(event)
     {
         Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('shuffleAll'), Mojo.Event.tap, this.shuffleHandler);
+        Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
     
+    findSongId:function(event)
+    {
+        var element = event.srcElement;
+        i=0;
+        while((!element.id.match("_song")) && i<100)
+        {
+            element = element.parentElement;
+            i++;
+        }
+        if(i==100)
+        {
+            return -1;
+        }
+        
+        idStr = element.id.split("_")[0];
+        id = parseInt(idStr, 10);
+        return id;
+    },
+    
+    findSong:function(songId)
+    {
+        for(i =0;i<this.itemsHelper.ItemsList.length;i++)
+        {
+            if(this.itemsHelper.ItemsList[i].id == songId)
+            {
+                return this.itemsHelper.ItemsList[i];
+            }
+        }
+        return null;
+    },
+    
+    heldPending:false,
+    listHeld:function(event)
+    {
+        this.heldPending = true;
+        id = this.findSongId(event);
+        if(id===-1)
+        {
+            return;
+        }
+        song = this.findSong(id);
+        
+        if(song)
+        {
+            var i = 0;
+            var filteredCmd = [];
+            song._this = this;
+            song._event = event;
+            
+            
+            filteredCmd[i++] = 
+                {
+                    label: "Play " + song.title,
+                    command: "play-justone"
+                };
+            
+            
+            
+            if (AmpacheMobile.audioPlayer.PlayListPending === true) 
+            {
+               
+                filteredCmd[i++] = 
+                {
+                    label: "Enqueue " + song.title,
+                    command: "enqueue-justone"
+                };
+            }
+            
+            
+            this.controller.popupSubmenu(
+            {
+                onChoose: this.popupHandler.bind(song),
+                placeNear: event.srcElement,
+                items: filteredCmd
+            });
+        }
+        
+        Mojo.Log.info("listHeld " + song.title);
+    },
     
     handleCommand: function(event)
     {
+        Mojo.Log.info("handleCommand");
         this.itemsHelper.handleCommand(event);
     },
     
@@ -210,6 +294,11 @@ SongsAssistant = Class.create(
     
     handleShuffleAll: function(event)
     {
+        if(this.heldPending===true)
+        {
+            return;
+        }
+        
         if (!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === false)) 
         {
         
@@ -288,6 +377,11 @@ SongsAssistant = Class.create(
     
     popupHandler: function(event)
     {
+        if(this._this && this._this.heldPending)
+        {
+            this._this.heldPending = false;
+        }
+        
         if (event) 
         {
             var item = this;
@@ -303,6 +397,9 @@ SongsAssistant = Class.create(
                 controller = this.controller;
                 obj = this;
             }
+            
+            
+            
             var playList;
             var index;
             Mojo.Log.info(event);
@@ -340,10 +437,18 @@ SongsAssistant = Class.create(
                 {
                     playList = obj.itemsHelper.GetAllMatches(obj.itemsHelper.filterString);
                 }
-                else 
+                else if(event.match("songs")) 
                 {
                     playList = obj.itemsHelper.ItemsList;
                 }
+                else if(event.match("justone")) 
+                {
+                    playList = [];
+                    playList[0] = item;
+                    index = 0;
+                }
+               
+                
             }
             
             
@@ -381,17 +486,24 @@ SongsAssistant = Class.create(
             {
                 if (playList.length != 0) 
                 {
-                    controller.stageController.pushScene(
+                    if(type==="play")
                     {
-                        transition: AmpacheMobile.Transition,
-                        name: "now-playing"
-                    }, 
+                        controller.stageController.pushScene(
+                        {
+                            transition: AmpacheMobile.Transition,
+                            name: "now-playing"
+                        }, 
+                        {
+                            type: type,
+                            playList: playList,
+                            startIndex: index,
+                            shuffle: shuffled
+                        });
+                    }
+                    else if(type === "enqueue")
                     {
-                        type: type,
-                        playList: playList,
-                        startIndex: index,
-                        shuffle: shuffled
-                    });
+                        AmpacheMobile.audioPlayer.enqueuePlayList(playList, shuffled);
+                    }
                 }
             }
         }
@@ -413,6 +525,11 @@ SongsAssistant = Class.create(
     listTapHandler: function(event)
     {
         Mojo.Log.info("--> listTapHandler");
+        if(this.heldPending===true)
+        {
+            return;
+        }
+        
         
         var click_id = event.originalEvent.target.id;
         var item;
@@ -499,6 +616,11 @@ SongsAssistant = Class.create(
                     {
                         label: "Enqueue All Songs",
                         command: "enqueue-songs"
+                    };
+                    filteredCmd[i++] = 
+                    {
+                        label: "Enqueue " + event.item.title,
+                        command: "enqueue-justone"
                     };
                 }
                 
