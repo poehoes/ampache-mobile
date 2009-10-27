@@ -326,7 +326,7 @@ ItemsHelper = Class.create({
         }
         else 
         {
-            for (var i = 0; i < this.ItemsList.length; i++) 
+            for (i = 0; i < this.ItemsList.length; i++) 
             {
                 if(this.MatchFunction(this.ItemsList[i], filterString))
                 {
