@@ -121,7 +121,7 @@ NowPlayingAssistant = Class.create(
             controller: this.controller,
             model: this.loadingModel,
             frameHeight:32
-        }
+        };
         this.loadingAnimation = new PageSearchAnimation(details);
         
         
@@ -482,7 +482,7 @@ NowPlayingAssistant = Class.create(
         this.loadingAnimation.stop();
         
         if (!this.playing){
-            this.cmdMenuModel.items[1].items[1] = this.playItem;;
+            this.cmdMenuModel.items[1].items[1] = this.playItem;
         }else{
             this.cmdMenuModel.items[1].items[1] = this.pauseStopItem;
         }

@@ -242,7 +242,7 @@ AudioPlayer = Class.create({
         {
                 this.playList[i] = newPlayList[i];
         }
-        newPlayList;
+        
         this.markPlayListUnplayed();
         this.playOrderList = this.createOrderList();
         this.shuffleOn=_shuffleOn;
@@ -316,7 +316,6 @@ AudioPlayer = Class.create({
     },
     
     toggleShuffleOn:function(){
-        //this.playOrderList.sort(this.randOrd);
         this.playOrderList.sort(this.randOrd);
         var i = this.playList.length;
         do{

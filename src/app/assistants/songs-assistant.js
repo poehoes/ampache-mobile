@@ -142,7 +142,7 @@ SongsAssistant = Class.create(
             element = element.parentElement;
             i++;
         }
-        if(i==100)
+        if(i===100)
         {
             return -1;
         }
@@ -401,7 +401,7 @@ SongsAssistant = Class.create(
             
             
             var playList;
-            var index;
+            
             Mojo.Log.info(event);
             
             var type = "unknown";
@@ -484,7 +484,7 @@ SongsAssistant = Class.create(
             }
             else if (type !== "unknown") 
             {
-                if (playList.length != 0) 
+                if (playList.length !== 0) 
                 {
                     if(type==="play")
                     {
