@@ -11,13 +11,13 @@
   * Could be an ACL issue. Ampache uses Access Control Lists to restrict access to the music server (see http://ampache.org/wiki/config:acl). You will need to create a an ACL rule for EVDO access
      * Go to the Ampache Admin page
      * click on "Add ACL"
-     * Name it (ex: EVDO Streaming) 
-     * Level = all
-     * User = all
-     * ACL type = Stream Access
-     * Remote Key =            (leave blank)
-     * Start = 0.0.0.0 
-     * End =  255.255.255.255
+        * Name it (ex: EVDO Streaming) 
+        * Level = all
+        * User = all
+        * ACL type = Stream Access
+        * Remote Key =            (leave blank)
+        * Start = 0.0.0.0 
+        * End =  255.255.255.255
      * click on "Create ACL"
 
 
