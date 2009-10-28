@@ -2,8 +2,8 @@
 =Common Issues=
 
 === Works on WiFi but not EVDO ===
-  * Are you connecting to a 192.168.x.x IP Address?  Most WiFi routers have an internal IP pool and one External IP.  
-    * 192.168.x.x is Internal and not accessible via EVDO
+  * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most WiFi routers have an internal IP pool and one External IP.  
+    * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
     * To find your external address try this link [http://www.whatismyip.com/]
   * Once you determine your internal address and external IP address you need to setup port forwarding on your router.
     * Your goal is to forward your External IP address to your Internal Ampache Server address.
