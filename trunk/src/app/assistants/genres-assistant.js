@@ -155,7 +155,11 @@ GenresAssistant = Class.create({
         Mojo.Log.info(event);
 
         if (event === "pushArtists") {
-            controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "artists"}, {
+            controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "artists"
+            },
+            {
                 SceneTitle: "Genre: " + item.name,
                 Genre_id: item.id,
                 ExpectedArtists: item.artists
@@ -163,7 +167,11 @@ GenresAssistant = Class.create({
         }
 
         if (event === "pushAlbums") {
-            controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "albums"}, {
+            controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "albums"
+            },
+            {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genres",
                 Genre_id: item.id,
@@ -173,7 +181,11 @@ GenresAssistant = Class.create({
         }
 
         if (event === "pushSongs") {
-            controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "songs"}, {
+            controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "songs"
+            },
+            {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genre",
                 Genre_id: item.id
