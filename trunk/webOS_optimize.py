@@ -13,6 +13,8 @@ if len(sys.argv) > 1:
 else:
     directory = './'
 
+print ("Processing Folder:", directory)
+
 rootdir = directory 
 #rootdir = './'+'optimized/'
 # Copy (Replace) directory to optimized folder, might not replace if directory is RO
@@ -149,49 +151,68 @@ for i in range(len(JAVASCRIPTS)):
     fout = open(JAVASCRIPTS[i], 'w')
     j = 0
     commentRemove = True
+    inString = False 
     while commentRemove == True:
-        #find and remove double spaces etc
-        if (j + 1)< len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
-            j=j+1
-            gotoCommentEnd= True 
-            while gotoCommentEnd == True:
-                if j >= len(finString):
-                    gotoCommentEnd = False
-                    commentRemove = False 
-                else:
-                    if finString[j] != ' ' and finString[j] != '\t' and finString[j] != '\n' and finString[j] != '\r':
-                        gotoCommentEnd = False
-                        k=0
-                        for k in range(len(JAVASCRIPTS_NOSPACEAROUND)):
-                            if finString[j] == JAVASCRIPTS_NOSPACEAROUND[k]:
-                                j=j+1
-                                break
-                        j=j-1
-                    else:
-                        j=j+1
         
-        if j >= len(finString):
-            commentRemove = False
-        else:
-            if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
-            #if finString != '\t':
-                fout.write(finString[j])
-                k=0
-                for k in range(len(JAVASCRIPTS_NOSPACEAROUND)):
-                    if finString[j] == JAVASCRIPTS_NOSPACEAROUND[k]:
-                        gotoCommentEnd= True
-                        k=len(JAVASCRIPTS_NOSPACEAROUND)
-                        while gotoCommentEnd == True:
-                            if (j + 1)< len(finString) and (finString[j+1] == ' ' or finString[j+1] == '\t' or finString[j+1] == '\n' or finString[j+1] == '\r'):
-                                j=j+1
-                            else:
-                                gotoCommentEnd = False
-                                
-
+        # remove any spaces at the start of the file
+        if (j == 0):
+            while (finString[j] == ' ') and (j+1)<len(finString):
+                j=j+1
+        
+        #determine if in a string or not
+        if ((j)<len(finString) and  finString[j] == '"'):
+            if (inString==True):
+                inString = False
             else:
-                fout.write(' ')
-            #print(j)
-            j=j+1
+                inString = True
+        
+        if (inString == True):
+            #if in a string print out raw contents
+            fout.write(finString[j])
+            if(j+1)<len(finString):
+                j=j+1
+        else:
+            #find and remove double spaces etc
+            if (j+1)<len(finString) and (finString[j] == ' ' or finString[j] == '\t' or finString[j] == '\n' or finString[j] == '\r'): 
+                j=j+1
+                gotoCommentEnd= True 
+                while gotoCommentEnd == True:
+                    if j >= len(finString):
+                        gotoCommentEnd = False
+                        commentRemove = False 
+                    else:
+                        if finString[j] != ' ' and finString[j] != '\t' and finString[j] != '\n' and finString[j] != '\r':
+                            gotoCommentEnd = False
+                            k=0
+                            for k in range(len(JAVASCRIPTS_NOSPACEAROUND)):
+                                if finString[j] == JAVASCRIPTS_NOSPACEAROUND[k]:
+                                    j=j+1
+                                    break
+                            j=j-1
+                        else:
+                            j=j+1
+
+            if j >= len(finString):
+                commentRemove = False
+            else:
+                if finString[j] != '\n' and finString[j] != '\r' and finString != '\t':
+                    #if finString != '\t':
+                    fout.write(finString[j])
+                    k=0
+                    for k in range(len(JAVASCRIPTS_NOSPACEAROUND)):
+                        if finString[j] == JAVASCRIPTS_NOSPACEAROUND[k]:
+                            gotoCommentEnd= True
+                            k=len(JAVASCRIPTS_NOSPACEAROUND)
+                            while gotoCommentEnd == True:
+                                if (j + 1)< len(finString) and (finString[j+1] == ' ' or finString[j+1] == '\t' or finString[j+1] == '\n' or finString[j+1] == '\r'):
+                                    j=j+1
+                                else:
+                                    gotoCommentEnd = False
+                else:
+                    fout.write(' ')
+                #print(j)
+                j=j+1
+
     fout.close()
 
 
