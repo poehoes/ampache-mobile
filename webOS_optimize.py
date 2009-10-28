@@ -30,6 +30,8 @@ for root, subFolders, files in os.walk(rootdir):
     for file in files:
         if fnmatch.fnmatch(file, '*.js'):
             JAVASCRIPTS.append(os.path.join(root,file))
+        #if fnmatch.fnmatch(file, '*.css'):
+        #    JAVASCRIPTS.append(os.path.join(root,file))
         if fnmatch.fnmatch(file, '*.html'):
             HTML.append(os.path.join(root,file))
 
