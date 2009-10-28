@@ -13,56 +13,50 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-ArtistsAssistant = Class.create(
-{
+ArtistsAssistant = Class.create({
 
-    initialize: function (params) {
+    initialize: function(params) {
         this.SceneTitle = params.SceneTitle;
         this.ExpectedArtists = params.ExpectedArtists;
         this.itemsHelper = new ItemsHelper();
         this.type = params.type;
-        
+
         if (params.Genre_id) {
             this.Genre_id = params.Genre_id;
         }
-        
+
         if (params.Search) {
             this.Search = params.Search;
         }
     },
-    
-    setup: function () {
-        
+
+    setup: function() {
+
         //**********************************************************************
         // Set title
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
 
-        
         //*********************************************************************************************************
         //  Setup Filter List
-        var attributesFilter = 
-        {
+        var attributesFilter = {
             itemTemplate: 'artists/listitem',
             dividerTemplate: 'artists/divider',
-            dividerFunction: (this.type==="random") ?null : this.dividerFunc.bind(this),
+            dividerFunction: (this.type === "random") ? null: this.dividerFunc.bind(this),
             filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper)
         };
-        this.listModel = 
-        {
+        this.listModel = {
             disabled: false,
             items: this.itemsHelper.ItemsList
         };
         this.controller.setupWidget('artistFilterList', attributesFilter, this.listModel);
 
-        
         //*********************************************************************************************************
         // Items Helper
         var sorting = this.Genre_id ? this.sortAlpha.bind(this) : null;
-        
-        var params = 
-        {
-            type:"artists",
+
+        var params = {
+            type: "artists",
             controller: this.controller,
             //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('artistFilterList'),
@@ -75,71 +69,65 @@ ArtistsAssistant = Class.create(
             MatchFunction: this.IsMatch
         };
         this.itemsHelper.setup(params);
-        
+
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
+
         //***************************************************************************************
         //Events
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
     },
-    
-    cleanup: function (event) {
+
+    cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
-    
-    sortAlpha: function (a, b)
-    {
-    
+
+    sortAlpha: function(a, b) {
+
         var regExp = /(the|a)\s+/g;
         var a_fixed = a.name.toLowerCase().replace(regExp, '');
         var b_fixed = b.name.toLowerCase().replace(regExp, '');
-        
+
         if (a_fixed === b_fixed) {
             return 0;
         }
         if (a_fixed < b_fixed) {
-            return -1;
-        }
-        else {
+            return - 1;
+        } else {
             return 1;
         }
-        
+
     },
-    
-    GetArtists: function (GotItems, offset, limit) {
-        if(this.type==="random")
-        {
+
+    GetArtists: function(GotItems, offset, limit) {
+        if (this.type === "random") {
             this.itemsHelper.fetchLimit = 1;
-            var random = Math.floor(Math.random()* parseInt(AmpacheMobile.ampacheServer.artists, 10));
+            var random = Math.floor(Math.random() * parseInt(AmpacheMobile.ampacheServer.artists, 10));
             AmpacheMobile.ampacheServer.GetArtists(GotItems, null, random, 1, null);
-        }
-        else if (!this.Genre_id) {
+        } else if (!this.Genre_id) {
             AmpacheMobile.ampacheServer.GetArtists(GotItems, null, offset, limit, this.Search);
-        }
-        else {
+        } else {
             AmpacheMobile.ampacheServer.GetArtists(GotItems, this.Genre_id, offset, limit, this.Search);
         }
     },
-    
-    IsMatch: function (item, filterString) {
+
+    IsMatch: function(item, filterString) {
         var matchString = item.name;
         if (matchString.toLowerCase().include(filterString.toLowerCase())) {
             return true;
         }
         return false;
     },
-    
-    listTapHandler: function (event) {
+
+    listTapHandler: function(event) {
         Mojo.Log.info("--> listTapHandler", event.item.name);
         this.RequestedArtist = event.item;
-        this.controller.stageController.pushScene(
-        {
+        this.controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "albums"
-        }, 
+        },
         {
             SceneTitle: this.RequestedArtist.name,
             DisplayArtistInfo: false,
@@ -150,11 +138,11 @@ ArtistsAssistant = Class.create(
         });
         Mojo.Log.info("<-- listTapHandler");
     },
-    
-    handleCommand: function (event) {
+
+    handleCommand: function(event) {
         this.itemsHelper.handleCommand(event);
     },
-/*
+    /*
     TurnOnSpinner: function () {
         Mojo.Log.info("-----> TurnOnSpinner");
         CenterSpinner($('large-activity-spinner'));
@@ -172,25 +160,21 @@ ArtistsAssistant = Class.create(
         Mojo.Log.info("<----- TurnOffSpinner");
     },
 */
-    dividerFunc: function (itemModel) {
+    dividerFunc: function(itemModel) {
         var regExp = /(the|a)\s+/g;
         var dividerText = itemModel.name.toLowerCase().replace(regExp, '');
-        if(dividerText[0].match(/[0-9]/))
-        {
+        if (dividerText[0].match(/[0-9]/)) {
             return "#";
         }
         return dividerText[0].toUpperCase();
     },
-    
-    activate: function(event)
-    {
+
+    activate: function(event) {
         this.itemsHelper.Activate();
     },
-    
-    deactivate: function(event)
-    {
+
+    deactivate: function(event) {
         this.itemsHelper.Deactivate();
     }
-    
 
 });

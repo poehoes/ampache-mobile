@@ -16,17 +16,16 @@
 var DEFAULT_MAX_FETCH = 1500;
 var DEFAULT_MIN_FETCH = 75;
 
-AccountAssistant = Class.create(
-{
+AccountAssistant = Class.create({
 
-    initialize: function(params){
+    initialize: function(params) {
         this.Account = params.Account;
         this.Type = params.Type;
         this.SettingsManager = params.SettingsManager;
         //this.Callback = params.Callback;
     },
-    
-    setup: function(){
+
+    setup: function() {
         /* this function is for setup tasks that have to happen when the scene is first created */
         /* use Mojo.View.render to render view templates and add them to the scene, if needed. */
         /* setup widgets here */
@@ -36,244 +35,226 @@ AccountAssistant = Class.create(
         //Mojo.Log.info("Loading ServerURL:", AmpacheMobile.ServerURL);
         //Mojo.Log.info("Loading UserName:", AmpacheMobile.UserName);
         this.context = this;
-        
-        this.controller.setupWidget("AccountNameField", this.attributes = 
-        {
+
+        this.controller.setupWidget("AccountNameField", this.attributes = {
             hintText: $L('Account Description')
-        }, this.model = 
-        {
+        },
+        this.model = {
             value: this.Account.AccountName
         });
-        
-        
-        this.controller.setupWidget("passwordField", this.attributes = 
-        {
+
+        this.controller.setupWidget("passwordField", this.attributes = {
             hintText: $L('Type Password')
-        }, this.model = 
-        {
+        },
+        this.model = {
             value: this.Account.Password
         });
-        
-        this.controller.setupWidget("ServerURLField", this.attributes = 
-        {
+
+        this.controller.setupWidget("ServerURLField", this.attributes = {
             hintText: $L('Full URL of Server'),
             textCase: Mojo.Widget.steModeLowerCase
-        }, this.model = 
-        {
+        },
+        this.model = {
             value: this.Account.ServerURL
         });
-        
-        this.controller.setupWidget("userNameField", this.attributes = 
-        {
+
+        this.controller.setupWidget("userNameField", this.attributes = {
             hintText: $L('Username'),
             textCase: Mojo.Widget.steModeLowerCase
-        }, this.model = 
-        {
+        },
+        this.model = {
             value: this.Account.UserName
         });
-        
-        this.controller.setupWidget('btnTestConnection', this.atts = 
-        {
+
+        this.controller.setupWidget('btnTestConnection', this.atts = {
             type: Mojo.Widget.activityButton
-        }, this.model = 
-        {
+        },
+        this.model = {
             buttonLabel: 'Test Connection',
             buttonClass: 'affirmative',
             disabled: false
         });
-        
+
         Mojo.Event.listen(this.controller.get('btnTestConnection'), Mojo.Event.tap, this.callStartTest.bind(this));
-        
+
         this.controller.listen("AccountNameField", Mojo.Event.propertyChange, this.changeAccountName.bindAsEventListener(this));
         this.controller.listen("ServerURLField", Mojo.Event.propertyChange, this.changeURL.bindAsEventListener(this));
         this.controller.listen("passwordField", Mojo.Event.propertyChange, this.changePassword.bindAsEventListener(this));
         this.controller.listen("userNameField", Mojo.Event.propertyChange, this.changeUserName.bindAsEventListener(this));
-        
+
         //*****************************************************************************
         // Fetch Size Setup
-        this.attributes = 
-        {
+        this.attributes = {
             modelProperty: 'value',
             minValue: Math.log(DEFAULT_MIN_FETCH) / Math.log(DEFAULT_MAX_FETCH),
             maxValue: 1,
             //round:         true,
             updateInterval: 0.1
         };
-        
-        this.model = 
-        {
+
+        this.model = {
             value: Math.log(this.Account.FetchSize) / Math.log(DEFAULT_MAX_FETCH)
             //width: 15
         };
-        
+
         this.controller.setupWidget('slider', this.attributes, this.model);
         this.propertyChanged = this.FetchSizeChanged.bindAsEventListener(this);
         this.controller.listen('slider', Mojo.Event.propertyChange, this.propertyChanged);
         $('fetchSize').innerHTML = "Items: " + this.Account.FetchSize;
-        
+
         //******************************************************************************************************************
-         //Setup Album Art Toggle
-        this.tattr = 
-        {
-            trueLabel: 'On',//if the state is true, what to label the toggleButton; default is 'On'
-            trueValue: true,//if the state is true, what to set the model[property] to; default if not specified is true
-            falseLabel: 'Off', //if the state is false, what to label the toggleButton; default is Off
-            falseValue: false, //if the state is false, , what to set the model[property] to; default if not specific is false],
+        //Setup Album Art Toggle
+        this.tattr = {
+            trueLabel: 'On',
+            //if the state is true, what to label the toggleButton; default is 'On'
+            trueValue: true,
+            //if the state is true, what to set the model[property] to; default if not specified is true
+            falseLabel: 'Off',
+            //if the state is false, what to label the toggleButton; default is Off
+            falseValue: false,
+            //if the state is false, , what to set the model[property] to; default if not specific is false],
             fieldName: 'toggle' //name of the field; optional
         };
-    
-        this.tModel = 
-        {
-            value: this.Account.ExtraCoverArt, // Current value of widget, from choices array.
+
+        this.tModel = {
+            value: this.Account.ExtraCoverArt,
+            // Current value of widget, from choices array.
             disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
         };
-        
+
         this.controller.setupWidget('art-toggle', this.tattr, this.tModel);
         this.ExtraArtPressedHandler = this.ExtraArtPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
     },
-    
-    ValidSettings: function(account){
+
+    ValidSettings: function(account) {
         var retVal = true;
         this.FailureReason = "Unknown Failure";
-        if ((!account.AccountName) || (account.AccountName === "")) 
-        {
+        if ((!account.AccountName) || (account.AccountName === "")) {
             this.FailureReason = "No acccount name entered ";
             retVal = false;
         }
-        if ((!account.ServerURL) || (account.ServerURL === "")) 
-        {
+        if ((!account.ServerURL) || (account.ServerURL === "")) {
             this.FailureReason = "No Server URL entered ";
             retVal = false;
-        }else{
+        } else {
             var startOfURL = account.ServerURL.toLowerCase().substring(0, 8);
-            if ((!startOfURL.match("http://")) && (!startOfURL.match("https://"))){
+            if ((!startOfURL.match("http://")) && (!startOfURL.match("https://"))) {
                 this.FailureReason = "Server URL requires http://";
                 retVal = false;
             }
         }
 
-
-        if ((!account.UserName) || (account.UserName === "")) 
-        {
+        if ((!account.UserName) || (account.UserName === "")) {
             this.FailureReason = "No user name entered ";
             retVal = false;
         }
         return retVal;
     },
-    
-    ExtraArtPressed: function(event){
+
+    ExtraArtPressed: function(event) {
         //Display the value of the toggle
-        if (event.value === true){
+        if (event.value === true) {
             this.Account.ExtraCoverArt = true;
             this.showDialogBox("WARNING", "This feature is disabled by default because it greatly diminishes performance, but it sure looks good");
-        }else{
+        } else {
             this.Account.ExtraCoverArt = false;
         }
         this.settingsManager.SaveSettings();
     },
-    
-    accountQuestions: function(value){
-        if (value === "delete"){
+
+    accountQuestions: function(value) {
+        if (value === "delete") {
             this.popAccount(null);
         }
     },
-    
-    popAccount: function(account){
-        var params = 
-        {
+
+    popAccount: function(account) {
+        var params = {
             type: this.Type,
             account: account
         };
         this.controller.stageController.popScene(null);
     },
-    
-    handleCommand: function(event){
+
+    handleCommand: function(event) {
         //test for Mojo.Event.back, not Mojo.Event.command..
         event.preventDefault();
         event.stopPropagation();
-        if (event.type === Mojo.Event.back){
-            if (!this.ValidSettings(this.Account)){
-                this.controller.showAlertDialog(
-                {
+        if (event.type === Mojo.Event.back) {
+            if (!this.ValidSettings(this.Account)) {
+                this.controller.showAlertDialog({
                     onChoose: this.accountQuestions,
                     title: $L("Account Incomplete"),
                     message: this.FailureReason,
-                    choices: [
-                        {
-                            label: $L('OK'),
-                            value: 'ok',
-                            type: 'primary'
-                        }, 
-                        {
-                            label: $L('Delete Account'),
-                            value: 'delete',
-                            type: 'negative'
-                        }
-                    ]
+                    choices: [{
+                        label: $L('OK'),
+                        value: 'ok',
+                        type: 'primary'
+                    },
+                    {
+                        label: $L('Delete Account'),
+                        value: 'delete',
+                        type: 'negative'
+                    }]
                 });
-            }else{
-                if (this.Type === "Add"){
+            } else {
+                if (this.Type === "Add") {
                     this.SettingsManager.AppendAccount(this.Account);
                 }
                 this.popAccount(this.Account);
             }
-        }else{
+        } else {
             this.popAccount(this.Account);
         }
     },
-    
-    callStartTest: function(){
+
+    callStartTest: function() {
         //console.log("*** ")
-        if (!this.spinning){
+        if (!this.spinning) {
             Mojo.Log.info("Staring Connection Test");
             this.ampacheServer = new AmpacheServer();
             this.ampacheServer.TestConnection(this.Account.ServerURL, this.Account.UserName, this.Account.Password, this.TestCallback.bind(this));
             this.timeoutInterval = window.setInterval(this.ConnectionTestTimeout.bind(this), 30000);
             Mojo.Log.info("this.timeoutInterval", this.timeoutInterval);
             this.spinning = true;
-        }else{
+        } else {
             Mojo.Log.info("Test already started");
         }
     },
-    
-    TestCallback: function(connectResult){
+
+    TestCallback: function(connectResult) {
         this.buttonWidget = this.controller.get('btnTestConnection');
         this.buttonWidget.mojo.deactivate();
         this.spinning = false;
         window.clearInterval(this.timeoutInterval);
         var html = false;
         var DisplayMessage = connectResult;
-        if (connectResult.toLowerCase() === "acl error"){
+        if (connectResult.toLowerCase() === "acl error") {
             DisplayMessage = "Error: " + connectResult + "<br><br>" + AmpacheMobile.AclErrorHelp;
             html = true;
         }
-        
-        if (connectResult.toLowerCase() === "error: empty response"){
+
+        if (connectResult.toLowerCase() === "error: empty response") {
             DisplayMessage = connectResult + "<br><br>" + AmpacheMobile.EmptyResponseErrorHelp;
             html = true;
         }
-        
+
         Mojo.Log.info("Display Alert");
-        this.controller.showAlertDialog(
-        {
-            onChoose: function (value)
-            {
-            },
+        this.controller.showAlertDialog({
+            onChoose: function(value) {},
             title: $L("Connection Test"),
             message: DisplayMessage,
-            choices: [
-                {
-                    label: $L('OK'),
-                    value: 'ok',
-                    type: 'color'
-                }
-            ],
+            choices: [{
+                label: $L('OK'),
+                value: 'ok',
+                type: 'color'
+            }],
             allowHTMLMessage: html
         });
     },
-    
-    ConnectionTestTimeout: function(){
+
+    ConnectionTestTimeout: function() {
         this.buttonWidget = this.controller.get('btnTestConnection');
         this.buttonWidget.mojo.deactivate();
         this.spinning = false;
@@ -282,20 +263,15 @@ AccountAssistant = Class.create(
         Mojo.Log.info("Deactivate Spinner");
         Mojo.Log.info(this.testContext);
         Mojo.Log.info("Display Alert");
-        this.controller.showAlertDialog(
-        {
-            onChoose: function (value)
-            {
-            },
+        this.controller.showAlertDialog({
+            onChoose: function(value) {},
             title: $L("Connection Test"),
             message: "Timed out while attempting test",
-            choices: [
-                {
-                    label: $L('OK'),
-                    value: 'ok',
-                    type: 'color'
-                }
-            ]
+            choices: [{
+                label: $L('OK'),
+                value: 'ok',
+                type: 'color'
+            }]
         });
         /*
          var currentScene = this.ControllerSave.activeScene();
@@ -311,63 +287,57 @@ AccountAssistant = Class.create(
          });
          */
     },
-    
+
     //Logrithimic scale for the FetchSize
-    FetchSizeChanged: function (event){
+    FetchSizeChanged: function(event) {
         var value = Math.pow(DEFAULT_MAX_FETCH, this.model.value);
         value = Math.round(value);
-        if (value === 0) { 
+        if (value === 0) {
             value = 1;
         }
         $('fetchSize').innerHTML = "Items: " + value;
         this.Account.FetchSize = value;
     },
-    
-    changeAccountName: function(event){
+
+    changeAccountName: function(event) {
         Mojo.Log.info("Account Name Changed; value = ", event.value);
         this.Account.AccountName = event.value;
     },
-    
-    changeURL: function(event){
+
+    changeURL: function(event) {
         Mojo.Log.info("Server URL Changed; value = ", event.value);
         this.Account.ServerURL = event.value;
     },
-    
-    changePassword: function(event){
+
+    changePassword: function(event) {
         Mojo.Log.info("Server Password Changed; value = ", event.value);
         this.Account.Password = event.value;
     },
-    
-    changeUserName: function(event){
+
+    changeUserName: function(event) {
         Mojo.Log.info("Server UserName Changed; value = ", event.value);
         this.Account.UserName = event.value;
     },
-    
-    
-    activate: function(event){
+
+    activate: function(event) {
         /* put in event handlers here that should only be in effect when this scene is active. For
          example, key handlers that are observing the document */
     },
-    
-    deactivate: function(event){
+
+    deactivate: function(event) {
         /* remove any event handlers you added in activate and do any other cleanup that should happen before
          this scene is popped or another scene is pushed on top */
-        this.controller.showAlertDialog(
-        {
-            onChoose: function (value)
-            {
-            },
+        this.controller.showAlertDialog({
+            onChoose: function(value) {},
             title: $L("Connection Test"),
             message: "Timed out while attempting test",
-            choices: [
-                {
-                    label: $L('OK'),
-                    value: 'ok',
-                    type: 'color'
-                }
-            ]
+            choices: [{
+                label: $L('OK'),
+                value: 'ok',
+                type: 'color'
+            }]
         });
-        
+
         Mojo.Event.stopListening(this.controller.get('btnTestConnection'), Mojo.Event.tap, this.callStartTest);
         this.controller.stopListening("AccountNameField", Mojo.Event.propertyChange, this.changeURL);
         this.controller.stopListening("ServerURLField", Mojo.Event.propertyChange, this.changeURL);
@@ -375,27 +345,22 @@ AccountAssistant = Class.create(
         this.controller.stopListening("userNameField", Mojo.Event.propertyChange, this.changeUserName);
         this.controller.stopListening("slider", Mojo.Event.propertyChange, this.propertyChanged);
     },
-    
-    cleanup: function (event){
+
+    cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
     },
-    
-        // This function will popup a dialog, displaying the message passed in.
-    showDialogBox: function (title, message){
-        this.controller.showAlertDialog(
-        {
-            onChoose: function (value)
-            {
-            },
+
+    // This function will popup a dialog, displaying the message passed in.
+    showDialogBox: function(title, message) {
+        this.controller.showAlertDialog({
+            onChoose: function(value) {},
             title: title,
             message: message,
-            choices: [
-                {
-                    label: 'OK',
-                    value: 'OK',
-                    type: 'color'
-                }
-            ]
+            choices: [{
+                label: 'OK',
+                value: 'OK',
+                type: 'color'
+            }]
         });
     }
 });

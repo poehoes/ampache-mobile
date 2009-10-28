@@ -13,15 +13,14 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-SearchMenuAssistant = Class.create(
-{
-    initialize: function(){ },
-    
-    setup: function(){
+SearchMenuAssistant = Class.create({
+    initialize: function() {},
+
+    setup: function() {
         //*****************************************************************************************************
         // Setup Menu
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
+
         ////******************************************************************************************************
         //// Setup Spinner
         //this.spinnerLAttrs = { spinnerSize: 'large' };
@@ -42,73 +41,70 @@ SearchMenuAssistant = Class.create(
         //};
         //this.searchLoadModel = { value: 1 };
         //this.controller.setupWidget('searchProgressbar', this.PPattr, this.searchLoadModel);
-        
         //***************************************************************************************************************
         // Setup Search Field
-        this.controller.setupWidget("search-field", 
-        {
+        this.controller.setupWidget("search-field", {
             autoFocus: true,
             autoReplace: false,
-            requiresEnterKey:true,
+            requiresEnterKey: true,
             //textCase: Mojo.Widget.steModeLowerCase,
             enterSubmits: true
-        }, this.searchModel = {});
+        },
+        this.searchModel = {});
         this.SearchField = this.controller.get("search-field");
-        
-        
+
         //*****************************************************************************************************
         // Search Event
-        this.searchTextChanged =  this.searchTextChanged.bindAsEventListener(this);
+        this.searchTextChanged = this.searchTextChanged.bindAsEventListener(this);
         this.controller.listen("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
-        
+
         this.artistSearchHandler = this.searchForArtists.bindAsEventListener(this);
-        this.controller.listen(this.controller.get('searchArtists'), Mojo.Event.tap,  this.artistSearchHandler);
-        
+        this.controller.listen(this.controller.get('searchArtists'), Mojo.Event.tap, this.artistSearchHandler);
+
         this.albumSearchHandler = this.searchForAlbums.bindAsEventListener(this);
         this.controller.listen(this.controller.get('searchAlbums'), Mojo.Event.tap, this.albumSearchHandler);
-        
+
         this.songsSearchHandler = this.searchForSongs.bindAsEventListener(this);
         this.controller.listen(this.controller.get('searchSongs'), Mojo.Event.tap, this.songsSearchHandler);
-        
+
         this.plSearchHandler = this.searchForPlaylists.bindAsEventListener(this);
         this.controller.listen(this.controller.get('searchPlaylists'), Mojo.Event.tap, this.plSearchHandler);
-        
+
         //this.genresSearchHandler = this.searchForGenres.bindAsEventListener(this);
         //this.controller.listen(this.controller.get('searchGenres'), Mojo.Event.tap, this.genresSearchHandler);
-        
         this.globalSearchHandler = this.searchForGlobal.bindAsEventListener(this);
         this.controller.listen(this.controller.get('searchGlobal'), Mojo.Event.tap, this.globalSearchHandler);
-        
+
         this.keypressHandler = this.handleKeyPressEvent.bindAsEventListener(this);
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
     },
-    
-    cleanup: function(event){
+
+    cleanup: function(event) {
         this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
         this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
         this.controller.stopListening("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
-        this.controller.stopListening(this.controller.get('searchArtists'), Mojo.Event.tap,  this.artistSearchHandler);
+        this.controller.stopListening(this.controller.get('searchArtists'), Mojo.Event.tap, this.artistSearchHandler);
         this.controller.stopListening(this.controller.get('searchAlbums'), Mojo.Event.tap, this.albumSearchHandler);
         this.controller.stopListening(this.controller.get('searchSongs'), Mojo.Event.tap, this.songsSearchHandler);
         this.controller.stopListening(this.controller.get('searchPlaylists'), Mojo.Event.tap, this.plSearchHandler);
         //this.controller.stopListening(this.controller.get('searchGenres'), Mojo.Event.tap, this.genresSearchHandler);
         this.controller.stopListening(this.controller.get('searchGlobal'), Mojo.Event.tap, this.globalSearchHandler);
     },
-    
+
     searchText: null,
-    searchTextChanged: function(event){
+    searchTextChanged: function(event) {
         Mojo.Log.info("searchText Changed; value = ", event.value);
         this.searchText = event.value;
-        if(event.originalEvent.keyCode){
-            if(event.originalEvent.keyCode === 13){
+        if (event.originalEvent.keyCode) {
+            if (event.originalEvent.keyCode === 13) {
                 this.searchForGlobal();
             }
         }
     },
-    
-    handleKeyPressEvent: function(event){
-         /*
+
+    handleKeyPressEvent: function(event) {
+        /*
          var eventModel =
          {
          eventType: event.type,
@@ -116,170 +112,157 @@ SearchMenuAssistant = Class.create(
          eventChar: String.fromCharCode(event.originalEvent.keyCode)
          };
          */
-         this.SetFocus();
-        
+        this.SetFocus();
+
         // var text = this.SearchField.mojo.getValue();
         // text += String.fromCharCode(event.originalEvent.keyCode);
         // his.SearchField.mojo.setValue(text);
-    
         //var content = Mojo.View.render({template: "input/keyPress/evententry", object: eventModel});    
         //this.div.insert(content);
     },
-    
-    searchCriteria: function(numChars){
+
+    searchCriteria: function(numChars) {
         var retVal = false;
-        if ((this.searchText !== "") && (this.searchText)){
-            if (this.searchText.length >= numChars){
+        if ((this.searchText !== "") && (this.searchText)) {
+            if (this.searchText.length >= numChars) {
                 retVal = true;
-            }else{
+            } else {
                 this.showDialogBox("Search", "Please enter at least " + numChars + " characters for your search.");
             }
-        }else{
+        } else {
             this.showDialogBox("Search", "Please enter a search string");
         }
         return retVal;
     },
-    
-    searchForAlbums: function(){
-        if (this.searchCriteria(3)){
+
+    searchForAlbums: function() {
+        if (this.searchCriteria(3)) {
             var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
-            if (numAlbums !== 0){
-                this.controller.stageController.pushScene('albums', 
-                {
+            if (numAlbums !== 0) {
+                this.controller.stageController.pushScene('albums', {
                     SceneTitle: "Album Search: " + this.searchText,
                     DisplayArtistInfo: true,
                     ExpectedAlbums: numAlbums,
-                    Search: this.searchText === "" ? null : this.searchText
+                    Search: this.searchText === "" ? null: this.searchText
                 });
             }
         }
     },
-    
-    searchForPlaylists: function(){
-        if (this.searchCriteria(3)){
+
+    searchForPlaylists: function() {
+        if (this.searchCriteria(3)) {
             var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
-            if (numPlaylists !== 0){
-                this.controller.stageController.pushScene('playlists', 
-                {
+            if (numPlaylists !== 0) {
+                this.controller.stageController.pushScene('playlists', {
                     SceneTitle: "Playlist Search: " + this.searchText,
-                    Search: this.searchText === "" ? null : this.searchText,
+                    Search: this.searchText === "" ? null: this.searchText,
                     ExpectedPlaylists: numPlaylists
                 });
             }
         }
     },
-    
-    searchForGenres: function(){
-        if (this.searchCriteria(3)){
+
+    searchForGenres: function() {
+        if (this.searchCriteria(3)) {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10); //using numsongs because there is no num genres (numsongs is worst case)
-                this.controller.stageController.pushScene('genres', 
-                {
-                    SceneTitle: "Genre Search: " + this.searchText,
-                    Search: this.searchText === "" ? null : this.searchText
-                });
+            this.controller.stageController.pushScene('genres', {
+                SceneTitle: "Genre Search: " + this.searchText,
+                Search: this.searchText === "" ? null: this.searchText
+            });
         }
     },
-    
-    
-    searchForSongs: function(){
-        if (this.searchCriteria(3)){
+
+    searchForSongs: function() {
+        if (this.searchCriteria(3)) {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
-            this.controller.stageController.pushScene('songs', 
-            {
+            this.controller.stageController.pushScene('songs', {
                 SceneTitle: "Song Search: " + this.searchText,
                 Type: "search",
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,
-                Search: this.searchText === "" ? null : this.searchText
+                Search: this.searchText === "" ? null: this.searchText
             });
         }
     },
-    
-    searchForGlobal: function(){
-        if (this.searchCriteria(3)){
+
+    searchForGlobal: function() {
+        if (this.searchCriteria(3)) {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
-            this.controller.stageController.pushScene('songs', 
-            {
+            this.controller.stageController.pushScene('songs', {
                 Type: "search-global",
                 SceneTitle: "Global Search: " + this.searchText,
                 DisplayArtistInfo: true,
                 ExepectedSongs: numSongs,
-                Search: this.searchText === "" ? null : this.searchText
+                Search: this.searchText === "" ? null: this.searchText
             });
         }
     },
-    
-    searchForArtists: function(){
-        if (this.searchCriteria(3)){
+
+    searchForArtists: function() {
+        if (this.searchCriteria(3)) {
             var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
-            if (numArtists !== 0){
-                this.controller.stageController.pushScene("artists", 
+            if (numArtists !== 0) {
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "artists"
+                },
                 {
                     SceneTitle: "Artist Search: " + this.searchText,
                     ExpectedArtists: numArtists,
-                    Search: this.searchText === "" ? null : this.searchText
+                    Search: this.searchText === "" ? null: this.searchText
                 });
             }
         }
     },
-    
-    SetFocus: function(){
+
+    SetFocus: function() {
         this.SearchField.mojo.focus();
     },
-    
+
     // This function will popup a dialog, displaying the message passed in.
-    showDialogBox: function(title, message){
-        this.controller.showAlertDialog(
-        {
+    showDialogBox: function(title, message) {
+        this.controller.showAlertDialog({
             onChoose: this.SetFocus.bind(this),
             title: title,
             message: message,
-            choices: [
-            {
+            choices: [{
                 label: 'OK',
                 value: 'OK',
                 type: 'color'
             }]
         });
     },
-    
-    TurnOnSpinner: function(spinnerText){
+
+    TurnOnSpinner: function(spinnerText) {
         this.scrim.show();
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
     },
-    
-    TurnOffSpinner: function(){
+
+    TurnOffSpinner: function() {
         this.scrim.hide();
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
     },
-    
-    activate: function(event){
+
+    activate: function(event) {
         this.controller.get("search-field").mojo.focus();
         // Now Playing Button
         var button = this.controller.get('now-playing-button');
-        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block' : 'none';
+        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block': 'none';
         this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
     },
-    
-    deactivate: function(event){
 
-        
+    deactivate: function(event) {
+
         Mojo.Event.stopListening(this.controller.get('now-playing-button'), Mojo.Event.tap, this.npTapHandler);
     },
-    
-    
-    showNowPlaying:function()
-    {
-       Mojo.Controller.stageController.pushScene('now-playing', 
-        {
-                type:"display"
+
+    showNowPlaying: function() {
+        Mojo.Controller.stageController.pushScene('now-playing', {
+            type: "display"
         });
     }
-    
-    
-    
 
 });

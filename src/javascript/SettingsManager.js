@@ -19,16 +19,16 @@ var DEFAULT_FETCH_SIZE = 300;
 var DEFAULT_OVERLAY = "images/backgrounds/overlay/overlay1.png";
 var DEFAULT_ROTATION = false;
 
-SettingsManager = Class.create(
-{
+SettingsManager = Class.create({
     settings: null,
     depot: null,
-    
-    initialize: function(DataBaseName){
-        var options = 
-        {
-            name: "AmpacheMobileData",  //Name used for the HTML5 database name. (required)
-            version: 1,                 //Version number used for the HTML5 database. (optional, defaults to 1)	
+
+    initialize: function(DataBaseName) {
+        var options = {
+            name: "AmpacheMobileData",
+            //Name used for the HTML5 database name. (required)
+            version: 1,
+            //Version number used for the HTML5 database. (optional, defaults to 1)	
             //displayName: "demoDB", //Name that would be used in user interface that the user sees regarding this database. Not currently used. (optional, defaults to name)
             //estimatedSize: 200000, //Estimated size for this database. (optional, no default)
             replace: false // open an existing depot
@@ -36,44 +36,43 @@ SettingsManager = Class.create(
         //Create a database when the scene is generated
         this.depot = new Mojo.Depot(options, this.dbSuccess, this.dbFailure);
     },
-    
-    dbSuccess: function(){
+
+    dbSuccess: function() {
         console.log("***** depot operation success!");
     },
-    
-    dbFailure: function(transaction, result){
+
+    dbFailure: function(transaction, result) {
         console.log("***** depot failure: ");
         Mojo.Controller.errorDialog("This is not good!.  Settings database failed to load.  Error Message: ");
     },
-    
-    
-    CreateSettings: function(){
+
+    CreateSettings: function() {
         this.settings = new Settings();
         this.settings.Accounts = [];
         this.settings.CurrentAccountIndex = 0;
     },
-    
-    CreateEmptyAccount: function(){
+
+    CreateEmptyAccount: function() {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = new Account();
         return this.settings.Accounts[index];
     },
-    
-    GetCurrentAccount: function(){
+
+    GetCurrentAccount: function() {
         var settings = this.settings;
-        if ((settings.CurrentAccountIndex >= 0) && (settings.CurrentAccountIndex < settings.Accounts.length)){
+        if ((settings.CurrentAccountIndex >= 0) && (settings.CurrentAccountIndex < settings.Accounts.length)) {
             return settings.Accounts[settings.CurrentAccountIndex];
-        }else{
+        } else {
             return null;
         }
     },
-    
-    AppendAccount: function(account){
+
+    AppendAccount: function(account) {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = account;
     },
-    
-    AddAccount: function(AccountName, username, password, url){
+
+    AddAccount: function(AccountName, username, password, url) {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = new Account();
         this.settings.Accounts[index].UserName = username;
@@ -81,20 +80,19 @@ SettingsManager = Class.create(
         this.settings.Accounts[index].ServerURL = url;
         return this.settings.Accounts[index];
     },
-    
-    RemoveAccount: function(index){
+
+    RemoveAccount: function(index) {
         this.settings.Accounts.splice(index, 1);
     },
-    
-    
-    GetSettings: function(OnSuccess, OnFailure){
+
+    GetSettings: function(OnSuccess, OnFailure) {
         GetSettingsSuccessCallback = OnSuccess;
         GetSettingsFailureCallback = OnFailure;
         this.depot.get("AppSettings", this.GetSettingsSuccess.bind(this), this.GetSettingsFailure.bind(this));
     },
-    
+
     GetSettingsSuccessCallback: null,
-    GetSettingsSuccess: function(settings){
+    GetSettingsSuccess: function(settings) {
         console.log("***************Success Get Happened");
         this.settings = settings;
         this.PopulateMissingDefaults();
@@ -103,69 +101,69 @@ SettingsManager = Class.create(
         }
         GetSettingsSuccessCallback = null;
     },
-    
-    PopulateMissingDefaults: function(){
-        if (this.settings){
-            if (!this.settings.BackgroundColor){
+
+    PopulateMissingDefaults: function() {
+        if (this.settings) {
+            if (!this.settings.BackgroundColor) {
                 this.settings.BackgroundColor = DEFAULT_COLOR;
             }
-            if (!this.settings.BackgroundImage){
+            if (!this.settings.BackgroundImage) {
                 this.settings.BackgroundImage = DEFAULT_IMAGE;
             }
-            if (!this.settings.StreamDebug){
+            if (!this.settings.StreamDebug) {
                 this.settings.StreamDebug = false;
             }
-            if (!this.settings.BackgroundMode){
+            if (!this.settings.BackgroundMode) {
                 this.settings.BackgroundMode = 0;
             }
-            if (!this.settings.AlbumsSort){
+            if (!this.settings.AlbumsSort) {
                 this.settings.AlbumsSort = 0;
             }
-            if (!this.settings.AllowRotation){
+            if (!this.settings.AllowRotation) {
                 this.settings.AllowRotation = DEFAULT_ROTATION;
             }
             this.settings.Version = Mojo.Controller.appInfo.version;
-            
-            for (i=0; i<this.settings.Accounts.length; i++){
-                if (!this.settings.Accounts[i].FetchSize){
+
+            for (i = 0; i < this.settings.Accounts.length; i++) {
+                if (!this.settings.Accounts[i].FetchSize) {
                     this.settings.Accounts[i].FetchSize = DEFAULT_FETCH_SIZE;
                 }
-                
-                if (!this.settings.Accounts[i].ExtraCoverArt){
+
+                if (!this.settings.Accounts[i].ExtraCoverArt) {
                     this.settings.Accounts[i].ExtraCoverArt = false;
                 }
             }
             this.SaveSettings(null, null);
         }
     },
-    
+
     GetSettingsFailureCallback: null,
-    GetSettingsFailure: function(){
+    GetSettingsFailure: function() {
         console.log("***************Failure Get Happened");
-        if (GetSettingsFailureCallback ) {
+        if (GetSettingsFailureCallback) {
             GetSettingsFailureCallback();
         }
         GetSettingsFailureCallback = null;
     },
-    
-    SaveSettings: function(OnSuccess, OnFailure){
-        this.depot.add("AppSettings", this.settings, function()
-        {
+
+    SaveSettings: function(OnSuccess, OnFailure) {
+        this.depot.add("AppSettings", this.settings,
+        function() {
             console.log("***************Success SaveSettings Happened");
-            if (OnSuccess ) {
+            if (OnSuccess) {
                 OnSuccess();
             }
-        }, function(){
+        },
+        function() {
             console.log("***************Failure SaveSettings Happened");
-            if (OnFailure ) {
+            if (OnFailure) {
                 OnFailure();
             }
         });
     }
 });
 
-Account = Class.create(
-{
+Account = Class.create({
     AccountName: null,
     UserName: null,
     Password: null,
@@ -174,8 +172,7 @@ Account = Class.create(
     FetchSize: DEFAULT_FETCH_SIZE
 });
 
-Settings = Class.create(
-{
+Settings = Class.create({
     Accounts: null,
     CurrentAccountIndex: null,
     StreamDebug: false,
