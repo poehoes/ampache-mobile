@@ -8,6 +8,18 @@
   * Once you determine your internal address and external IP address you need to setup port forwarding on your router.
     * Your goal is to forward your External IP address to your Internal Ampache Server address.
     * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most webservers default to running on port 80.  But you can choose any port you like as long as your configure your web server as such. 
+  * Could be an ACL issue. Ampache uses Access Control Lists to restrict access to the music server. You will need to create a an ACL rule for EVDO access
+     * Go to the Ampache Admin page
+     * click on "Add ACL"
+     * Name it (ex: EVDO Streaming) 
+     * Level = all
+     * User = all
+     * ACL type = Stream Access
+     * Remote Key =            (leave blank)
+     * Start = 0.0.0.0 
+     * End =  255.255.255.255
+     * click on "Create ACL"
+
 
 === Transcoding not working  ===
   * Transcoding tools are not installed as part of Apache/XAMMP. You must download and install them separately. Here are some links to get you started :
