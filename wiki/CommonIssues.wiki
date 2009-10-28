@@ -8,3 +8,17 @@
   * Once you determine your internal address and external IP address you need to setup port forwarding on your router.
     * Your goal is to forward your External IP address to your Internal Ampache Server address.
     * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most webservers default to running on port 80.  But you can choose any port you like as long as your configure your web server as such. 
+
+=== Transcoding not working  ===
+  * Transcoding tools are not installed as part of Apache/XAMMP. You must download and install them separately. Here are some links to get you started :
+     * LAME : http://en.wikipedia.org/wiki/LAME
+     * FLAC : http://en.wikipedia.org/wiki/Flac
+     * FACC : http://en.wikipedia.org/wiki/Advanced_Audio_Coding#FAAC_and_FAAD2
+     * Mp3splt : http://en.wikipedia.org/wiki/Mp3splt
+     * oggsplt/oggdec  : http://en.wikipedia.org/wiki/Ogg
+     * ALAC : http://en.wikipedia.org/wiki/Alac
+  * If things are not working, look at the Ampache log file on the music server for the command Ampache is running. Copy it and try to run it on the command line.
+  * You set the default sample rate on the Ampache Admin page-> streaming. It is called "Transcode Bitrate".
+  * The ";" is a comment character in the Aampache configuration file. Everything on the line after it is a comment and will not be executed. By default most transcoding commands are commented out -- they will not run.
+  * Use the Amapche log file...it can REALLY help you to figure out why things are not working.
+  * The Ampache page on Transcoding: http://ampache.org/wiki/config:transcode
