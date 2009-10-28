@@ -112,18 +112,18 @@ COLOR: grey;
 }
 .shuffleLeft
 {
-    float:left;     
+    float:left;
 }
 
 .shuffleAllText
 {
     vertical-align:bottom;
-    margin:15px 0px 0px 15px
+    margin:15px 0px 0px 15px;
 }
 
 .shuffleAllIcon
 {
-    margin:10px 0px 0px 10px
+    margin:10px 0px 0px 10px;
 }
 
 .songsMenuLeft
@@ -184,7 +184,7 @@ COLOR: grey;
 {
     position:relative;
     left:480px;
-    width:100%; 
+    width:100%;
     margin-bottom:10px;
     z-index:-1;
     background: url(../images/thick-border.png) repeat-x bottom;
@@ -202,7 +202,7 @@ COLOR: grey;
 
 .shuffleIcon
 {
-    background-image: url(../images/big-shuffle.png); 
+    background-image: url(../images/big-shuffle.png);
 }
 
 .albumLeft
@@ -231,7 +231,7 @@ COLOR: grey;
 
 .listArt
 {
-    margin: 3px 10px 3px 3px
+    margin: 3px 10px 3px 3px;
 }
 
 .random-album-spinner
@@ -249,7 +249,6 @@ COLOR: grey;
 
 .spinner-right{
     right: 30px;
-    
 }
 
 .spinner-left
@@ -308,7 +307,6 @@ COLOR: grey;
 .OneLineTitle {
     color: white;
     padding: 5px 15px 5px 15px;
-    
 }
 
 .OneLineDesc {
@@ -353,7 +351,6 @@ COLOR: grey;
 {
     color: white;
     padding: 5px 15px 5px 15px;
-
 }
 
 .songDesc {
@@ -405,7 +402,6 @@ COLOR: grey;
 
 body.wallpaper,
 body.palm-default {
-  /*background: url(../images/background.png) 0 0 fixed no-repeat; */
     background-size: 100%;
 }
 
@@ -491,82 +487,82 @@ body.palm-default {
 
 
 .palm-menu-icon.load-progress.progress-0 {
-                background-position: 0px 0px;           
+                background-position: 0px 0px;
 }
 .palm-menu-icon.load-progress.progress-1 {
-                background-position: 0px -48px;         
+                background-position: 0px -48px;
 }
 .palm-menu-icon.load-progress.progress-2 {
-                background-position: 0px -96px;         
+                background-position: 0px -96px;
 }
 .palm-menu-icon.load-progress.progress-3 {
-                background-position: 0px -144px;                
+                background-position: 0px -144px;
 }
 .palm-menu-icon.load-progress.progress-4 {
-                background-position: 0px -192px;                
+                background-position: 0px -192px;
 }
 .palm-menu-icon.load-progress.progress-5 {
-                background-position: 0px -240px;                
+                background-position: 0px -240px;
 }
 .palm-menu-icon.load-progress.progress-6 {
-                background-position: 0px -288px;        
+                background-position: 0px -288px;
 }
 .palm-menu-icon.load-progress.progress-7 {
-                background-position: 0px -336px;                
+                background-position: 0px -336px;
 }
 .palm-menu-icon.load-progress.progress-8 {
-                background-position: 0px -384px;        
+                background-position: 0px -384px;
 }
 .palm-menu-icon.load-progress.progress-9 {
-                background-position: 0px -432px;        
+                background-position: 0px -432px;
 }
 .palm-menu-icon.load-progress.progress-10 {
-                background-position: 0px -480px;        
+                background-position: 0px -480px;
 }
 .palm-menu-icon.load-progress.progress-11 {
-                background-position: 0px -528px;        
+                background-position: 0px -528px;
 }
 .palm-menu-icon.load-progress.progress-12 {
-                background-position: 0px -576px;        
+                background-position: 0px -576px;
 }
 .palm-menu-icon.load-progress.progress-13 {
-                background-position: 0px -624px;        
+                background-position: 0px -624px;
 }
 .palm-menu-icon.load-progress.progress-14 {
-                background-position: 0px -672px;        
+                background-position: 0px -672px;
 }
 .palm-menu-icon.load-progress.progress-15 {
-                background-position: 0px -720px;        
+                background-position: 0px -720px;
 }
 .palm-menu-icon.load-progress.progress-16 {
-                background-position: 0px -768px;        
+                background-position: 0px -768px;
 }
 .palm-menu-icon.load-progress.progress-17 {
-                background-position: 0px -816px;        
+                background-position: 0px -816px;
 }
 .palm-menu-icon.load-progress.progress-18 {
-                background-position: 0px -864px;        
+                background-position: 0px -864px;
 }
 .palm-menu-icon.load-progress.progress-19 {
-                background-position: 0px -912px;        
+                background-position: 0px -912px;
 }
 .palm-menu-icon.load-progress.progress-20 {
-                background-position: 0px -960px;        
+                background-position: 0px -960px;
 }
 .palm-menu-icon.load-progress.progress-21 {
-                background-position: 0px -1008px;       
+                background-position: 0px -1008px;
 }
 .palm-menu-icon.load-progress.progress-22 {
-                background-position: 0px -1056px;       
+                background-position: 0px -1056px;
 }
 .palm-menu-icon.load-progress.progress-23 {
-                background-position: 0px -1104px;       
+                background-position: 0px -1104px;
 }
 .palm-menu-icon.load-progress.progress-24 {
-                background-position: 0px -1152px;       
+                background-position: 0px -1152px;
 }
 .palm-menu-icon.load-progress.progress-25 {
-                background-position: 0px -1200px;       
+                background-position: 0px -1200px;
 }
 
 
@@ -633,10 +629,10 @@ body.palm-default {
                 background-position: -32px -0px;
 }
 .palm-menu-icon.ampache-spinner.progress-2 {
-                background-position: -64px -0px; 
+                background-position: -64px -0px;
 }
 .palm-menu-icon.ampache-spinner.progress-3 {
-                background-position: -96px -0px; 
+                background-position: -96px -0px;
 }
 .palm-menu-icon.ampache-spinner.progress-4 {
                 background-position: -128px -0px;
@@ -651,10 +647,10 @@ body.palm-default {
                 background-position: -32px -32px;
 }
 .palm-menu-icon.ampache-spinner.progress-8 {
-                background-position: -64px -32px; 
+                background-position: -64px -32px;
 }
 .palm-menu-icon.ampache-spinner.progress-9 {
-                background-position: -96px -32px; 
+                background-position: -96px -32px;
 }
 .palm-menu-icon.ampache-spinner.progress-10 {
                 background-position: -128px -32px;
@@ -669,10 +665,10 @@ body.palm-default {
                 background-position: -32px -64px;
 }
 .palm-menu-icon.ampache-spinner.progress-14 {
-                background-position: -64px -64px; 
+                background-position: -64px -64px;
 }
 .palm-menu-icon.ampache-spinner.progress-15 {
-                background-position: 96px 64px; 
+                background-position: 96px 64px;
 }
 .palm-menu-icon.ampache-spinner.progress-16 {
                 background-position: 128px 64px;
@@ -917,12 +913,12 @@ body.palm-default {
 
 .palm-divider.labeled .left {
     height: 20px;
-    background: url(../images/thick-border.png) repeat-x center;/*url(../images/palm-divider-line.png) right center no-repeat*/;
+    background: url(../images/thick-border.png) repeat-x center;
 }
 
 .palm-divider.labeled .right {
     margin-top: 50px;
-    background: url(../images/thick-border.png) repeat-x left;/*url(../images/palm-divider-line.png) left center no-repeat;*/
+    background: url(../images/thick-border.png) repeat-x left;
 }
 
 .palm-divider .label {
