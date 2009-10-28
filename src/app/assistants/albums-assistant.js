@@ -276,7 +276,11 @@ AlbumsAssistant = Class.create({
     FinishedGettingShuffleAll: function(_songsList) {
         Mojo.Log.info("--> GotAllSongsCallback");
         this.TurnOffSpinner();
-        this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "now-playing"}, {
+        this.controller.stageController.pushScene({
+            transition: AmpacheMobile.Transition,
+            name: "now-playing"
+        },
+        {
             playList: _songsList,
             startIndex: 0,
             shuffle: true

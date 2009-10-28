@@ -425,7 +425,11 @@ RandomAssistant = Class.create({
     },
 
     showNowPlaying: function() {
-        Mojo.Controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "now-playing"}, {
+        Mojo.Controller.stageController.pushScene({
+            transition: AmpacheMobile.Transition,
+            name: "now-playing"
+        },
+        {
             type: "display"
         });
     }

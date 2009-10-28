@@ -60,7 +60,7 @@ AudioPlayer = Class.create({
     //**********************************************************************************************************************
     //Code for audio events vodo
     //**********************************************************************************************************************
-    audioEvents: ["play", "pause", "abort", "error", "ended", "canplay", "canplaythrough", "canshowfirstframe", "emptied", "load", "loadedfirstframe", "loadedmetadata", "loadstart", "seeked", "seeking", "stalled",
+    audioEvents: ["play", "pause", "abort", "error", "ended", "canplay", "canplaythrough", "canshowfirstframe", "emptied", "load", "loadedfirstframe", "loadedmetadata", "loadstart", "seeked", "seeking", "stalled"
     /* "timeupdate",*/
     , "waiting", "progress", "durationchange"],
 
