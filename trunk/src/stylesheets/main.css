@@ -619,6 +619,71 @@ body.palm-default {
 
 
 
+.palm-menu-icon.ampache-spinner {
+                background-image: url(../images/gnome-spinner.png);
+                width: 32px;
+                height: 32px;
+                left: -16px;
+                /*margin-top: -8px;*/
+}
+.palm-menu-icon.ampache-spinner.progress-0 {
+                background-position: 0px 0px;
+}
+.palm-menu-icon.ampache-spinner.progress-1 {
+                background-position: -32px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-2 {
+                background-position: -64px -0px; 
+}
+.palm-menu-icon.ampache-spinner.progress-3 {
+                background-position: -96px -0px; 
+}
+.palm-menu-icon.ampache-spinner.progress-4 {
+                background-position: -128px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-5 {
+                background-position: -160px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-6 {
+                background-position: 0px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-7 {
+                background-position: -32px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-8 {
+                background-position: -64px -32px; 
+}
+.palm-menu-icon.ampache-spinner.progress-9 {
+                background-position: -96px -32px; 
+}
+.palm-menu-icon.ampache-spinner.progress-10 {
+                background-position: -128px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-11 {
+                background-position: -160px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-12 {
+                background-position: -0px -64px;
+}
+.palm-menu-icon.ampache-spinner.progress-13 {
+                background-position: -32px -64px;
+}
+.palm-menu-icon.ampache-spinner.progress-14 {
+                background-position: -64px -64px; 
+}
+.palm-menu-icon.ampache-spinner.progress-15 {
+                background-position: 96px 64px; 
+}
+.palm-menu-icon.ampache-spinner.progress-16 {
+                background-position: 128px 64px;
+}
+.palm-menu-icon.ampache-spinner.progress-17 {
+                background-position: 160px 64px;
+}
+
+
+
+
 
 .palm-menu-icon.load-search {
                 background-image: url(../images/browser-indeterminate-progress.png);
