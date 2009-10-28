@@ -89,7 +89,7 @@ AmpacheServer = Class.create({
     GetRandomSongs:function(size)
     {
         var path = this.URL + "/play/index.php?sid=" +  this.auth + "&random=1&type=default";
-        var song = new SongModel(0, "Pure Random", "", 0, "", 0, 0, 0, path, 0, "images/blankalbum.png", "mime/random");
+        var song = new SongModel(0, "Shuffle All Songs", null, 0, null, 0, 0, 0, path, 0, "images/shuffled.png", "mime/random");
         songs = [];
         for(i = 0; i<size;i++)
         {

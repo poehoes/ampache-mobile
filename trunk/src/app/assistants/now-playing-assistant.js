@@ -49,6 +49,12 @@ NowPlayingAssistant = Class.create({
 
         }
 
+        if(params.repeat)
+        {
+            this.repeatMode = params.repeat;
+            AmpacheMobile.audioPlayer.repeatMode = this.repeatMode;
+        }
+
         Mojo.Log.info("<-- NowPlayingAssistant.prototype.constuctor");
     },
 
@@ -472,7 +478,14 @@ NowPlayingAssistant = Class.create({
         this.controller.get('songTitle').innerHTML = song.title.escapeHTML();
         //this.controller.get('artist').innerHTML = song.artist.escapeHTML();
         //this.controller.get('album').innerHTML = song.album.escapeHTML();
-        this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
+        if(song.artist && song.album)
+        {
+            this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
+        }
+        else
+        {
+            this.controller.get('albumArtist').innerHTML = "";
+        }
         if ((!song.art) || (song.art === "")) {
             $('coverArt').src = "images/blankalbum.png";
         } else {
