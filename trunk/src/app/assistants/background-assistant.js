@@ -70,7 +70,7 @@ BackgroundAssistant = Class.create({
         Mojo.Event.listen(this.controller.get('myPhotoDiv'), Mojo.Event.imageViewChanged, this.imageViewChanged);
         this.solidImages = [];
         for (var i = 0; i < 7; i++) {
-            var imgSource = 'images/backgrounds/solids/background' + (i + 1) + '.png';
+            var imgSource = 'images/backgrounds/solids/background' + (i + 1) + '.jpg';
             this.solidImages[i] = {
                 source: imgSource
             };
