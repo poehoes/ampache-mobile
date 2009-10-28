@@ -47,6 +47,16 @@ MainmenuAssistant = Class.create({
          
          },
          */
+        
+        {
+            category: $L("bottom"),
+            name: $L("Shuffle All"),
+            scene: "shuffleAll",
+            description: $L(AmpacheMobile.ampacheServer.songs.toString()),
+            icon: "images/icons/shuffle.png",
+            displayCount: ""
+        },
+        
         {
             category: $L("bottom"),
             directory: $L("artists"),
@@ -66,7 +76,7 @@ MainmenuAssistant = Class.create({
             displayCount: ""
         },
 
-        /*
+        /*\
          {
          category: $L("bottom"),
          directory: $L("songs"),
@@ -79,7 +89,7 @@ MainmenuAssistant = Class.create({
             category: $L("bottom"),
             directory: $L("playlists"),
             name: $L("Playlists"),
-            scene: $L("playlists"),
+            scene: "playlists",
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
             icon: "images/icons/playlists.png",
             displayCount: ""
@@ -89,16 +99,17 @@ MainmenuAssistant = Class.create({
             category: $L("bottom"),
             directory: $L("genres"),
             name: $L("Genres"),
-            scene: $L("genres"),
+            scene: "genres",
             description: 0,
             icon: "images/icons/genres.png",
             displayCount: "none"
         },
+        
         {
             category: $L("bottom"),
             directory: $L("random"),
             name: $L("Random"),
-            scene: $L("random"),
+            scene: "random",
             description: 0,
             icon: "images/icons/random.png",
             displayCount: "none"
@@ -269,6 +280,20 @@ MainmenuAssistant = Class.create({
                 SceneTitle: "Random",
                 Type: "all-genres"
             });
+            break;
+        case "shuffleAll":
+            playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1);
+            this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "now-playing"
+                },
+                {
+                    type: "play",
+                    playList: playlist,
+                    startIndex: 0,
+                    shuffle: false,
+                    repeat:RepeatModeType.repeat_forever
+                });
             break;
         }
         //this.controller.stageController.assistant.showScene(event.item.directory, event.item.scene)
