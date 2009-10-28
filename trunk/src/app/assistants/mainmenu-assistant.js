@@ -47,7 +47,7 @@ MainmenuAssistant = Class.create({
          
          },
          */
-        
+        /*
         {
             category: $L("bottom"),
             name: $L("Shuffle All"),
@@ -56,7 +56,7 @@ MainmenuAssistant = Class.create({
             icon: "images/icons/shuffle.png",
             displayCount: ""
         },
-        
+        */
         {
             category: $L("bottom"),
             directory: $L("artists"),

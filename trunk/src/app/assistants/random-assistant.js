@@ -68,14 +68,17 @@ RandomAssistant = Class.create({
          {
             type: $L("pureRandom"),
             name: $L("Shuffle All Songs"),
-            icon: "images/icons/shuffle.png"
+            icon: "images/icons/shuffle.png",
+            description: $L(AmpacheMobile.ampacheServer.songs.toString()),
+            displayCount: ""
 
         },
         {
             type: $L("artists"),
             name: $L("Artists"),
             icon: "images/icons/artists.png",
-            items: ["1", "5", "10", "20"]
+            items: ["1", "5", "10", "20"],
+            displayCount: "none"
 
         },
 
@@ -83,14 +86,16 @@ RandomAssistant = Class.create({
             type: $L("albums"),
             name: $L("Albums"),
             icon: "images/icons/albums.png",
-            items: ["1", "5", "10", "20"]
+            items: ["1", "5", "10", "20"],
+            displayCount: "none"
         },
 
         {
             type: $L("songs"),
             name: $L("Songs"),
             icon: "images/icons/songs.png",
-            items: ["10", "25", "50", "100", "200"]
+            items: ["10", "25", "50", "100", "200"],
+            displayCount: "none"
 
         }
        
