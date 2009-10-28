@@ -1,8 +1,8 @@
 #summary Some pointers for common issues encountered while setting up ampache
 =Common Issues=
 
-=== Works on WiFi but not EVDO ===
-  * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most WiFi routers have an internal IP pool and one External IP.  
+=== Works on Wi-Fi but not EVDO ===
+  * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most Wi-Fi routers have an internal IP pool and one External IP.  
     * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
     * To find your external address try this link [http://www.whatismyip.com/]
   * Once you determine your internal address and external IP address you need to setup port forwarding on your router.
@@ -17,7 +17,7 @@
      * Mp3splt : http://en.wikipedia.org/wiki/Mp3splt
      * oggsplt/oggdec  : http://en.wikipedia.org/wiki/Ogg
      * ALAC : http://en.wikipedia.org/wiki/Alac
-  * If things are not working, look at the Ampache log file on the music server for the command Ampache is running. Copy it and try to run it on the command line.
+  * If things are not working, look at the Ampache log file on the music server for the command Ampache is running. Copy it and try to run it on the command line. [http://ampache.org/wiki/support#enabling_logging Enable Logging]
   * You set the default sample rate on the Ampache Admin page-> streaming. It is called "Transcode Bitrate".
   * The ";" is a comment character in the Aampache configuration file. Everything on the line after it is a comment and will not be executed. By default most transcoding commands are commented out -- they will not run.
   * Use the Amapche log file...it can REALLY help you to figure out why things are not working.
