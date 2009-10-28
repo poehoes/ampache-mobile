@@ -65,7 +65,12 @@ RandomAssistant = Class.create({
         this.tempArt = "images/blankalbum.png";
 
         this.randomMenu = [
+         {
+            type: $L("pureRandom"),
+            name: $L("Shuffle All Songs"),
+            icon: "images/icons/shuffle.png"
 
+        },
         {
             type: $L("artists"),
             name: $L("Artists"),
@@ -87,13 +92,8 @@ RandomAssistant = Class.create({
             icon: "images/icons/songs.png",
             items: ["10", "25", "50", "100", "200"]
 
-        },
-        {
-            type: $L("pureRandom"),
-            name: $L("Pure Random"),
-            icon: "images/icons/random.png"
-
         }
+       
 
         ];
 
@@ -309,7 +309,7 @@ RandomAssistant = Class.create({
 
         if(event.item.type ==="pureRandom")
         {
-            playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1000);
+            playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1);
             this.controller.stageController.pushScene({
                     transition: AmpacheMobile.Transition,
                     name: "now-playing"
@@ -318,7 +318,8 @@ RandomAssistant = Class.create({
                     type: "play",
                     playList: playlist,
                     startIndex: 0,
-                    shuffle: false
+                    shuffle: false,
+                    repeat:RepeatModeType.repeat_forever
                 });
             return;
         }
