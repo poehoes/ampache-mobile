@@ -100,7 +100,7 @@ PlaylistsAssistant = Class.create({
     listTapHandler: function(event) {
 
         this.RequestedPlaylist = event.item;
-        this.controller.stageController.pushScene('songs', {
+        this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "songs"}, {
             SceneTitle: event.item.name,
             Type: "playlist",
             Playlist_id: event.item.id,

@@ -155,7 +155,7 @@ GenresAssistant = Class.create({
         Mojo.Log.info(event);
 
         if (event === "pushArtists") {
-            controller.stageController.pushScene('artists', {
+            controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "artists"}, {
                 SceneTitle: "Genre: " + item.name,
                 Genre_id: item.id,
                 ExpectedArtists: item.artists
@@ -163,7 +163,7 @@ GenresAssistant = Class.create({
         }
 
         if (event === "pushAlbums") {
-            controller.stageController.pushScene('albums', {
+            controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "albums"}, {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genres",
                 Genre_id: item.id,
@@ -173,7 +173,7 @@ GenresAssistant = Class.create({
         }
 
         if (event === "pushSongs") {
-            controller.stageController.pushScene('songs', {
+            controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "songs"}, {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genre",
                 Genre_id: item.id
@@ -185,7 +185,7 @@ GenresAssistant = Class.create({
          {
          var playList = item._this.itemsHelper.GetAllMatches(item._this.itemsHelper.filterString);
          var index = item._event.index;
-         controller.stageController.pushScene('now-playing',
+         controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "now-playing"},
          {
          
          playList: playList,
@@ -198,7 +198,7 @@ GenresAssistant = Class.create({
          {
          var playList = item._this.itemsHelper.ItemsList;
          var index = item._this.FindIndex(item.id);
-         controller.stageController.pushScene('now-playing',
+         controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "now-playing"},
          {
          playList: playList,
          startIndex: index,

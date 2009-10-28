@@ -62,7 +62,6 @@ RandomAssistant = Class.create({
         //};
         //this.searchLoadModel = { value: 1 };
         //this.controller.setupWidget('randomProgressbar', this.PPattr, this.searchLoadModel);
-
         this.tempArt = "images/blankalbum.png";
 
         this.randomMenu = [
@@ -142,7 +141,12 @@ RandomAssistant = Class.create({
 
         switch (event) {
         case "pushAlbum":
-            this.controller.stageController.pushScene('songs', {
+            this.controller.stageController.pushScene({
+                transition:
+                AmpacheMobile.Transition,
+                name: "songs"
+            },
+            {
                 SceneTitle: this.center.artist + " - " + this.center.name,
                 Type: "album",
                 Album_id: this.center.id,
@@ -151,7 +155,12 @@ RandomAssistant = Class.create({
             break;
 
         case "pushArtist":
-            this.controller.stageController.pushScene('albums', {
+            this.controller.stageController.pushScene({
+                transition:
+                AmpacheMobile.Transition,
+                name: "albums"
+            },
+            {
                 SceneTitle: this.center.artist,
                 DisplayArtistInfo: false,
                 Artist_id: this.center.artist_id,
@@ -333,7 +342,11 @@ RandomAssistant = Class.create({
             }
 
             else if (command[0] === "albums") {
-                controller.stageController.pushScene('albums', {
+                controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "albums"
+                },
+                {
                     SceneTitle: numItems + " Random Albums",
                     Type: "random",
                     ExpectedAlbums: numItems
@@ -341,7 +354,11 @@ RandomAssistant = Class.create({
             }
 
             else if (command[0] === "songs") {
-                controller.stageController.pushScene('songs', {
+                controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "songs"
+                },
+                {
                     SceneTitle: numItems + " Random Songs",
                     Type: "random",
                     DisplayArtistInfo: true,
@@ -357,7 +374,7 @@ RandomAssistant = Class.create({
             this.TurnOnSpinner();
             var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
             if (numPlaylists !== 0){
-                this.controller.stageController.pushScene('playlists', 
+                this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "playlists"}, 
                 {
                     SceneTitle: "Playlist Search: " + this.searchText,
                     Search: this.searchText === "" ? null : this.searchText,
@@ -408,7 +425,7 @@ RandomAssistant = Class.create({
     },
 
     showNowPlaying: function() {
-        Mojo.Controller.stageController.pushScene('now-playing', {
+        Mojo.Controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "now-playing"}, {
             type: "display"
         });
     }
