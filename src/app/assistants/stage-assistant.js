@@ -80,7 +80,8 @@ StageAssistant.prototype.handleCommand = function(event) {
         case "doPref-cmd":
             AmpacheMobile.loadingPreferences = true;
             var scenes = this.controller.getScenes();
-            for (var i = 0; i < scenes.length - 1; i++) {
+            
+            for (var i = (scenes.length - 1); i !== 0; i--) {
                 this.controller.popScene(scenes[i]);
             }
             var params = {

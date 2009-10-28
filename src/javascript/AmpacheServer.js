@@ -85,6 +85,19 @@ AmpacheServer = Class.create({
         return ActionString;
     },
 
+
+    GetRandomSongs:function(size)
+    {
+        var path = this.URL + "/play/index.php?sid=" +  this.auth + "&random=1&type=default";
+        var song = new SongModel(0, "Pure Random", "", 0, "", 0, 0, 0, path, 0, "images/blankalbum.png", "mime/random");
+        songs = [];
+        for(i = 0; i<size;i++)
+        {
+            songs[i] = song;
+        }
+        return songs;
+    },
+
     onCreate: function() {
         console.info('******* onCreate happened');
     },

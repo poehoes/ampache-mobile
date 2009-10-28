@@ -87,6 +87,12 @@ RandomAssistant = Class.create({
             icon: "images/icons/songs.png",
             items: ["10", "25", "50", "100", "200"]
 
+        },
+        {
+            type: $L("pureRandom"),
+            name: $L("Pure Random"),
+            icon: "images/icons/random.png"
+
         }
 
         ];
@@ -301,6 +307,22 @@ RandomAssistant = Class.create({
 
     listTapHandler: function(event) {
 
+        if(event.item.type ==="pureRandom")
+        {
+            playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1000);
+            this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "now-playing"
+                },
+                {
+                    type: "play",
+                    playList: playlist,
+                    startIndex: 0,
+                    shuffle: false
+                });
+            return;
+        }
+        
         var item = event.item;
         item._this = this;
 
