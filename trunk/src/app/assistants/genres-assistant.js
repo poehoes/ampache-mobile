@@ -13,47 +13,36 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-GenresAssistant = Class.create(
-{
+GenresAssistant = Class.create({
 
-    initialize: function(params)
-    {
+    initialize: function(params) {
         this.SceneTitle = params.SceneTitle;
         this.itemsHelper = new ItemsHelper();
         this.type = params.Type;
-        if (params.Search) 
-        {
+        if (params.Search) {
             this.Search = params.Search;
         }
     },
-    
-    setup: function()
-    {
 
-        
-        
+    setup: function() {
+
         //*********************************************************************************************************
         //  Setup Filter List
-        this.listAttributes = 
-        {
+        this.listAttributes = {
             itemTemplate: 'genres/listitem',
             dividerTemplate: 'genres/divider',
             dividerFunction: this.dividerFunc.bind(this),
             filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper)
         };
-        this.listModel = 
-        {
+        this.listModel = {
             disabled: false,
             items: this.itemsHelper.ItemsList
         };
         this.controller.setupWidget('genreFilterList', this.listAttributes, this.listModel);
 
-        
-        
         //*********************************************************************************************************
         // Items Helper
-        var params = 
-        {
+        var params = {
             controller: this.controller,
             //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('genreFilterList'),
@@ -64,22 +53,20 @@ GenresAssistant = Class.create(
             ExpectedItems: 0,
             SortFunction: null,
             MatchFunction: this.IsMatch
-        
+
         };
         this.itemsHelper.setup(params);
-        
-        
+
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
+
         //*********************************************************************************************************
         // Events
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('genreFilterList'), Mojo.Event.listTap, this.listTapHandler);
     },
-    
-    cleanup: function(event)
-    {
-    
+
+    cleanup: function(event) {
+
         Mojo.Log.info("--> cleanup");
         Mojo.Event.stopListening(this.controller.get('genreFilterList'), Mojo.Event.listTap, this.listTapHandler);
         this.itemsHelper.cleanup();
@@ -87,78 +74,59 @@ GenresAssistant = Class.create(
         Mojo.Log.info("<-- cleanup");
 
     },
-    
-    GetTags: function(GotItems, offset, limit)
-    {
+
+    GetTags: function(GotItems, offset, limit) {
         AmpacheMobile.ampacheServer.GetTags(GotItems, offset, limit, this.Search);
     },
-    
-    
-    IsMatch: function(item, filterString)
-    {
+
+    IsMatch: function(item, filterString) {
         var matchString = item.name;
-        if (matchString.toLowerCase().include(filterString.toLowerCase())) 
-        {
+        if (matchString.toLowerCase().include(filterString.toLowerCase())) {
             return true;
         }
         return false;
     },
-    
-    
-    handleCommand: function (event) {
+
+    handleCommand: function(event) {
         this.itemsHelper.handleCommand(event);
     },
-    
-    
-    
-    listTapHandler: function(event)
-    {
-    
+
+    listTapHandler: function(event) {
+
         var item = event.item;
         item._this = this;
-        
+
         var editCmd = [];
         var i = 0;
-        
-        editCmd[i++] = 
-        {
+
+        editCmd[i++] = {
             label: "Songs",
             command: "pushSongs",
             secondaryIconPath: "images/icons/songs.png"
-        
-        
+
         };
-        
-        
-        if (event.item.artists !== 0) 
-        {
-            editCmd[i++] = 
-            {
+
+        if (event.item.artists !== 0) {
+            editCmd[i++] = {
                 label: "Artists: " + event.item.artists,
                 command: "pushArtists",
                 secondaryIconPath: "images/icons/artists.png"
-            
-            
+
             };
         }
-        
-        if (event.item.albums !== 0) 
-        {
-            editCmd[i++] = 
-            {
+
+        if (event.item.albums !== 0) {
+            editCmd[i++] = {
                 label: "Albums: " + event.item.albums,
                 command: "pushAlbums",
                 secondaryIconPath: "images/icons/albums.png"
-            
-            
+
             };
         }
-        
+
         //if (event.item.songs != 0) 
         //{
-        
         //}
-        
         /*
         if (event.item.playlists != 0) 
         {
@@ -171,56 +139,45 @@ GenresAssistant = Class.create(
             
             };
         }*/
-        
-        this.controller.popupSubmenu(
-        {
+
+        this.controller.popupSubmenu({
             onChoose: this.popupHandler.bind(item),
             placeNear: event.originalEvent.target,
             items: editCmd
         });
-        
+
     },
-    
-    
-    
-    popupHandler: function(event)
-    {
+
+    popupHandler: function(event) {
         var item = this;
-        
-        
+
         var controller = item._this.controller;
         Mojo.Log.info(event);
-        
-        if (event === "pushArtists") 
-        {
-            controller.stageController.pushScene('artists', 
-            {
+
+        if (event === "pushArtists") {
+            controller.stageController.pushScene('artists', {
                 SceneTitle: "Genre: " + item.name,
                 Genre_id: item.id,
                 ExpectedArtists: item.artists
             });
         }
-        
-        if (event === "pushAlbums") 
-        {
-            controller.stageController.pushScene('albums', 
-            {
+
+        if (event === "pushAlbums") {
+            controller.stageController.pushScene('albums', {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genres",
                 Genre_id: item.id,
                 ExpectedAlbums: item.albums
-            
+
             });
         }
-        
-        if (event === "pushSongs") 
-        {
-            controller.stageController.pushScene('songs', 
-            {
+
+        if (event === "pushSongs") {
+            controller.stageController.pushScene('songs', {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genre",
                 Genre_id: item.id
-            
+
             });
         }
         /*
@@ -251,20 +208,16 @@ GenresAssistant = Class.create(
          
          }*/
     },
-    
-    
-    
-    dividerFunc: function(itemModel)
-    {
+
+    dividerFunc: function(itemModel) {
         return itemModel.year;
     },
-    
-    
-    activate: function (event) {
+
+    activate: function(event) {
         this.itemsHelper.Activate();
     },
 
-    deactivate: function (event) {
+    deactivate: function(event) {
         this.itemsHelper.Deactivate();
     }
 

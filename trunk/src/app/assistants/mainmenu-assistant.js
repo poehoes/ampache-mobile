@@ -13,9 +13,8 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
-MainmenuAssistant = Class.create(
-{
-    initialize: function(){
+MainmenuAssistant = Class.create({
+    initialize: function() {
         /* this is the creator function for your scene assistant object. It will be passed all the 
          additional parameters (after the scene name) that were passed to pushScene. The reference
          to the scene controller (this.controller) has not be established yet, so any initialization
@@ -25,17 +24,19 @@ MainmenuAssistant = Class.create(
         this.AlbumsList = null;
         this.SongsList = null;
     },
-    
-    setup: function(){
+
+    setup: function() {
         Mojo.Log.info("--> setup");
-        
+
         var title = this.controller.get('title');
         title.innerHTML = AmpacheMobile.Account.AccountName;
-    
-        
-        
-        this.spinnerAttrs = { spinnerSize: 'small' };
-        this.spinnerModel = { spinning: false };
+
+        this.spinnerAttrs = {
+            spinnerSize: 'small'
+        };
+        this.spinnerModel = {
+            spinning: false
+        };
         this.controller.setupWidget('mainmenu-spinner', this.spinnerAttrs, this.spinnerModel);
         this.mainmenu = [
         /*
@@ -56,7 +57,7 @@ MainmenuAssistant = Class.create(
             scene: $L("artists"),
             description: $L(AmpacheMobile.ampacheServer.artists.toString()),
             icon: "images/icons/artists.png"
-        }, 
+        },
 
         {
             category: $L("bottom"),
@@ -65,9 +66,9 @@ MainmenuAssistant = Class.create(
             scene: $L("albums"),
             description: $L(AmpacheMobile.ampacheServer.albums.toString()),
             icon: "images/icons/albums.png",
-            displayCount:""
-        }, 
-        
+            displayCount: ""
+        },
+
         /*
          {
          category: $L("bottom"),
@@ -84,9 +85,9 @@ MainmenuAssistant = Class.create(
             scene: $L("playlists"),
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
             icon: "images/icons/playlists.png",
-            displayCount:""
+            displayCount: ""
         },
-        
+
         {
             category: $L("bottom"),
             directory: $L("genres"),
@@ -94,19 +95,19 @@ MainmenuAssistant = Class.create(
             scene: $L("genres"),
             description: 0,
             icon: "images/icons/genres.png",
-            displayCount:"none"
+            displayCount: "none"
         },
-         {
+        {
             category: $L("bottom"),
             directory: $L("random"),
             name: $L("Random"),
             scene: $L("random"),
             description: 0,
             icon: "images/icons/random.png",
-            displayCount:"none"
+            displayCount: "none"
         }
-        
-           /*{
+
+        /*{
          category: $L("bottom"),
          directory: $L("preferences"),
          name: $L("Preferences"),
@@ -123,284 +124,254 @@ MainmenuAssistant = Class.create(
          description: ""
          }, */
         ];
-        
-        
-        this.controller.setupWidget('mainMenuList', 
-        {
+
+        this.controller.setupWidget('mainMenuList', {
             itemTemplate: 'mainmenu/listitem'
             //dividerTemplate: 'mainmenu/divider',
             //dividerFunction: this.dividerFunc.bind(this)
-        }, 
+        },
         {
             items: this.mainmenu
         });
-        
-        
-
 
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
-        
+
         //****************************************************************************************************
         // Setup Screen Rotation
-        if (AmpacheMobile.settingsManager.settings.AllowRotation === true){
+        if (AmpacheMobile.settingsManager.settings.AllowRotation === true) {
             /* Allow this stage to rotate */
-            if (this.controller.stageController.setWindowOrientation){
+            if (this.controller.stageController.setWindowOrientation) {
                 this.controller.stageController.setWindowOrientation("free");
             }
-        }else{
+        } else {
             /* Allow this stage to rotate */
-            if (this.controller.stageController.setWindowOrientation){
+            if (this.controller.stageController.setWindowOrientation) {
                 this.controller.stageController.setWindowOrientation("up");
             }
         }
-        
+
         // Menu Tap Event
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
-        
+
         //*****************************************************************************************************
         // Search Event
         this.searchTapHandler = this.pushSearch.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
-        
 
     },
-    
-    cleanup: function(event){
+
+    cleanup: function(event) {
         /* this function should do any cleanup needed before the scene is destroyed as 
          a result of being popped off the scene stack */
         Mojo.Log.info("--> ArtistsAssistant.prototype.cleanup");
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
-        
+
         AmpacheMobile.audioPlayer.PlayListPending = false;
         AmpacheMobile.ampacheServer.StopPing();
         Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
     },
-    
-    
-    pushSearch: function(){
-        this.controller.stageController.pushScene(
-        {
+
+    pushSearch: function() {
+        this.controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "search-menu"
         });
     },
-    
-    listTapHandler: function(event){
+
+    listTapHandler: function(event) {
         Mojo.Log.info("--> listTapHandler: " + event.item.scene);
-        switch (event.item.scene){
-            case "artists":
-                var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
-                if (numArtists !== 0){
-                    this.controller.stageController.pushScene(
-                    {
-                        transition: AmpacheMobile.Transition,
-                        name: "artists"
-                    }, 
-                    {
-                        SceneTitle: "Artists",
-                        ExpectedArtists: numArtists
-                    });
-                }
-                this.getPending = false;
-                //this.TurnOffSpinner("Getting Artists");
-                break;
-            case "albums":
-                Mojo.Log.info("Pushing Albums");
-                var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
-                if (numAlbums !== 0){
-                    this.controller.stageController.pushScene(
-                    {
-                        transition: AmpacheMobile.Transition,
-                        name: "albums"
-                    }, 
-                    {
-                        SceneTitle: "Albums",
-                        DisplayArtistInfo: true,
-                        ExpectedAlbums: numAlbums
+        switch (event.item.scene) {
+        case "artists":
+            var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
+            if (numArtists !== 0) {
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "artists"
+                },
+                {
+                    SceneTitle: "Artists",
+                    ExpectedArtists: numArtists
+                });
+            }
+            this.getPending = false;
+            //this.TurnOffSpinner("Getting Artists");
+            break;
+        case "albums":
+            Mojo.Log.info("Pushing Albums");
+            var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
+            if (numAlbums !== 0) {
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "albums"
+                },
+                {
+                    SceneTitle: "Albums",
+                    DisplayArtistInfo: true,
+                    ExpectedAlbums: numAlbums
                     //AlbumsList: _albumsList,
-                    });
-                }
-                this.getPending = false;
-                //this.TurnOffSpinner("Getting Albums");
-                break;
-            case "playlists":
-                var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
-                if (numPlaylists !== 0){
-                    Mojo.Log.info("Pushing Playlists");
-                    this.controller.stageController.pushScene(
-                    {
-                        transition: AmpacheMobile.Transition,
-                        name: "playlists"
-                    },
-                    {
-                        SceneTitle: "Playlists",
-                        ExpectedPlaylists: numPlaylists
-                    });
-                }
-                this.getPending = false;
-                //this.TurnOffSpinner("Getting Albums");
-                break;
-            case "songs":
-                this.controller.stageController.pushScene(
-                    {
-                        transition: AmpacheMobile.Transition,
-                        name: "songs"
-                    }, 
-                {
-                    
-                    SceneTitle: "Songs",
-                    Type: "all-songs",
-                    Item: event.item
-                
                 });
-                break;
-            case "genres":
-                this.controller.stageController.pushScene(
-                {
+            }
+            this.getPending = false;
+            //this.TurnOffSpinner("Getting Albums");
+            break;
+        case "playlists":
+            var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
+            if (numPlaylists !== 0) {
+                Mojo.Log.info("Pushing Playlists");
+                this.controller.stageController.pushScene({
                     transition: AmpacheMobile.Transition,
-                    name: "genres"
+                    name: "playlists"
                 },
                 {
-                    SceneTitle: "Genres",
-                    Type: "all-genres"
+                    SceneTitle: "Playlists",
+                    ExpectedPlaylists: numPlaylists
                 });
-                break;
-            case "random":
-                this.controller.stageController.pushScene(
-                {
-                    transition: AmpacheMobile.Transition,
-                    name: "random"
-                },
-                {
-                    SceneTitle: "Random",
-                    Type: "all-genres"
-                });
-                break;
+            }
+            this.getPending = false;
+            //this.TurnOffSpinner("Getting Albums");
+            break;
+        case "songs":
+            this.controller.stageController.pushScene({
+                transition:
+                AmpacheMobile.Transition,
+                name: "songs"
+            },
+            {
+
+                SceneTitle: "Songs",
+                Type: "all-songs",
+                Item: event.item
+
+            });
+            break;
+        case "genres":
+            this.controller.stageController.pushScene({
+                transition:
+                AmpacheMobile.Transition,
+                name: "genres"
+            },
+            {
+                SceneTitle: "Genres",
+                Type: "all-genres"
+            });
+            break;
+        case "random":
+            this.controller.stageController.pushScene({
+                transition:
+                AmpacheMobile.Transition,
+                name: "random"
+            },
+            {
+                SceneTitle: "Random",
+                Type: "all-genres"
+            });
+            break;
         }
         //this.controller.stageController.assistant.showScene(event.item.directory, event.item.scene)
         Mojo.Log.info("<-- listTapHandler");
     },
-    
+
     // This function will popup a dialog, displaying the message passed in.
-    showDialogBox: function(title, message){
-        this.controller.showAlertDialog(
-        {
-            onChoose: function(value)
-            {
-            },
+    showDialogBox: function(title, message) {
+        this.controller.showAlertDialog({
+            onChoose: function(value) {},
             title: title,
             message: message,
-            choices: [
-            {
+            choices: [{
                 label: 'OK',
                 value: 'OK',
                 type: 'color'
             }]
         });
     },
-    
-    TurnOnSpinner: function(spinnerText){
+
+    TurnOnSpinner: function(spinnerText) {
         this.spinnerModel.spinning = true;
         this.controller.modelChanged(this.spinnerModel);
     },
-    
-    TurnOffSpinner: function(){
+
+    TurnOffSpinner: function() {
         this.spinnerModel.spinning = false;
         this.controller.modelChanged(this.spinnerModel);
     },
-    
+
     /*
      * This function will push a passed in scene.  The reason we are using a special function here is that
      * for file organization purposes we have put the scene files in sub directories & to load them requires that
      * we use the name and sceneTemplate properties when pushing the scenes.
      */
-    showScene: function(sceneName, directory){
+    showScene: function(sceneName, directory) {
         Mojo.Log.info("--> showScene");
-        this.controller.stageController.pushScene(
-        {
+        this.controller.stageController.pushScene({
             name: sceneName,
             sceneTemplate: directory + "/" + sceneName + "/" + sceneName + "-scene"
         });
         Mojo.Log.info("<-- showScene");
     },
-    
-    
-    
 
-    activate: function(event){
+    activate: function(event) {
         // Now Playing Button
         var button = this.controller.get('now-playing-button');
-        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block' : 'none';
+        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block': 'none';
         this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
     },
-    
-    deactivate: function(event){
+
+    deactivate: function(event) {
 
         Mojo.Log.info("--> ArtistsAssistant.prototype.deactivate");
         Mojo.Event.stopListening(this.controller.get('now-playing-button'), Mojo.Event.tap, this.npTapHandler);
         Mojo.Log.info("<-- ArtistsAssistant.prototype.deactivate");
     },
-    
-    
-    showNowPlaying:function()
-    {
-        Mojo.Controller.stageController.pushScene(
-        {
+
+    showNowPlaying: function() {
+        Mojo.Controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "now-playing"
-        }, 
+        },
         {
-                type:"display"
+            type: "display"
         });
     },
-    
-    stopMusic: function(value){
-        
-        if (value === "stopMusic"){
-            if(AmpacheMobile.audioPlayer.PlayListPending===true)
-            {
+
+    stopMusic: function(value) {
+
+        if (value === "stopMusic") {
+            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
                 AmpacheMobile.audioPlayer.stop();
             }
             this.controller.stageController.popScene(null);
         }
     },
-    
-    
-    handleCommand: function(event){
-        //test for Mojo.Event.back, not Mojo.Event.command..
 
-        if (event.type === Mojo.Event.back){
-            if(AmpacheMobile.audioPlayer.PlayListPending===true)
-            {
+    handleCommand: function(event) {
+        //test for Mojo.Event.back, not Mojo.Event.command..
+        if (event.type === Mojo.Event.back) {
+            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
                 event.preventDefault();
                 event.stopPropagation();
-                this.controller.showAlertDialog(
-                {
+                this.controller.showAlertDialog({
                     onChoose: this.stopMusic,
                     title: $L("Are you sure?"),
                     message: "Going back will close your current now playing list and stop your music.",
-                    choices: [
-                        {
-                            label: $L('Cancel'),
-                            value: 'ok',
-                            type: 'primary'
-                        }, 
-                        {
-                            label: $L('Stop Music'),
-                            value: 'stopMusic',
-                            type: 'negative'
-                        }
-                    ]
+                    choices: [{
+                        label: $L('Cancel'),
+                        value: 'ok',
+                        type: 'primary'
+                    },
+                    {
+                        label: $L('Stop Music'),
+                        value: 'stopMusic',
+                        type: 'negative'
+                    }]
                 });
             }
         }
     },
-    
 
-    dividerFunc: function(itemModel){
+    dividerFunc: function(itemModel) {
         return itemModel.category; // We're using the item's category as the divider label.
     }
 });
