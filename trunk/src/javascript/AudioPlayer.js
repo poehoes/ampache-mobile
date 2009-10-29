@@ -427,6 +427,7 @@ AudioPlayer = Class.create({
     kill_stall_timer: function() {
         window.clearInterval(this.stallTimer);
         this.stallTimer = null;
+        this.stalled = false;
     },
 
     play_change_interval: null,
@@ -605,14 +606,27 @@ AudioPlayer = Class.create({
         return moreInfo;
     },
 
+    SetStalled:function(stalled)
+    {
+        if(stalled === true)
+        {
+            this.kill_stall_timer();
+            this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
+        }
+        
+        this.UpdateNowPlayingShowSpinner(stalled);
+    },
+
+
     handleAudioEvents: function(event) {
         Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
 
-        if (this.stallTimer) {
+        if (this.stallTimer && event.type !== "stalled") {
             this.kill_stall_timer();
         }
 
         this.NowPlayingStreamDebug(event.type);
+        
 
         switch (event.type) {
         case "canplay":
@@ -620,9 +634,10 @@ AudioPlayer = Class.create({
             this.player.play();
             break;
         case "stalled":
-            //this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
-            //this.UpdateNowPlayingShowSpinner(true);
-            //this.stalled =true;
+            if(!this.stallTimer)
+            {
+                this.SetStalled(true);
+            }
             break;
         case "durationchange":
             this.UpdateNowPlayingTime();
@@ -632,16 +647,14 @@ AudioPlayer = Class.create({
             break;
         case "progress":
         case "load":
-            if (this.stalled) {
-                this.UpdateNowPlayingShowSpinner(false);
-            }
-            this.stalled = false;
+            this.SetStalled(false);
             this._updateBuffering();
             break;
         case "play":
             this.Paused = false;
             this.NowPlayingStartPlaybackTimer();
             this.NowPlayingShowPause();
+            this.kill_stall_timer();
             break;
         case "pause":
             this.Paused = true;
@@ -654,15 +667,7 @@ AudioPlayer = Class.create({
             this.NowPlayingDisplayError("Palm Audio Service failed");
             break;
         case "error":
-            /*this.Controller.showAlertDialog({
-                //onChoose: this.onErrorDialogDismiss.bind(this),
-                title: $L("Error"),
-                message: "Audio Player Recieved an Error",
-                choices:[
-                {label:$L('Cancel'), value:"cancel", type:'dismiss'}
-                ]
-              });*/
-            //this.Controller.errorDialog();
+
             var errorString = this.streamErrorCodeLookup(event.error);
             this.NowPlayingDisplayError(errorString);
             break;
