@@ -235,75 +235,7 @@ NowPlayingAssistant = Class.create({
         }
         Mojo.Log.info("--> togglePausePlay");
     },
-    /*
-     // hardcoded position for the album art divs
-     ANIMATION_FAR_LEFT_LEFT = -400
-     ANIMATION_PREV_LEFT = -140
-     ANIMATION_PREV_HEIGHT = 200
-     ANIMATION_PREV_BOTTOM = 200
-     ANIMATION_CURRENT_LEFT = 70
-     ANIMATION_CURRENT_HEIGHT = 220
-     ANIMATION_CURRENT_BOTTOM = 100
-     ANIMATION_NEXT_LEFT = 280
-     ANIMATION_NEXT_HEIGHT =200
-     ANIMATION_NEXT_BOTTOM = 95
-     ANIMATION_FAR_RIGHT_LEFT = 400
-     moveArt : function(){
-     this.currentPicDiv = this.controller.get('loaded-display');
-     var oldInfo = {};
-     oldInfo.left = 200;
-     oldInfo.bottom = this.ANIMATION_CURRENT_BOTTOM;
-     var newInfo = {};
-     newInfo.left = 280;
-     newInfo.bottom = this.ANIMATION_CURRENT_BOTTOM;
-     Mojo.Animation.animateStyle(this.currentPicDiv, 'left', 'bezier', {
-     from: 0,
-     to: 100,
-     duration: 0.2,
-     curve: 'over-easy',
-     reverse: false,
-     onComplete: function(){
-     Mojo.Log.info("Animation Complete")
-     }
-     });
-     
-     }
-     _getDims = function (divPos){
-     
-     var dims = {};
-     switch (divPos){
-     case 0:
-     dims.left = this.ANIMATION_FAR_LEFT_LEFT;
-     dims.div = this.farLeftPicDiv;
-     break;
-     case 1:
-     dims.left = this.ANIMATION_PREV_LEFT;
-     dims.height = this.ANIMATION_PREV_HEIGHT;
-     dims.bottom = this.ANIMATION_PREV_BOTTOM;
-     dims.div = this.prevPicDiv;
-     break;
-     case 2:
-     dims.left = this.ANIMATION_CURRENT_LEFT;
-     dims.height = this.ANIMATION_CURRENT_HEIGHT;
-     dims.bottom = this.ANIMATION_CURRENT_BOTTOM;
-     dims.div = this.currentPicDiv;
-     break;
-     case 3:
-     dims.left = this.ANIMATION_NEXT_LEFT;
-     dims.height = this.ANIMATION_NEXT_HEIGHT;
-     dims.bottom = this.ANIMATION_NEXT_BOTTOM;
-     dims.div = this.nextPicDiv;
-     break;
-     case 4:
-     dims.left = this.ANIMATION_FAR_RIGHT_LEFT;
-     dims.div = this.farRightPicDiv;
-     break;
-     
-     }
-     return dims;
-     
-     }
-     */
+    
     activate: function(event) {
         Mojo.Log.info("--> activate");
         AmpacheMobile.audioPlayer.setNowPlaying(this);
@@ -437,10 +369,21 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("<-- progressBarSeek");
     },
 
+    oneTime:true,
+
     updateBuffering: function(startPctg, endPctg) {
-        this.sliderModel.progressStart = startPctg;
-        this.sliderModel.progressEnd = endPctg;
-        this.controller.modelChanged(this.sliderModel);
+        if(startPctg === 0 && endPctg === 0)
+        {
+            this.sliderModel.progressStart = 0.0000001;
+            this.sliderModel.progressEnd =   0.0000001;
+            this.controller.modelChanged(this.sliderModel);
+        }
+        else
+        {
+            this.sliderModel.progressStart = startPctg;
+            this.sliderModel.progressEnd = endPctg;
+            this.controller.modelChanged(this.sliderModel);
+        }
     },
 
     //*********************************************************************************************************************************

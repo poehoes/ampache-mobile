@@ -1,27 +1,27 @@
 Version 0.7.0 (Beta) (10/29/2009)
     * New Feature: Now Playing, now playing screen will now continue playing after navigating away from the now playing page
-		o Any list of songs can be enqueued onto the end of the current playlist
-	    o Tap and Hold a song to add just that song
-		o Delete the now playing list from any scene
-		o TODO: Build a playlist editor to remove items from a list
-	* New Feature: Random Music
-	    o Shuffle all Songs NOTE: This is using an documented method from the Ampache Server and does not allow for retrieval of song information.
-	    o Random Album Selector cover-flow like to allow random browsing
-	    o Artist, Albums, Songs of the moment lists
-	* New Feature: Redesign of progress indicator for loading content, works the same as the web browser and you can cancel while loading at any point.
-	* New Feature: Added the ability to e-mail the xml from problem tracks with corrupted tags to enable easier debug
-	* Improvement: Auto restart stalled stream after 20 seconds of stalled state.
-	* Improvement: Optimized all images included in the ipk making for a much smaller download.
-	* Improvement: Modified all icons to have the same look and feel.
-	* Improvement: Spinner on now playing scene is now in the command menu and not covering up the coverart.
-	* Improvement: Made restarting a partially downloaded list optional, button click continues download
-	* Improvement: Removed all scene transitions makes the app much faster
-	* Impromement: Fixed the buffering indicator
-		o Can now move the slider outside the buffered part of a song and it will start the download from the point you dropped
-		o If the start of the buffer has been deleted by the audio service it will now be displayed
-		o Fixed the issue where it would resize itself and make the now playing screen jump around
-	* Bug Fix: Added code to remove bad characters resulting in "unicode error" on the application side
-	
+        o Any list of songs can be enqueued onto the end of the current playlist
+        o Tap and Hold a song to add just that song
+        o Delete the now playing list from any scene
+        o TODO: Build a playlist editor to remove items from a list
+    * New Feature: Random Music
+        o Shuffle all Songs NOTE: This is using an documented method from the Ampache Server and does not allow for retrieval of song information.
+        o Random Album Selector cover-flow like to allow random browsing
+        o Artist, Albums, Songs of the moment lists
+    * New Feature: Redesign of progress indicator for loading content, works the same as the web browser and you can cancel while loading at any point.
+    * New Feature: Added the ability to e-mail the xml from problem tracks with corrupted tags to enable easier debug
+    * Improvement: Auto restart stalled stream after 20 seconds of stalled state.
+    * Improvement: Optimized all images included in the ipk making for a much smaller download.
+    * Improvement: Modified all icons to have the same look and feel.
+    * Improvement: Spinner on now playing scene is now in the command menu and not covering up the coverart.
+    * Improvement: Made restarting a partially downloaded list optional, button click continues download
+    * Improvement: Removed all scene transitions makes the app much faster
+    * Impromement: Fixed the buffering indicator
+        o Can now move the slider outside the buffered part of a song and it will start the download from the point you dropped
+        o If the start of the buffer has been deleted by the audio service it will now be displayed
+        o Fixed the issue where it would resize itself and make the now playing screen jump around
+    * Bug Fix: Added code to remove bad characters resulting in "unicode error" on the application side
+    
 
 Version 0.6.0 (Beta) (10/15/2009)
     * New Feature: Genre Browser
