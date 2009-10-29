@@ -360,6 +360,10 @@ NowPlayingAssistant = Class.create({
         }
         var result = displayHours + ((mins < 10) ? "0" + mins: mins) + ":" + ((secs < 10) ? "0" + secs: secs);
         //Mojo.Log.info("<-- timeFormatter result", result);
+        if(result.match(/NaN/))
+        {
+            result = "00:00";
+        }
         return result;
     },
 

@@ -387,7 +387,7 @@ MainmenuAssistant = Class.create({
                         type: 'primary'
                     },
                     {
-                        label: $L('Stop Music'),
+                        label: $L('Delete Now Playing'),
                         value: 'stopMusic',
                         type: 'negative'
                     }]
