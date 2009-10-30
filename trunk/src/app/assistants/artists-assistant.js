@@ -40,6 +40,8 @@ ArtistsAssistant = Class.create({
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
 
+        //*********************************************************************
+        // Setup Header Tap
         this.header = this.controller.get('header');
         this.divSelector = this.dividerSelect.bindAsEventListener(this);
         Mojo.Event.listen(this.header, Mojo.Event.tap, this.divSelector);
@@ -98,9 +100,17 @@ ArtistsAssistant = Class.create({
         var commands = [];
         previousLetter = null;
         j=0;
-        for(i=0;i<this.itemsHelper.ItemsList.length;i++)
+        if(this.itemsHelper.IsFiltered())
         {
-            letter = this.dividerFunc(this.itemsHelper.ItemsList[i]);
+            list = this.itemsHelper.GetAllMatches(this.itemsHelper.filterString);
+        }
+        else
+        {
+            list = this.itemsHelper.ItemsList;
+        }
+        for(i=0;i<list.length;i++)
+        {
+            letter = this.dividerFunc(list[i]);
             if(letter !== previousLetter)
             {
                 commands[j++] = {

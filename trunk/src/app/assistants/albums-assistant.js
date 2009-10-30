@@ -228,9 +228,17 @@ AlbumsAssistant = Class.create({
         var commands = [];
         previousLetter = null;
         j=0;
-        for(i=0;i<this.itemsHelper.ItemsList.length;i++)
+        if(this.itemsHelper.IsFiltered())
         {
-            letter = this.dividerFunc(this.itemsHelper.ItemsList[i]);
+            list = this.itemsHelper.GetAllMatches(this.itemsHelper.filterString);
+        }
+        else
+        {
+            list = this.itemsHelper.ItemsList;
+        }
+        for(i=0;i<list.length;i++)
+        {
+            letter = this.dividerFunc(list[i]);
             if(letter !== previousLetter)
             {
                 commands[j++] = {
