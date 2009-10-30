@@ -73,7 +73,16 @@ AlbumsAssistant = Class.create({
         // Set Scene Menu Title
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
-
+        
+        
+        if (this.DisplayArtistInfo === true) {
+            //*********************************************************************
+            // Setup Header Tap
+            this.header = this.controller.get('header');
+            this.divSelector = this.dividerSelect.bindAsEventListener(this);
+            Mojo.Event.listen(this.header, Mojo.Event.tap, this.divSelector);
+        }
+        
         //******************************************************************************************************
         // Setup numSongs pill
         if (this.numSongs) {
@@ -202,7 +211,10 @@ AlbumsAssistant = Class.create({
     cleanup: function(event) {
 
         Mojo.Log.info("--> cleanup");
-
+        
+        if (this.DisplayArtistInfo === true) {
+            Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.divSelector);
+        }
         Mojo.Event.stopListening(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('allSongs'), Mojo.Event.tap, this.allSongsHandler);
         this.itemsHelper.cleanup();
@@ -210,6 +222,43 @@ AlbumsAssistant = Class.create({
         Mojo.Log.info("<-- cleanup");
 
     },
+
+    dividerSelect:function(event)
+    {
+        var commands = [];
+        previousLetter = null;
+        j=0;
+        for(i=0;i<this.itemsHelper.ItemsList.length;i++)
+        {
+            letter = this.dividerFunc(this.itemsHelper.ItemsList[i]);
+            if(letter !== previousLetter)
+            {
+                commands[j++] = {
+                    label: letter,
+                    command: "jumpTo-"+ i
+                };
+                previousLetter = letter;
+            }
+        }
+        
+        this.controller.popupSubmenu({
+            onChoose: this.popupHandler.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+    },
+
+    popupHandler:function(event)
+    {
+        if(Object.isString(event) && event.match("jumpTo"))
+        {
+            console.log(event);
+            list = this.itemsHelper.filterList.mojo.getList();
+            i = parseInt(event.split("-")[1],10);
+            list.mojo.revealItem(i);
+        }
+    },
+
 
     IsMatch: function(item, filterString) {
         var matchString = item.name + " " + item.artist;
