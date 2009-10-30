@@ -30,12 +30,20 @@ ArtistsAssistant = Class.create({
         }
     },
 
+    
+
+
     setup: function() {
 
         //**********************************************************************
         // Set title
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
+
+        this.header = this.controller.get('header');
+        this.divSelector = this.dividerSelect.bindAsEventListener(this);
+        Mojo.Event.listen(this.header, Mojo.Event.tap, this.divSelector);
+
 
         //*********************************************************************************************************
         //  Setup Filter List
@@ -80,9 +88,48 @@ ArtistsAssistant = Class.create({
 
     cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.divSelector);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
+
+    dividerSelect:function(event)
+    {
+        var commands = [];
+        previousLetter = null;
+        j=0;
+        for(i=0;i<this.itemsHelper.ItemsList.length;i++)
+        {
+            letter = this.dividerFunc(this.itemsHelper.ItemsList[i]);
+            if(letter !== previousLetter)
+            {
+                commands[j++] = {
+                    label: letter,
+                    command: "jumpTo-"+ i
+                };
+                previousLetter = letter;
+            }
+        }
+        
+        this.controller.popupSubmenu({
+            onChoose: this.popupHandler.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+    },
+
+    popupHandler:function(event)
+    {
+        if(Object.isString(event) && event.match("jumpTo"))
+        {
+            console.log(event);
+            filterList = this.controller.get('artistFilterList');
+            list = filterList.mojo.getList();
+            i = parseInt(event.split("-")[1],10);
+            list.mojo.revealItem(i);
+        }
+    },
+
 
     sortAlpha: function(a, b) {
 
@@ -165,6 +212,10 @@ ArtistsAssistant = Class.create({
         var dividerText = itemModel.name.toLowerCase().replace(regExp, '');
         if (dividerText[0].match(/[0-9]/)) {
             return "#";
+        }
+        else if(!dividerText[0].match(/[0-9a-zA-Z]/))
+        {
+            return "@";
         }
         return dividerText[0].toUpperCase();
     },
