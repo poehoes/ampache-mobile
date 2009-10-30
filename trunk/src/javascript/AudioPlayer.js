@@ -522,13 +522,13 @@ AudioPlayer = Class.create({
         var errorString = "Unknown Error";
         switch (errorCode) {
         case MediaError.MEDIA_ERR_ABORTED:
-            errorString = "The audio stream was aborted by WebOS.  Most often this happens when you do not have a fast enough connection to support an audio stream.";
+            errorString = "The audio stream was aborted by WebOS. Most often this happens when you do not have a fast enough connection to support an audio stream.";
             //if (this.debug) {
             errorString += this.moreErrorInfo("MEDIA_ERR_ABORTED");
             //}
             break;
         case MediaError.MEDIA_ERR_NETWORK:
-            errorString = "A network error has occured.  The network cannot support an audio stream at this time.";
+            errorString = "A network error has occured. The network cannot support an audio stream at this time.";
             //if (this.debug) {
             errorString += this.moreErrorInfo("MEDIA_ERR_NETWORK");
             //}
