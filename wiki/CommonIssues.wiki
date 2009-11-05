@@ -9,7 +9,7 @@
            * Check out this [http://ampache.org/wiki/config:acl page] on Ampache ACL rules  
         # Can you access Ampache via Wifi from your Pre using the web browser (i.e. http://192.168.x.x)? If no, it could be a firewall issue on the machine running the Amapche music server or maybe an ACL rule. See links above.
         # Can you access Ampache via Wifi from your Pre using Ampache-mobile?
-    * You may want to go through the steps above before posting a "Ampache-mobile isn't working" post and then posting which of the above steps worked for you and which didn't. 
+   * You may want to go through the steps above before posting a "Ampache-mobile isn't working" post and then posting which of the above steps worked for you and which didn't. 
 === Works on Wi-Fi but not EVDO ===
   * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most Wi-Fi routers have an internal IP pool and one External IP.  
     * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
