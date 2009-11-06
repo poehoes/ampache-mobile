@@ -103,17 +103,46 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://en.wikipedia.org/wiki/DynDNS  Wikipedia]
 
-*Firewall* : to do
+*Firewall* : a program/service that prevents unauthorized access to the computer. A properly configured firewall will permit valid network traffic while blocking unauthorized traffic. 
 
-*MySQL* : to do
+    You may need to configure your firewall to allow other computers and *Ampache Mobile* to access the *Ampache* music server.  As a quick test: If *Ampache Mobile* is not working, but you turn off your firewall and *Ampache Mobile* works, then you need to configure your firewall.
 
-*PHP* : to do
+    * more information :
+       * [http://en.wikipedia.org/wiki/Firewall  Wikipedia]
 
-*Portforward.com* : to do
+*MySQL* : is a database server where information can be stored logically for faster retrieval and storage.
 
-*EVDO* : to do
+    You must have *MySQL* running or *Ampache* will not work. Whenever you add a catalog, Ampache reads metadata from the audio files stored on your hard drive and stores the meta data in the database. Likewise, when you access Ampache via it's web interface, it uses the database to retrieve the information it is displaying.
 
-*RPC* : to do (ACL type)
+    * more information :
+       * [http://en.wikipedia.org/wiki/Mysql Wikipedia]
+
+*PHP* : is a popular programming language used for web sites. 
+
+    Ampache is written in PHP, so you must have *PHP* running or *Ampache* will not work. 
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/Php  Wikipedia]
+
+*Portforward.com* : a web site with tons of "how do I configure my router to do XXX" sorted by manufacturer and service (look for the service "Apache" for your router). 
+
+    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. 
+
+    * more information :
+       * [http://Portforward.com  Home Page]
+
+*EVDO* : is the wireless standard for data communication that the Pre uses when Wifi is turned off.
+
+    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. Whenever your Pre is using EVDO, it has a public IP address on the Internet. It must go through your router to access the *Ampache* music server.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/EVDO Wikipedia]
+  
+
+*RPC* : (ACL type) A standard that allows remote computers to run programming commands on a remote computer.
+
+    This is the standard that *Ampache mobile* uses to run commands on *Ampache*. You must set up at least one RPC-XML ACL rule or *Ampache mobile* will not work.
+
 
 
  
