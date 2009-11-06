@@ -32,13 +32,6 @@ kinds of access to Ampache based on the remote computer's IP address.
        * [http://www.apache.org/ Apache Home Page]
        * [http://en.wikipedia.org/wiki/Apache_HTTP_Server Wikipedia]
 
-*EVDO* : is the wireless standard for data communication that the Pre uses when Wifi is turned off.
-
-    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. Whenever your Pre is using EVDO, it has a public IP address on the Internet. It must go through your router to access the *Ampache* music server.
-
-    * more information :
-       * [http://en.wikipedia.org/wiki/EVDO Wikipedia]
-  
 *DSL modem* : a network device used to connect a single computer or private network using a router to the Internet. Some DSL modem have built-in routers.
 
     You will only need to worry about this if you have a ISP that uses DSL and you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
@@ -63,6 +56,13 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://en.wikipedia.org/wiki/DynDNS  Wikipedia]
 
+*EVDO* : is the wireless standard for data communication that the Pre uses when Wifi is turned off.
+
+    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. Whenever your Pre is using EVDO, it has a public IP address on the Internet. It must go through your router to access the *Ampache* music server.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/EVDO Wikipedia]
+  
 *Firewall* : a program/service that prevents unauthorized access to the computer. A properly configured firewall will permit valid network traffic while blocking unauthorized traffic. 
 
     You may need to configure your firewall to allow other computers and *Ampache Mobile* to access the *Ampache* music server.  As a quick test: If *Ampache Mobile* is not working, but you turn off your firewall and *Ampache Mobile* works, then you need to configure your firewall.
