@@ -10,10 +10,6 @@ kinds of access to Ampache based on the remote computer's IP address.
        * [http://ampache.org/wiki/config:acl Ampache ACL page]
        * [http://en.wikipedia.org/wiki/Access_control_list Wikipedia]
 
-*Ampache Mobile* : an application written for the Palm Pre to access an *Ampache* music server.
-
-*Ampache Pre* : a similar application to *Ampache Mobile*.  
-
 *Ampache* : This is the free web-based music server that runs on a desktop/laptop computer using *Apache*, *PHP* and *MySQL*. 
 
     You will need to install Ampache on a computer to use Ampache mobile. Your music will need to be either stored on this computer or be accessible by this computer. This music server must be powered on or *Ampache Mobile* will not work.
@@ -23,6 +19,10 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://ampache.org/ Ampache Home Page]
        * [http://en.wikipedia.org/wiki/Ampache Wikipdedia] 
+
+*Ampache Mobile* : an application written for the Palm Pre to access an *Ampache* music server.
+
+*Ampache Pre* : a similar application to *Ampache Mobile*.  
 
 *Apache* : The web server program that Ampache runs on top of. Apache runs on a variety of different OS's such as Linux, Windows XP/Vista/7, OSX,...
 
