@@ -1,5 +1,4 @@
-#summary One-sentence summary of this page.
-Common terms and definitions used in Ampache setup.
+#summary Common terms and definitions used in Ampache setup.
 
 = Terms =
 *Ampache Mobile* : an application written for the Palm Pre to access an *Ampache* music server.
