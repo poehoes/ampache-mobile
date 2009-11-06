@@ -48,7 +48,7 @@ kinds of access to Ampache based on the remote computer's IP address.
        * [http://en.wikipedia.org/wiki/Port_forwarding Wikipedia]
        * [http://code.google.com/p/ampache-mobile/wiki/CommonIssues Wiki Page] See the section "Works on Wi-Fi but not EVDO" for more information on How to set up Port Forwarding.
 
-*Router* : a network device that acts like a gateway between the Internet and the home network. A router has both a *Public IP Address* and a *Private IP Address*.
+*Router* : a network device that acts like a gateway between the Internet and the home network. A router has both a Public IP Address and a Private IP Address.
 
     You will only need to setup your router if you want to use *Ampache mobile* when you are away from home and not on the same private network as your Ampache server. See port forwarding.
 
