@@ -139,7 +139,7 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *Streaming* : (ACL type) A standard that allows for the transfer of multimedia files to a remote device.
 
-    * This is the standard that *Ampache mobile* uses to get music over a network from *Ampache*. You must set up at least one Streaming ACL rule or *Ampache mobile* will not be able to play audio.
+    * This is the standard that *Ampache mobile* uses to get music over a network from the *Ampache* server. You must set up at least one Streaming ACL rule or *Ampache mobile* will not be able to play audio.
 
     * more information :
        * [http://ampache.org/wiki/config:acl Ampache Access Control Lists]
