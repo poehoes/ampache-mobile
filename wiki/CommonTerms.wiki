@@ -1,0 +1,45 @@
+#summary One-sentence summary of this page.
+Common terms and definitions used in Ampache setup.
+
+= Terms =
+
+*Ampache* : This is the free web-based music server that Ampache mobile connects to. It runs on *Apache* using *PHP* and *MySQL*. 
+    * more information :
+       * [http://ampache.org/ Ampache Home Page]
+       * [http://en.wikipedia.org/wiki/Ampache Wikipdedia] 
+
+*Apache* : The web server program that Ampache runs on top of. Apache runs on a variety of different OS's such as Linux, Windows XP/Vista/7, OSX,...
+    * more information :
+       * [http://www.apache.org/ Apache Home Page]
+       * [http://en.wikipedia.org/wiki/Apache_HTTP_Server Wikipedia]
+
+*XAMPP* :  A free "all-in-one" web server package containing *Apache*, *MySQL* and *PHP*. A lot of people find it easier to just install this single package, rather than install Apache, PHP & MySQL separately.  There are a variety of different installers for different OS's such as Linux, Windows XP/Vista/7, OSX,...
+    NOTE: you will still need to install Ampache as a separate package. 
+    * more information :
+       * [http://www.apachefriends.org/en/index.html XAMPP Home Page]
+       * [http://en.wikipedia.org/wiki/Xampp Wikipedia]
+
+*ACL* (Access Control Lists) :  these are "rules" that grant different
+kinds of access to Ampache based on the remote computer's IP address.
+
+*Port Forwarding* : allows computers on the Internet to connect to a specific computer on a private network. On most home networks, Amapche is not accessible from the Internet. One or more "port forwarding" rules must be created to forward request from the Internet to Ampache on the home network.
+    * more information :
+       * [http://en.wikipedia.org/wiki/Port_forwarding Wikipedia]
+       * [http://code.google.com/p/ampache-mobile/wiki/CommonIssues Wiki Page] See the section "Works on Wi-Fi but not EVDO" for more information on How to set up Port Forwarding.
+
+*Router* : a network device that acts like a gateway between the Internet and the home network. A router has both a *Public IP Address* and a *Private IP Address*.
+
+*Public IP address* : unique IP addresses that are accessible via the Internet. These address tend to be dynamic on most home networks and are assigned by the ISP. 
+
+*Private IP address* : Address like 192.168.x.x or 10.x.x.x or 172.16.x.x of machines on a private network usually assigned to computers by your router on you home network. This IP address are not directly accessible from the Internet. Each private IP address within a the same home network must be unique.
+    * more information :
+       * [http://en.wikipedia.org/wiki/Private_IP_address Wikipedia]
+
+*Static IP address* :
+
+*Dynamic IP address* :
+
+*DynDNS* :
+    * more information :
+       * [http://ampache.org/wiki/config:acl Ampache ACL page]
+       * [http://en.wikipedia.org/wiki/Access_control_list Wikipedia]
