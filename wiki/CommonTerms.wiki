@@ -2,19 +2,32 @@
 Common terms and definitions used in Ampache setup.
 
 = Terms =
+*Ampache Mobile* : an application written for the Palm Pre to access an *Ampache* music server.
 
-*Ampache* : This is the free web-based music server that Ampache mobile connects to. It runs on *Apache* using *PHP* and *MySQL*. 
+*Ampache Pre* : a similar application to *Ampache Mobile*.  
+
+*Ampache* : This is the free web-based music server that runs on a desktop/laptop computer using *Apache*, *PHP* and *MySQL*. 
+
+    You will need to install Ampache on a computer to use Ampache mobile. Your music will need to be either stored on this computer or be accessible by this computer. This music server must be on or *Ampache Mobile* will not work.
+
+    You must use version 3.5.1 or newer, or *Ampache Mobile* will not work
+
     * more information :
        * [http://ampache.org/ Ampache Home Page]
        * [http://en.wikipedia.org/wiki/Ampache Wikipdedia] 
 
 *Apache* : The web server program that Ampache runs on top of. Apache runs on a variety of different OS's such as Linux, Windows XP/Vista/7, OSX,...
+
+    You will need to install Apache on a computer to use Ampache mobile.
+
     * more information :
        * [http://www.apache.org/ Apache Home Page]
        * [http://en.wikipedia.org/wiki/Apache_HTTP_Server Wikipedia]
 
-*XAMPP* :  A free "all-in-one" web server package containing *Apache*, *MySQL* and *PHP*. A lot of people find it easier to just install this single package, rather than install Apache, PHP & MySQL separately.  There are a variety of different installers for different OS's such as Linux, Windows XP/Vista/7, OSX,...
-    NOTE: you will still need to install Ampache as a separate package. 
+*XAMPP* :  A free "all-in-one" web server package containing *Apache*, *MySQL* and *PHP*. There are a variety of different installers for different OS's such as Linux, Windows XP/Vista/7, OSX,...
+
+    A lot of people find it easier to just install this single package, rather than install Apache, PHP & MySQL separately.  Note that if you use this package, you will still need to install *Ampache*.
+    
     * more information :
        * [http://www.apachefriends.org/en/index.html XAMPP Home Page]
        * [http://en.wikipedia.org/wiki/Xampp Wikipedia]
@@ -22,24 +35,62 @@ Common terms and definitions used in Ampache setup.
 *ACL* (Access Control Lists) :  these are "rules" that grant different
 kinds of access to Ampache based on the remote computer's IP address.
 
+    You will need to set up 1 or more ACLs on Ampache to get *Ampache mobile* working
+
+    * more information :
+       * [http://ampache.org/wiki/config:acl Ampache ACL page]
+       * [http://en.wikipedia.org/wiki/Access_control_list Wikipedia]
+
 *Port Forwarding* : allows computers on the Internet to connect to a specific computer on a private network. On most home networks, Amapche is not accessible from the Internet. One or more "port forwarding" rules must be created to forward request from the Internet to Ampache on the home network.
+ 
+    You will only need to setup port forwarding if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
+
     * more information :
        * [http://en.wikipedia.org/wiki/Port_forwarding Wikipedia]
        * [http://code.google.com/p/ampache-mobile/wiki/CommonIssues Wiki Page] See the section "Works on Wi-Fi but not EVDO" for more information on How to set up Port Forwarding.
 
 *Router* : a network device that acts like a gateway between the Internet and the home network. A router has both a *Public IP Address* and a *Private IP Address*.
 
+    You will only need to setup your router if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/Router Wikipedia]
+
 *Public IP address* : unique IP addresses that are accessible via the Internet. These address tend to be dynamic on most home networks and are assigned by the ISP. 
 
+    You will only need to worry about public IP addresses if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/IPv4#Addressing Wikipedia]
+
 *Private IP address* : Address like 192.168.x.x or 10.x.x.x or 172.16.x.x of machines on a private network usually assigned to computers by your router on you home network. This IP address are not directly accessible from the Internet. Each private IP address within a the same home network must be unique.
+
+    You will need to have the private IP address of your *Ampache* server to configure *Ampache mobile*
+
     * more information :
        * [http://en.wikipedia.org/wiki/Private_IP_address Wikipedia]
 
-*Static IP address* :
+*Static IP address* : an IP address that does not change, even when the device is powered off and back on.
 
-*Dynamic IP address* :
-
-*DynDNS* :
+    You may need worry about static IP addresses if :
+        * the private ip address of your *Ampache* server keeps changing and you have to keep changing it in *Ampache Mobile*
+        * you want to set up port forwarding
+      
     * more information :
-       * [http://ampache.org/wiki/config:acl Ampache ACL page]
-       * [http://en.wikipedia.org/wiki/Access_control_list Wikipedia]
+       * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
+   
+*Dynamic IP address* : an IP address that changes from time to time. It is most often changed when a device is powered off and back on, but it can also be change base on a time cycle such as every 24 hours.
+    * more information :
+       * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
+
+*DSL modem* : a network device used to connect a single computer or private network using a router to the Internet. Some DSL modem have built-in routers.
+    * more information :
+       * [hhttp://en.wikipedia.org/wiki/DSL_modem  Wikipedia]
+
+
+*DynDNS* : a website offering a free service to provide a "static" names to routers/DSL modems/Cable modems that have dynamic IP addresses. 
+
+If the public IP address for your home private network keeps changing, it make life a lot easier to get one of these "static" names and use it with Ampache mobile.
+    * more information :
+       * [http://en.wikipedia.org/wiki/DynDNS  Wikipedia]
+ 
