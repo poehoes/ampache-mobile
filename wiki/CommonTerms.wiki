@@ -55,14 +55,14 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://en.wikipedia.org/wiki/Router Wikipedia]
 
-*Public IP address* : unique IP addresses that are accessible via the Internet. These address tend to be dynamic on most home networks and are assigned by the ISP. 
+*Public IP address* : unique IP addresses that are accessible via the Internet. These addresses tend to be dynamic on most home networks and are assigned by the ISP. 
 
     You will only need to worry about public IP addresses if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
 
     * more information :
        * [http://en.wikipedia.org/wiki/IPv4#Addressing Wikipedia]
 
-*Private IP address* : Address like 192.168.x.x or 10.x.x.x or 172.16.x.x of machines on a private network usually assigned to computers by your router on you home network. This IP address are not directly accessible from the Internet. Each private IP address within a the same home network must be unique.
+*Private IP address* : Address like 192.168.x.x or 10.x.x.x or 172.16.x.x of machines on a private network usually assigned to computers by your router on you home network. These IP addresses are not directly accessible from the Internet. Each private IP address within a the same home network must be unique.
 
     You will need to have the private IP address of your *Ampache* server to configure *Ampache mobile*
 
@@ -71,14 +71,14 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *Static IP address* : an IP address that does not change, even when the device is powered off and back on.
 
-    You may need worry about static IP addresses if :
-        * the private ip address of your *Ampache* server keeps changing and you have to keep changing it in *Ampache Mobile*
-        * you want to set up port forwarding
+   You may need worry about Dynamic IP addresses if :
+     * the private ip address of your *Ampache* server keeps changing and you have to keep changing it in *Ampache Mobile* 
+     * you want to set up port forwarding and your brand of router can only forward to static IP addresses.
       
     * more information :
        * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
    
-*Dynamic IP address* : an IP address that changes from time to time. It is most often changed when a device is powered off and back on, but it can also be change base on a time cycle such as every 24 hours.
+*Dynamic IP address* : an IP address that changes from time to time. It is most often changed when a device is powered off and back on, but it can also be changed base on a time cycle such as every 24 hours.
 
     You may need worry about Dynamic IP addresses if :
         * the private ip address of your *Ampache* server keeps changing and you have to keep changing it in *Ampache Mobile*
@@ -96,10 +96,18 @@ kinds of access to Ampache based on the remote computer's IP address.
        * [hhttp://en.wikipedia.org/wiki/DSL_modem  Wikipedia]
 
 
-*DynDNS* : a website offering a free service to provide a "static" names to routers/DSL modems/Cable modems that have dynamic IP addresses. 
+*DynDNS.com* : a website offering a free service to provide a "static" names to routers/DSL modems/Cable modems that have dynamic IP addresses. 
 
     You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. If the public IP address for your home private network keeps changing, it make life a lot easier to get one of these "static" names and use it with Ampache mobile.
 
     * more information :
        * [http://en.wikipedia.org/wiki/DynDNS  Wikipedia]
+
+*Firewall* : to do
+*MySQL* : to do
+*PHP* : to do
+*Portforward.com* : to do
+*EVDO* : to do
+*RPC* : to do (ACL type)
+
  
