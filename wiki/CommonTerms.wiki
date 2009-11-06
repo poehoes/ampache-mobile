@@ -133,6 +133,13 @@ kinds of access to Ampache based on the remote computer's IP address.
       
     * more information :
        * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
+
+*Wi-Fi* : a wireless network communication protocol.
+
+    Whenever you use *Ampache Mobile* on your home network, the Pre will have a private IP address. It will not have to go through your router to access Ampache since both the Ampache Server and your Pre will be on the same private network.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/Wifi Wikipedia]
    
 *XAMPP* :  A free "all-in-one" web server package containing *Apache*, *MySQL* and *PHP*. There are a variety of different installers for different OS's such as Linux, Windows XP/Vista/7, OSX,...
 
