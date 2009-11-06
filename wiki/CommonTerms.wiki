@@ -104,10 +104,16 @@ kinds of access to Ampache based on the remote computer's IP address.
        * [http://en.wikipedia.org/wiki/DynDNS  Wikipedia]
 
 *Firewall* : to do
+
 *MySQL* : to do
+
 *PHP* : to do
+
 *Portforward.com* : to do
+
 *EVDO* : to do
+
 *RPC* : to do (ACL type)
+
 
  
