@@ -1,6 +1,15 @@
 #summary Common terms and definitions used in Ampache setup.
 
 = Terms =
+*ACL* (Access Control Lists) :  these are "rules" that grant different
+kinds of access to Ampache based on the remote computer's IP address.
+
+    You will need to set up 1 or more ACLs on Ampache to get *Ampache mobile* working
+
+    * more information :
+       * [http://ampache.org/wiki/config:acl Ampache ACL page]
+       * [http://en.wikipedia.org/wiki/Access_control_list Wikipedia]
+
 *Ampache Mobile* : an application written for the Palm Pre to access an *Ampache* music server.
 
 *Ampache Pre* : a similar application to *Ampache Mobile*.  
@@ -23,61 +32,20 @@
        * [http://www.apache.org/ Apache Home Page]
        * [http://en.wikipedia.org/wiki/Apache_HTTP_Server Wikipedia]
 
-*XAMPP* :  A free "all-in-one" web server package containing *Apache*, *MySQL* and *PHP*. There are a variety of different installers for different OS's such as Linux, Windows XP/Vista/7, OSX,...
+*EVDO* : is the wireless standard for data communication that the Pre uses when Wifi is turned off.
 
-    A lot of people find it easier to just install this single package, rather than install Apache, PHP & MySQL separately.  Note that if you use this package, you will still need to install *Ampache*.
-    
-    * more information :
-       * [http://www.apachefriends.org/en/index.html XAMPP Home Page]
-       * [http://en.wikipedia.org/wiki/Xampp Wikipedia]
-
-*ACL* (Access Control Lists) :  these are "rules" that grant different
-kinds of access to Ampache based on the remote computer's IP address.
-
-    You will need to set up 1 or more ACLs on Ampache to get *Ampache mobile* working
+    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. Whenever your Pre is using EVDO, it has a public IP address on the Internet. It must go through your router to access the *Ampache* music server.
 
     * more information :
-       * [http://ampache.org/wiki/config:acl Ampache ACL page]
-       * [http://en.wikipedia.org/wiki/Access_control_list Wikipedia]
+       * [http://en.wikipedia.org/wiki/EVDO Wikipedia]
+  
+*DSL modem* : a network device used to connect a single computer or private network using a router to the Internet. Some DSL modem have built-in routers.
 
-*Port Forwarding* : allows computers on the Internet to connect to a specific computer on a private network. On most home networks, Amapche is not accessible from the Internet. One or more "port forwarding" rules must be created to forward request from the Internet to Ampache on the home network.
- 
-    You will only need to setup port forwarding if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
-
-    * more information :
-       * [http://en.wikipedia.org/wiki/Port_forwarding Wikipedia]
-       * [http://code.google.com/p/ampache-mobile/wiki/CommonIssues Wiki Page] See the section "Works on Wi-Fi but not EVDO" for more information on How to set up Port Forwarding.
-
-*Router* : a network device that acts like a gateway between the Internet and the home network. A router has both a Public IP Address and a Private IP Address.
-
-    You will only need to setup your router if you want to use *Ampache mobile* when you are away from home and not on the same private network as your Ampache server. See port forwarding.
+    You will only need to worry about this if you have a ISP that uses DSL and you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
 
     * more information :
-       * [http://en.wikipedia.org/wiki/Router Wikipedia]
+       * [hhttp://en.wikipedia.org/wiki/DSL_modem  Wikipedia]
 
-*Public IP address* : unique IP addresses that are accessible via the Internet. These addresses tend to be dynamic on most home networks and are assigned by the ISP. 
-
-    You will only need to worry about public IP addresses if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
-
-    * more information :
-       * [http://en.wikipedia.org/wiki/IPv4#Addressing Wikipedia]
-
-*Private IP address* : Address like 192.168.x.x or 10.x.x.x or 172.16.x.x of machines on a private network usually assigned to computers by your router on you home network. These IP addresses are not directly accessible from the Internet. Each private IP address within a the same home network must be unique.
-
-    You will need to have the private IP address of your *Ampache* server to configure *Ampache mobile*
-
-    * more information :
-       * [http://en.wikipedia.org/wiki/Private_IP_address Wikipedia]
-
-*Static IP address* : an IP address that does not change, even when the device is powered off and back on.
-
-   You may need worry about Dynamic IP addresses if :
-     * the private ip address of your *Ampache* server keeps changing and you have to keep changing it in *Ampache Mobile* 
-     * you want to set up port forwarding and your brand of router can only forward to static IP addresses.
-      
-    * more information :
-       * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
-   
 *Dynamic IP address* : an IP address that changes from time to time. It is most often changed when a device is powered off and back on, but it can also be changed base on a time cycle such as every 24 hours.
 
     You may need worry about Dynamic IP addresses if :
@@ -87,14 +55,6 @@ kinds of access to Ampache based on the remote computer's IP address.
 
     * more information :
        * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
-
-*DSL modem* : a network device used to connect a single computer or private network using a router to the Internet. Some DSL modem have built-in routers.
-
-    You will only need to worry about this if you have a ISP that uses DSL and you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
-
-    * more information :
-       * [hhttp://en.wikipedia.org/wiki/DSL_modem  Wikipedia]
-
 
 *DynDNS.com* : a website offering a free service to provide a "static" names to routers/DSL modems/Cable modems that have dynamic IP addresses. 
 
@@ -124,6 +84,14 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://en.wikipedia.org/wiki/Php  Wikipedia]
 
+*Port Forwarding* : allows computers on the Internet to connect to a specific computer on a private network. On most home networks, Amapche is not accessible from the Internet. One or more "port forwarding" rules must be created to forward request from the Internet to Ampache on the home network.
+ 
+    You will only need to setup port forwarding if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/Port_forwarding Wikipedia]
+       * [http://code.google.com/p/ampache-mobile/wiki/CommonIssues Wiki Page] See the section "Works on Wi-Fi but not EVDO" for more information on How to set up Port Forwarding.
+
 *Portforward.com* : a web site with tons of "how do I configure my router to do XXX" sorted by manufacturer and service (look for the service "Apache" for your router). 
 
     You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. 
@@ -131,18 +99,47 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://Portforward.com  Home Page]
 
-*EVDO* : is the wireless standard for data communication that the Pre uses when Wifi is turned off.
+*Private IP address* : Address like 192.168.x.x or 10.x.x.x or 172.16.x.x of machines on a private network usually assigned to computers by your router on you home network. These IP addresses are not directly accessible from the Internet. Each private IP address within a the same home network must be unique.
 
-    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. Whenever your Pre is using EVDO, it has a public IP address on the Internet. It must go through your router to access the *Ampache* music server.
+    You will need to have the private IP address of your *Ampache* server to configure *Ampache mobile*
 
     * more information :
-       * [http://en.wikipedia.org/wiki/EVDO Wikipedia]
-  
+       * [http://en.wikipedia.org/wiki/Private_IP_address Wikipedia]
 
-*RPC* : (ACL type) A standard that allows remote computers to run programming commands on a remote computer.
+*Public IP address* : unique IP addresses that are accessible via the Internet. These addresses tend to be dynamic on most home networks and are assigned by the ISP. 
+
+    You will only need to worry about public IP addresses if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/IPv4#Addressing Wikipedia]
+
+*Router* : a network device that acts like a gateway between the Internet and the home network. A router has both a Public IP Address and a Private IP Address.
+
+    You will only need to setup your router if you want to use *Ampache mobile* when you are away from home and not on the same private network as your Ampache server. See port forwarding.
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/Router Wikipedia]
+
+*RPC* : (ACL type) A standard that allows computers to execute programming commands on a remote computer.
 
     This is the standard that *Ampache mobile* uses to run commands on *Ampache*. You must set up at least one RPC-XML ACL rule or *Ampache mobile* will not work.
 
 
+*Static IP address* : an IP address that does not change, even when the device is powered off and back on.
+
+   You may need worry about Dynamic IP addresses if :
+     * the private ip address of your *Ampache* server keeps changing and you have to keep changing it in *Ampache Mobile* 
+     * you want to set up port forwarding and your brand of router can only forward to static IP addresses.
+      
+    * more information :
+       * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
+   
+*XAMPP* :  A free "all-in-one" web server package containing *Apache*, *MySQL* and *PHP*. There are a variety of different installers for different OS's such as Linux, Windows XP/Vista/7, OSX,...
+
+    A lot of people find it easier to just install this single package, rather than install Apache, PHP & MySQL separately.  Note that if you use this package, you will still need to install *Ampache*.
+    
+    * more information :
+       * [http://www.apachefriends.org/en/index.html XAMPP Home Page]
+       * [http://en.wikipedia.org/wiki/Xampp Wikipedia]
 
  
