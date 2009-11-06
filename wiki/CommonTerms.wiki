@@ -26,7 +26,7 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *Apache* : The web server program that Ampache runs on top of. Apache runs on a variety of different OS's such as Linux, Windows XP/Vista/7, OSX,... Take a look at XAMPP before you start to install from source.
 
-    You will need to install Apache on a computer to use *Ampache mobile*.
+    You will need to install Apache on a computer to use *Ampache mobile*. See XAMPP for an easy way to install Apache.
 
     * more information :
        * [http://www.apache.org/ Apache Home Page]
@@ -72,14 +72,14 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *MySQL* : is a database server where information can be stored logically for faster retrieval and storage.
 
-    You must have *MySQL* running or *Ampache* will not work. Whenever you add a catalog, Ampache reads metadata from the audio files stored on your hard drive and stores the meta data in the database. Likewise, when you access Ampache via it's web interface, it uses the database to retrieve the information it is displaying. Take a look at XAMPP before you start to install from source.
+    You must have *MySQL* running or *Ampache* will not work. Whenever you add a catalog, Ampache reads metadata from the audio files stored on your hard drive and stores the meta data in the database. Likewise, when you access Ampache via it's web interface, it uses the database to retrieve the information it is displaying. See XAMPP for an easy way to install MySQL.
 
     * more information :
        * [http://en.wikipedia.org/wiki/Mysql Wikipedia]
 
 *PHP* : is a popular programming language used for web sites. 
 
-    Ampache is written in PHP, so you must have *PHP* running or *Ampache* will not work. 
+    Ampache is written in PHP, so you must have *PHP* running or *Ampache* will not work. See XAMPP for an easy way to install PHP. 
 
     * more information :
        * [http://en.wikipedia.org/wiki/Php  Wikipedia]
