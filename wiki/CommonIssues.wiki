@@ -18,7 +18,7 @@
   * Once you determine your internal address and external IP address you need to setup port forwarding on your router.
     * Your goal is to forward your External IP address to your Internal Ampache Server address. Imagine that your router is a large building. 
         * The building has a unique public address that can be seen by everyone on the outside world (i.e. external IP address).
-        * The building has 100's of doors (i.e. Ports).
+        * The building has 100's of outside doors (i.e. Ports).
         * Each outside door has a unique number (i.e. Port number). 
         * Almost all outside doors are always locked.
         * The building has one or more suites inside (i.e. private network address IP).
