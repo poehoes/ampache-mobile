@@ -16,12 +16,20 @@
     * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
     * To find your external address try this link [http://www.whatismyip.com/]
   * Once you determine your internal address and external IP address you need to setup port forwarding on your router.
-    * Your goal is to forward your External IP address to your Internal Ampache Server address. Imagine that your router is a large building with 100's of doors. 
-        * Each door has a unique "port number". 
-        * Each door opens onto a hallway that goes to an unique suite with the same "port number". (i.e. Suite 80)
-        * The Ampache server by default is occupying suite 80, office 192.168.x.x. (where 192.168.x.x is the private IP address of the Ampache server)
+    * Your goal is to forward your External IP address to your Internal Ampache Server address. Imagine that your router is a large building. 
+        * The building has a unique public address that can be seen by everyone on the outside world (i.e. external IP address).
+        * The building has 100's of doors (i.e. Ports).
+        * Each outside door has a unique number (i.e. Port number). 
+        * Almost all outside doors are always locked.
+        * The building has one or more suites inside (i.e. private network address IP).
+        * By default, the suites cannot be accessed from the outside: there are no hallways going from the outside doors to the suites.
+        * All the suites are connected by an internal hallway (i.e. your private network) 
+        * Each suite has 100's of offices with each office having an individual door (i.e ports).
+        * The doors for each office are usually locked (by the firewall on your music server)
+        * The Ampache server by default is occupying suite office 192.168.x.x, office 80. (where 192.168.x.x is the private IP address of the Ampache server, and port 80 by default is used for all HTML request)
+        * When you set up a port forwarding rule, you are basically unlocking an outside door so everyone can come in whenever they like and building a hallway in the building that goes directly to one suite in the building. As an example: unlock door 80 and build a hallway that goes to suite 192.168.x.x, office 80 
         * Some ISPs block door 80...they install a lock on the outside of the door and you cannot unlock it 
-        * To get around this, you open up another door...as an example door 8080. At the same time you build a hallway in the building so anyone coming in on door 8080 is automatically directed to suite 80, office 192.168.x.x .
+            * To get around this, you open up another door...as an example door 8080. At the same time you build a hallway in the building so anyone coming in on door 8080 is automatically directed to suite 192.168.x.x, office 80.
     
     * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most webservers default to running on port 80.  But you can choose any port you like as long as your configure your web server as such. 
   * Could be an ACL issue. Ampache uses Access Control Lists to restrict access to the music server (see http://ampache.org/wiki/config:acl). You will need to create a an ACL rule for EVDO access
