@@ -24,7 +24,7 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *Ampache Pre* : a similar application to *Ampache Mobile*.  
 
-*Apache* : The web server program that Ampache runs on top of. Apache runs on a variety of different OS's such as Linux, Windows XP/Vista/7, OSX,... Take a look at XAMPP before you start to install from source.
+*Apache* : The web server program that Ampache runs on top of. Apache runs on a variety of different OS's such as Linux, Windows XP/Vista/7, OSX,... 
 
     You will need to install Apache on a computer to use *Ampache mobile*. See XAMPP for an easy way to install Apache.
 
