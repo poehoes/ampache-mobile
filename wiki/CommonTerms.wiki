@@ -84,7 +84,7 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://en.wikipedia.org/wiki/Php  Wikipedia]
 
-*Port Forwarding* : allows computers on the Internet to connect to a specific computer on a private network. On most home networks, Amapche is not accessible from the Internet. One or more "port forwarding" rules must be created to forward request from the Internet to Ampache on the home network. Take a look at XAMPP before you start to install from source.
+*Port Forwarding* : allows computers on the Internet to connect to a specific computer on a private network. On most home networks, Amapche is not accessible from the Internet. One or more "port forwarding" rules must be created to forward request from the Internet to Ampache on the home network.
  
     You will only need to setup port forwarding if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
 
@@ -92,16 +92,16 @@ kinds of access to Ampache based on the remote computer's IP address.
        * [http://en.wikipedia.org/wiki/Port_forwarding Wikipedia]
        * [http://code.google.com/p/ampache-mobile/wiki/CommonIssues Wiki Page] See the section "Works on Wi-Fi but not EVDO" for more information on How to set up Port Forwarding.
 
-*Portforward.com* : a web site with tons of "how do I configure my router to do XXX" sorted by manufacturer and service (look for the service "Apache" for your router). 
+*Portforward.com* : a web site with tons of "how do I configure my router to do XXX" sorted by manufacturer, model and service. 
 
-    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. 
+    You will only need to worry about this if you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server. Once you choose the manufacturer and the model, look for port forward information under "Apache".
 
     * more information :
        * [http://Portforward.com  Home Page]
 
 *Private IP address* : Address like 192.168.x.x or 10.x.x.x or 172.16.x.x of machines on a private network usually assigned to computers by your router on you home network. These IP addresses are not directly accessible from the Internet. Each private IP address within a the same home network must be unique.
 
-    You will need to have the private IP address of your *Ampache* server to configure *Ampache mobile*
+    You will need to have the private IP address of your *Ampache* server to configure *Ampache mobile* to work when your Pre is in Wi-Fi mode. You will also need it if you are setting up port forwarding rules on your router.
 
     * more information :
        * [http://en.wikipedia.org/wiki/Private_IP_address Wikipedia]
