@@ -130,12 +130,13 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *Static IP address* : an IP address that does not change, even when the device is powered off and back on.
 
-   You may need worry about Dynamic IP addresses if :
+   You may need worry about a Static IP addresses if :
      * the private ip address of your *Ampache* server keeps changing and you have to keep changing it in *Ampache Mobile* 
-     * you want to set up port forwarding and your brand of router can only forward to static IP addresses.
+     * you want to set up port forwarding and your brand of router can only forward to computers in your private network that have a static IP address.
       
     * more information :
        * [http://en.wikipedia.org/wiki/Static_IP#Static_and_dynamic_IP_addresses  Wikipedia]
+       * [http://www.portforward.com/networking/staticip.htm How To setup a Static IP Address]
 
 *Streaming* : (ACL type) A standard that allows for the transfer of multimedia files to a remote device.
 
