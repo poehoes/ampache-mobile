@@ -37,7 +37,7 @@ kinds of access to Ampache based on the remote computer's IP address.
     You will only need to worry about this if you have a ISP that uses DSL and you will want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
 
     * more information :
-       * [hhttp://en.wikipedia.org/wiki/DSL_modem  Wikipedia]
+       * [http://en.wikipedia.org/wiki/DSL_modem  Wikipedia]
 
 *Dynamic IP address* : an IP address that changes from time to time. It is most often changed when a device is powered off and back on, but it can also be changed base on a time cycle such as every 24 hours.
 
