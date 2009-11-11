@@ -14,7 +14,7 @@
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 var DEFAULT_COLOR = "#384438";
-var DEFAULT_IMAGE = "images/backgrounds/solids/background1.png";
+var DEFAULT_IMAGE = "images/backgrounds/solids/background1.jpg";
 var DEFAULT_FETCH_SIZE = 300;
 var DEFAULT_OVERLAY = "images/backgrounds/overlay/overlay1.png";
 var DEFAULT_ROTATION = false;

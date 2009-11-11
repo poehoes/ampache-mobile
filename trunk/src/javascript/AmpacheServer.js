@@ -35,6 +35,7 @@ AmpacheServer = Class.create({
     playlists: "",
     videos: "",
     XMLFormattingIssue: "This happens due to songs with invalid characters information. <br><br> Look in the Ampache Web Interface for characters like  <img src='images/illegal_chars.png'/>.",
+    ErrorEmptyResponse: "Response from server contained no information.  This usually happens when you don't have a solid connection to the server.  Please try again.",
 
     initialize: function(url, username, password) {
         Mojo.Log.info("Enter AmpacheServer.prototype.initialize", url, username, password);
@@ -121,10 +122,10 @@ AmpacheServer = Class.create({
             method: 'get',
             evalJSON: false,
             //to enforce parsing JSON if there is JSON response
-            onCreate: this.onCreate,
-            onLoading: this.onLoading,
-            onLoaded: this.onLoaded,
-            onComplete: this.onComplete,
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
             onSuccess: this._pingCallback.bind(this),
             onFailure: this._pingCallback.bind(this)
         });
@@ -171,10 +172,10 @@ AmpacheServer = Class.create({
             method: 'get',
             evalJSON: false,
             //to enf rce parsing JSON if there is JSON response
-            onCreate: this.onCreate,
-            onLoading: this.onLoading,
-            onLoaded: this.onLoaded,
-            onComplete: this.onComplete,
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
             onSuccess: this.ConnectCallbackSuccess.bind(this),
             onFailure: this.ConnectCallbackFailure.bind(this)
         });
@@ -235,6 +236,10 @@ AmpacheServer = Class.create({
     CleanupIllegalXML: function(transport) {
         this.ProblemFinder(transport.responseText); //Alert Users to Issue
         text = transport.responseText;
+        if(text==="")
+        {
+            return transport;
+        }
         text.replace(/[^\x0009\x000A\x000D\x0020-\xD7FF\xE000-\xFFFD]/g, ' ');
         transport.responseXML = parser.parseFromString(text, "text/xml");
         return transport;
@@ -247,6 +252,13 @@ AmpacheServer = Class.create({
 
     ProblemFinder: function(xmlResponse, type) {
         try {
+            if(xmlResponse=="")
+            {
+                this.ShowErrorAlert(this.ErrorEmptyResponse);
+                return;
+            }
+            
+            
             foundProblem = false;
 
             var footer = "</" + type + ">";
@@ -351,12 +363,12 @@ AmpacheServer = Class.create({
                 method: 'get',
                 evalJSON: false,
                 //to enforce parsing JSON if there is JSON response
-                onCreate: this.onCreate,
-                onLoading: this.onLoading,
-                onLoaded: this.onLoaded,
-                onComplete: this.onComplete,
+                //onCreate: this.onCreate,
+                //onLoading: this.onLoading,
+                //onLoaded: this.onLoaded,
+                //onComplete: this.onComplete,
                 onSuccess: this.GotArtistsCallback.bind(this),
-                onFailure: this.GotArtistsCallback.bind(this)
+                onFailure: this.GetArtistsFailed.bind(this)
             });
         } catch(err) {
             Mojo.Controller.errorDialog("Get " + type + " failed: " + err.message);
@@ -369,10 +381,15 @@ AmpacheServer = Class.create({
             this.ArtistRequest.abort();
         }
     },
+    
+    GetArtistsFailed: function(transport) {
+        this.ShowErrorAlert("Get Artists Failed");
+    },
+
 
     GotArtistsCallback: function(transport) {
         Mojo.Log.info(transport.responseText);
-        var ArtistList = null;
+        var ArtistList = "error";
 
         if (!transport.responseXML) {
             transport = this.CleanupIllegalXML(transport);
@@ -423,6 +440,7 @@ AmpacheServer = Class.create({
         } else {
             this.ProblemFinder(transport.responseText, "artist");
             //Mojo.Controller.errorDialog("Get Artists failed: " + this.XMLFormattingIssue);
+            
         }
 
         this.GetArtistsCallback(ArtistList);
@@ -470,14 +488,19 @@ AmpacheServer = Class.create({
             method: 'get',
             evalJSON: false,
             //to enforce parsing JSON if there is JSON response
-            onCreate: this.onCreate,
-            onLoading: this.onLoading,
-            onLoaded: this.onLoaded,
-            onComplete: this.onComplete,
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
             onSuccess: this.GotAlbumsCallback.bind(this),
-            onFailure: this.GotAlbumsCallback.bind(this)
+            onFailure: this.GetAlbumsFailed.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetAlbums");
+    },
+
+
+    GetAlbumsFailed: function(transport) {
+        this.ShowErrorAlert("Get Albums Failed");
     },
 
     GetAlbumsCancel: function() {
@@ -493,7 +516,7 @@ AmpacheServer = Class.create({
             transport = this.CleanupIllegalXML(transport);
         }
 
-        var AlbumList = null;
+        var AlbumList = "error";
         if (transport.responseXML) {
             var xmlDoc = transport.responseXML;
             AlbumList = [];
@@ -530,10 +553,9 @@ AmpacheServer = Class.create({
             this.ProblemFinder(transport.responseText, "album");
             //Mojo.Controller.errorDialog("Get Albums failed: " + this.XMLFormattingIssue);
         }
-        Mojo.Log.info("Processed " + AlbumList.length + " albums");
-        if (AlbumList) {
-            this.GetAlbumsCallback(AlbumList);
-        }
+        
+        this.GetAlbumsCallback(AlbumList);
+        
         this.GetAlbumsRequest = null;
         Mojo.Log.info("<-- AmpacheServer.prototype.GotAlbumsCallback");
     },
@@ -587,14 +609,18 @@ AmpacheServer = Class.create({
             method: 'get',
             evalJSON: false,
             //to enforce parsing JSON if there is JSON response
-            onCreate: this.onCreate,
-            onLoading: this.onLoading,
-            onLoaded: this.onLoaded,
-            onComplete: this.onComplete,
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
             onSuccess: this.GotSongsCallbackInternal.bind(this),
-            onFailure: this.GotSongsCallbackInternal.bind(this)
+            onFailure: this.GetSongsFailed.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetSongs");
+    },
+
+    GetSongsFailed: function(transport) {
+        this.ShowErrorAlert("Get Songs Failed");
     },
 
     GetSongsCancel: function() {
@@ -606,7 +632,7 @@ AmpacheServer = Class.create({
     GotSongsCallbackInternal: function(transport) {
         Mojo.Log.info("--> AmpacheServer.prototype.GotSongsCallbackInternal");
         Mojo.Log.info(transport.responseText);
-        var SongsList = null;
+        var SongsList = "error"; //Preinitialized to error will be made into an array if we get data
 
         if (!transport.responseXML) {
             transport = this.CleanupIllegalXML(transport);
@@ -736,14 +762,18 @@ AmpacheServer = Class.create({
             method: 'get',
             evalJSON: false,
             //to enforce parsing JSON if there is JSON response
-            onCreate: this.onCreate,
-            onLoading: this.onLoading,
-            onLoaded: this.onLoaded,
-            onComplete: this.onComplete,
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
             onSuccess: this.GotPlaylistsCallback.bind(this),
-            onFailure: this.GotPlaylistsCallback.bind(this)
+            onFailure: this.GetPlaylistsFailed.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
+    },
+
+    GetPlaylistsFailed: function(transport) {
+        this.ShowErrorAlert("Get Playlists Failed");
     },
 
     GetPlaylistsCancel: function() {
@@ -754,7 +784,7 @@ AmpacheServer = Class.create({
 
     GotPlaylistsCallback: function(transport) {
         Mojo.Log.info(transport.responseText);
-        var PlaylistsList = null;
+        var PlaylistsList = "error";
 
         if (!transport.responseXML) {
             transport = this.CleanupIllegalXML(transport);
@@ -803,14 +833,18 @@ AmpacheServer = Class.create({
             method: 'get',
             evalJSON: false,
             //to enforce parsing JSON if there is JSON response
-            onCreate: this.onCreate,
-            onLoading: this.onLoading,
-            onLoaded: this.onLoaded,
-            onComplete: this.onComplete,
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
             onSuccess: this.GotTagsCallback.bind(this),
-            onFailure: this.GotTagsCallback.bind(this)
+            onFailure: this.GetGenresFailed.bind(this)
         });
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
+    },
+
+    GetGenresFailed: function(transport) {
+        this.ShowErrorAlert("Get Genres Failed");
     },
 
     GetTagsCancel: function() {
@@ -821,7 +855,7 @@ AmpacheServer = Class.create({
 
     GotTagsCallback: function(transport) {
         //Mojo.Log.info(transport.responseText);
-        var TagsList = null;
+        var TagsList = "error";
         /*
          <root>
          <tag id="2481">
@@ -881,10 +915,10 @@ AmpacheServer = Class.create({
             method: 'get',
             evalJSON: false,
             //to enforce parsing JSON if there is JSON response
-            onCreate: this.onCreate,
-            onLoading: this.onLoading,
-            onLoaded: this.onLoaded,
-            onComplete: this.onComplete,
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
             onSuccess: this.TestConnectionCallbackSuccess.bind(this),
             onFailure: this.TestConnectionCallbackSuccess.bind(this)
         });
@@ -898,6 +932,7 @@ AmpacheServer = Class.create({
         if (transport.responseText === "") {
             returnValue = "Error: Empty response";
         }
+        
         if (transport.responseXML) {
             Mojo.Log.info("responseXML exits");
             var response = transport.responseXML;
@@ -916,6 +951,10 @@ AmpacheServer = Class.create({
                 }
             }
         }
+        else if(transport.responseText !== "") {
+            returnValue = transport.responseText.escapeHTML();
+        }
+       
 
         Mojo.Log.info("Calling callback function this.TestConnectionCallback:");
         this.TestConnectionCallback(returnValue, this.TestConnectCallbackContext);
