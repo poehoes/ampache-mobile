@@ -105,6 +105,8 @@ ItemsHelper = Class.create({
         Mojo.Event.stopListening(this.filterList, Mojo.Event.filterImmediate, this.filterChange);
     },
 
+    
+
     GotoLoadingMode: function() {
         this.waiting = false;
         this.waitingAnimation.stop();
@@ -127,65 +129,74 @@ ItemsHelper = Class.create({
     },
 
     GotItems: function(_ItemsList) {
-        if (this.percentDone === 0) {
-            this.GotoLoadingMode();
-            this.scrim.hide();
-        }
-
-        //this.TurnOffSpinner();
-
-        if (this.PopulateSort) {
-            this.PopulateSort(_ItemsList);
-        }
-
-        for (var i = 0; i < _ItemsList.length; i++) {
-
-            var newItem = _ItemsList[i];
-            this.ItemsList.push(newItem);
-
-        }
-
-        //Update Progress
-        this.percentDone = this.ItemsList.length / this.ExpectedItems;
-        //var progress = this.ItemsList.length / this.ExpectedItems;
-        //this.progressModel.value = progress;
-        //this.controller.modelChanged(this.progressModel);
-
-        this.loadProgress(this.percentDone * 100);
-
-        //Sorting Here
-
-        if (this.SortFunction) {
-
-            this.ItemsList.sort(this.SortFunction);
-        }
-
-        //Add to list   
-
-        if (!this.IsFiltered()) {
-            this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
-        } else //list currently has a filter
+        if(_ItemsList === "error")
         {
-            var matches = this.GetAllMatches(this.filterString);
-            this.filterList.mojo.noticeUpdatedItems(0, matches);
-            this.filterList.mojo.setLength(matches.length);
-            this.filterList.mojo.setCount(matches.length);
+            this.CancelRequest();
+            this.GotoRefreshMode();
         }
-
-        if ((this.ItemsList.length >= this.ExpectedItems) || (_ItemsList.length !== this.fetchLimit) || this.IndexBusted) {
-            this.percentDone = 1;
-            this.controller.setMenuVisible(Mojo.Menu.commandMenu, false);
-            this.LoadingFinished = true;
+        else
+        {
+        
+        
+            if (this.percentDone === 0) {
+                this.GotoLoadingMode();
+                this.scrim.hide();
+            }
+    
+            //this.TurnOffSpinner();
+    
+            if (this.PopulateSort) {
+                this.PopulateSort(_ItemsList);
+            }
+    
+            for (var i = 0; i < _ItemsList.length; i++) {
+    
+                var newItem = _ItemsList[i];
+                this.ItemsList.push(newItem);
+    
+            }
+    
+            //Update Progress
+            this.percentDone = this.ItemsList.length / this.ExpectedItems;
+            //var progress = this.ItemsList.length / this.ExpectedItems;
+            //this.progressModel.value = progress;
+            //this.controller.modelChanged(this.progressModel);
+    
+            this.loadProgress(this.percentDone * 100);
+    
+            //Sorting Here
+    
+            if (this.SortFunction) {
+    
+                this.ItemsList.sort(this.SortFunction);
+            }
+    
+            //Add to list   
+    
+            if (!this.IsFiltered()) {
+                this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
+            } else //list currently has a filter
+            {
+                var matches = this.GetAllMatches(this.filterString);
+                this.filterList.mojo.noticeUpdatedItems(0, matches);
+                this.filterList.mojo.setLength(matches.length);
+                this.filterList.mojo.setCount(matches.length);
+            }
+    
+            if ((this.ItemsList.length >= this.ExpectedItems) || (_ItemsList.length !== this.fetchLimit) || this.IndexBusted) {
+                this.percentDone = 1;
+                this.controller.setMenuVisible(Mojo.Menu.commandMenu, false);
+                this.LoadingFinished = true;
+            }
+    
+            else {
+                this.offset = this.ItemsList.length;
+                this.GetItems();
+            }
+    
+            Mojo.Log.info("Progress: " + progress);
+            Mojo.Log.info("<-- FinishedGettings");
         }
-
-        else {
-            this.offset = this.ItemsList.length;
-            this.GetItems();
-        }
-
-        Mojo.Log.info("Progress: " + progress);
-        Mojo.Log.info("<-- FinishedGettings");
-
     },
 
     IsFiltered: function() {
@@ -257,9 +268,20 @@ ItemsHelper = Class.create({
             }
             break;
         case "finish-loading":
-            this.GotoLoadingMode();
-            this.currLoadProgressImage = 0;
-            this.loadProgress(this.percentDone * 100);
+            
+            if(this.percentDone===0)
+            {
+                this.waitingAnimation.start();
+                this.cmdMenuModel.items.pop(this.reloadModel);
+                this.cmdMenuModel.items.push(this.waitModel);
+                this.controller.modelChanged(this.cmdMenuModel);
+            }
+            else
+            {
+                this.GotoLoadingMode();
+                this.currLoadProgressImage = 0;
+                this.loadProgress(this.percentDone * 100);
+            }
             this.RestartRequest();
             break;
         }

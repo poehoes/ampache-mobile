@@ -230,6 +230,7 @@ AccountAssistant = Class.create({
         window.clearInterval(this.timeoutInterval);
         var html = false;
         var DisplayMessage = connectResult;
+        html = true;
         if (connectResult.toLowerCase() === "acl error") {
             DisplayMessage = "Error: " + connectResult + "<br><br>" + AmpacheMobile.AclErrorHelp;
             html = true;
