@@ -2,5 +2,6 @@
 
  * [MainPage Home]
   * [AmpacheServerSetup Ampache Setup] 
+   * [CommonTerms Common Terms]  
    * [WindowsAmpacheServer Windows Setup]
    * [CommonIssues Common Issues]
