@@ -151,7 +151,7 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *Wi-Fi* : a wireless network communication protocol.
 
-    Whenever you use *Ampache Mobile* on your home network, the Pre will have a private IP address. It will not have to go through your router to access Ampache since both the Ampache Server and your Pre will be on the same private network. It will have to go through the firewall on the Ampache Server.
+    Whenever you use *Ampache Mobile* on your Wi-Fi home network, the Pre will have a private IP address. It will not have to go through your router to access Ampache since both the Ampache Server and your Pre will be on the same private network, but it will have to go through the firewall on the Ampache Server.
 
     * more information :
        * [http://en.wikipedia.org/wiki/Wifi Wikipedia]
