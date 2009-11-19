@@ -212,7 +212,7 @@ SongsAssistant = Class.create({
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, offset, limit, this.Search, true);
         } else if (this.Type === "genre") {
-            this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
+            this.itemsHelper.ExpectedItems = this.Expected_items;
             AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, this.Genre_id, offset, limit, this.Search, true);
         }
 

@@ -178,11 +178,11 @@ AudioPlayer = Class.create({
     },
 
     btEventsFailure: function(event) {
-        Mojo.Controller.errorDialog("Bluetooth Error");
+        //Mojo.Controller.errorDialog("Bluetooth Error");
     },
 
     handleSingleButtonFailure: function(event) {
-        Mojo.Controller.errorDialog("Headset Error");
+        //Mojo.Controller.errorDialog("Headset Error");
     },
 
     handleSingleButton: function(event) {
