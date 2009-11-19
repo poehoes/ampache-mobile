@@ -131,14 +131,38 @@ AmpacheServer = Class.create({
         });
         Mojo.Log.info("<-- AmpacheServer.prototype._ping");
     },
-
+    
+    warned:false,
     _pingCallback: function(transport) {
         Mojo.Log.info("--> AmpacheServer.prototype._pingCallback");
         Mojo.Log.info(transport.responseText);
-        var ping = new PingModel(transport.responseXML);
-        this.StopPing();
-        this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining);
-        Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
+        
+        try
+        {
+            var ping = new PingModel(transport.responseXML);
+            if((ping.Server==="Uknown") && !this.warned)
+            {
+                this.ShowErrorAlert("Ampache Mobile will work best if you update to 3.5.2 from ampache.org");
+                this.warned = true;
+            }
+            this.StopPing();
+            this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining);
+            Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
+        }
+        catch(ex)
+        {
+            if(!this.warned)
+            {
+                this.warned = true;
+                this.ShowErrorAlert("Ping Error:<br>" + this.EscapeXML(transport.responseText));
+            }
+            this.StopPing();
+            this.pingTimer = setInterval(this._ping.bind(this), DEFAULT_PING_TIME);
+            Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
+        }
+        
+        
+
     },
 
     StopPing: function() {
@@ -1159,6 +1183,7 @@ PingModel = Class.create({
      <root>
      <session_expire><![CDATA[Sun, 20 Sep 2009 22:29:27 -0500]]></session_expire>
      <version><![CDATA[350001]]></version>
+     <server></server>
      </root>
      */
     initialize: function(PingXML) {
@@ -1170,10 +1195,22 @@ PingModel = Class.create({
         this.TimeRemaining = this.UTC - CurrentUTC;
         this.TimeRemaining *= 0.45; //So it will ping twice during the session time
         this.ApiVersion = pingResponse.getElementsByTagName("version")[0].firstChild.data;
+        if(pingResponse.getElementsByTagName("server")[0])
+        {
+            this.Server = pingResponse.getElementsByTagName("server")[0].firstChild.data;
+        }
+        else
+        {
+            this.Server= "Unknown";
+        }
+        
     },
+    
+    
     UTC: null,
     SessionExpires: null,
-    ApiVersion: null
+    ApiVersion: null,
+    Server:null
 });
 
 TagModel = Class.create({
@@ -1202,7 +1239,7 @@ TagModel = Class.create({
         this.playlists = _playlists;
         this.stream = _stream;
         //this.desc = "Artists: " + this.artists + " Songs: " + this.songs + " Albums: " + this.albums;
-        this.desc = "Artists: " + this.artists + " Albums: " + this.albums;
+        this.desc = "Songs: " + this.songs +" Artists: " + this.artists + " Albums: " + this.albums;
     }
 });
 

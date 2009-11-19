@@ -100,7 +100,7 @@ GenresAssistant = Class.create({
         var i = 0;
 
         editCmd[i++] = {
-            label: "Songs",
+            label: "Songs: " + event.item.songs,
             command: "pushSongs",
             secondaryIconPath: "images/icons/songs.png"
 
@@ -188,7 +188,8 @@ GenresAssistant = Class.create({
             {
                 SceneTitle: "Genre: " + item.name,
                 Type: "genre",
-                Genre_id: item.id
+                Genre_id: item.id,
+                Expected_items: item.songs
 
             });
         }
