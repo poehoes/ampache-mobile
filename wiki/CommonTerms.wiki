@@ -147,7 +147,12 @@ kinds of access to Ampache based on the remote computer's IP address.
 
 *Transcoding* : On-the-fly conversion from one type of audio file to another. 
 
-    * You will only have to worry about this if you have music file types (i.e. FLAC, M4a,..) that are not compatible with the Pre. You may also want to use transcoding to save bandwidth: you can convert from a high-bit MP3 file (320kbs, 256kbs,..) to a lower-bit MP3 file (128kbs, 96kbs).
+    You will only have to worry about this if you have music file types (i.e. FLAC, M4a,..) that are not compatible with the Pre. You may also want to use transcoding to save bandwidth: you can convert from a high-bit MP3 file (320kbs, 256kbs,..) to a lower-bit MP3 file (128kbs, 96kbs).
+
+    * more information :
+       * [http://en.wikipedia.org/wiki/Transcoding Wikipedia]
+       * [http://ampache.org/wiki/config:transcode Ampache Transcoding]
+       * [http://code.google.com/p/ampache-mobile/wiki/CommonIssues Wiki Page] See the section "Transcoding not working" for more information.
 
 *Wi-Fi* : a wireless network communication protocol.
 
