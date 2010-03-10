@@ -373,7 +373,15 @@ MainmenuAssistant = Class.create({
 
     handleCommand: function(event) {
         //test for Mojo.Event.back, not Mojo.Event.command..
-        if (event.type === Mojo.Event.back) {
+        
+        if(event.type === Mojo.Event.forward)
+        {
+            if(AmpacheMobile.audioPlayer.PlayListPending === true)
+            {
+                this.showNowPlaying();
+            }
+        }
+        else if (event.type === Mojo.Event.back) {
             if (AmpacheMobile.audioPlayer.PlayListPending === true) {
                 event.preventDefault();
                 event.stopPropagation();

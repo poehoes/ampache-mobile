@@ -46,7 +46,7 @@ AudioPlayer = Class.create({
     mediaEvents: null,
     //Paused:true,
     PlayListPending: false,
-
+    StallRecovery: false,
     stallTimer: null,
 
     initialize: function(_controller) {
@@ -87,22 +87,23 @@ AudioPlayer = Class.create({
                 Mojo.Log.info("Setting up audio for safari");
                 this.inPalmHost = true;
                 this.PlayerReady = true;
-                this.player = new Audio();
+                //this.player = new Audio();
                 //this.player = AudioTag.extendElement(_controller.get('audioPlayerDiv'), _controller);
             } else {
                 Mojo.Log.info("Setting up audio for palm");
                 this.inPalmHost = false;
                 this.PlayerReady = true;
-                this.player = new Audio();
+                //this.player = new Audio();
                 //this.player = AudioTag.extendElement(_controller.get('audioPlayerDiv'), _controller);
-                this.player.palm.audioClass = "media";
-                this.player.mojo.audioClass = "media";
-                this.player.addEventListener("x-palm-connect", this.handleAudioEvents.bind(this));
-                this.player.addEventListener("x-palm-disconnect", this.handleAudioEvents.bind(this));
-                this.player.addEventListener("x-palm-render-mode", this.handleAudioEvents.bind(this));
+                //this.player.palm.audioClass = "media";
+                //this.player.mojo.audioClass = "media";
+                //this.player.addEventListener("x-palm-connect", this.handleAudioEvents.bind(this));
+                //this.player.addEventListener("x-palm-disconnect", this.handleAudioEvents.bind(this));
+                //this.player.addEventListener("x-palm-render-mode", this.handleAudioEvents.bind(this));
                 //this.player.addEventListener("x-palm-success", this.handleAudioEvents.bind(this));
-                this.player.addEventListener("x-palm-watchdog", this.handleAudioEvents.bind(this));
+                //this.player.addEventListener("x-palm-watchdog", this.handleAudioEvents.bind(this));
             }
+            this.player = new Audio();
             //Mojo.Log.error("audioObj: %j", this.player);
             this.player.addEventListener("play", this.handleAudioEvents.bind(this));
             this.player.addEventListener("pause", this.handleAudioEvents.bind(this));
@@ -608,7 +609,7 @@ AudioPlayer = Class.create({
 
     SetStalled:function(stalled)
     {
-        if(stalled === true)
+        if( (stalled === true) && (this.StallRecovery === true) ) 
         {
             this.kill_stall_timer();
             this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
@@ -646,9 +647,12 @@ AudioPlayer = Class.create({
             //this.UpdateNowPlayingTime()
             break;
         case "progress":
-        case "load":
             this.SetStalled(false);
             this._updateBuffering();
+            break;
+        case "load":
+            this.SetStalled(false);
+            this._bufferingFinished();
             break;
         case "play":
             this.Paused = false;
@@ -855,7 +859,20 @@ AudioPlayer = Class.create({
         }
     },
 
-    _updateBuffering: function() {
+    _bufferingFinished: function()
+    {
+            var startPercentage = (this.player.buffered.start(0) / this.player.duration);
+            var endPercentage = 1;
+            this.UpdateNowPlayingBuffering(startPercentage, endPercentage);
+            if (this.debug) {
+                var percentage = (Math.round(endPercentage * 10000) / 100);
+                this.NowPlayingStreamDebug("Download Complete");
+            }  
+        
+    },
+    
+
+    _updateBuffering: function(string) {
         //Mojo.Log.info("--> AudioPlayer.prototype._updateBuffering")
         if (this.player.buffered && this.player.buffered.length > 0) {
             var startPercentage = (this.player.buffered.start(0) / this.player.duration);

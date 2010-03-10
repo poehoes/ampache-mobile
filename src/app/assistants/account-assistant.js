@@ -125,6 +125,19 @@ AccountAssistant = Class.create({
         this.controller.setupWidget('art-toggle', this.tattr, this.tModel);
         this.ExtraArtPressedHandler = this.ExtraArtPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
+        
+        //******************************************************************************************************************
+        //Setup Stall Recovery Toggle
+        this.stall_Model = {
+            value: this.Account.StallRecovery,
+            // Current value of widget, from choices array.
+            disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
+        };
+
+        this.controller.setupWidget('stall-toggle', this.tattr, this.stall_Model);
+        this.StallPressedHandler = this.StallPressed.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('stall-toggle'), Mojo.Event.propertyChange, this.StallPressedHandler);
+        
     },
 
     ValidSettings: function(account) {
@@ -151,7 +164,14 @@ AccountAssistant = Class.create({
         }
         return retVal;
     },
-
+    
+    StallPressed: function(event) {
+        //Display the value of the toggle
+        this.Account.StallRecovery = event.value;
+        this.settingsManager.SaveSettings();
+    },
+    
+    
     ExtraArtPressed: function(event) {
         //Display the value of the toggle
         if (event.value === true) {
@@ -349,6 +369,7 @@ AccountAssistant = Class.create({
 
     cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
+        Mojo.Event.stopListening(this.controller.get('stall-toggle'), Mojo.Event.propertyChange, this.StallPressedHandler);
     },
 
     // This function will popup a dialog, displaying the message passed in.
