@@ -123,6 +123,19 @@ StageAssistant.prototype.handleCommand = function(event) {
             break;
         }
     }
+    else if(event.type === Mojo.Event.forward)
+    {
+        if(AmpacheMobile.audioPlayer.PlayListPending === true)
+        {
+            Mojo.Controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "now-playing"
+            },
+            {
+                type: "display"
+            });
+        }
+    }
     Mojo.Log.info("--> StageAssistant.prototype.handleCommand");
 };
 

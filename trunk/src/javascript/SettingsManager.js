@@ -132,6 +132,10 @@ SettingsManager = Class.create({
                 if (!this.settings.Accounts[i].ExtraCoverArt) {
                     this.settings.Accounts[i].ExtraCoverArt = false;
                 }
+                
+                if (!this.settings.Accounts[i].StallRecovery) {
+                    this.settings.Accounts[i].StallRecovery = false;
+                }
             }
             this.SaveSettings(null, null);
         }
@@ -169,6 +173,7 @@ Account = Class.create({
     Password: null,
     ServerURL: null,
     ExtraCoverArt: false,
+    StallRecovery:false,
     FetchSize: DEFAULT_FETCH_SIZE
 });
 
