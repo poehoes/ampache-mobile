@@ -71,6 +71,33 @@ StageAssistant.prototype.setup = function() {
     });
 };
 
+GotoPreferences = function() {
+    AmpacheMobile.loadingPreferences = true;
+    var controller = Mojo.Controller.getAppController().getFocusedStageController();
+    var scenes = controller.getScenes();
+            
+    for (var i = (scenes.length - 1); i !== 0; i--) {
+        controller.popScene(scenes[i]);
+    }
+    var params = {
+        settingsManager: AmpacheMobile.settingsManager
+    };
+    
+    controller.pushScene({
+        transition: AmpacheMobile.Transition,
+        name: "preferences"
+        },
+        params);
+};
+
+StageAssistant.prototype.confirmGotoPrefs = function(value) {
+    if (value === "stopMusic") {
+        GotoPreferences();
+    }
+};
+
+
+
 StageAssistant.prototype.handleCommand = function(event) {
     Mojo.Log.info("<-- StageAssistant.prototype.handleCommand");
     Mojo.Log.info("*** StageAssistant.prototype.handleCommand", event.type);
@@ -78,32 +105,41 @@ StageAssistant.prototype.handleCommand = function(event) {
     if (event.type === Mojo.Event.command) {
         switch (event.command) {
         case "doPref-cmd":
-            AmpacheMobile.loadingPreferences = true;
-            var scenes = this.controller.getScenes();
             
-            for (var i = (scenes.length - 1); i !== 0; i--) {
-                this.controller.popScene(scenes[i]);
+            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+                
+                controller.showAlertDialog({
+                    onChoose: this.confirmGotoPrefs,
+                    title: $L("Are you sure?"),
+                    message: "Going to preferences will close your current now playing list and stop your music.",
+                    choices: [{
+                        label: $L('Cancel'),
+                        value: 'ok',
+                        type: 'primary'
+                    },
+                    {
+                        label: $L('Delete Now Playing'),
+                        value: 'stopMusic',
+                        type: 'negative'
+                    }]
+                });
             }
-            var params = {
-                settingsManager: AmpacheMobile.settingsManager
-            };
-            this.controller.pushScene({
-                transition: AmpacheMobile.Transition,
-                name: "preferences"
-            },
-            params);
+            else
+            {
+                GotoPreferences();
+            }
             break;
-            //case "doTest-cmd":
-            //  Mojo.Log.info("Test Connection");
-            //  this.TestConnection();
-            //  break;
         case 'mojo-back':
         case "about-cmd":
             currentScene.showAlertDialog({
                 onChoose:
                 function(value) {},
                 title: "Ampache Mobile - v" + Mojo.Controller.appInfo.version,
-                message: "Copyright 2009, Bryce Geiser",
+                message: "Copyright 2009-2010, Bryce Geiser",
                 choices: [{
                     label: "OK",
                     value: ""
@@ -138,6 +174,7 @@ StageAssistant.prototype.handleCommand = function(event) {
     }
     Mojo.Log.info("--> StageAssistant.prototype.handleCommand");
 };
+
 
 function CenterSpinner(spinner) {
     spinner.style.left = (window.innerWidth / 2 - 64) + "px";

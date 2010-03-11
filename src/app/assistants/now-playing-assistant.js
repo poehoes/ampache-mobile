@@ -564,20 +564,22 @@ NowPlayingAssistant = Class.create({
         }
         else
         {
-            for(var i = 0; i< playList.length;i++)
+            if(this.npList)
             {
-                Mojo.Log.info("Resetting i: " + i);
-                var node = this.npList.mojo.getNodeByIndex(i);
-                if(node)
+                for(var i = 0; i< playList.length;i++)
                 {
-                    node.getElementsByClassName("progressDone")[0].style.width = "0%";
-                    node.getElementsByClassName("timeLoaded")[0].style.width = "0%";
-                    node.getElementsByClassName("npListIcon")[0].src = "images/player/blank.png";
+                    Mojo.Log.info("Resetting i: " + i);
+                    var node = this.npList.mojo.getNodeByIndex(i);
+                    if(node)
+                    {
+                        node.getElementsByClassName("progressDone")[0].style.width = "0%";
+                        node.getElementsByClassName("timeLoaded")[0].style.width = "0%";
+                        node.getElementsByClassName("npListIcon")[0].src = "images/player/blank.png";
+                    }
                 }
+                this.npList.mojo.revealItem(currentIndex);
+                this.npList.mojo.getNodeByIndex(currentIndex).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
             }
-            this.npList.mojo.revealItem(currentIndex);
-            this.npList.mojo.getNodeByIndex(currentIndex).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
-            
         }
         var xofy = (currentIndex + 1) + "/" + playList.length;
         this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
@@ -915,7 +917,11 @@ NowPlayingAssistant = Class.create({
 
     appMenuModel: {
         visible: true,
-        items: [{
+        items: [
+        { label: "Preferences...",
+          command:"doPref-cmd"
+            },        
+        {
             label: "Stream Info",
             command: "doStreamingInfo-cmd"
         },
