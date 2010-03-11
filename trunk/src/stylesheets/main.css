@@ -128,13 +128,43 @@ COLOR: grey;
 .songsMenuLeft
 {
     float:left;
-    width:90%;
+    width:80%;
+}
+
+.npIndex
+{
+    position:absolute;
+    margin-left:25px;
+    margin-top:12px;
+}
+
+.npMenuLeft
+{
+    position:absolute;
+    width:80%;
+    margin-left:50px;
+}
+
+.npListIcon
+{
+   position:absolute;
+   left:0px;
+   margin-top:12px;
 }
 
 .songsMenuRight
 {
     position:absolute;
     right:0px;
+    /*float:right;
+    width:20%;*/
+}
+
+.npMenuRight
+{
+    position:absolute;
+    right:0px;
+    margin-top:35px;
     /*float:right;
     width:20%;*/
 }
@@ -851,54 +881,56 @@ body.palm-default {
 /* 
  * Now Playing More Popup 
  */
-
 .toggle-inlay {
-    float: right;
-    width: 120px;
-    height: 50px;
-    margin-right: -3px;
-    margin-left: -26px;
+	float: right;
+	width: 120px;
+	height: 50px;
+	margin-right: -3px;
+	margin-left: -26px;
 }
 .toggle-list-view,
 .toggle-album-view {
-    float: right;
-    height: 50px;
-    width: 50px;
-    margin: 0px;
-    border-width: 0 25px;
-    -webkit-box-sizing: border-box;
+	float: right;
+	height: 50px;
+	width: 50px;
+	margin: 0px;
+	border-width: 0 25px;
+	-webkit-box-sizing: border-box;
 }
 .toggle-list-view > img,
 .toggle-album-view > img {
-    margin: 9px 0px 0px -18px;
+	margin: 9px 0px 0px -18px;
 }
 .toggle-list-view > img {
-    margin-left: -12px;
+  margin-left: -12px;
 }
+
 .toggle-list-view {
-    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-album-view {          
-    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-list-view.depressed { 
-    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
 }                             
 .toggle-album-view.depressed {
-    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
 }
+
 .toggle-list-view.selected  {
-    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-album-view.selected {          
-    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-list-view.depressed.selected { 
-    -webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
 }                             
 .toggle-album-view.depressed.selected {
-    -webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
+	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
 }
+
 
 .palm-alpha-divider.black-glass {
     background: url(../images/alpha-divider-black-glass.png) center left no-repeat;
@@ -932,3 +964,29 @@ body.palm-default {
   height: 96px;
 }
 
+.progressDone {
+	position: absolute;
+	left: 0px;
+	width: 0%;
+	height: 50px;
+	margin-top: 0px;
+	display: inline-block;
+	float: left;
+	background-color: #404040;
+	z-index: -2;
+        opacity:0.4;
+        
+}
+
+.timeLoaded {
+	position: absolute;
+	left: 0px;
+	width: 0%;
+	height: 50px;
+	margin-top: 0px;
+	display: inline-block;
+	float: left;
+	background-color: #6095C1;
+	z-index: -1;
+        opacity:0.9;
+}

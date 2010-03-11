@@ -1,18 +1,18 @@
 <div class="palm-scene palm-dark" id="now-playing">
     <div class="palm-hasheader music-now-playing-art music-streaming">
-        <div class="palm-header left truncating-text">
-            <!-- onclick="assistant.toggleViews();">-->
+        <div class="palm-header left truncating-text" onclick="assistant.toggleViews();">
+           
             <div class="palm-header-wrapper">
-                <!--
-                <div class="toggle-inlay">
-                <div id="toggle-album-view" class="toggle-album-view" x-mojo-tap-highlight="immediate">
-                <img src="images/album-view-header-icon.png" />
+                
+                <div class="toggle-inlay" >
+                    <div id="toggle-album-view" class="toggle-album-view" x-mojo-tap-highlight="immediate">
+                        <img height="32px" width="32px" src="images/icons/albums.png" />
+                    </div>
+                    <div id="toggle-list-view" class="toggle-list-view depressed" x-mojo-tap-highlight="immediate">
+                        <img height="32px" width="32px" src="images/icons/playlists.png" />
+                    </div>
                 </div>
-                <div id="toggle-list-view" class="toggle-list-view depressed" x-mojo-tap-highlight="immediate">
-                <img src="images/list-view-header-icon.png" />
-                </div>
-                </div>
-                -->
+                
                 <div id="song-x-of-y" class="song-x-of-y">
                 </div>
                 <div id="title" class="truncating-text current-song-text">
@@ -24,13 +24,11 @@
         </div>
         <div class="scrim">
         </div>
+        
+        
+        
         <div id="playback-display">
-            <!--<div id="loading-info">
-            <div class="buffering-animation-container">
-            <div id="spinner" x-mojo-element="Spinner">
-            </div>
-            </div>
-            </div>-->
+            
             <div id="albumArtist" class="artist-album-title truncating-text">
                 Artist - Album 
             </div>
@@ -57,8 +55,17 @@
             <div id="stream-debug" class="stream-debug truncating-text">
             </div>
         </div>
-        <div id="audioPlayerDiv">
+        
+       <div id="list-display">
+	    <div class="palm-list" id="npList" x-mojo-element="List"/>
+	</div>
+
+        
+        
+        
+        
         </div>
+       
     </div>
 </div>
 <div class='customBackground'>
