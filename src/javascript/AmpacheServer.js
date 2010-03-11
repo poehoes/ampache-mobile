@@ -1111,7 +1111,7 @@ SongModel = Class.create({
         this.artist = _artist;
         this.album = _album;
         this.track = _track;
-        this.time = _time;
+        this.time = parseInt(_time);
         this.url = _url;
         this.size = _size;
         this.art = _art;
@@ -1120,6 +1120,12 @@ SongModel = Class.create({
         this.artist_id = _artist_id;
         this.played = false;
         //Mojo.Log.info("<-- SongModel constructor " + _title);
+        
+        minutes = Math.floor(this.time/60);
+        seconds = this.time-(minutes*60);
+        this.timeStr = minutes + ":";
+        if(seconds<10) this.timeStr += "0";
+        this.timeStr += seconds;
     },
     id: null,
     title: null,
@@ -1129,10 +1135,13 @@ SongModel = Class.create({
     album_id: null,
     track: null,
     time: null,
+    timeStr:null,
     url: null,
     size: null,
     art: null,
-    mime: null
+    mime: null,
+    
+    
     //used when put into a song array to create a playlist
     //played:null,
     //linked list for playback

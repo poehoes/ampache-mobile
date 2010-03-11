@@ -21,6 +21,9 @@
 NowPlayingAssistant = Class.create({
     initialize: function(params) {
         Mojo.Log.info("--> NowPlayingAssistant.prototype.constuctor");
+        
+        assistant = this;
+        this.listIsShowing = false;
         //this.playList = params.playList;
         this.type = params.type;
         this.pauseStopItem = this.pauseItem;
@@ -73,6 +76,8 @@ NowPlayingAssistant = Class.create({
         this.setMenuControls(true, false, false);
         this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuModel);
 
+        
+
         Mojo.Log.info("Setup sliderModel");
         this.sliderModel = {
             value: 0,
@@ -105,7 +110,7 @@ NowPlayingAssistant = Class.create({
         };
         Mojo.Log.info("Setup slider");
         this.controller.setupWidget('sliderdiv', sliderAttributes, this.sliderModel);
-        this.updateBuffering(0, 0);
+        
 
         this.loadingModel = {
             label: $L('Stop'),
@@ -122,8 +127,25 @@ NowPlayingAssistant = Class.create({
         if (this.type !== "display") {
             $('coverArt').src = "images/blankalbum.png";
         } else {
+        }
+        
+        var attributes = {
+            itemTemplate: 'now-playing/listitem_w_artist'
+        };
 
-}
+        this.listModel = {
+            disabled: false,
+            items: AmpacheMobile.audioPlayer.playList
+        };
+        this.controller.setupWidget('npList', attributes, this.listModel);
+        this.npList = this.controller.get('npList')
+        
+        
+
+         //Events
+        this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('npList'), Mojo.Event.listTap, this.listTapHandler);
+
 
         window.onresize = this.FitToWindow;
         this.FitToWindow();
@@ -141,9 +163,7 @@ NowPlayingAssistant = Class.create({
         this.dragEndHandler = this.progressBarDragEnd.bindAsEventListener(this);
         Mojo.Event.listen(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
 
-        this.noDragHandler = this.noDrag.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
-
+ 
         this.flickHandler = this.handleFlick.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
 
@@ -152,13 +172,68 @@ NowPlayingAssistant = Class.create({
 
         Mojo.Log.info("<-- setup");
     },
-
+    
+    /**
+		 * Swap between album view and list view
+		 */
+    toggleViews: function(){
+        
+	
+        if (this.listIsShowing === true){
+            this.showAlbumView();
+        }
+	else {
+            this.showListView();
+	}
+        AmpacheMobile.audioPlayer.setNowPlaying(this);
+    },
+    
+    listTapHandler:function(event)
+    {
+        AmpacheMobile.audioPlayer.playTrack(event.index);
+    },
+    
+    showAlbumView:function()
+    {
+        this.npList.mojo.revealItem(0);
+        
+        this.controller.get('toggle-list-view').removeClassName('depressed');	
+	this.controller.get('toggle-album-view').addClassName('depressed');
+        this.listIsShowing = false;
+        this.controller.get('npList').hide();
+        this.controller.get('playback-display').show();
+        this.noDragHandler = this.noDrag.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
+        
+        
+        
+    },
+    
+    showListView:function()
+    {
+        this.controller.get('toggle-list-view').addClassName('depressed');	
+	this.controller.get('toggle-album-view').removeClassName('depressed');
+        this.listIsShowing = true;
+        this.controller.get('playback-display').hide();
+        this.controller.get('npList').show();
+        
+        Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
+        this.noDragHandler = null;
+        
+        
+    },
+		
+    
+    
     cleanup: function(event) {
         this.slider = this.controller.get('sliderdiv');
         Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
         Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
         Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
-        Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
+        if(this.noDragHandler!== null)
+        {
+            Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
+        }
         Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
         Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
         this.loadingAnimation.stop();
@@ -246,6 +321,13 @@ NowPlayingAssistant = Class.create({
             this.setMenuControls();
         }
 
+        if (this.listIsShowing === true){
+            this.showListView();
+        }
+	else {
+            this.showAlbumView();
+	}
+
         AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
         Mojo.Log.info("<-- activate");
     },
@@ -260,16 +342,24 @@ NowPlayingAssistant = Class.create({
     },
 
     updateTime: function(current, duration) {
-        //Mojo.Log.info("-- updateTime secs", current);
-        this.updateCounters(current, duration);
+       
         this.percentage = 0;
         if (duration === 0) {
             this.percentage = 0;
         } else {
             this.percentage = (current / duration) * 100;
         }
-        this.sliderModel.value = this.percentage;
-        this.controller.modelChanged(this.sliderModel);
+        if(this.listIsShowing === true)
+        {
+            
+            this.npList.mojo.getNodeByIndex(this.trackIndex).getElementsByClassName("timeLoaded")[0].style.width = Math.floor(this.percentage) + "%";
+        }
+        else
+        {
+            this.updateCounters(current, duration);
+            this.sliderModel.value = this.percentage;
+            this.controller.modelChanged(this.sliderModel);
+        }
     },
 
     updateCounters: function(_current, _duration) {
@@ -371,18 +461,35 @@ NowPlayingAssistant = Class.create({
 
     oneTime:true,
 
-    updateBuffering: function(startPctg, endPctg) {
-        if(startPctg === 0 && endPctg === 0)
+    cleanupTrack:function(track)
+    {
+        if(this.listIsShowing === true)
         {
-            this.sliderModel.progressStart = 0.0000001;
-            this.sliderModel.progressEnd =   0.0000001;
-            this.controller.modelChanged(this.sliderModel);
+          
+            
+        }
+    },
+
+    updateBuffering: function(startPctg, endPctg) {
+        if(this.listIsShowing === true)
+        {
+            this.npList.mojo.getNodeByIndex(this.trackIndex).getElementsByClassName("progressDone")[0].style.width = Math.floor(endPctg*100) + "%";
         }
         else
         {
-            this.sliderModel.progressStart = startPctg;
-            this.sliderModel.progressEnd = endPctg;
-            this.controller.modelChanged(this.sliderModel);
+        
+            if(startPctg === 0 && endPctg === 0)
+            {
+                this.sliderModel.progressStart = 0.0000001;
+                this.sliderModel.progressEnd =   0.0000001;
+                this.controller.modelChanged(this.sliderModel);
+            }
+            else
+            {
+                this.sliderModel.progressStart = startPctg;
+                this.sliderModel.progressEnd = endPctg;
+                this.controller.modelChanged(this.sliderModel);
+            }
         }
     },
 
@@ -420,31 +527,52 @@ NowPlayingAssistant = Class.create({
     //*********************************************************************************************************************************
     NowPlayingDisplaySongInfo: function(playList, currentIndex) {
         var song = playList[currentIndex];
+        this.trackIndex = currentIndex;
+        
         Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
-        this.controller.get('loaded-display').show();
-        this.controller.get('songTitle').innerHTML = song.title.escapeHTML();
-        //this.controller.get('artist').innerHTML = song.artist.escapeHTML();
-        //this.controller.get('album').innerHTML = song.album.escapeHTML();
-        if(song.artist && song.album)
+        
+        if(this.listIsShowing === false)
         {
-            this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
+            this.controller.get('loaded-display').show();
+            this.controller.get('songTitle').innerHTML = song.title.escapeHTML();
+            if(song.artist && song.album)
+            {
+                this.controller.get('albumArtist').innerHTML = song.artist.escapeHTML() + " - " + song.album.escapeHTML();
+            }
+            else
+            {
+                this.controller.get('albumArtist').innerHTML = "";
+            }
+            if ((!song.art) || (song.art === "")) {
+                $('coverArt').src = "images/blankalbum.png";
+            } else {
+                if ($('coverArt').src !== song.art) {
+                    $('coverArt').src = "images/blankalbum.png";
+                    $('coverArt').src = song.art;
+                }
+            }
         }
         else
         {
-            this.controller.get('albumArtist').innerHTML = "";
-        }
-        if ((!song.art) || (song.art === "")) {
-            $('coverArt').src = "images/blankalbum.png";
-        } else {
-            if ($('coverArt').src !== song.art) {
-                $('coverArt').src = "images/blankalbum.png";
-                $('coverArt').src = song.art;
+            for(var i = 0; i< playList.length;i++)
+            {
+                Mojo.Log.info("Resetting i: " + i);
+                var node = this.npList.mojo.getNodeByIndex(i);
+                if(node)
+                {
+                    node.getElementsByClassName("progressDone")[0].style.width = "0%";
+                    node.getElementsByClassName("timeLoaded")[0].style.width = "0%";
+                    node.getElementsByClassName("npListIcon")[0].src = "images/player/blank.png";
+                }
             }
+            this.npList.mojo.getNodeByIndex(currentIndex).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
+            this.npList.mojo.revealItem(currentIndex);
         }
         var xofy = (currentIndex + 1) + "/" + playList.length;
         this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
         var title = "Now Playing";
         this.controller.get('title').innerHTML = title.escapeHTML();
+        
         Mojo.Log.info("<-- NowPlayingDisplaySongInfo");
     },
 
