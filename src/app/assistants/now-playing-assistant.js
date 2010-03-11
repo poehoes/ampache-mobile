@@ -23,8 +23,10 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("--> NowPlayingAssistant.prototype.constuctor");
         
         assistant = this;
-        this.listIsShowing = false;
-        //this.playList = params.playList;
+        if(!AmpacheMobile.audioPlayer.listIsShowing)
+        {
+            AmpacheMobile.audioPlayer.listIsShowing = false;
+        }
         this.type = params.type;
         this.pauseStopItem = this.pauseItem;
 
@@ -179,8 +181,8 @@ NowPlayingAssistant = Class.create({
     toggleViews: function(){
         
 	
-        if (this.listIsShowing === true){
-            this.showAlbumView();
+        if (AmpacheMobile.audioPlayer.listIsShowing === true){
+            this.showAlbumView(true);
         }
 	else {
             this.showListView();
@@ -193,13 +195,15 @@ NowPlayingAssistant = Class.create({
         AmpacheMobile.audioPlayer.playTrack(event.index);
     },
     
-    showAlbumView:function()
+    showAlbumView:function(scroll)
     {
-        this.npList.mojo.revealItem(0);
-        
+        if(scroll ===true)
+        {
+            this.npList.mojo.revealItem(0);
+        }
         this.controller.get('toggle-list-view').removeClassName('depressed');	
 	this.controller.get('toggle-album-view').addClassName('depressed');
-        this.listIsShowing = false;
+        AmpacheMobile.audioPlayer.listIsShowing = false;
         this.controller.get('npList').hide();
         this.controller.get('playback-display').show();
         this.noDragHandler = this.noDrag.bindAsEventListener(this);
@@ -213,12 +217,16 @@ NowPlayingAssistant = Class.create({
     {
         this.controller.get('toggle-list-view').addClassName('depressed');	
 	this.controller.get('toggle-album-view').removeClassName('depressed');
-        this.listIsShowing = true;
+        AmpacheMobile.audioPlayer.listIsShowing = true;
         this.controller.get('playback-display').hide();
         this.controller.get('npList').show();
         
-        Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
-        this.noDragHandler = null;
+        if(this.noDragHandler)
+        {
+            Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
+            this.noDragHandler = null;
+        }
+        this.npList.mojo.revealItem(AmpacheMobile.audioPlayer.currentPlayingTrack);
         
         
     },
@@ -230,12 +238,13 @@ NowPlayingAssistant = Class.create({
         Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
         Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
         Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
-        if(this.noDragHandler!== null)
+        if((this.noDragHandler)&&(this.noDragHandler!== null))
         {
             Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
         }
         Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
         Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
+        Mojo.Event.stopListening(this.controller.get('npList'), Mojo.Event.listTap, this.listTapHandler);
         this.loadingAnimation.stop();
         this.loadingAnimation = null;
     },
@@ -321,7 +330,7 @@ NowPlayingAssistant = Class.create({
             this.setMenuControls();
         }
 
-        if (this.listIsShowing === true){
+        if (AmpacheMobile.audioPlayer.listIsShowing === true){
             this.showListView();
         }
 	else {
@@ -336,6 +345,7 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("<-- activate");
         //AmpacheMobile.audioPlayer.stop();
         AmpacheMobile.audioPlayer.clearNowPlaying();
+        
         window.onresize = null;
 
         Mojo.Log.info("--> activate");
@@ -349,7 +359,7 @@ NowPlayingAssistant = Class.create({
         } else {
             this.percentage = (current / duration) * 100;
         }
-        if(this.listIsShowing === true)
+        if(AmpacheMobile.audioPlayer.listIsShowing === true)
         {
             
             this.npList.mojo.getNodeByIndex(this.trackIndex).getElementsByClassName("timeLoaded")[0].style.width = Math.floor(this.percentage) + "%";
@@ -463,7 +473,7 @@ NowPlayingAssistant = Class.create({
 
     cleanupTrack:function(track)
     {
-        if(this.listIsShowing === true)
+        if(AmpacheMobile.audioPlayer.listIsShowing === true)
         {
           
             
@@ -471,7 +481,7 @@ NowPlayingAssistant = Class.create({
     },
 
     updateBuffering: function(startPctg, endPctg) {
-        if(this.listIsShowing === true)
+        if(AmpacheMobile.audioPlayer.listIsShowing === true)
         {
             this.npList.mojo.getNodeByIndex(this.trackIndex).getElementsByClassName("progressDone")[0].style.width = Math.floor(endPctg*100) + "%";
         }
@@ -531,7 +541,7 @@ NowPlayingAssistant = Class.create({
         
         Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
         
-        if(this.listIsShowing === false)
+        if(AmpacheMobile.audioPlayer.listIsShowing === false)
         {
             this.controller.get('loaded-display').show();
             this.controller.get('songTitle').innerHTML = song.title.escapeHTML();
@@ -565,8 +575,9 @@ NowPlayingAssistant = Class.create({
                     node.getElementsByClassName("npListIcon")[0].src = "images/player/blank.png";
                 }
             }
-            this.npList.mojo.getNodeByIndex(currentIndex).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
             this.npList.mojo.revealItem(currentIndex);
+            this.npList.mojo.getNodeByIndex(currentIndex).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
+            
         }
         var xofy = (currentIndex + 1) + "/" + playList.length;
         this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();

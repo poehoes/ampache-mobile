@@ -1,11 +1,15 @@
 {
-    "id": "com.palm.ampachemobile",
-    "version": "0.7.1",
-    "vendor": "Ampache Mobile Project",
-    "keywords": ["Audio", "Music", "Songs"],
-    "type": "web",
-    "main": "index.html",
-    "title": "Ampache Mobile",
-    "icon": "icon.png",
-    "theme": "dark"
+  "id":"com.palm.ampachemobile",
+  "version":"0.8.0",
+  "title":"Ampache Mobile",
+  "vendor":"Ampache Mobile Project",
+  "vendorurl":"http://code.google.com/p/ampache-mobile",
+  "main":"index.html",
+  "icon":"icon.png",
+  "miniicon":"miniicon.png",
+  "type":"web",
+  "theme":"dark",
+  "noWindow":false,
+  "noDeprecatedStyles":true,
+  "keywords": ["Audio", "Music", "Songs"]
 }

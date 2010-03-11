@@ -141,7 +141,7 @@ COLOR: grey;
 .npMenuLeft
 {
     position:absolute;
-    width:80%;
+    width:70%;
     margin-left:50px;
 }
 
@@ -972,9 +972,9 @@ body.palm-default {
 	margin-top: 0px;
 	display: inline-block;
 	float: left;
-	background-color: #404040;
+	background-color: #181818;
 	z-index: -2;
-        opacity:0.4;
+        opacity:0.6;
         
 }
 

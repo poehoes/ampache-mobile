@@ -449,13 +449,25 @@ AudioPlayer = Class.create({
 
     playTrack:function(track)
     {
-        this.Paused = false;
-        this.stop();
-        this.prevPlayingTrack = this.currentPlayingTrack;
-        this.currentPlayingTrack = track;
-        this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-        this.internal_play();
+        if(track !== this.currentPlayingTrack ){
         
+            this.Paused = false;
+            this.stop();
+            
+            this.currentPlayingTrack = track;
+            
+            if(this.shuffleOn==true)
+            {
+                this.toggleShuffleOn();
+            }
+            else
+            {
+                this.currentPlayingIndex = track;
+            }
+            
+            this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
+            this.internal_play();
+        }
     },
 
     play_next: function(clicked) {
@@ -467,8 +479,7 @@ AudioPlayer = Class.create({
         if (this.currentPlayingTrack > -1) {
             this.Paused = false;
             this.stop();
-            this.CleanupTrack(this.prevPlayingTrack);
-            //this.stop();
+            
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             //Add a little bit of delay after a next request to allow for rapid song switching.
             if (clicked) {
@@ -491,7 +502,7 @@ AudioPlayer = Class.create({
         Mojo.Log.info("--> AudioPlayer.prototype.play_prev");
         //this.printPlayOrderList();
         //this.playList[this.currentPlayingTrack].played = true;
-        this.prevPlayingTrack = this.currentPlayingTrack;
+        //this.prevPlayingTrack = this.currentPlayingTrack;
         this.currentPlayingTrack = this.getPrevTrack();
         if (this.currentPlayingTrack > -1) {
             this.Paused = false;
