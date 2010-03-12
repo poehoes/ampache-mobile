@@ -128,7 +128,7 @@ SongsAssistant = Class.create({
 
     findSong: function(songId) {
         for (i = 0; i < this.itemsHelper.ItemsList.length; i++) {
-            if (this.itemsHelper.ItemsList[i].id == songId) {
+            if (this.itemsHelper.ItemsList[i].id === songId) {
                 return this.itemsHelper.ItemsList[i];
             }
         }

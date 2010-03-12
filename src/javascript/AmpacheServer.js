@@ -1111,7 +1111,7 @@ SongModel = Class.create({
         this.artist = _artist;
         this.album = _album;
         this.track = _track;
-        this.time = parseInt(_time);
+        this.time = parseInt(_time,10);
         this.url = _url;
         this.size = _size;
         this.art = _art;
@@ -1124,7 +1124,10 @@ SongModel = Class.create({
         minutes = Math.floor(this.time/60);
         seconds = this.time-(minutes*60);
         this.timeStr = minutes + ":";
-        if(seconds<10) this.timeStr += "0";
+        if(seconds<10)
+        {
+            this.timeStr += "0";
+        }
         this.timeStr += seconds;
     },
     id: null,
@@ -1139,24 +1142,10 @@ SongModel = Class.create({
     url: null,
     size: null,
     art: null,
-    mime: null,
+    mime: null
     
     
-    //used when put into a song array to create a playlist
-    //played:null,
-    //linked list for playback
-    //next:null,
-    //prev:null,
-
-    /*generateDescription: function(){
-     this.description = "";
-     if (this.year !== "")
-     this.description += "Year: " + this.year + " ";
-     if (this.tracks !== "")
-     this.description += "Tracks: " + this.tracks + " ";
-     if ((this.disc !== "") && (this.disc !== "0"))
-     this.description += "Disc #: " + this.disc + " ";
-     },*/
+    
 });
 /*
  * <playlist id="1234">

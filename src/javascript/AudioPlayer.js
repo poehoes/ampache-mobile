@@ -49,7 +49,7 @@ AudioPlayer = Class.create({
     StallRecovery: false,
     stallTimer: null,
 
-    initialize: function(_controller) {
+    initialize: function (_controller) {
         Mojo.Log.info("--> AudioPlayer.prototype.initialize", _controller);
         if (this.OneTimeInit === false) {
             this.OneTimeInit = true;
@@ -79,7 +79,7 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<-- AudioPlayer.prototype.initialize", this.audioObj);
     },
 
-    createAudioObj: function(_controller) {
+    createAudioObj: function (_controller) {
         Mojo.Log.info("--> AudioPlayer.prototype.createAudioObj");
         if (!this.player) {
             // use Safari's HTML5 implementation if we are runing on palm host
@@ -163,7 +163,7 @@ AudioPlayer = Class.create({
         }
     },
     */
-    btEventsCallbacks: function(event) {
+    btEventsCallbacks: function (event) {
         if (event.state === "up") {
             if (event.key === "play") {
                 this.play();
@@ -178,7 +178,7 @@ AudioPlayer = Class.create({
         }
     },
 
-    btEventsFailure: function(event) {
+    btEventsFailure: function (event) {
         //Mojo.Controller.errorDialog("Bluetooth Error");
     },
 
@@ -247,7 +247,7 @@ AudioPlayer = Class.create({
         }
         
         
-        var playlist = this.playList        
+        var playlist = this.playList;        
         playlist.splice(index,1);
         
         for (var i = 0; i < playlist.length; i++) {
@@ -274,7 +274,7 @@ AudioPlayer = Class.create({
     
     reorder:function(event)
     {
-        var item = this.playList[event.fromIndex]
+        var item = this.playList[event.fromIndex];
         if(event.fromIndex<event.toIndex) 
         {   //Dragging down list
             
@@ -546,7 +546,7 @@ AudioPlayer = Class.create({
             
             this.currentPlayingTrack = track;
             
-            if(this.shuffleOn==true)
+            if(this.shuffleOn===true)
             {
                 this.toggleShuffleOn();
             }

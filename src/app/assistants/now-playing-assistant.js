@@ -145,7 +145,7 @@ NowPlayingAssistant = Class.create({
             
         };
         this.controller.setupWidget('npList', attributes, this.listModel);
-        this.npList = this.controller.get('npList')
+        this.npList = this.controller.get('npList');
         
         
 

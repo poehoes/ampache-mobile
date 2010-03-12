@@ -144,7 +144,7 @@ AccountAssistant = Class.create({
         var retVal = true;
         this.FailureReason = "Unknown Failure";
         if ((!account.AccountName) || (account.AccountName === "")) {
-            this.FailureReason = "No acccount name entered ";
+            this.FailureReason = "No account name entered ";
             retVal = false;
         }
         if ((!account.ServerURL) || (account.ServerURL === "")) {
@@ -309,7 +309,7 @@ AccountAssistant = Class.create({
          */
     },
 
-    //Logrithimic scale for the FetchSize
+    //Logarithmic scale for the FetchSize
     FetchSizeChanged: function(event) {
         var value = Math.pow(DEFAULT_MAX_FETCH, this.model.value);
         value = Math.round(value);
