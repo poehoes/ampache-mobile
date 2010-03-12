@@ -239,6 +239,100 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<-- AudioPlayer.prototype.ConnectedToServer");
     },
 
+
+    removeSong: function(index){
+        if(index === this.currentPlayingTrack)
+        {
+            this.play_next(false);
+        }
+        
+        
+        var playlist = this.playList        
+        playlist.splice(index,1);
+        
+        for (var i = 0; i < playlist.length; i++) {
+            playlist[i].index = i+1;
+        }
+        this.playList = playlist;
+        this.playOrderList = this.createOrderList();
+        
+        if(index < this.currentPlayingTrack)
+        {
+            this.currentPlayingIndex--;
+            this.currentPlayingTrack--;
+        }
+        
+        if(this.shuffleOn===true)
+        {
+            this.toggleShuffleOn();
+        }
+        
+        //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
+        
+        
+    },
+    
+    reorder:function(event)
+    {
+        var item = this.playList[event.fromIndex]
+        if(event.fromIndex<event.toIndex) 
+        {   //Dragging down list
+            
+            this.playList.splice(event.fromIndex,1);
+            this.playList.splice(event.toIndex,0,item);
+            if(event.fromIndex ===this.currentPlayingTrack)
+            {
+                this.currentPlayingIndex=event.toIndex;
+                this.currentPlayingTrack=event.toIndex;
+            }
+            else if((event.fromIndex<this.currentPlayingTrack)&&(event.toIndex>=this.currentPlayingTrack))
+            {
+                this.currentPlayingIndex--;
+                this.currentPlayingTrack--;
+            }
+            
+        }
+        else
+        {   //Dragging up list
+            this.playList.splice(event.fromIndex,1);
+            this.playList.splice(event.toIndex,0,item);
+            if(event.fromIndex ===this.currentPlayingTrack)
+            {
+                this.currentPlayingIndex=event.toIndex;
+                this.currentPlayingTrack=event.toIndex;
+            }
+            else if((event.fromIndex>this.currentPlayingTrack)&&(event.toIndex<=this.currentPlayingTrack))
+            {
+                this.currentPlayingIndex++;
+                this.currentPlayingTrack++;
+            }
+        }
+        
+        for (var i = 0; i < this.playList.length; i++) {
+            this.playList[i].index = i+1;
+        }
+        this.playOrderList = this.createOrderList();
+        if(this.shuffleOn===true)
+        {
+            this.toggleShuffleOn();
+        }
+        
+        //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
+        //_updateBuffering();
+        
+    },
+    
+    setCurrentTrack:function(currentIndex)
+    {
+        this.currentPlayingIndex = currentIndex;
+        this.currentPlayingTrack = currentIndex;
+        if(this.shuffleOn===true)
+        {
+            this.toggleShuffleOn();
+        }
+    },
+
+
     newPlayList: function(newPlayList, _shuffleOn, _startIndex) {
         Mojo.Log.info("--> AudioPlayer.prototype.addPlayList");
         this.stop();
@@ -281,11 +375,7 @@ AudioPlayer = Class.create({
         }
     },
 
-    setCurrentTrack: function(index) {
-        Mojo.Log.info("--> AudioPlayer.prototype.setCurrentTrack", index);
-        //this.currentTrackIndex = parseInt(index);
-        Mojo.Log.info("<-- AudioPlayer.prototype.setCurrentTrack");
-    },
+
 
     //**********************************************************************************************************************
     //Code for shuffle
@@ -303,7 +393,7 @@ AudioPlayer = Class.create({
         var i = 0;
         do {
             newList[i] = i;
-        } while (++ i < this . playList . length );
+        } while (++ i < this.playList.length );
         return newList;
     },
 

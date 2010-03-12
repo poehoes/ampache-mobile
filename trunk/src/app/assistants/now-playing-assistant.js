@@ -132,22 +132,36 @@ NowPlayingAssistant = Class.create({
         }
         
         var attributes = {
-            itemTemplate: 'now-playing/listitem_w_artist'
+            itemTemplate: 'now-playing/listitem_w_artist',
+            autoconfirmDelete:false,
+            swipeToDelete:true,
+            reorderable:true
         };
 
         this.listModel = {
             disabled: false,
             items: AmpacheMobile.audioPlayer.playList
+
+            
         };
         this.controller.setupWidget('npList', attributes, this.listModel);
         this.npList = this.controller.get('npList')
         
         
 
-         //Events
+         //List Tap
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('npList'), Mojo.Event.listTap, this.listTapHandler);
-
+        
+        //List Delete
+        this.listDeleteHandler = this.listDeleteHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('npList'), Mojo.Event.listDelete, this.listDeleteHandler);
+        
+        //List Reorder
+        this.listReorderHandler = this.listReorderHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('npList'), Mojo.Event.listReorder, this.listReorderHandler);
+        
+        
 
         window.onresize = this.FitToWindow;
         this.FitToWindow();
@@ -175,9 +189,91 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("<-- setup");
     },
     
-    /**
-		 * Swap between album view and list view
-		 */
+    
+    cleanup: function(event) {
+        this.slider = this.controller.get('sliderdiv');
+        Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
+        Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
+        Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
+        if((this.noDragHandler)&&(this.noDragHandler!== null))
+        {
+            Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
+        }
+        Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
+        Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
+        Mojo.Event.stopListening(this.controller.get('npList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.controller.get('npList'), Mojo.Event.listDelete, this.listDeleteHandler);
+        Mojo.Event.stopListening(this.controller.get('npList'), Mojo.Event.listReorder, this.listReorderHandler);
+        
+        this.loadingAnimation.stop();
+        this.loadingAnimation = null;
+    },
+    
+    
+   
+    
+    listTapHandler:function(event)
+    {
+        AmpacheMobile.audioPlayer.playTrack(event.index);
+    },
+    
+    listDeleteHandler:function(event)
+    {
+        //Update Printouts
+        for(var i=event.index; i<AmpacheMobile.audioPlayer.playList.length; i++)
+        {
+            this.npList.mojo.getNodeByIndex(i).getElementsByClassName("npIndex")[0].innerHTML = i;
+        }
+        
+        AmpacheMobile.audioPlayer.removeSong(event.index);
+        
+        //Update XofY
+        var xofy = (AmpacheMobile.audioPlayer.currentPlayingTrack + 1) + "/" + AmpacheMobile.audioPlayer.playList.length;
+        this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
+    
+        //Close Now Playing if there are no more tracks left
+        if(AmpacheMobile.audioPlayer.playList.length===0)
+        {
+            AmpacheMobile.audioPlayer.PlayListPending = false;
+            this.controller.stageController.popScene();
+        }
+        
+    },
+    
+    listReorderHandler:function(event)
+    {
+        AmpacheMobile.audioPlayer.reorder(event);
+        
+        
+        
+        //Update Printouts
+        for(var i=0; i<AmpacheMobile.audioPlayer.playList.length; i++)
+        {
+            this.npList.mojo.getNodeByIndex(i).getElementsByClassName("npIndex")[0].innerHTML = i+1;
+        }
+        
+        //Update XofY
+        var xofy = (AmpacheMobile.audioPlayer.currentPlayingTrack + 1) + "/" + AmpacheMobile.audioPlayer.playList.length;
+        this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
+        
+        ////Update arrow
+        //this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
+        //AmpacheMobile.audioPlayer._updateBuffering();
+        
+        
+
+        this.fixDisplay = window.setInterval(this.FixDisplay.bind(this), 1000);
+    },
+    
+    FixDisplay:function()
+    {
+        window.clearInterval(this.fixDisplay);
+        this.fixDisplay = null;
+        
+        this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
+        AmpacheMobile.audioPlayer._updateBuffering();
+    },
+    
     toggleViews: function(){
         
 	
@@ -188,12 +284,7 @@ NowPlayingAssistant = Class.create({
             this.showListView();
 	}
         AmpacheMobile.audioPlayer.setNowPlaying(this);
-    },
-    
-    listTapHandler:function(event)
-    {
-        AmpacheMobile.audioPlayer.playTrack(event.index);
-    },
+    }, 
     
     showAlbumView:function(scroll)
     {
@@ -233,21 +324,7 @@ NowPlayingAssistant = Class.create({
 		
     
     
-    cleanup: function(event) {
-        this.slider = this.controller.get('sliderdiv');
-        Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
-        Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
-        Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragEnd, this.dragEndHandler);
-        if((this.noDragHandler)&&(this.noDragHandler!== null))
-        {
-            Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
-        }
-        Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.flick, this.flickHandler);
-        Mojo.Event.stopListening(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
-        Mojo.Event.stopListening(this.controller.get('npList'), Mojo.Event.listTap, this.listTapHandler);
-        this.loadingAnimation.stop();
-        this.loadingAnimation = null;
-    },
+    
 
     FitToWindow: function() {
         var percentate = 0.8;
@@ -360,9 +437,8 @@ NowPlayingAssistant = Class.create({
             this.percentage = (current / duration) * 100;
         }
         if(AmpacheMobile.audioPlayer.listIsShowing === true)
-        {
-            
-            this.npList.mojo.getNodeByIndex(this.trackIndex).getElementsByClassName("timeLoaded")[0].style.width = Math.floor(this.percentage) + "%";
+        {            
+            this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("timeLoaded")[0].style.width = Math.floor(this.percentage) + "%";
         }
         else
         {
@@ -483,7 +559,7 @@ NowPlayingAssistant = Class.create({
     updateBuffering: function(startPctg, endPctg) {
         if(AmpacheMobile.audioPlayer.listIsShowing === true)
         {
-            this.npList.mojo.getNodeByIndex(this.trackIndex).getElementsByClassName("progressDone")[0].style.width = Math.floor(endPctg*100) + "%";
+            this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("progressDone")[0].style.width = Math.floor(endPctg*100) + "%";
         }
         else
         {
@@ -537,7 +613,7 @@ NowPlayingAssistant = Class.create({
     //*********************************************************************************************************************************
     NowPlayingDisplaySongInfo: function(playList, currentIndex) {
         var song = playList[currentIndex];
-        this.trackIndex = currentIndex;
+        
         
         Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
         
