@@ -122,6 +122,11 @@ SettingsManager = Class.create({
             if (!this.settings.AllowRotation) {
                 this.settings.AllowRotation = DEFAULT_ROTATION;
             }
+            
+            if (!this.settings.npPlayingListView) {
+                this.settings.npPlayingListView = false;
+            }
+            
             this.settings.Version = Mojo.Controller.appInfo.version;
 
             for (i = 0; i < this.settings.Accounts.length; i++) {
@@ -190,5 +195,6 @@ Settings = Class.create({
     BackgroundOverlay: DEFAULT_OVERLAY,
     CUSTOM_COLOR: 0,
     CUSTOM_IMAGE: 1,
-    AlbumsSort: 0
+    AlbumsSort: 0,
+    npPlayingListView:false
 });

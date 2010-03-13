@@ -283,6 +283,9 @@ NowPlayingAssistant = Class.create({
 	else {
             this.showListView();
 	}
+        
+        AmpacheMobile.settingsManager.settings.npPlayingListView = AmpacheMobile.audioPlayer.listIsShowing;
+        AmpacheMobile.settingsManager.SaveSettings();
         AmpacheMobile.audioPlayer.setNowPlaying(this);
     }, 
     

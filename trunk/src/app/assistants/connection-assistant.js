@@ -140,6 +140,7 @@ ConnectionAssistant = Class.create({
                 this.LoadMainMenu(AmpacheMobile.Account);
             }
         }
+        AmpacheMobile.audioPlayer.listIsShowing = AmpacheMobile.settingsManager.settings.npPlayingListView;
         this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
         Mojo.Log.info("<-- StageAssistant.prototype.GotSettings");
     },
