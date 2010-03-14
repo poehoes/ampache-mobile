@@ -222,7 +222,13 @@ NowPlayingAssistant = Class.create({
         //Update Printouts
         for(var i=event.index; i<AmpacheMobile.audioPlayer.playList.length; i++)
         {
-            this.npList.mojo.getNodeByIndex(i).getElementsByClassName("npIndex")[0].innerHTML = i;
+            try{
+                this.npList.mojo.getNodeByIndex(i).getElementsByClassName("npIndex")[0].innerHTML = i;
+            }
+            catch(ex)
+            {
+                i=AmpacheMobile.audioPlayer.playList.length;
+            }
         }
         
         AmpacheMobile.audioPlayer.removeSong(event.index);
@@ -276,13 +282,13 @@ NowPlayingAssistant = Class.create({
     
     toggleViews: function(){
         
-	
+        
         if (AmpacheMobile.audioPlayer.listIsShowing === true){
             this.showAlbumView(true);
         }
-	else {
+        else {
             this.showListView();
-	}
+        }
         
         AmpacheMobile.settingsManager.settings.npPlayingListView = AmpacheMobile.audioPlayer.listIsShowing;
         AmpacheMobile.settingsManager.SaveSettings();
@@ -295,8 +301,8 @@ NowPlayingAssistant = Class.create({
         {
             this.npList.mojo.revealItem(0);
         }
-        this.controller.get('toggle-list-view').removeClassName('depressed');	
-	this.controller.get('toggle-album-view').addClassName('depressed');
+        this.controller.get('toggle-list-view').removeClassName('depressed');        
+        this.controller.get('toggle-album-view').addClassName('depressed');
         AmpacheMobile.audioPlayer.listIsShowing = false;
         this.controller.get('npList').hide();
         this.controller.get('playback-display').show();
@@ -309,8 +315,8 @@ NowPlayingAssistant = Class.create({
     
     showListView:function()
     {
-        this.controller.get('toggle-list-view').addClassName('depressed');	
-	this.controller.get('toggle-album-view').removeClassName('depressed');
+        this.controller.get('toggle-list-view').addClassName('depressed');        
+        this.controller.get('toggle-album-view').removeClassName('depressed');
         AmpacheMobile.audioPlayer.listIsShowing = true;
         this.controller.get('playback-display').hide();
         this.controller.get('npList').show();
@@ -324,7 +330,7 @@ NowPlayingAssistant = Class.create({
         
         
     },
-		
+                
     
     
     
@@ -413,9 +419,9 @@ NowPlayingAssistant = Class.create({
         if (AmpacheMobile.audioPlayer.listIsShowing === true){
             this.showListView();
         }
-	else {
+        else {
             this.showAlbumView();
-	}
+        }
 
         AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
         Mojo.Log.info("<-- activate");
@@ -441,7 +447,12 @@ NowPlayingAssistant = Class.create({
         }
         if(AmpacheMobile.audioPlayer.listIsShowing === true)
         {            
-            this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("timeLoaded")[0].style.width = Math.floor(this.percentage) + "%";
+            try
+            {
+                this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("timeLoaded")[0].style.width = Math.floor(this.percentage) + "%";
+            }
+            catch(ex)
+            {}
         }
         else
         {
@@ -562,7 +573,13 @@ NowPlayingAssistant = Class.create({
     updateBuffering: function(startPctg, endPctg) {
         if(AmpacheMobile.audioPlayer.listIsShowing === true)
         {
-            this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("progressDone")[0].style.width = Math.floor(endPctg*100) + "%";
+            try {
+                this.npList.mojo.getNodeByIndex(AmpacheMobile.audioPlayer.currentPlayingTrack).getElementsByClassName("progressDone")[0].style.width = Math.floor(endPctg*100) + "%";
+            }
+            catch(e) {
+                
+            }
+    
         }
         else
         {
@@ -1000,10 +1017,10 @@ NowPlayingAssistant = Class.create({
         { label: "Preferences...",
           command:"doPref-cmd"
             },        
-        {
+        /*{
             label: "Stream Info",
             command: "doStreamingInfo-cmd"
-        },
+        },*/
         {
             label: "Delete Now Playing",
             command: "delete-np-cmd"

@@ -182,7 +182,7 @@ MainmenuAssistant = Class.create({
         }
         
         
-        AmpacheMobile.ampacheServer.StopPing();
+        AmpacheMobile.ampacheServer.disconnect();
         Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
     },
 
@@ -344,6 +344,26 @@ MainmenuAssistant = Class.create({
         button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block': 'none';
         this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
+        
+        /*if(AmpacheMobile.ampacheServer.version==="")        {
+            this.controller.get('ampache-version').innerHTML = "Requesting Server Version";    
+            AmpacheMobile.ampacheServer._ping(this.UpdateServerVersion.bind(this));
+        }
+        else {
+            this.UpdateServerVersion();
+        }*/
+    },
+
+    UpdateServerVersion:function(){
+        if( AmpacheMobile.ampacheServer.version)
+        {
+            this.controller.get('ampache-version').innerHTML = "Server Version: " + AmpacheMobile.ampacheServer.version;    
+        }
+        else
+        {
+              this.controller.get('ampache-version').hide();    
+          
+        }
     },
 
     deactivate: function(event) {

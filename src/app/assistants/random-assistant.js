@@ -309,23 +309,48 @@ RandomAssistant = Class.create({
         this.UpdateText();
         this.GetRandomAlbum();
     },
-
+    
+    showDialogBox: function(title, message) {
+        this.controller.showAlertDialog({            
+            title: title,
+            message: message,
+            choices: [{
+                label: 'OK',
+                value: 'OK',
+                type: 'color'
+            }]
+        });
+    },
+    
     listTapHandler: function(event) {
 
         if(event.item.type ==="pureRandom")
         {
-            playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1);
-            this.controller.stageController.pushScene({
-                    transition: AmpacheMobile.Transition,
-                    name: "now-playing"
-                },
-                {
-                    type: "play",
-                    playList: playlist,
-                    startIndex: 0,
-                    shuffle: false,
-                    repeat:RepeatModeType.repeat_forever
-                });
+            switch(AmpacheMobile.ampacheServer.version)
+            {
+                case "3.5.1":
+                case "3.5.2":
+                case "3.5.3":
+                      playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1);
+                    this.controller.stageController.pushScene({
+                            transition: AmpacheMobile.Transition,
+                            name: "now-playing"
+                        },
+                        {
+                            type: "play",
+                            playList: playlist,
+                            startIndex: 0,
+                            shuffle: false,
+                            repeat:RepeatModeType.repeat_forever
+                        });
+                    break;
+                    
+                   
+                default:
+                    this.showDialogBox("Unavailable", "Recent changes in 3.5.4 and newer versions of the Ampache Server have disabled this functionality.  If you require this functionality downgrade to 3.5.3");
+                    break;
+
+            }
             return;
         }
         
@@ -396,36 +421,9 @@ RandomAssistant = Class.create({
         }
     },
 
-    /*
-    searchForPlaylists: function(){
-        if (this.searchCriteria(3)){
-            this.TurnOnSpinner();
-            var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
-            if (numPlaylists !== 0){
-                this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "playlists"}, 
-                {
-                    SceneTitle: "Playlist Search: " + this.searchText,
-                    Search: this.searchText === "" ? null : this.searchText,
-                    ExpectedPlaylists: numPlaylists
-                });
-            }
-        }
-    },
-    */
+   
 
-    // This function will popup a dialog, displaying the message passed in.
-    showDialogBox: function(title, message) {
-        this.controller.showAlertDialog({
-            onChoose: this.SetFocus.bind(this),
-            title: title,
-            message: message,
-            choices: [{
-                label: 'OK',
-                value: 'OK',
-                type: 'color'
-            }]
-        });
-    },
+   
 
     TurnOnSpinner: function(spinnerText) {
         this.scrim.show();
