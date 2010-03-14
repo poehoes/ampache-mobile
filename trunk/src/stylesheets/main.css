@@ -882,53 +882,53 @@ body.palm-default {
  * Now Playing More Popup 
  */
 .toggle-inlay {
-	float: right;
-	width: 120px;
-	height: 50px;
-	margin-right: -3px;
-	margin-left: -26px;
+        float: right;
+        width: 120px;
+        height: 50px;
+        margin-right: -3px;
+        margin-left: -26px;
 }
 .toggle-list-view,
 .toggle-album-view {
-	float: right;
-	height: 50px;
-	width: 50px;
-	margin: 0px;
-	border-width: 0 25px;
-	-webkit-box-sizing: border-box;
+        float: right;
+        height: 50px;
+        width: 50px;
+        margin: 0px;
+        border-width: 0 25px;
+        -webkit-box-sizing: border-box;
 }
 .toggle-list-view > img,
 .toggle-album-view > img {
-	margin: 9px 0px 0px -18px;
+        margin: 9px 0px 0px -18px;
 }
 .toggle-list-view > img {
   margin-left: -12px;
 }
 
 .toggle-list-view {
-	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-album-view {          
-	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-list-view.depressed { 
-	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
 }                             
 .toggle-album-view.depressed {
-	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
 }
 
 .toggle-list-view.selected  {
-	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-album-view.selected {          
-	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-list-view.depressed.selected { 
-	-webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
 }                             
 .toggle-album-view.depressed.selected {
-	-webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
 }
 
 
@@ -965,28 +965,56 @@ body.palm-default {
 }
 
 .progressDone {
-	position: absolute;
-	left: 0px;
-	width: 0%;
-	height: 50px;
-	margin-top: 0px;
-	display: inline-block;
-	float: left;
-	background-color: #181818;
-	z-index: -2;
+        position: absolute;
+        left: 0px;
+        width: 0%;
+        height: 50px;
+        margin-top: 0px;
+        display: inline-block;
+        float: left;
+        background-color: #181818;
+        z-index: -2;
         opacity:0.6;
         
 }
 
 .timeLoaded {
-	position: absolute;
-	left: 0px;
-	width: 0%;
-	height: 50px;
-	margin-top: 0px;
-	display: inline-block;
-	float: left;
-	background-color: #6095C1;
-	z-index: -1;
+        position: absolute;
+        left: 0px;
+        width: 0%;
+        height: 50px;
+        margin-top: 0px;
+        display: inline-block;
+        float: left;
+        background-color: #6095C1;
+        z-index: -1;
         opacity:0.9;
+}
+
+.ampache-version{
+        /*position:absolute;
+        right:10px;*/
+        bottom:10px;
+        position:fixed;
+        margin-top:10px;
+        width:100%;
+        text-align:center;
+        font-size:9px;
+        color:white;
+}
+
+.about
+{
+     font-size:smaller;   
+}
+
+.about-details
+{
+margin-left:10px;       
+}
+
+.about-details-data
+{
+        position:absolute;
+        left:55px;
 }

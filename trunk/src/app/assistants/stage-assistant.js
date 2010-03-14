@@ -135,15 +135,34 @@ StageAssistant.prototype.handleCommand = function(event) {
             break;
         case 'mojo-back':
         case "about-cmd":
+            
+            serverinfo = "<div class='about'><BR><B>Server Info</B><div class='about-details'>";
+            if((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.Connected===true))
+            {
+                var update = new Date(AmpacheMobile.ampacheServer.update);
+                serverinfo += "Version: <font class='about-details-data'>" + AmpacheMobile.ampacheServer.version + "</font>";
+                serverinfo += "<BR>Link: <a class='about-details-data' href=" + AmpacheMobile.ampacheServer.URL +">" + AmpacheMobile.Account.AccountName + "</a>";
+                serverinfo += "<BR>Update:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.ProcessAmpacheDate(AmpacheMobile.ampacheServer.update), "medium") + "</font>"; 
+                serverinfo += "<BR>Add:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.ProcessAmpacheDate(AmpacheMobile.ampacheServer.add), "medium") + "</font>";
+                serverinfo += "<BR>Clean:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.ProcessAmpacheDate(AmpacheMobile.ampacheServer.clean), "medium") + "</font>";
+                
+            }
+            else
+            {
+                serverinfo += "Not Connected";
+            }
+            serverinfo += "</div></div>";
+            
             currentScene.showAlertDialog({
                 onChoose:
                 function(value) {},
                 title: "Ampache Mobile - v" + Mojo.Controller.appInfo.version,
-                message: "Copyright 2009-2010, Bryce Geiser",
+                message: "Copyright 2009-2010, Bryce Geiser"+serverinfo,
                 choices: [{
                     label: "OK",
                     value: ""
-                }]
+                },],
+                allowHTMLMessage: true
             });
             break;
         case "delete-np-cmd":

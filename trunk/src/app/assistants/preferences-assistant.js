@@ -41,7 +41,8 @@ PreferencesAssistant = Class.create({
             addItemLabel: $L("Add Account..."),
             swipeToDelete: true,
             autoconfirmDelete: false,
-            deletedProperty: 'swiped'
+            deletedProperty: 'swiped',
+            reorderable:true
 
         };
         this.controller.setupWidget('innerList', this.innerListAttrs, this.accountsModel);
@@ -125,6 +126,9 @@ PreferencesAssistant = Class.create({
 
         this.listDeleteFunction = this.listDeleteHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
+        
+                this.listReorderFunction = this.listReorderFunction.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
 
         this.accountSelectorChanged = this.accountSelectorChanged.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
@@ -147,6 +151,7 @@ PreferencesAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listAdd, this.listAddFunction);
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
         Mojo.Event.stopListening(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
+        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
 
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
@@ -206,12 +211,16 @@ PreferencesAssistant = Class.create({
             value: -1
         };
 
-        for (var i = 1; i < this.settingsManager.settings.Accounts.length + 1; i++) {
+        for (var i = 1; i < (this.settingsManager.settings.Accounts.length + 1); i++) {
             this.Accounts[i] = {
                 label: this.settingsManager.settings.Accounts[i - 1].AccountName,
                 value: i - 1
             };
         }
+        
+
+        
+        
     },
 
     //displays the current state of various selectors
@@ -228,6 +237,7 @@ PreferencesAssistant = Class.create({
         // Warning: By not checking which model we're modifying here, we implicitly assume that they share the same structure.
         event.model.items.splice(event.model.items.indexOf(event.item), 1); //Remove from items list
         //this.settings.Accounts.splice(event.model.items.indexOf(event.item),1); //Remove from 
+        
         this.UpdateSelector();
         this.settingsManager.SaveSettings();
     },
@@ -275,6 +285,26 @@ PreferencesAssistant = Class.create({
         });
 
     },
+    
+    listReorderFunction:function(event)
+    {
+        if(this.settingsManager.settings.CurrentAccountIndex!==-1)
+        {
+            var accountIndexChanged = true;
+            var currentAccount = event.model.items[this.settingsManager.settings.CurrentAccountIndex];
+        }
+        
+        event.model.items.splice(event.fromIndex,1);
+        event.model.items.splice(event.toIndex,0,event.item);
+        
+        if(accountIndexChanged)
+        {
+            this.settingsManager.settings.CurrentAccountIndex = event.model.items.indexOf(currentAccount);
+        }
+        
+        this.UpdateSelector();
+        this.settingsManager.SaveSettings();
+    },
 
     activate: function(event) {
         /* put in event handlers here that should only be in effect when this scene is active. For
@@ -291,6 +321,16 @@ PreferencesAssistant = Class.create({
     UpdateSelector: function() {
         this.UpdateSelectorAccounts();
         this.selectorsModel.choices = this.Accounts;
+        
+        //Determine new account index
+        newIndex = this.settingsManager.settings.CurrentAccountIndex+1;
+        if(newIndex>= this.selectorsModel.choices.length)
+        {
+            newIndex=this.selectorsModel.choices.length-1;
+            this.settingsManager.settings.CurrentAccountIndex=newIndex-1;
+        }
+        
+        this.selectorsModel.currentAccount =  this.selectorsModel.choices[newIndex].label;
         this.controller.modelChanged(this.selectorsModel, this);
     },
 

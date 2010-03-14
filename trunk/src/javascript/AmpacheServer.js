@@ -34,6 +34,7 @@ AmpacheServer = Class.create({
     artists: "",
     playlists: "",
     videos: "",
+    version:"",
     XMLFormattingIssue: "This happens due to songs with invalid characters information. <br><br> Look in the Ampache Web Interface for characters like  <img src='images/illegal_chars.png'/>.",
     ErrorEmptyResponse: "Response from server contained no information.  This usually happens when you don't have a solid connection to the server.  Please try again.",
 
@@ -89,7 +90,7 @@ AmpacheServer = Class.create({
 
     GetRandomSongs:function(size)
     {
-        var path = this.URL + "/play/index.php?sid=" +  this.auth + "&random=1&type=default";
+        var path = this.URL + "/play/index.php?sid=" +  this.auth + "&random=1&type=default&uid=1";
         var song = new SongModel(0, "Shuffle All Songs", null, 0, null, 0, 0, 0, path, 0, "images/shuffled.png", "mime/random");
         songs = [];
         for(i = 0; i<size;i++)
@@ -115,8 +116,15 @@ AmpacheServer = Class.create({
         console.info('******* onComplete happened');
     },
 
-    _ping: function() {
+    PingCallBack:null,
+    
+    _ping: function(callback) {
+        
         Mojo.Log.info("--> AmpacheServer.prototype._ping");
+        this.StopPing();
+        
+        
+        this.PingCallBack = callback;
         var path = this.BuildActionString("ping");
         var request = new Ajax.Request(path, {
             method: 'get',
@@ -140,14 +148,20 @@ AmpacheServer = Class.create({
         try
         {
             var ping = new PingModel(transport.responseXML);
+            this.version = ping.Server;
             if((ping.Server==="Uknown") && !this.warned)
             {
-                this.ShowErrorAlert("Ampache Mobile will work best if you update to 3.5.2 from ampache.org");
+                this.ShowErrorAlert("Ampache Mobile will work best if you update to 3.5.2 or newer from ampache.org");
                 this.warned = true;
             }
             this.StopPing();
             this.pingTimer = setInterval(this._ping.bind(this), ping.TimeRemaining);
+            if(this.PingCallBack){
+                this.PingCallBack();
+                this.PingCallBack=null;
+            }
             Mojo.Log.info("<-- AmpacheServer.prototype._pingCallback");
+            
         }
         catch(ex)
         {
@@ -174,10 +188,8 @@ AmpacheServer = Class.create({
 
     disconnect: function() {
         Mojo.Log.info("--> AmpacheServer.prototype.disconnect");
-        if (this.pingTimer) {
-            window.clearInterval(this.pingTimer);
-            this.pingTimer = null;
-        }
+        this.StopPing();
+        this.Connected = false;
         Mojo.Log.info("<-- AmpacheServer.prototype.disconnect");
     },
 
@@ -238,13 +250,15 @@ AmpacheServer = Class.create({
                 this.videos = parseInt(response.getElementsByTagName("videos")[0].firstChild.data, 10);
                 Mojo.Log.info(" auth: " + this.auth + " api: " + this.api + " update: " + this.update + " add: " + this.add + " clean: " + this.clean + " songs: " + this.songs + " albums: " + this.albums + " artists: " + this.artists + " playlists: " + this.playlists + " videos: " + this.videos);
                 returnValue = "connected";
+                this.Connected = true;
+                this._ping();
             } else { //if no auth key exists check for an error
                 var findErrorCode = response.getElementsByTagName("error");
                 if (findErrorCode.length !== 0) {
                     returnValue = findErrorCode[0].firstChild.data;
                 }
             }
-            this._ping();
+            
         }
         Mojo.Log.info("Calling callback function this.ConnectCallback:");
         this.ConnectCallback(returnValue);
@@ -1003,6 +1017,19 @@ AmpacheServer = Class.create({
         var m = t.evaluate(transport);
         Mojo.Log.info("Failed:", m);
         this.ConnectCallBack(m);
+    },
+    
+    
+    ProcessAmpacheDate:function(dateStr)
+    {
+        var matches = dateStr.match(/^([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2}:[0-9]{2})(.*$)/);
+        
+        var timezone = "";
+        if(matches.length===4)
+        {
+            timezone = matches[3].replace(":","");
+        }
+        return new Date(matches[1] + " " + matches[2] + " GMT" + timezone);
     }
 });
 
