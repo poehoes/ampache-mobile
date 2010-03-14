@@ -75,6 +75,14 @@ AudioPlayer = Class.create({
                 onSuccess: this.btEventsCallbacks.bind(this),
                 onFailure: this.btEventsFailure.bind(this)
             });
+            
+            this.Controller.serviceRequest('palm://com.palm.keys/media', {
+                method: 'status',
+                method: "lockVolumeKeys",
+		onSuccess: this.btEventsCallbacks.bind(this),
+		parameters: {"foregroundApp": true, "subscribe": true}
+            });
+           
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.initialize", this.audioObj);
     },

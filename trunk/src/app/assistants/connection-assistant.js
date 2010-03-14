@@ -25,8 +25,7 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("--> setup");
 
         AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
-        //AmpacheMobile.mediaEventsService = new MediaEventsService();
-        //AmpacheMobile.mediaEventsService.markAppForeground();
+
         //******************************************************************************************************
         // Make scrim
         this.scrim = $("connect-scrim");
