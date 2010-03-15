@@ -25,7 +25,7 @@
   * Known Bug: Ampache 3.5.4 broke stream all songs.  Requested fix, slated for Ampache 3.6.  Added error message.
 {{{
    [Note] New application name space, no longer using com.palm.ampachemobile, the API is mature enough to move to com.ampachemobile.
-      o This means 0.7.0 and 0.8.0 can exist on the same app.  Transfer account settings and delete old app.
+      o This means 0.7.0 and 0.8.0 can coexist.  Transfer account settings and delete old app.
 
 }}}  
 
