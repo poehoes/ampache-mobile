@@ -185,10 +185,38 @@ NowPlayingAssistant = Class.create({
 
         this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('playback-display'), Mojo.Event.tap, this.doubleClickHandler);
+        
+        
+        
+        
+        AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
+        this.updateBuffering(0,0);
+        
 
+        
+        
+        
         Mojo.Log.info("<-- setup");
     },
     
+    ready: function(event) {
+        Mojo.Log.info("--> activate");
+        AmpacheMobile.audioPlayer.setNowPlaying(this);
+        if (AmpacheMobile.audioPlayer.listIsShowing === true){
+            this.showListView();
+        }
+        else {
+            this.showAlbumView();
+        }
+        
+        if (this.type === "play") {
+            AmpacheMobile.audioPlayer.play();
+        } else if (this.type === "enqueue") {
+            this.setMenuControls();
+        }
+        
+        Mojo.Log.info("<-- activate");
+    },
     
     cleanup: function(event) {
         this.slider = this.controller.get('sliderdiv');
@@ -207,6 +235,9 @@ NowPlayingAssistant = Class.create({
         
         this.loadingAnimation.stop();
         this.loadingAnimation = null;
+        
+        AmpacheMobile.audioPlayer.clearNowPlaying();
+        window.onresize = null;
     },
     
     
@@ -406,33 +437,10 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("--> togglePausePlay");
     },
     
-    activate: function(event) {
-        Mojo.Log.info("--> activate");
-        AmpacheMobile.audioPlayer.setNowPlaying(this);
-
-        if (this.type === "play") {
-            AmpacheMobile.audioPlayer.play();
-        } else if (this.type === "enqueue") {
-            this.setMenuControls();
-        }
-
-        if (AmpacheMobile.audioPlayer.listIsShowing === true){
-            this.showListView();
-        }
-        else {
-            this.showAlbumView();
-        }
-
-        AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
-        Mojo.Log.info("<-- activate");
-    },
+    
 
     deactivate: function(event) {
         Mojo.Log.info("<-- activate");
-        //AmpacheMobile.audioPlayer.stop();
-        AmpacheMobile.audioPlayer.clearNowPlaying();
-        
-        window.onresize = null;
 
         Mojo.Log.info("--> activate");
     },

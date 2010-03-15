@@ -51,7 +51,7 @@ GenresAssistant = Class.create({
             //progressModel: this.listLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: 0,
-            SortFunction: null,
+            SortFunction: this.sortAlpha.bind(this),
             MatchFunction: this.IsMatch
 
         };

@@ -25,8 +25,13 @@ SongsAssistant = Class.create({
         this.Artist_id = params.Artist_id;
         this.Expected_items = params.Expected_items;
 
-        if ((this.Type === "random") || (this.Type === "playlist") || (this.Type === "all-songs") || (this.Type === "search") || (this.Type === "search-global") || (this.Type === "genre") || this.Type === "artist-songs") {
+        if ((this.Type === "recent") || (this.Type === "random") || (this.Type === "playlist") || (this.Type === "all-songs") || (this.Type === "search") || (this.Type === "search-global") || (this.Type === "genre") || this.Type === "artist-songs") {
             this.DisplayAlbumInfo = true;
+        }
+
+        if(params.FromDate)
+        {
+            this.FromDate = params.FromDate;
         }
 
         if (params.Genre_id) {
@@ -189,31 +194,50 @@ SongsAssistant = Class.create({
 
     GetSongs: function(callback, offset, limit) {
 
-        if (this.Type === "random") {
+        var params = {};
+        params.CallBack = callback;
+        params.offset = offset;
+        params.limit = limit;
+        
+        if (this.Type === "recent") {
+            this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
+            params.FromDate = this.FromDate
+            AmpacheMobile.ampacheServer.GetSongs(params);
+        }
+        else if (this.Type === "random") {
             this.itemsHelper.fetchLimit = 1;
             var random = Math.floor(Math.random() * parseInt(AmpacheMobile.ampacheServer.songs, 10));
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, random, 1);
+            params.offset = random;
+            params.limit = 1;
+            AmpacheMobile.ampacheServer.GetSongs(params);
         } else if (this.Type === "playlist") {
             this.itemsHelper.ExpectedItems = this.Item.items;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, this.Playlist_id, null, offset, limit);
+            params.PlayListID = this.Playlist_id;
+            AmpacheMobile.ampacheServer.GetSongs(params);
         } else if (this.Type === "album") {
             if (this.Item) {
                 this.itemsHelper.ExpectedItems = this.Item.tracks;
             }
-            AmpacheMobile.ampacheServer.GetSongs(callback, this.Album_id, null, null, null, offset, limit);
+            params.AlbumId = this.Album_id;
+            AmpacheMobile.ampacheServer.GetSongs(params);
         } else if ((this.Type === "all-songs") || (this.Type === "search")) {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, offset, limit, this.Search);
+            params.search = this.Search;
+            AmpacheMobile.ampacheServer.GetSongs(params);
         } else if (this.Type === "artist-songs") {
 
             this.itemsHelper.ExpectedItems = this.Expected_items;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, this.Artist_id, null, null, offset, limit);
+            params.ArtistId = this.Artist_id;
+            AmpacheMobile.ampacheServer.GetSongs(params);
         } else if (this.Type === "search-global") {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, null, offset, limit, this.Search, true);
+            params.search = this.Search;
+            params.global_search = true;
+            AmpacheMobile.ampacheServer.GetSongs(params);
         } else if (this.Type === "genre") {
             this.itemsHelper.ExpectedItems = this.Expected_items;
-            AmpacheMobile.ampacheServer.GetSongs(callback, null, null, null, this.Genre_id, offset, limit, this.Search, true);
+            params.TagID = this.Genre_id;
+            AmpacheMobile.ampacheServer.GetSongs(params);
         }
 
     },

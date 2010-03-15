@@ -11,6 +11,7 @@
     {"source": "javascript/AudioPlayer.js"},
     {"source": "javascript/ColorPicker.js"},
     {"source": "javascript/ItemsHelper.js"},
+    {"source": "javascript/ISO8601.js"},
     {
         "scenes": "connection",
         "source": "app/assistants/connection-assistant.js"
@@ -59,5 +60,9 @@
     {
         "scenes": "random",
         "source": "app/assistants/random-assistant.js"
+    },
+    {
+        "scenes": "recent",
+        "source": "app/assistants/recent-assistant.js"
     }
 ]

@@ -28,6 +28,11 @@ ArtistsAssistant = Class.create({
         if (params.Search) {
             this.Search = params.Search;
         }
+        
+        if(params.FromDate)
+        {
+            this.FromDate = params.FromDate;
+        }
     },
 
     
@@ -158,16 +163,29 @@ ArtistsAssistant = Class.create({
 
     },
 
-    GetArtists: function(GotItems, offset, limit) {
+    GetArtists: function(callback, offset, limit) {
+        
+        var params = {};
+        params.CallBack = callback;
+        params.offset = offset;
+        params.limit = limit;
+        params.FromDate = this.FromDate;
+        
+        
+        
+        
         if (this.type === "random") {
             this.itemsHelper.fetchLimit = 1;
             var random = Math.floor(Math.random() * parseInt(AmpacheMobile.ampacheServer.artists, 10));
-            AmpacheMobile.ampacheServer.GetArtists(GotItems, null, random, 1, null);
+            params.offset = random;
+            params.limit = 1;
         } else if (!this.Genre_id) {
-            AmpacheMobile.ampacheServer.GetArtists(GotItems, null, offset, limit, this.Search);
+            params.search = this.Search;
         } else {
-            AmpacheMobile.ampacheServer.GetArtists(GotItems, this.Genre_id, offset, limit, this.Search);
+            params.TagID = this.Genre_id;
         }
+        AmpacheMobile.ampacheServer.GetArtists(params);
+        
     },
 
     IsMatch: function(item, filterString) {
