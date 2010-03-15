@@ -113,6 +113,15 @@ MainmenuAssistant = Class.create({
             description: 0,
             icon: "images/icons/random.png",
             displayCount: "none"
+        },
+        {
+            category: $L("bottom"),
+            directory: $L("recent"),
+            name: $L("Recent"),
+            scene: "recent",
+            description: 0,
+            icon: "images/icons/recent.png",
+            displayCount: "none"
         }
 
         /*{
@@ -279,6 +288,12 @@ MainmenuAssistant = Class.create({
             {
                 SceneTitle: "Random",
                 Type: "all-genres"
+            });
+            break;
+        case "recent":
+            this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "recent"
             });
             break;
         case "shuffleAll":

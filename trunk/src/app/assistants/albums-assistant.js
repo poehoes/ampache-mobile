@@ -39,7 +39,11 @@ AlbumsAssistant = Class.create({
 
         this.isArtistView = false;
 
-        if (this.type === "random") {
+        if (this.type ==="recent")
+        {
+            this.DisplayArtistInfo = true;
+        }
+        else if (this.type === "random") {
             this.DisplayArtistInfo = true;
             this.Artist_id = params.Artist_id;
         } else if (params.Artist_id) {
@@ -56,6 +60,11 @@ AlbumsAssistant = Class.create({
 
         if (params.Search) {
             this.Search = params.Search;
+        }
+
+        if(params.FromDate)
+        {
+            this.FromDate = params.FromDate;
         }
 
         this.itemsHelper = new ItemsHelper();
@@ -93,6 +102,12 @@ AlbumsAssistant = Class.create({
 
         if (!this.isArtistView) {
             this.controller.get('shuffleForArtist').hide();
+        }
+        
+        if(this.FromDate)
+        {
+            this.controller.get('shuffleForArtist').show();
+            
         }
 
         var listAttributes;
@@ -276,20 +291,33 @@ AlbumsAssistant = Class.create({
         return false;
     },
 
-    GetAlbums: function(GotItems, offset, limit) {
+    GetAlbums: function(callback, offset, limit) {
         Mojo.Log.info("--> GetMoreAlbums");
 
+        var params = {};
+        params.CallBack = callback;
+        params.offset = offset;
+        params.limit = limit;
+
+        if(this.type ==="recent")
+        {
+            params.FromDate = this.FromDate;    
+        }
         if (this.type === "random") {
             this.itemsHelper.fetchLimit = 1;
             var random = Math.floor(Math.random() * parseInt(AmpacheMobile.ampacheServer.albums, 10));
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, null, random, 1, null);
+            params.offset = random;
+            params.limit = 1;
+            
         } else if (this.isArtistView === true) {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, this.Artist_id, null, offset, limit);
+            params.ArtistId = this.Artist_id;
         } else if (this.type === "genres") {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, this.Genre_id, offset, limit);
+            params.TagID = this.Genre_id;
         } else {
-            AmpacheMobile.ampacheServer.GetAlbums(GotItems, null, null, offset, limit, this.Search);
+            params.search = this.Search;
         }
+
+        AmpacheMobile.ampacheServer.GetAlbums(params);
 
         Mojo.Log.info("<-- GetMoreAlbums");
     },
@@ -314,7 +342,8 @@ AlbumsAssistant = Class.create({
 
     handleShuffleAll: function(event) {
         Mojo.Log.info("--> handleShuffleAll");
-
+        if(this.type !== "recent")
+        {
         this.controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "songs"
@@ -326,7 +355,21 @@ AlbumsAssistant = Class.create({
             Expected_items: this.numSongs ? this.numSongs: AmpacheMobile.ampacheServer.songs
             //Item: event.item
         });
-
+        }
+        else
+        {
+             this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "songs"
+                },
+                {
+                    SceneTitle: this.SceneTitle.replace("Albums", "Songs"),
+                    Type: "recent",
+                    DisplayArtistInfo: true,
+                    FromDate:this.FromDate
+                });
+            
+        }
         Mojo.Log.info("<-- handleShuffleAll");
     },
 

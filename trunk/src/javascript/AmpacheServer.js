@@ -240,9 +240,12 @@ AmpacheServer = Class.create({
                 Mojo.Log.info("Found Auth");
                 this.auth = findAuth[0].firstChild.data;
                 this.api = response.getElementsByTagName("api")[0].firstChild.data;
-                this.update = response.getElementsByTagName("update")[0].firstChild.data;
-                this.add = response.getElementsByTagName("add")[0].firstChild.data;
-                this.clean = response.getElementsByTagName("clean")[0].firstChild.data;
+                this.update = new Date();
+                this.update.setISO8601(response.getElementsByTagName("update")[0].firstChild.data);
+                this.add = new Date();
+                this.add.setISO8601(response.getElementsByTagName("add")[0].firstChild.data);
+                this.clean = new Date();
+                this.clean.setISO8601(response.getElementsByTagName("clean")[0].firstChild.data);
                 this.songs = parseInt(response.getElementsByTagName("songs")[0].firstChild.data, 10);
                 this.albums = parseInt(response.getElementsByTagName("albums")[0].firstChild.data, 10);
                 this.artists = parseInt(response.getElementsByTagName("artists")[0].firstChild.data, 10);
@@ -367,34 +370,40 @@ AmpacheServer = Class.create({
     //******************************************************************************************/
     //Get All Artist information 
     GetArtistsCallback: null,
-    GetArtists: function(_GetArtistsCallback, _TagID, _offset, _limit, _search) {
+    GetArtists: function(params) {
         Mojo.Log.info("--> AmpacheServer.prototype.GetArtists");
-        this.GetArtistsCallback = _GetArtistsCallback;
+        this.GetArtistsCallback = params.CallBack;
         var path;
         if (typeof this.GetArtistsCallback !== "function") {
             this.GetArtistsCallback = new Function(func);
         }
 
-        var offset = [];
+        var filter = [];
         var i = 0;
         var type = "artists";
-        offset[i++] = "offset";
-        offset[i++] = _offset;
-        offset[i++] = "limit";
-        offset[i++] = _limit;
+        filter[i++] = "offset";
+        filter[i++] = params.offset;
+        filter[i++] = "limit";
+        filter[i++] = params.limit;
 
-        if ((_search !== null) && (_search !== undefined)) {
-            offset[4] = "filter";
-            offset[5] = _search;
+        if ((params.search !== null) && (params.search !== undefined)) {
+            filter[4] = "filter";
+            filter[5] = params.search;
         }
 
-        if (_TagID) {
-            offset[i++] = "filter";
-            offset[i++] = _TagID;
+        if (params.TagID) {
+            filter[i++] = "filter";
+            filter[i++] = params.TagID;
             type = "tag_artists";
         }
+        
+        if(params.FromDate)
+        {
+            filter[i++] = "add";
+            filter[i++] = params.FromDate.toISO8601String();
+        }
 
-        path = this.BuildActionString(type, offset);
+        path = this.BuildActionString(type, filter);
 
         try {
             this.ArtistRequest = new Ajax.Request(path, {
@@ -489,10 +498,11 @@ AmpacheServer = Class.create({
     //Get Albums information 
     GetAlbumsCallback: null,
 
-    GetAlbums: function(_GetAlbumsCallback, _ArtistId, _TagID, _offset, _limit, _search) {
+    //GetAlbums: function(_GetAlbumsCallback, _ArtistId, _TagID, _offset, _limit, _search) {
+    GetAlbums: function(params) { 
         Mojo.Log.info("--> AmpacheServer.prototype.GetAlbums");
         var i = 0;
-        this.GetAlbumsCallback = _GetAlbumsCallback;
+        this.GetAlbumsCallback = params.CallBack;
         if (typeof this.GetAlbumsCallback !== "function") {
             this.GetAlbumsCallback = new Function(func);
         }
@@ -500,23 +510,28 @@ AmpacheServer = Class.create({
         var type = "albums";
         var filter = [];
 
-        if (_ArtistId) {
+        if (params.ArtistId) {
             filter[i++] = "filter";
-            filter[i++] = _ArtistId;
+            filter[i++] = params.ArtistId;
             type = "artist_albums";
-        } else if (_TagID) {
+        } else if (params.TagID) {
             filter[i++] = "filter";
             filter[i++] = _TagID;
             type = "tag_albums";
         }
 
         filter[i++] = "offset";
-        filter[i++] = _offset;
+        filter[i++] = params.offset;
         filter[i++] = "limit";
-        filter[i++] = _limit;
-        if (_search) {
+        filter[i++] = params.limit;
+        if (params.search) {
             filter[i++] = "filter";
-            filter[i++] = _search;
+            filter[i++] = params.search;
+        }
+        if(params.FromDate)
+        {
+            filter[i++] = "add";
+            filter[i++] = params.FromDate.toISO8601String();
         }
 
         var path = this.BuildActionString(type, filter);
@@ -601,9 +616,10 @@ AmpacheServer = Class.create({
     //******************************************************************************************/
     //Get Album Songs
     GetSongsCallback: null,
-    GetSongs: function(_GetSongsCallback, _AlbumId, _ArtistId, _PlayListID, _TagID, _offset, _limit, _search, _global_search) {
+    //GetSongs: function(_GetSongsCallback, _AlbumId, _ArtistId, _PlayListID, _TagID, _offset, _limit, _search, _global_search) {
+    GetSongs: function(params) {
         Mojo.Log.info("--> AmpacheServer.prototype.GetSongs");
-        this.GetSongsCallback = _GetSongsCallback;
+        this.GetSongsCallback = params.CallBack;
         if (typeof this.GetSongsCallback !== "function") {
             this.GetSongsCallback = new Function(func);
         }
@@ -611,35 +627,41 @@ AmpacheServer = Class.create({
         var path = "";
         var type = "";
         var filter = [];
-        if (_AlbumId) {
+        if (params.AlbumId) {
             filter[i++] = "filter";
-            filter[i++] = _AlbumId;
+            filter[i++] = params.AlbumId;
             type = "album_songs";
-        } else if (_ArtistId) {
+        } else if (params.ArtistId) {
             filter[i++] = "filter";
-            filter[i++] = _ArtistId;
+            filter[i++] = params.ArtistId;
             type = "artist_songs";
-        } else if (_PlayListID) {
+        } else if (params.PlayListID) {
             filter[i++] = "filter";
-            filter[i++] = _PlayListID;
+            filter[i++] = params.PlayListID;
             type = "playlist_songs";
-        } else if (_TagID) {
+        } else if (params.TagID) {
             filter[i++] = "filter";
-            filter[i++] = _TagID;
+            filter[i++] = params.TagID;
             type = "tag_songs";
-        } else if ((_global_search) && (_global_search === true)) {
+        } else if ((params.global_search) && (params.global_search === true)) {
             type = "search_songs";
         } else {
             type = "songs";
         }
 
+        if(params.FromDate)
+        {
+            filter[i++] = "add";
+            filter[i++] = params.FromDate.toISO8601String();
+        }
+
         filter[i++] = "offset";
-        filter[i++] = _offset;
+        filter[i++] = params.offset;
         filter[i++] = "limit";
-        filter[i++] = _limit;
-        if (_search) {
+        filter[i++] = params.limit;
+        if (params.search) {
             filter[i++] = "filter";
-            filter[i++] = _search;
+            filter[i++] = params.search;
         }
 
         path = this.BuildActionString(type, filter);

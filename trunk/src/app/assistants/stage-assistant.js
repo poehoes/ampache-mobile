@@ -73,22 +73,26 @@ StageAssistant.prototype.onBlurHandler = function ()
 
 StageAssistant.prototype.onFocusHandler = function ()
 {
-    if (!this.foregroundVolumeMarker)
-    {
-    
-    var parameters = {};
-    parameters.subscribe = true;
-    parameters.foregroundApp = true;
-		
-    this.foregroundVolumeMarker = new Mojo.Service.Request(
-	"palm://com.palm.audio/media",
-	{
-	    method: 'lockVolumeKeys',					
-	    onSuccess: this.lockVolumeKeys,
-	    parameters: parameters
-	}
-    );
+    try{
+        if (!this.foregroundVolumeMarker)
+        {
+        
+        var parameters = {};
+        parameters.subscribe = true;
+        parameters.foregroundApp = true;
+                    
+        this.foregroundVolumeMarker = new Mojo.Service.Request(
+            "palm://com.palm.audio/media",
+            {
+                method: 'lockVolumeKeys',					
+                onSuccess: this.lockVolumeKeys,
+                parameters: parameters
+            }
+        );
+        }
     }
+    catch(ex)
+    {}
 };
 
 StageAssistant.prototype.lockVolumeKeys = function(event)
@@ -178,13 +182,11 @@ StageAssistant.prototype.handleCommand = function(event) {
             serverinfo = "<div class='about'><BR><B>Server Info</B><div class='about-details'>";
             if((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.Connected===true))
             {
-                var update = new Date(AmpacheMobile.ampacheServer.update);
                 serverinfo += "Version: <font class='about-details-data'>" + AmpacheMobile.ampacheServer.version + "</font>";
                 serverinfo += "<BR>Link: <a class='about-details-data' href=" + AmpacheMobile.ampacheServer.URL +">" + AmpacheMobile.Account.AccountName + "</a>";
-                serverinfo += "<BR>Update:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.ProcessAmpacheDate(AmpacheMobile.ampacheServer.update), "medium") + "</font>"; 
-                serverinfo += "<BR>Add:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.ProcessAmpacheDate(AmpacheMobile.ampacheServer.add), "medium") + "</font>";
-                serverinfo += "<BR>Clean:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.ProcessAmpacheDate(AmpacheMobile.ampacheServer.clean), "medium") + "</font>";
-                
+                serverinfo += "<BR>Update:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.update, "medium") + "</font>";
+                serverinfo += "<BR>Add:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.add, "medium") + "</font>";
+                serverinfo += "<BR>Clean:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.clean, "medium") + "</font>";
             }
             else
             {
