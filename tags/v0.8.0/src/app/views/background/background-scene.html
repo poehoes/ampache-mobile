@@ -1,0 +1,22 @@
+<!-- This is div is required -->
+<div id="scene-container"></div>
+<div x-mojo-element="RadioButton" id="wallpaperType" class="radiobuttonClass"></div>
+<div id="color-container" style="display: none;">
+    <div id="colorPicker">
+        <input type="text" class="color" value="#FF0000">
+    </div>
+    <div class="palm-group">
+        <div class="palm-group-title">Overlay Selector</div>
+        <div class="palm-list">
+            <div class="palm-row first last" x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div id="overlaySelector" x-mojo-element="ListSelector"></div>                                                   
+                </div>
+            </div>
+        </div>      
+    </div>
+</div>
+<div id="image-container" style="display: none;">
+    <div id="myPhotoDiv" x-mojo-element="ImageView" ></div>
+    <div x-mojo-element="Button" id="btnChooseWallpaperImage" class="buttonClass"></div>
+</div>

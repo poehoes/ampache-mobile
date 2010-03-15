@@ -1,0 +1,72 @@
+<div class="palm-scene palm-dark" id="now-playing">
+    <div class="palm-hasheader music-now-playing-art music-streaming">
+        <div class="palm-header left truncating-text" onclick="assistant.toggleViews();">
+           
+            <div class="palm-header-wrapper">
+                
+                <div class="toggle-inlay" >
+                    <div id="toggle-album-view" class="toggle-album-view" x-mojo-tap-highlight="immediate">
+                        <img height="32px" width="32px" src="images/icons/albums.png" />
+                    </div>
+                    <div id="toggle-list-view" class="toggle-list-view depressed" x-mojo-tap-highlight="immediate">
+                        <img height="32px" width="32px" src="images/icons/playlists.png" />
+                    </div>
+                </div>
+                
+                <div id="song-x-of-y" class="song-x-of-y">
+                </div>
+                <div id="title" class="truncating-text current-song-text">
+                    Now Playing
+                </div>
+            </div>
+        </div>
+        <div class="palm-header-spacer">
+        </div>
+        <div class="scrim">
+        </div>
+        
+        
+        
+        <div id="playback-display">
+            
+            <div id="albumArtist" class="artist-album-title truncating-text">
+                Artist - Album 
+            </div>
+            <div id="loaded-display" class="art-container" align="center">
+                <img id="coverArt" width="240" height="240">
+                </img>
+                <div id="spinner" x-mojo-element="Spinner" class='centerSpinner'>
+                    <span class="spinner-message">Loading Stream</span>
+                </div>
+            </div>
+            <div id="songTitle" class="stream-title truncating-text">
+                Title
+            </div>
+            <div id="progress-info" class="stream-info" align="center">
+                <div id="playback-progress" class="elapsed">
+                    00:00
+                </div>
+                <div id="sliderdiv" x-mojo-element="ProgressSlider" class="stream-buffer-bar" align="left">
+                </div>
+                <div id="playback-remaining" class="duration">
+                    00:00
+                </div>
+            </div>
+            <div id="stream-debug" class="stream-debug truncating-text">
+            </div>
+        </div>
+        
+       <div id="list-display">
+            <div class="palm-list" id="npList" x-mojo-element="List"/>
+        </div>
+
+        
+        
+        
+        
+        </div>
+       
+    </div>
+</div>
+<div class='customBackground'>
+</div>

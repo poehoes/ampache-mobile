@@ -1,0 +1,106 @@
+<div id="main" class="palm-dark">
+    <div id="header" class="palm-header left truncating-text">
+        <div class="palm-header-wrapper">
+            <div id='now-playing-button' class="now-playing-button" x-mojo-tap-highlight="immediate">
+                <div class="now-playing-wrapper">
+                    <span x-mojo-loc=''>Now Playing</span>
+                </div>
+            </div>
+            <div class='header-body'>
+                <div class='icon'><img class="icon-img" src='images/icons/search.png'/></div>
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>Search</div>
+            </div>
+        </div>
+    </div>  
+    <div id="spacerDiv" class="music-header-spacer"></div>
+    
+    <div id="search-group" class="palm-group unlabeled palm-dark mainMenuList">
+        <div id="search-list" class="palm-list">
+            <div class="palm-row first">
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <!--<div class="image">
+                            <img class="mainMenuIcon" src="images/icons/search.png">
+                            </img>
+                        </div>-->
+                        <div class="label left">Find...</div>
+                        <div x-mojo-element="TextField" id="search-field"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="palm-row" id='searchArtists' x-Mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">Artists</div>
+                    </div>
+                    <div class="mainMenuRight">
+                        <img class="mainMenuIcon" src="images/icons/artists.png"></img>
+                    </div>
+                    <div class="mainMenuClear"></div>
+                </div>
+            </div>
+            <div class="palm-row" id='searchAlbums' x-Mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">Albums</div>
+                    </div>
+                    <div class="mainMenuRight">
+                        <img class="mainMenuIcon" src="images/icons/albums.png"></img>
+                    </div>
+                    <div class="mainMenuClear"></div>
+                </div>
+            </div>
+            <div class="palm-row" id='searchSongs' x-Mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">Songs</div>
+                    </div>
+                    <div class="mainMenuRight">
+                        <img class="mainMenuIcon" src="images/icons/songs.png"></img>
+                    </div>
+                    <div class="mainMenuClear"></div>
+                </div>
+            </div>
+
+            <div class="palm-row" id='searchPlaylists' x-Mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">Playlists</div>
+                    </div>
+                    <div class="mainMenuRight">
+                        <img class="mainMenuIcon" src="images/icons/playlists.png"></img>
+                    </div>
+                    <div class="mainMenuClear"></div>
+                </div>
+            </div>
+            <!--
+            <div class="palm-row" id='searchGenres' x-Mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">
+                            Genres
+                        </div>
+                    </div>
+                    <div class="mainMenuRight">
+                        <img class="mainMenuIcon" src="images/icons/genres.png">
+                        </img>
+                    </div>
+                    <div class="mainMenuClear">
+                    </div>
+                </div>
+            </div>-->
+            <div class="palm-row last" id='searchGlobal' x-Mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">Global</div>
+                    </div>
+                    <div class="mainMenuRight">
+                        <img class="mainMenuIcon" src="images/icons/global.png"></img>
+                    </div>
+                    <div class="mainMenuClear"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
