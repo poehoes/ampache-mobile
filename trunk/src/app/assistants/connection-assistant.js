@@ -26,6 +26,7 @@ ConnectionAssistant = Class.create({
 
         AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
 
+        
         //******************************************************************************************************
         // Make scrim
         this.scrim = $("connect-scrim");

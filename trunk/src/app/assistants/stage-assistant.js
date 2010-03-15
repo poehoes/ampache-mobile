@@ -63,13 +63,51 @@ StageAssistant.appMenuModel = {
     }]
 };
 
+StageAssistant.prototype.onBlurHandler = function ()
+{
+    if (this.foregroundVolumeMarker){
+	this.foregroundVolumeMarker.cancel();
+	this.foregroundVolumeMarker = null;
+    }    
+};
+
+StageAssistant.prototype.onFocusHandler = function ()
+{
+    if (!this.foregroundVolumeMarker)
+    {
+    
+    var parameters = {};
+    parameters.subscribe = true;
+    parameters.foregroundApp = true;
+		
+    this.foregroundVolumeMarker = new Mojo.Service.Request(
+	"palm://com.palm.audio/media",
+	{
+	    method: 'lockVolumeKeys',					
+	    onSuccess: this.lockVolumeKeys,
+	    parameters: parameters
+	}
+    );
+    }
+};
+
+StageAssistant.prototype.lockVolumeKeys = function(event)
+{
+    
+};
+
 StageAssistant.prototype.setup = function() {
     Mojo.Log.info("--> StageAssistant.prototype.setup");
     this.controller.pushScene({
         transition: AmpacheMobile.Transition,
         name: "connection"
     });
+    
+    window.document.addEventListener(Mojo.Event.deactivate, this.onBlurHandler.bind(this));
+    window.document.addEventListener(Mojo.Event.activate, this.onFocusHandler.bind(this));
 };
+
+
 
 GotoPreferences = function() {
     AmpacheMobile.loadingPreferences = true;
@@ -95,6 +133,7 @@ StageAssistant.prototype.confirmGotoPrefs = function(value) {
         GotoPreferences();
     }
 };
+
 
 
 
@@ -161,7 +200,7 @@ StageAssistant.prototype.handleCommand = function(event) {
                 choices: [{
                     label: "OK",
                     value: ""
-                },],
+                }],
                 allowHTMLMessage: true
             });
             break;
