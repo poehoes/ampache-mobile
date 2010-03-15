@@ -1,28 +1,28 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
 ===Version 0.8.0 (Beta) (03/14/2010)====
-  *[New Feature] Playlist view added to now playing screen.
+  *New Feature: Playlist view added to now playing screen.
     *Application saves last view state between sessions
     * Swipe to delete
     * Drag to reorder
     * Buffer and playback indicators
     * Tap Header to toggle view
     * Coming with Ampache 3.6, ability to save a now playing list to the server 
-  *[New Feature] Added configuration for auto stall recovery, per account.  Default:Off
+  *New Feature: Added configuration for auto stall recovery, per account.  Default:Off
       * Turn this off if you are having issues with songs restarting
-  *[New Feature] List Jump: tap the header on a page with dividers to bring up a Selector to jump down in the list.  No more scrolling forever.
+  *New Feature: List Jump: tap the header on a page with dividers to bring up a Selector to jump down in the list.  No more scrolling forever.
     *Currently on Artists and Albums Lists
     *Long lists can take awhile to populate the drop down, be patient
-  *[New Feature] New splash screen when app starts
-  *[new Feature] Volume Keys: instructs webOS that the application wants music volume, allows changing of music volume prior to starting playback of music
-  *[Improvement] Added drag to reorder accounts in preferences screen.
-  *[Improvement] Requests which result in no information from the server now display a useful message allow the user to retry the request.  Formerly these messages were mistaken as Unicode errors.
-  *[Improvement] Request confirmation for preferences screen when playing music    
-  *[Improvement] About... now shows server information
-  *[Bug Fix] Downloading indicators broke with webOS 1.4
-  *[Bug Fix] Simplified AudioPlayer class due to improvements made in webOS media handling
-  *[Bug Fix] Fixed alpha divider in artists view.
-  *[Known Bug] Ampache 3.5.4 broke stream all songs.  Requested fix, slated for Ampache 3.6.  Added error message.
+  *New Feature: New splash screen when app starts
+  *New Feature: Volume Keys: instructs webOS that the application wants music volume, allows changing of music volume prior to starting playback of music
+  *Improvement: Added drag to reorder accounts in preferences screen.
+  *Improvement: Requests which result in no information from the server now display a useful message allow the user to retry the request.  Formerly these messages were mistaken as Unicode errors.
+  *Improvement: Request confirmation for preferences screen when playing music    
+  *Improvement: About... now shows server information
+  *Bug Fix: Downloading indicators broke with webOS 1.4
+  *Bug Fix: Simplified AudioPlayer class due to improvements made in webOS media handling
+  *Bug Fix: Fixed alpha divider in artists view.
+  *Known Bug: Ampache 3.5.4 broke stream all songs.  Requested fix, slated for Ampache 3.6.  Added error message.
 
 [Note] New application name space, no longer using com.palm.ampachemobile, the API is mature enough to move to com.ampachemobile.
         o This means 0.7.0 and 0.8.0 can exist on the same app.  Transfer account settings and delete old app.
