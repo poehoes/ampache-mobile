@@ -133,7 +133,7 @@ SongsAssistant = Class.create({
 
     findSong: function(songId) {
         for (i = 0; i < this.itemsHelper.ItemsList.length; i++) {
-            if (this.itemsHelper.ItemsList[i].id === songId) {
+            if (Number(this.itemsHelper.ItemsList[i].id) === Number(songId)) {
                 return this.itemsHelper.ItemsList[i];
             }
         }
@@ -174,8 +174,12 @@ SongsAssistant = Class.create({
                 items: filteredCmd
             });
         }
-
-        Mojo.Log.info("listHeld " + song.title);
+        else
+        {
+            this.heldPending = false;
+        }
+        
+        //Mojo.Log.info("listHeld " + song.title);
     },
 
     handleCommand: function(event) {
@@ -201,7 +205,7 @@ SongsAssistant = Class.create({
         
         if (this.Type === "recent") {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-            params.FromDate = this.FromDate
+            params.FromDate = this.FromDate;
             AmpacheMobile.ampacheServer.GetSongs(params);
         }
         else if (this.Type === "random") {

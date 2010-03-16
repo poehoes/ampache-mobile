@@ -348,7 +348,7 @@ AudioPlayer = Class.create({
             this.playList[i].index = i+1;
         }
 
-        this.markPlayListUnplayed();
+        //this.markPlayListUnplayed();
         this.playOrderList = this.createOrderList();
         this.shuffleOn = _shuffleOn;
         if (_shuffleOn) {
@@ -366,12 +366,22 @@ AudioPlayer = Class.create({
     enqueuePlayList: function(newPlayList, _shuffleOn) {
         if (this.playList) {
             //Combine lists
-            var originalSize = this.playList.length;
+           
+            
+            offset = this.playList.length;
             for (var i = 0; i < newPlayList.length; i++) {
-                this.playList[originalSize + i] = newPlayList[i];
-                this.playList[originalSize + i].index = originalSize+i+1;
-                this.playOrderList[originalSize + i] = originalSize + i;
+            
+                this.playList[i+offset] = newPlayList[i].clone();
             }
+            
+           
+            for (var i = 0; i < this.playList.length; i++) {
+            
+                this.playList[i].index = i+1;
+            }
+            
+            this.playOrderList = this.createOrderList();
+            
             if (_shuffleOn || this.shuffleOn === true) {
                 this.toggleShuffleOn();
             }
@@ -384,12 +394,12 @@ AudioPlayer = Class.create({
     //**********************************************************************************************************************
     //Code for shuffle
     //**********************************************************************************************************************
-    markPlayListUnplayed: function() {
-        var i = 0;
-        do {
-            this.playList[i].played = false;
-        } while (++ i < this . playList . length );
-    },
+    //markPlayListUnplayed: function() {
+    //    var i = 0;
+    //    do {
+    //        this.playList[i].played = false;
+    //    } while (++ i < this . playList . length );
+    //},
 
     createOrderList: function() {
         //Inititialize an array to randomize;
@@ -840,7 +850,19 @@ AudioPlayer = Class.create({
                 duration = this.player.duration;
             }
             if (duration != "Infinity") {
-                this.NowPlaying.updateTime(currentTime, duration);
+                
+                this.timePercentage = 0;
+                if (duration === 0) {
+                    this.timePercentage = 0;
+                } else {
+                    this.timePercentage = (currentTime / duration) * 100;
+                }
+                
+                this.NowPlaying.updateTime(currentTime, duration, this.timePercentage);
+            }
+            else
+            {
+                this.timePercentage = 0;
             }
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
@@ -855,14 +877,17 @@ AudioPlayer = Class.create({
     ClearNowPlayingTime: function() {
         Mojo.Log.info("--> AudioPlayer.prototype.ClearNowPlayingTime");
         if (this.NowPlaying) {
-            this.NowPlaying.updateTime(0, 0);
+            this.NowPlaying.updateTime(0, 0, 0);
+            this.timePercentage = 0;
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.ClearNowPlayingTime");
     },
 
     UpdateNowPlayingBuffering: function(start, end) {
+        AmpacheMobile.audioPlayer.downloadPercentage = Math.floor( end*100);
         //Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
         if (this.NowPlaying) {
+            
             this.NowPlaying.updateBuffering(start, end);
         }
         //Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
@@ -984,7 +1009,8 @@ AudioPlayer = Class.create({
 
     NowPlayingResetTime: function() {
         if (this.NowPlaying) {
-            this.NowPlaying.updateTime(0, 0);
+            this.NowPlaying.updateTime(0, 0, 0);
+            this.timePercentage =0;
         }
     },
 

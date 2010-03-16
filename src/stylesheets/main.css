@@ -1018,3 +1018,10 @@ margin-left:10px;
         position:absolute;
         left:55px;
 }
+
+#playback-display
+{
+        position:fixed;
+        left:0px;
+        top:50px;
+}
