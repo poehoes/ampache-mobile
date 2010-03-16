@@ -64,6 +64,10 @@ SongModel = Class.create({
         }
         this.timeStr += seconds;
     },
+    
+    clone :function(){
+        return new SongModel(this.id, this.title, this.artist, this.artist_id, this.album, this.album_id, this.track, this.time, this.url, this.size, this.art, this.mime); 
+    },
     id: null,
     title: null,
     artist: null,
