@@ -240,7 +240,12 @@ RandomAssistant = Class.create({
         this.AlbumSpinner(this.fetching, true);
         //this.TurnOnSpinner();
         var random = Math.floor(Math.random() * parseInt(AmpacheMobile.ampacheServer.albums, 10));
-        AmpacheMobile.ampacheServer.GetAlbums(this.GotRandomAlbum.bind(this), null, null, random, 1, null);
+        params = {};
+        params.CallBack = this.GotRandomAlbum.bind(this);
+        params.offset = random;
+        params.limit = 1;
+        
+        AmpacheMobile.ampacheServer.GetAlbums(params);
     },
 
     GotRandomAlbum: function(album) {
