@@ -530,6 +530,53 @@ AudioPlayer = Class.create({
         }
     },
 
+    _seek:function(seekTime)
+    {
+        try {
+            this.player.currentTime = seekTime;
+            }
+        catch(e) {
+            Mojo.Log.error("Error setting currentTime: %j", e);
+        }
+    },
+
+    seek:function(seekTime)
+    {
+        if(seekTime < this.player.duration)
+        {
+            if(seekTime >= 0)
+            {
+                this._seek(seekTime);
+            }
+            else
+            {
+                this._seek(0);
+            }
+        }
+        else
+        {
+            this._seek(this.player.duration-1);
+        }
+    },
+
+    jump:function(seconds)
+    {
+        this.seek(this.player.currentTime+seconds);
+    },
+    
+    seekPercentage:function(percent)
+    {
+        var secs = this.player.currentTime;
+        var duration = this.player.duration;
+        if ((duration) && (duration !== 0)) {
+            var secs = Math.round(percent * duration);
+        }
+
+        this.seek(secs);
+       
+    },
+
+
     TurnOffNowPlayingButton: function() {
         var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
         var button = controller.get('now-playing-button');
@@ -1046,6 +1093,9 @@ AudioPlayer = Class.create({
         }
         //Mojo.Log.info("<-- AudioPlayer.prototype._updateBuffering");
     },
+
+    
+
 
     setNowPlaying: function(NowPlayingPointer) {
         Mojo.Log.info("<-- AudioPlayer.prototype.setNowPlaying loaded");

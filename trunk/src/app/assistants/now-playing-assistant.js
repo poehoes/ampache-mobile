@@ -209,6 +209,10 @@ NowPlayingAssistant = Class.create({
          }
         
         
+        this.keypressHandler = this.handleKeyPressEvent.bindAsEventListener(this);
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
+        
+        
         
         Mojo.Log.info("<-- setup");
     },
@@ -224,6 +228,9 @@ NowPlayingAssistant = Class.create({
     },
     
     cleanup: function(event) {
+        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
+        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
+        
         this.slider = this.controller.get('sliderdiv');
         Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
         Mojo.Event.stopListening(this.slider, Mojo.Event.sliderDragStart, this.dragStartHandler);
@@ -268,7 +275,71 @@ NowPlayingAssistant = Class.create({
         }
         
     },
-   
+    
+    handleKeyPressEvent: function(event) {
+        /*
+         var eventModel =
+         {
+         eventType: event.type,
+         eventKeyCode: event.originalEvent.keyCode,
+         eventChar: String.fromCharCode(event.originalEvent.keyCode)
+         };
+         */
+        
+        switch (Number(event.originalEvent.keyCode)) {
+            
+            case 113: // Q 
+            case  81: // Q + Caps
+            case  47: // Q + Orange
+            
+                AmpacheMobile.audioPlayer.play_prev();
+                break;
+            case 112: // P 
+            case  80: // P + Caps
+            case  61: // P + Orange
+                AmpacheMobile.audioPlayer.play_next(true);
+                break;
+            
+            case 32: // Space Bar Key
+                this.togglePausePlay();
+                break;
+            case 115: // S 
+            case 83:  // S + Caps
+            case 45:  // S + Orange
+                this.toggleShuffle();
+                break;
+            case 114: // R 
+            case 82:  // R + Caps
+            case 50:  // R + Orange
+                this.toggleRepeat();
+                break;
+            case  46: // (.) Period Key
+            case   8: // Delete
+                AmpacheMobile.audioPlayer.jump(15);
+                break;
+            case  44: // (,) Comma
+            case  64: // (@) Comma
+            case  97: // A
+                AmpacheMobile.audioPlayer.jump(-15);
+                break;
+            case 118: // V
+            case  86: // V + Caps
+                this.toggleViews();
+                break;
+                
+            //default:
+            //    this.controller.showAlertDialog({
+            //   title: $L("Unknown Keycode"),
+            //   message: "Key Code: " + event.originalEvent.keyCode,
+            //   choices: [{
+            //       label: 'OK',
+            //       value: "retry",
+            //       type: 'primary'
+            //   }]});
+            //    break;
+        }
+    },
+    
     
     listTapHandler:function(event)
     {
@@ -508,20 +579,7 @@ NowPlayingAssistant = Class.create({
         this.sliderIsDragging = false;
         var pos = this.sliderModel.value;
         var percentage = (pos / 100);
-        //Not yet supporting restaring the download from a new spot
-        var secs = AmpacheMobile.audioPlayer.player.currentTime;
-        var duration = AmpacheMobile.audioPlayer.player.duration;
-        if ((duration) && (duration !== 0)) {
-            var secs = Math.round((pos / 100) * duration);
-        }
-
-        try {
-            AmpacheMobile.audioPlayer.player.currentTime = secs;
-        }
-
-        catch(e) {
-            Mojo.Log.error("Error setting currentTime: %j", e);
-        }
+        AmpacheMobile.audioPlayer.seekPercentage(percentage);
 
         AmpacheMobile.audioPlayer.NowPlayingStartPlaybackTimer();
        
