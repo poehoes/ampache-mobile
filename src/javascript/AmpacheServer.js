@@ -468,10 +468,11 @@ AmpacheServer = Class.create({
                             i++;
                         } catch(err) {
                             var name = artistListXML[i].getElementsByTagName("name");
+                            var _name;
                             if (name) {
-                                var _name = artistListXML[i].getElementsByTagName("name")[0].firstChild.data;
+                                _name = artistListXML[i].getElementsByTagName("name")[0].firstChild.data;
                             } else {
-                                var _name = "";
+                                _name = "";
                             }
                             ArtistList[i] = new ArtistModel(artistListXML[i].getAttribute("id"), _name, artistListXML[i].getElementsByTagName("albums")[0].firstChild.data, artistListXML[i].getElementsByTagName("songs")[0].firstChild.data);
                             i++;
@@ -698,7 +699,7 @@ AmpacheServer = Class.create({
             transport = this.CleanupIllegalXML(transport);
         }
         if (transport.responseXML) {
-            SongsList = new Array();
+            SongsList = [];
             /*
              <root>
              <song id="3180">
@@ -1039,256 +1040,17 @@ AmpacheServer = Class.create({
         var m = t.evaluate(transport);
         Mojo.Log.info("Failed:", m);
         this.ConnectCallBack(m);
-    },
-    
-    
-    ProcessAmpacheDate:function(dateStr)
-    {
-        var matches = dateStr.match(/^([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2}:[0-9]{2})(.*$)/);
-        
-        var timezone = "";
-        if(matches.length===4)
-        {
-            timezone = matches[3].replace(":","");
-        }
-        return new Date(matches[1] + " " + matches[2] + " GMT" + timezone);
     }
 });
 
-ArtistModel = Class.create({
-    initialize: function(_id, _name, _albums, _songs) {
-        //Mojo.Log.info("Arist model: " + _name);
-        this.id = _id;
-        this.name = _name;
-        this.albums = _albums;
-        this.songs = _songs;
-    },
-    id: null,
-    name: null,
-    albums: null,
-    songs: null
-});
 
-/*
- <root>
- <album id="2910">
- <name>Back in Black</name>
- <artist id="129348">AC/DC</artist>
- <year>1984</year>
- <tracks>12</tracks>
- <disk>1</disk>
- <tag id="2481" count="2">Rock & Roll</tag>
- <tag id="2482" count="1">Rock</tag>
- <tag id="2483" count="1">Roll</tag>
- <art>http://localhost/image.php?id=129348</art>
- <preciserating>3</preciserating>
- <rating>2.9</rating>
- </album>
- </root>
- */
-AlbumModel = Class.create({
-    initialize: function(_id, _name, _artist, _artist_id, _tracks, _year, _disc, _art) {
-        //Mojo.Log.info("--> AlbumModel constructor " + _name);
-        this.id = _id;
-        this.artist = _artist;
-        this.artist_id = _artist_id;
-        this.name = _name;
-        this.tracks = _tracks;
-        this.year = _year;
-        this.disc = _disc;
-        this.art = _art;
-        this.generateDescription();
-        // Mojo.Log.info("<-- AlbumModel constructor " + _name);
-    },
-    id: "",
-    name: "",
-    artist: "",
-    artist_id: null,
-    tracks: "",
-    year: "",
-    disc: "",
-    art: "",
-    description: "",
-    sortByYearTitleString: function() {
-        //This is just for the sort function of the albums scene
-        var year;
-        if (this.year === "N/A") {
-            year = 0x0000;
-        } else {
-            year = parseInt(this.year, 10);
-        }
-        return year + "_" + this.name + "_" + this.disc;
-    },
-    generateDescription: function() {
-        this.description = "";
-        if (this.year !== "") {
-            this.description += "Year: " + this.year + " ";
-        }
-        if (this.tracks !== "") {
-            this.description += "Tracks: " + this.tracks + " ";
-        }
-        if ((this.disc !== "") && (this.disc !== "0")) {
-            this.description += "Disc #: " + this.disc + " ";
-        }
-    }
-});
 
-/*
- <root>
- <song id="3180">
- <title>Hells Bells</title>
- <artist id="129348">AC/DC</artist>
- <album id="2910">Back in Black</album>
- <tag id="2481" count="3">Rock & Roll</tag>
- <tag id="2482" count="1">Rock</tag>
- <tag id="2483" count="1">Roll</tag>
- <track>4</track>
- <time>234</time>
- <url>http://localhost/play/index.php?oid=123908...</url>
- <size>Song Filesize in Bytes</size>
- <art>http://localhost/image.php?id=129348</art>
- <preciserating>3</preciserating>
- <rating>2.9</rating>
- </song>
- </root>
- */
-SongModel = Class.create({
-    initialize: function(_id, _title, _artist, _artist_id, _album, _album_id, _track, _time, _url, _size, _art, _mime) {
-        //Mojo.Log.info("--> SongModel constructor " + _title);
-        this.id = _id;
-        this.title = _title;
-        this.artist = _artist;
-        this.album = _album;
-        this.track = _track;
-        this.time = parseInt(_time,10);
-        this.url = _url;
-        this.size = _size;
-        this.art = _art;
-        this.mime = _mime;
-        this.album_id = _album_id;
-        this.artist_id = _artist_id;
-        this.played = false;
-        //Mojo.Log.info("<-- SongModel constructor " + _title);
-        
-        minutes = Math.floor(this.time/60);
-        seconds = this.time-(minutes*60);
-        this.timeStr = minutes + ":";
-        if(seconds<10)
-        {
-            this.timeStr += "0";
-        }
-        this.timeStr += seconds;
-    },
-    id: null,
-    title: null,
-    artist: null,
-    artist_id: null,
-    album: null,
-    album_id: null,
-    track: null,
-    time: null,
-    timeStr:null,
-    url: null,
-    size: null,
-    art: null,
-    mime: null
-    
-    
-    
-});
-/*
- * <playlist id="1234">
- <name>The Good Stuff</name>
- <owner>Karl Vollmer</owner>
- <items>50</items>
- <tag id="2481" count="2">Rock & Roll</tag>
- <tag id="2482" count="2">Rock</tag>
- <tag id="2483" count="1">Roll</tag>
- <type>Public</type>
- </playlist>
- */
-PlaylistModel = Class.create({
-    initialize: function(_id, _name, _owner, _items, _type) {
-        this.id = _id;
-        this.name = _name;
-        this.owner = _owner;
-        this.items = _items;
-        this.type = _type;
-        this.desc = "Songs: " + this.items + " Owner: " + this.owner;
-    },
-    id: null,
-    name: null,
-    owner: null,
-    items: null,
-    type: null,
-    desc: null
-});
 
-PingModel = Class.create({
-    /*
-     <?xml version="1.0" encoding="UTF-8" ?>
-     <root>
-     <session_expire><![CDATA[Sun, 20 Sep 2009 22:29:27 -0500]]></session_expire>
-     <version><![CDATA[350001]]></version>
-     <server></server>
-     </root>
-     */
-    initialize: function(PingXML) {
-        var pingResponse = PingXML.getElementsByTagName("root")[0];
-        this.SessionExpires = pingResponse.getElementsByTagName("session_expire")[0].firstChild.data;
-        this.UTC = Date.parse(this.SessionExpires);
-        var CurrentTime = new Date();
-        var CurrentUTC = CurrentTime.getTime();
-        this.TimeRemaining = this.UTC - CurrentUTC;
-        this.TimeRemaining *= 0.45; //So it will ping twice during the session time
-        this.ApiVersion = pingResponse.getElementsByTagName("version")[0].firstChild.data;
-        if(pingResponse.getElementsByTagName("server")[0])
-        {
-            this.Server = pingResponse.getElementsByTagName("server")[0].firstChild.data;
-        }
-        else
-        {
-            this.Server= "Unknown";
-        }
-        
-    },
-    
-    
-    UTC: null,
-    SessionExpires: null,
-    ApiVersion: null,
-    Server:null
-});
 
-TagModel = Class.create({
-    /*
-     *
-     <root>
-     <tag id="2481">
-     <name>Rock & Roll</name>
-     <albums>84</albums>
-     <artists>29</artists>
-     <songs>239</songs>
-     <videos>13</video>
-     <playlists>2</playlist>
-     <stream>6</stream>
-     </tag>
-     </root>
-     *
-     */
-    initialize: function(_id, _name, _albums, _artists, _songs, _videos, _playlists, _stream) {
-        this.id = _id;
-        this.name = _name;
-        this.albums = _albums;
-        this.artists = _artists;
-        this.songs = _songs;
-        this.videos = _videos;
-        this.playlists = _playlists;
-        this.stream = _stream;
-        //this.desc = "Artists: " + this.artists + " Songs: " + this.songs + " Albums: " + this.albums;
-        this.desc = "Songs: " + this.songs +" Artists: " + this.artists + " Albums: " + this.albums;
-    }
-});
+
+
+
+
 
 AmpacheServerAUTH = Class.create({
     root: [{

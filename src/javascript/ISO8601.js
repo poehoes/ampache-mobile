@@ -1,3 +1,24 @@
+/*
+    Copyright (c) Ampache Mobile
+    All rights reserved.
+
+    This file is part of Ampache Mobile.
+
+    Ampache Mobile is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Ampache Mobile is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 Date.prototype.setISO8601 = function (string) {
     var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
         "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
@@ -15,7 +36,7 @@ Date.prototype.setISO8601 = function (string) {
     if (d[12]) { date.setMilliseconds(Number("0." + d[12]) * 1000); }
     if (d[14]) {
         offset = (Number(d[16]) * 60) + Number(d[17]);
-        offset *= ((d[15] == '-') ? 1 : -1);
+        offset *= ((d[15] === '-') ? 1 : -1);
     }
 
     offset -= date.getTimezoneOffset();
@@ -47,11 +68,11 @@ Date.prototype.toISO8601String = function (format, offset) {
     } else {
         var d = offset.match(/([-+])([0-9]{2}):([0-9]{2})/);
         var offsetnum = (Number(d[2]) * 60) + Number(d[3]);
-        offsetnum *= ((d[1] == '-') ? -1 : 1);
+        offsetnum *= ((d[1] === '-') ? -1 : 1);
         var date = new Date(Number(Number(this) + (offsetnum * 60000)));
     }
 
-    var zeropad = function (num) { return ((num < 10) ? '0' : '') + num; }
+    var zeropad = function (num) { return ((num < 10) ? '0' : '') + num; };
 
     var str = "";
     str += date.getUTCFullYear();
