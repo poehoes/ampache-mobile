@@ -78,15 +78,9 @@ NowPlayingAssistant = Class.create({
         this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuModel);
 
         
-
-        Mojo.Log.info("Setup sliderModel");
-        this.sliderModel = {
-            value: 0,
-            maxValue: 100,
-            minValue: 0,
-            progress: 0
-        };
-
+        
+        
+        /*
         Mojo.Log.info("Setup spinnnerAttrs");
         this.spinnerAttrs = {
             spinnerSize: 'large'
@@ -98,9 +92,15 @@ NowPlayingAssistant = Class.create({
         };
 
         Mojo.Log.info("Setup spinner");
-        this.controller.setupWidget('spinner', this.spinnerAttrs, this.spinnerModel);
+        this.controller.setupWidget('spinner', this.spinnerAttrs, this.spinnerModel);*/
 
-        Mojo.Log.info("Setup slider attrs");
+        this.sliderModel = {
+            value: 0,
+            maxValue: 100,
+            minValue: 0,
+            progress: 0
+        };
+
         // setup the slider
         var sliderAttributes = {
             sliderProperty: 'value',
@@ -201,12 +201,11 @@ NowPlayingAssistant = Class.create({
             this.controller.get('toggle-list-view').addClassName('depressed');        
             this.controller.get('toggle-album-view').removeClassName('depressed');
         }
-        else
-        {
+        else{
             this.controller.get('toggle-list-view').removeClassName('depressed');        
             this.controller.get('toggle-album-view').addClassName('depressed');
            
-         }
+        }
         
         
         this.keypressHandler = this.handleKeyPressEvent.bindAsEventListener(this);
@@ -229,7 +228,6 @@ NowPlayingAssistant = Class.create({
     
     cleanup: function(event) {
         this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
-        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
         
         this.slider = this.controller.get('sliderdiv');
         Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
@@ -448,7 +446,7 @@ NowPlayingAssistant = Class.create({
     
 
     FitToWindow: function() {
-        var percentate = 0.8;
+        var percentate = 0.89;
         var coverArt = $('coverArt');
         //var diff = window.innerHeight - height;
         var height = coverArt.height;
@@ -461,11 +459,9 @@ NowPlayingAssistant = Class.create({
         height = (option1 < option2) ? option1: option2;
         coverArt.height = height;
         coverArt.width = height;
+        
         var diff = window.innerHeight - height;
-        //alert(window.innerHeight-height);
-        spinner.style.left = (coverArt.offsetLeft + (height / 2 - 64)) + "px";
-        spinner.style.top = (coverArt.offsetTop + (height / 2 - 64)) + "px";
-        //CenterSpinner($('spinner'));
+        
     },
 
     //****************************************************************************************************************
@@ -538,19 +534,34 @@ NowPlayingAssistant = Class.create({
         }
         else
         {
-            this.updateCounters(current, duration);
             this.sliderModel.value = percentage;
             this.controller.modelChanged(this.sliderModel);
         }
+        this.updateCounters(current, duration);
     },
 
     updateCounters: function(_current, _duration) {
         var current = Math.floor(_current);
         var duration = Math.floor(_duration);
         var remaining = Math.floor(duration - current);
-        this.controller.get('playback-remaining').innerHTML = "-" + this.timeFormatter(remaining);
         var timeString = this.timeFormatter(current);
-        this.controller.get('playback-progress').innerHTML = timeString;
+        
+        if(AmpacheMobile.audioPlayer.listIsShowing === true)
+        {            
+            var node = this.getCurrentTrackNode();
+            if(node)
+            {
+                node.getElementsByClassName("nplist-progess")[0].innerHTML = timeString;
+                node.getElementsByClassName("nplist-remaining")[0].innerHTML = "-" + this.timeFormatter(remaining);
+                
+            }
+        }
+        else
+        {
+        
+            this.controller.get('playback-remaining').innerHTML = "-" + this.timeFormatter(remaining);
+            this.controller.get('playback-progress').innerHTML = timeString;
+        }
     },
 
     timeFormatter: function(secs) {
@@ -612,16 +623,6 @@ NowPlayingAssistant = Class.create({
     getCurrentTrackNode:function()
     {
         return this.npList.mojo.getNodeByIndex (AmpacheMobile.audioPlayer.currentPlayingTrack);
-    },
-
-
-    cleanupTrack:function(track)
-    {
-        if(AmpacheMobile.audioPlayer.listIsShowing === true)
-        {
-          
-            
-        }
     },
 
     updateBuffering: function(startPctg, endPctg) {
@@ -719,21 +720,9 @@ NowPlayingAssistant = Class.create({
             if(this.npList)
             {
                 this.npList.mojo.invalidateItems(0);
-                /*for(var i = 0; i< playList.length;i++)
-                {
-                    Mojo.Log.info("Resetting i: " + i);
-                    var node = this.npList.mojo.getNodeByIndex(i);
-                    if(node)
-                    {
-                        node.getElementsByClassName("progressDone")[0].style.width = "0%";
-                        node.getElementsByClassName("timeLoaded")[0].style.width = "0%";
-                        node.getElementsByClassName("npListIcon")[0].src = "images/player/blank.png";
-                    }
-                }*/
                 
                 try {
                     this.npList.mojo.revealItem(currentIndex);
-                    //this.npList.mojo.getNodeByIndex(currentIndex).getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
                 }
                 catch(ex)
                 {}
