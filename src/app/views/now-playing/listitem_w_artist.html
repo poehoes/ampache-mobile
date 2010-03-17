@@ -9,14 +9,15 @@
             <div class="truncating-text" id="title" x-mojo-loc=''>
                 <div class="songTitle truncating-text">#{-title}</div>
             </div>
-            <div class="truncating-text songDesc truncating-text">
+            <div class="truncating-text songDesc">
                 #{-artist}&nbsp;-&nbsp;#{-album}
             </div>
         </div>
-        <div class="npMenuRight">
-            <div class="truncating-text songDesc truncating-text">
-                #{-timeStr}
-            </div>
+        <div class="nplist-time nplist-progess">
+                
+        </div>
+        <div class="nplist-time nplist-remaining">
+            #{-timeStr}
         </div>
         <div class="mainMenuClear"></div>
         <div id="downloadDiv" class="progressDone truncating-text" style="width:0%">&nbsp;</div>

@@ -534,7 +534,11 @@ AudioPlayer = Class.create({
     {
         try {
             this.player.currentTime = seekTime;
+            if(this.Paused)
+            {
+                this.UpdateNowPlayingTime();
             }
+        }
         catch(e) {
             Mojo.Log.error("Error setting currentTime: %j", e);
         }
@@ -900,10 +904,9 @@ AudioPlayer = Class.create({
                 
                 this.timePercentage = 0;
                 if (duration === 0) {
-                    this.timePercentage = 0;
-                } else {
-                    this.timePercentage = (currentTime / duration) * 100;
+                    duration = this.playList[this.currentPlayingTrack].time;
                 }
+                this.timePercentage = (currentTime / duration) * 100;
                 
                 this.NowPlaying.updateTime(currentTime, duration, this.timePercentage);
             }
@@ -924,7 +927,8 @@ AudioPlayer = Class.create({
     ClearNowPlayingTime: function() {
         Mojo.Log.info("--> AudioPlayer.prototype.ClearNowPlayingTime");
         if (this.NowPlaying) {
-            this.NowPlaying.updateTime(0, 0, 0);
+            var trackLength = this.isValidTrack(this.currentPlayingTrack) ? this.playList[this.currentPlayingTrack].time : 0;
+            this.NowPlaying.updateTime(0, trackLength, 0);
             this.timePercentage = 0;
         }
         Mojo.Log.info("<-- AudioPlayer.prototype.ClearNowPlayingTime");
@@ -1059,6 +1063,15 @@ AudioPlayer = Class.create({
             this.NowPlaying.updateTime(0, 0, 0);
             this.timePercentage =0;
         }
+    },
+
+    isValidTrack:function(index)
+    {
+        if((this.currentPlayingTrack>=0) && (this.currentPlayingTrack<this.playList.length))
+        {
+            return true;
+        }
+        return false;
     },
 
     NowPlayingSetRepeatMode: function() {

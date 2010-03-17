@@ -205,7 +205,7 @@ COLOR: grey;
 .extended-alpha
 {
     position:relative;
-    top:-12px;
+    top:-6px;
     left:-480px;
 }
 
@@ -285,11 +285,22 @@ COLOR: grey;
    
 }
 
+.arrow-right{
+    right: 30px;
+}
+
+.arrow-left
+{
+   left:30px;
+}
+
 
 .spinner-arrow{
 
     z-index: 4;
 }
+
+
 
 
 
@@ -384,7 +395,7 @@ COLOR: grey;
 
 .songDesc {
     color: white;
-    margin-top: -10px;
+    margin-top: -8px;
     padding: 0 15px 10px 15px;
     font-size:small;
 }
@@ -1022,6 +1033,30 @@ margin-left:10px;
 #playback-display
 {
         position:fixed;
-        left:0px;
         top:50px;
+        width:100%;
 }
+
+.loaded-display
+{
+        
+}
+
+.nplist-time {
+    position:absolute;
+    right:15px;
+    color: white;
+    font-size:small;
+    /*border:solid;*/
+}
+
+.nplist-progess
+{
+   margin-top:8px;
+}
+.nplist-remaining
+{
+   margin-top:28px;
+}
+
+
