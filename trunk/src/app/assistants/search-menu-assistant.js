@@ -14,35 +14,27 @@
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 SearchMenuAssistant = Class.create({
-    initialize: function() {},
+    initialize: function(params) {
+        if(params.key)
+        {
+            this.sentKey = params.key;
+        }
+        
+    },
 
     setup: function() {
         //*****************************************************************************************************
         // Setup Menu
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 
-        ////******************************************************************************************************
-        //// Setup Spinner
-        //this.spinnerLAttrs = { spinnerSize: 'large' };
-        //this.spinnerModel = { spinning: false };
-        //this.controller.setupWidget('large-activity-spinner', this.spinnerLAttrs, this.spinnerModel);
-        //
-        ////******************************************************************************************************
-        //// Make scrim
-        // this.scrim = $("search-scrim");
-        // this.scrim.hide();
-        //
-        ////*********************************************************************************************************
-        ////  Setup Progress Pill
-        //this.PPattr = 
-        //{
-        //    title: "Search",
-        //    image: 'images/icons/search.png'
-        //};
-        //this.searchLoadModel = { value: 1 };
-        //this.controller.setupWidget('searchProgressbar', this.PPattr, this.searchLoadModel);
-        //***************************************************************************************************************
-        // Setup Search Field
+        
+
+         this.searchModel = {};
+         if(this.sentKey)
+         {
+            this.searchModel.value = this.sentKey;
+         }
+        
         this.controller.setupWidget("search-field", {
             autoFocus: true,
             autoReplace: false,
@@ -50,7 +42,9 @@ SearchMenuAssistant = Class.create({
             //textCase: Mojo.Widget.steModeLowerCase,
             enterSubmits: true
         },
-        this.searchModel = {});
+        this.searchModel
+        );
+        
         this.SearchField = this.controller.get("search-field");
 
         //*****************************************************************************************************
@@ -98,7 +92,24 @@ SearchMenuAssistant = Class.create({
         this.searchText = event.value;
         if (event.originalEvent.keyCode) {
             if (event.originalEvent.keyCode === 13) {
-                this.searchForGlobal();
+                switch(AmpacheMobile.settingsManager.settings.SearchType)
+                {
+                    case SEARCH_ALBUMS:
+                        this.searchForAlbums();
+                        break;
+                    case SEARCH_ARTISTS:
+                        this.searchForArtists();
+                        break;
+                    case SEARCH_SONGS:
+                        this.searchForSongs();
+                        break;
+                    case SEARCH_PLAYLISTS:
+                        this.searchForPlaylists();
+                        break;
+                    default:
+                        this.searchForGlobal();
+                        break;
+                }
             }
         }
     },
@@ -252,6 +263,10 @@ SearchMenuAssistant = Class.create({
         button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block': 'none';
         this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
+        
+        //Setup Search Help
+        this.controller.get("search-help").innerHTML ="Press Enter to Search " + SEARCH_TYPES[AmpacheMobile.settingsManager.settings.SearchType];
+        
     },
 
     deactivate: function(event) {

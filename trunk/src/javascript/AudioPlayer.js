@@ -503,7 +503,6 @@ AudioPlayer = Class.create({
 
     playFinished: false,
     play_finished: function() {
-        this.CleanupTrack(this.currentPlayingTrack);
         
         this.currentPlayingIndex = 0;
         this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
@@ -655,15 +654,11 @@ AudioPlayer = Class.create({
 
     play_prev: function() {
         Mojo.Log.info("--> AudioPlayer.prototype.play_prev");
-        //this.printPlayOrderList();
-        //this.playList[this.currentPlayingTrack].played = true;
-        //this.prevPlayingTrack = this.currentPlayingTrack;
+        
         this.currentPlayingTrack = this.getPrevTrack();
         if (this.currentPlayingTrack > -1) {
             this.Paused = false;
             this.stop();
-            this.CleanupTrack(this.prevPlayingTrack);
-            //this.internal_play();
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             this.kill_play_change_interval();
             this.play_change_interval = window.setInterval(this.delayed_play.bind(this), 500);
@@ -918,12 +913,7 @@ AudioPlayer = Class.create({
         Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
     },
 
-    CleanupTrack: function(track) {
-        if (this.NowPlaying) {
-            this.NowPlaying.cleanupTrack(track);
-        }
-    },
-
+  
     ClearNowPlayingTime: function() {
         Mojo.Log.info("--> AudioPlayer.prototype.ClearNowPlayingTime");
         if (this.NowPlaying) {

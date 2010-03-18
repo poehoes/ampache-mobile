@@ -19,6 +19,21 @@ var DEFAULT_FETCH_SIZE = 300;
 var DEFAULT_OVERLAY = "images/backgrounds/overlay/overlay1.png";
 var DEFAULT_ROTATION = false;
 
+var SEARCH_GLOBAL = 0;
+var SEARCH_ARTISTS = 1;
+var SEARCH_ALBUMS = 2;
+var SEARCH_SONGS = 3;
+var SEARCH_PLAYLISTS = 4;
+var SEARCH_TYPES ={};
+SEARCH_TYPES[0] = "Global";
+SEARCH_TYPES[1] = "Artists";
+SEARCH_TYPES[2] = "Albums";
+SEARCH_TYPES[3] = "Songs";
+SEARCH_TYPES[4] = "Playlists";
+
+
+
+
 SettingsManager = Class.create({
     settings: null,
     depot: null,
@@ -127,6 +142,11 @@ SettingsManager = Class.create({
                 this.settings.npPlayingListView = false;
             }
             
+            if (!this.settings.SearchType) {
+                this.settings.SearchType=SEARCH_GLOBAL;
+            }
+            
+            
             this.settings.Version = Mojo.Controller.appInfo.version;
 
             for (i = 0; i < this.settings.Accounts.length; i++) {
@@ -196,5 +216,6 @@ Settings = Class.create({
     CUSTOM_COLOR: 0,
     CUSTOM_IMAGE: 1,
     AlbumsSort: 0,
-    npPlayingListView:false
+    npPlayingListView:false,
+    SearchType:0
 });

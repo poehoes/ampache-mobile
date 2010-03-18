@@ -71,6 +71,25 @@ PreferencesAssistant = Class.create({
         },
         this.selectorsModel);
 
+         this.searchTypeModel = {
+                value:  this.settingsManager.settings.SearchType,
+                disabled: false
+        };
+        
+        this.controller.setupWidget("searchSelector",
+            this.attributes = {
+                choices: [
+                    {label: "Global", value: SEARCH_GLOBAL},
+                    {label: "Artists", value: SEARCH_ARTISTS},
+                    {label: "Albums", value: SEARCH_ALBUMS},
+                    {label: "Songs", value: SEARCH_SONGS},
+                    {label: "Playlists", value: SEARCH_PLAYLISTS}
+                ]
+            },this.searchTypeModel
+           
+        ); 
+
+
         //**********************************************************************************************************************
         //Setup Stream Debug Toggle
         // Setup toggle widget and  listen  for when it is changed
@@ -141,7 +160,10 @@ PreferencesAssistant = Class.create({
 
         this.rotation_pressed = this.rotationPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
-
+        
+        this.searchSelectorChanged = this.searchSelectorChanged.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('searchSelector'), Mojo.Event.propertyChange, this.searchSelectorChanged);
+        
     },
 
     cleanup: function(event) {
@@ -231,6 +253,13 @@ PreferencesAssistant = Class.create({
         this.settingsManager.SaveSettings();
         //this.currentStuff.innerText = $L("Status = ") +this.selectorsModel.currentStatus+ $L(", Transport = ") +this.selectorsModel.currentTransport+", work = "+this.selectorsModel.currentWork;
     },
+
+    searchSelectorChanged:function(event)
+    {
+        this.settingsManager.settings.SearchType = parseInt(event.value, 10);
+        this.settingsManager.SaveSettings();
+    },
+
 
     listDeleteHandler: function(event) {
         // Remove the item from the model's list.

@@ -1,17 +1,21 @@
 <div id="main" class="palm-hasheader preferences">
-     <div id="header" class="palm-header left truncating-text">
+    <div id="header" class="palm-header left truncating-text">
         <div class="palm-header-wrapper">
             <div class='header-body'>
-                <div class='icon'><img class="icon-img" src='images/icons/settings.png'/></div>
-                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>Ampache Mobile Preferences</div>
+                <div class='icon'><img class="icon-img" src='images/icons/settings.png'></div>
+
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>
+                    Ampache Mobile Preferences
+                </div>
             </div>
         </div>
-    </div>  
-    
-    
-    
+    </div>
+
     <div class="palm-group">
-        <div class="palm-group-title">Startup Account</div>
+        <div class="palm-group-title">
+            Startup Account
+        </div>
+
         <div class="palm-list">
             <div class="palm-row first last" x-mojo-tap-highlight="momentary">
                 <div class="palm-row-wrapper">
@@ -20,35 +24,54 @@
             </div>
         </div>
     </div>
+
     <div id="e_example">
         <div id="innerList" x-mojo-element="List"></div>
     </div>
+
     <div x-mojo-element="Button" id="backgroundBtn"></div>
+
     <div class="palm-group">
-        <div class="palm-group-title">More Options</div>
+        <div class="palm-group-title">
+            Default Search Type
+        </div>
+
+        <div class="palm-list">
+            <div class="palm-row first last" x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div id="searchSelector" x-mojo-element="ListSelector"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="palm-group">
+        <div class="palm-group-title">
+            More Options
+        </div>
+
         <div class="palm-list">
             <div class="palm-row first" x-mojo-tap-highlight="momentary">
                 <div class="palm-row-wrapper">
                     <table class="palm-list-section-label">
                         <tr>
-                             <td width=85%>
-                                <span class="palm-text-wrapper" x-mojo-loc="">Stream Debug</span>
-                            </td>
-                             <td width=15%>
+                            <td width="85%"><span class="palm-text-wrapper" x-mojo-loc="">Stream Debug</span></td>
+
+                            <td width="15%">
                                 <div id="stream-debug-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
+
             <div class="palm-row last" x-mojo-tap-highlight="momentary">
                 <div class="palm-row-wrapper">
                     <table class="palm-list-section-label">
                         <tr>
-                             <td width=85%>
-                                <span class="palm-text-wrapper" x-mojo-loc="">Allow Rotation</span>
-                            </td>
-                             <td width=15%>
+                            <td width="85%"><span class="palm-text-wrapper" x-mojo-loc="">Allow Rotation</span></td>
+
+                            <td width="15%">
                                 <div id="rotation-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
                             </td>
                         </tr>
@@ -57,4 +80,6 @@
             </div>
         </div>
     </div>
+
+    
 </div>

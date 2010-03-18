@@ -219,10 +219,6 @@ NowPlayingAssistant = Class.create({
     ready: function(event) {
         Mojo.Log.info("--> activate");
         AmpacheMobile.audioPlayer.setNowPlaying(this);
-        
-        
-       
-        
         Mojo.Log.info("<-- activate");
     },
     
@@ -255,7 +251,7 @@ NowPlayingAssistant = Class.create({
         if(!this.firstActivate)
         {
             this.firstActivate = false;
-            this.updateBuffering(0,0);
+            this.updateBuffering(0,AmpacheMobile.audioPlayer.downloadPercentage/100);
             
             this.switchingReady=true;
             if (AmpacheMobile.audioPlayer.listIsShowing === true){
