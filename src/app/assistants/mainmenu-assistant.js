@@ -36,27 +36,7 @@ MainmenuAssistant = Class.create({
         };
         this.controller.setupWidget('mainmenu-spinner', this.spinnerAttrs, this.spinnerModel);
         this.mainmenu = [
-        /*
-         {
-         category: $L("top"),
-         directory: $L("search"),
-         name: $L("Search"),
-         scene: $L("search"),
-         description: null,
-         icon: "images/icons/search.png"
-         
-         },
-         */
-        /*
-        {
-            category: $L("bottom"),
-            name: $L("Shuffle All"),
-            scene: "shuffleAll",
-            description: $L(AmpacheMobile.ampacheServer.songs.toString()),
-            icon: "images/icons/shuffle.png",
-            displayCount: ""
-        },
-        */
+       
         {
             category: $L("bottom"),
             directory: $L("artists"),
@@ -75,16 +55,6 @@ MainmenuAssistant = Class.create({
             icon: "images/icons/albums.png",
             displayCount: ""
         },
-
-        /*\
-         {
-         category: $L("bottom"),
-         directory: $L("songs"),
-         name: $L("Songs"),
-         scene: $L("songs"),
-         icon: "images/songs.png",
-         description: $L(AmpacheMobile.ampacheServer.songs.toString())
-         },*/
         {
             category: $L("bottom"),
             directory: $L("playlists"),
@@ -94,7 +64,6 @@ MainmenuAssistant = Class.create({
             icon: "images/icons/playlists.png",
             displayCount: ""
         },
-
         {
             category: $L("bottom"),
             directory: $L("genres"),
@@ -104,7 +73,6 @@ MainmenuAssistant = Class.create({
             icon: "images/icons/genres.png",
             displayCount: "none"
         },
-        
         {
             category: $L("bottom"),
             directory: $L("random"),
@@ -123,29 +91,10 @@ MainmenuAssistant = Class.create({
             icon: "images/icons/recent.png",
             displayCount: "none"
         }
-
-        /*{
-         category: $L("bottom"),
-         directory: $L("preferences"),
-         name: $L("Preferences"),
-         scene: $L("preferences"),
-         //description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
-         icon: "images/settings.png"
-         },*/
-        /* 
-         {
-         category: $L("bottom"),
-         directory: $L("genre"),
-         name: $L("Genre"),
-         scene: $L("genre"),
-         description: ""
-         }, */
         ];
 
         this.controller.setupWidget('mainMenuList', {
             itemTemplate: 'mainmenu/listitem'
-            //dividerTemplate: 'mainmenu/divider',
-            //dividerFunction: this.dividerFunc.bind(this)
         },
         {
             items: this.mainmenu
@@ -175,13 +124,18 @@ MainmenuAssistant = Class.create({
         // Search Event
         this.searchTapHandler = this.pushSearch.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
+        
+        //Key Handler
+        this.pushSearch = this.pushSearch.bindAsEventListener(this);
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.pushSearch);
 
     },
 
     cleanup: function(event) {
-        /* this function should do any cleanup needed before the scene is destroyed as 
-         a result of being popped off the scene stack */
+
         Mojo.Log.info("--> ArtistsAssistant.prototype.cleanup");
+        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keydown, this.pushSearch);
+        
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
 
@@ -193,13 +147,25 @@ MainmenuAssistant = Class.create({
         
         AmpacheMobile.ampacheServer.disconnect();
         Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
-    },
+    },    
 
-    pushSearch: function() {
-        this.controller.stageController.pushScene({
-            transition: AmpacheMobile.Transition,
-            name: "search-menu"
-        });
+    pushSearch: function(event) {
+        var params ={};
+        var searchScene = {transition: AmpacheMobile.Transition, name: "search-menu"};
+        
+        if(event.type !=="mojo-tap")
+        {    
+            params.key  = String.fromCharCode(event.originalEvent.keyCode);
+            var myRegxp = /([a-zA-Z0-9]+)$/;
+            if(myRegxp.test(params.key)==true)
+            { 
+                this.controller.stageController.pushScene(searchScene, params);
+            }
+        }
+        else
+        {
+            this.controller.stageController.pushScene(searchScene,params);
+        }
     },
 
     listTapHandler: function(event) {
