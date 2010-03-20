@@ -20,30 +20,29 @@
 
 
 Date.prototype.setISO8601 = function (string) {
-    var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
-        "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
-        "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
+    var regexp = "([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?(Z|(([-+])([0-9]{2}):([0-9]{2})))";
     var d = string.match(new RegExp(regexp));
 
     var offset = 0;
     var date = new Date(d[1], 0, 1);
 
-    if (d[3]) { date.setMonth(d[3] - 1); }
-    if (d[5]) { date.setDate(d[5]); }
-    if (d[7]) { date.setHours(d[7]); }
-    if (d[8]) { date.setMinutes(d[8]); }
-    if (d[10]) { date.setSeconds(d[10]); }
-    if (d[12]) { date.setMilliseconds(Number("0." + d[12]) * 1000); }
-    if (d[14]) {
-        offset = (Number(d[16]) * 60) + Number(d[17]);
-        offset *= ((d[15] === '-') ? 1 : -1);
+    if (d[2]) { date.setUTCMonth(d[2] - 1); }
+    if (d[3]) { date.setUTCDate(d[3]); }
+    if (d[4]) { date.setUTCHours(d[4]); }
+    if (d[5]) { date.setUTCMinutes(d[5]); }
+    if (d[6]) { date.setUTCSeconds(d[6]); }
+    //if (d[7]) { date.setMilliseconds(Number("0." + d[12]) * 1000); }
+    if (d[10] && d[10]!=="Z") { //if Z then its already UTC
+        offset = (Number(d[11]) * 60) + Number(d[12]);
+        offset *= ((d[10] === '-') ? +1 : -1);
     }
 
-    offset -= date.getTimezoneOffset();
     time = (Number(date) + (offset * 60 * 1000));
     this.setTime(Number(time));
     
  };
+
+
 
 Date.prototype.toISO8601String = function (format, offset) {
     /* accepted values for the format [1-6]:
@@ -66,7 +65,7 @@ Date.prototype.toISO8601String = function (format, offset) {
         var offset = 'Z';
         var date = this;
     } else {
-        var d = offset.match(/([-+])([0-9]{2}):([0-9]{2})/);
+        var d = offset.match(/([\-+])([0-9]{2}):([0-9]{2})/);
         var offsetnum = (Number(d[2]) * 60) + Number(d[3]);
         offsetnum *= ((d[1] === '-') ? -1 : 1);
         var date = new Date(Number(Number(this) + (offsetnum * 60000)));
@@ -95,7 +94,10 @@ Date.prototype.toISO8601String = function (format, offset) {
 
 
 
-
+Date.prototype.addHours = function(value){
+    var time = Number(this.getTime()) + (value * 3600 * 1000);
+    this.setTime(Number(time));
+};
 
 Date.prototype.addDays = function(d) {
         /* Adds the number of days to the date */
