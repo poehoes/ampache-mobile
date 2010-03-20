@@ -116,7 +116,7 @@ RandomAssistant = Class.create({
         // Random Album Selector
         this.attributes = {
             limitZoom: true,
-            highResolutionLoadTimeout: 10
+            highResolutionLoadTimeout: 0.1
         };
 
         this.photoModel = {
@@ -255,20 +255,20 @@ RandomAssistant = Class.create({
         case "center":
 
             this.center = album[0];
-            this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art);//, this.tempArt);
+            this.myPhotoDivElement.mojo.centerUrlProvided(this.center.art, this.tempArt);
             this.center_stale = false;
             this.UpdateText();
             this.AlbumSpinner("center", false);
             break;
         case "left":
             this.left = album[0];
-            this.myPhotoDivElement.mojo.leftUrlProvided(this.left.art);//, this.tempArt);
+            this.myPhotoDivElement.mojo.leftUrlProvided(this.left.art, this.tempArt);
             this.left_stale = false;
             this.AlbumSpinner("left", false);
             break;
         case "right":
             this.right = album[0];
-            this.myPhotoDivElement.mojo.rightUrlProvided(this.right.art);//, this.tempArt);
+            this.myPhotoDivElement.mojo.rightUrlProvided(this.right.art, this.tempArt);
             this.right_stale = false;
             this.AlbumSpinner("right", false);
             break;
