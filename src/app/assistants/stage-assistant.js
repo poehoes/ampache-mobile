@@ -46,19 +46,34 @@ StageAssistant.appMenuAttr = {
 };
 StageAssistant.appMenuModel = {
     visible: true,
+    
+    
+    
     items: [
     //{label: "Test Connection", command: "doTest-cmd"},
     {
-        label: "Preferences...",
-        command: "doPref-cmd"
+        label: "Preferences",
+        command: "doPref-cmd",
+        shortcut:"p"
+    },
+    {   label:"Now Playing",
+        items:
+            [{
+                label: "Delete Now Playing",
+                disabled: true,
+                command: "delete-np-cmd",
+                shortcut:"d"
+            },
+            {
+                label: "Goto Now Playing",
+                disabled: true,
+                command: "push-np-cmd",
+                shortcut:"n"
+            }],
+        disabled: false
     },
     {
-        label: "Delete Now Playing",
-        disabled: true,
-        command: "delete-np-cmd"
-    },
-    {
-        label: "About...",
+        label: "About",
         command: "about-cmd"
     }]
 };
@@ -213,28 +228,33 @@ StageAssistant.prototype.handleCommand = function(event) {
                 var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
                 var button = controller.get('now-playing-button');
                 button.style.display = 'none';
-                StageAssistant.appMenuModel.items[1].disabled = true;
-
+                StageAssistant.appMenuModel.items[1].items[0].disabled = true;
+                StageAssistant.appMenuModel.items[1].items[1].disabled = true;
             }
+            break;
+        case "mojo-up":
+        case "push-np-cmd":
+            this.pushNowPlaying();
             break;
         }
     }
-    else if(event.type === Mojo.Event.forward)
-    {
-        if(AmpacheMobile.audioPlayer.PlayListPending === true)
-        {
-            Mojo.Controller.stageController.pushScene({
-                transition: AmpacheMobile.Transition,
-                name: "now-playing"
-            },
-            {
-                type: "display"
-            });
-        }
-    }
+    
     Mojo.Log.info("--> StageAssistant.prototype.handleCommand");
 };
 
+StageAssistant.prototype.pushNowPlaying= function()
+{
+    if((AmpacheMobile.audioPlayer)&&(AmpacheMobile.audioPlayer.PlayListPending === true))
+    {
+        Mojo.Controller.stageController.pushScene({
+            transition: AmpacheMobile.Transition,
+            name: "now-playing"
+        },
+        {
+            type: "display"
+        });
+    }
+}
 
 function CenterSpinner(spinner) {
     spinner.style.left = (window.innerWidth / 2 - 64) + "px";

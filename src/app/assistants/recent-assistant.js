@@ -79,6 +79,10 @@ RecentAssistant = Class.create({
 
         if(event.item.type ==="lastUpdate")
         {
+            fromDate = new Date();
+            fromDate = AmpacheMobile.ampacheServer.add.clone();
+            fromDate.addHours(-2);
+            
             this.controller.stageController.pushScene({
                     transition: AmpacheMobile.Transition,
                     name: "songs"
@@ -87,7 +91,7 @@ RecentAssistant = Class.create({
                     SceneTitle: "Recent Songs: Last Update",
                     Type: "recent",
                     DisplayArtistInfo: true,
-                    FromDate:AmpacheMobile.ampacheServer.add
+                    FromDate:fromDate
                 });
         }
         
@@ -123,6 +127,7 @@ RecentAssistant = Class.create({
                 {
                     case "Last Update":
                         fromDate = AmpacheMobile.ampacheServer.add.clone();
+                        fromDate.addHours(-2);
                         break;
                     case "1 Week":
                         fromDate.addDays(-7);

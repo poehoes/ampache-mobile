@@ -265,7 +265,7 @@ SearchMenuAssistant = Class.create({
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
         
         //Setup Search Help
-        this.controller.get("search-help").innerHTML ="Press Enter to Search " + SEARCH_TYPES[AmpacheMobile.settingsManager.settings.SearchType];
+        this.controller.get("search-"+SEARCH_TYPES[AmpacheMobile.settingsManager.settings.SearchType]).src = "images/enter.png";
         
     },
 

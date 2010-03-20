@@ -454,34 +454,45 @@ body.palm-default {
 }
 
 .music-streaming .stream-debug {
-    margin: -15px 5px 5px 5px;
+    position:relative;
+    top:-29px;
     color: white;
     font-size:small;
     font-weight:bold;
-    width:100%;
+    width:96%;
+    left:2%;
     text-align:center;
 }
 
 .music-streaming .artist-album-title {
-    padding: 0px 5px 5px 5px;
+    margin-bottom:1px;
     color: white;
     font-size:small;
     font-weight:bold;
-    width:100%;
+    width:96%;
+    left: 2%;
     text-align:center;
+    position: relative;
 }
 
 .music-streaming .stream-title {
-    padding: 5px 5px 0px 5px;
+    margin-top:-5px;
     color: white;
     font-size:medium;
     font-weight:bold;
-    width:100%;
+    width:96%;
+    left: 2%;
     text-align:center;
+    position: relative;
+    
 }
 
+
+
+
 .music-streaming .stream-info {
-    margin-top:-10px;
+    position:relative;
+    top:-13px;
 }
 
 .music-streaming .stream-info .elapsed,
@@ -1058,4 +1069,51 @@ margin-left:10px;
    margin-top:28px;
 }
 
+/***********************************************/
+/*   Search Menu
+/**********************************************/
+.search-text
+{
+    text-align:right;
+    width:100%;
+}
 
+.search-enter{
+    position:absolute;
+    margin-top:15px;
+    right:70px;
+    height:17px;
+    width:19px;
+}
+
+.search-icon
+{
+    position:absolute;
+    right:5px;
+}
+
+
+
+
+.search-test {   
+	display: inline-block;  
+	width: 168px;
+	margin-left: 3px;       
+	height: 35px;
+    
+}
+.search-test.text-hidden {
+	font-size:0px; 
+	opacity: 0;
+    
+}
+.search-test-find {
+	padding-left: 8px;
+    
+}
+.search-test input,
+.search-test .truncating-text {     
+	color: #fff;
+	text-align: right;
+	margin-right: -2px;
+}

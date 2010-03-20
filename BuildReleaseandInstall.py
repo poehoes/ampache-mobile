@@ -25,8 +25,12 @@ except:
 try:
 	shutil.rmtree(directory + '\\auto_build')
 	print ("auto_build Deleted")
+	
 except:
 	print ("auto_build Deleted")
+
+os.makedirs(directory + '\\auto_build')
+    
 
 
 source = directory + "\src"

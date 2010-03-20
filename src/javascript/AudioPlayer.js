@@ -135,38 +135,8 @@ AudioPlayer = Class.create({
 
         Mojo.Log.info("<-- AudioPlayer.prototype.createAudioObj");
     },
-    /*
-    mediaEventsCallbacks: function(event){
-       Mojo.Log.info("--> AudioPlayer.prototype.mediaEventsCallbacks: "+ event.key);
-       switch (event.key) {
-            case "next":
-                this.play_next(true);
-                break;
-            case "prev":
-                this.play_prev();
-                break;
-            case "pause":
-                 this.Paused = true;
-                this.pause();
-                break;
-            case "stop":
-                this.pause();
-                break;
-            case "play":
-                this.play();
-                break;
-            case "togglePausePlay":
-                if (!this.Paused) {
-                    this.Paused = true;
-                    this.pause();
-                }
-                else {
-                    this.play();
-                }
-                break;
-        }
-    },
-    */
+    
+    
     btEventsCallbacks: function (event) {
         if (event.state === "up") {
             if (event.key === "play") {
@@ -601,12 +571,16 @@ AudioPlayer = Class.create({
         }
     },
 
+   
     playTrack:function(track)
     {
         if(track !== this.currentPlayingTrack ){
         
             this.Paused = false;
             this.stop();
+            
+            this.downloadPercentage = 0;
+            this.timePercentage = 0;
             
             this.currentPlayingTrack = track;
             
@@ -634,6 +608,9 @@ AudioPlayer = Class.create({
             this.Paused = false;
             this.stop();
             
+            this.downloadPercentage = 0;
+            this.timePercentage = 0;
+            
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             //Add a little bit of delay after a next request to allow for rapid song switching.
             if (clicked) {
@@ -659,6 +636,10 @@ AudioPlayer = Class.create({
         if (this.currentPlayingTrack > -1) {
             this.Paused = false;
             this.stop();
+            
+            this.downloadPercentage = 0;
+            this.timePercentage = 0;
+            
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             this.kill_play_change_interval();
             this.play_change_interval = window.setInterval(this.delayed_play.bind(this), 500);
@@ -685,7 +666,7 @@ AudioPlayer = Class.create({
             this.playFinished = false;
             Mojo.Log.info("Starting play of " + this.playList[this.currentPlayingTrack].artist + " - " + this.playList[this.currentPlayingTrack].album + " - " + this.playList[this.currentPlayingTrack].track + " - " + this.playList[this.currentPlayingTrack].title);
             Mojo.Log.info("URL play of " + this.playList[this.currentPlayingTrack].url);
-            this.NowPlayingResetTime();
+            this.ClearNowPlayingTime();
             this.UpdateNowPlayingBuffering(0, 0);
             this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
             this.UpdateNowPlayingShowSpinner(true);
@@ -694,8 +675,6 @@ AudioPlayer = Class.create({
         }
         this.Paused = false;
         //Mojo.Log.info("Audio() URL play of " + 
-        //this.player.src);
-        //this.player.play();
         Mojo.Log.info("<-- AudioPlayer.prototype.internal_play");
     },
 
@@ -828,7 +807,7 @@ AudioPlayer = Class.create({
             this.UpdateNowPlayingTime();
             break;
         case "timeupdate":
-            //this.UpdateNowPlayingTime()
+            this.UpdateNowPlayingTime();
             break;
         case "progress":
             this.SetStalled(false);
@@ -925,7 +904,7 @@ AudioPlayer = Class.create({
     },
 
     UpdateNowPlayingBuffering: function(start, end) {
-        AmpacheMobile.audioPlayer.downloadPercentage = Math.floor( end*100);
+        this.downloadPercentage = Math.floor( end*100);
         //Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
         if (this.NowPlaying) {
             

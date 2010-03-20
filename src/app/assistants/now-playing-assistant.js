@@ -30,7 +30,8 @@ NowPlayingAssistant = Class.create({
         this.type = params.type;
         this.pauseStopItem = this.pauseItem;
 
-        StageAssistant.appMenuModel.items[1].disabled = false;
+        StageAssistant.appMenuModel.items[1].items[0].disabled = false;
+        StageAssistant.appMenuModel.items[1].items[1].disabled = false;
 
         switch (params.type) {
         case "display":
@@ -163,8 +164,8 @@ NowPlayingAssistant = Class.create({
         
         
 
-        window.onresize = this.FitToWindow;
-        this.FitToWindow();
+        
+        
 
         //***************************************************************************************
         //Events
@@ -401,10 +402,11 @@ NowPlayingAssistant = Class.create({
             else {
                 this.showListView();
             }
-        
+            
             AmpacheMobile.settingsManager.settings.npPlayingListView = AmpacheMobile.audioPlayer.listIsShowing;
             AmpacheMobile.settingsManager.SaveSettings();
             AmpacheMobile.audioPlayer.setNowPlaying(this);
+            
         }
     }, 
     
@@ -417,6 +419,9 @@ NowPlayingAssistant = Class.create({
         this.controller.get('playback-display').show();
         this.noDragHandler = this.noDrag.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
+    
+        window.onresize = this.FitToWindow.bind(this);
+        this.FitToWindow();
     },
     
     showListView:function()
@@ -432,9 +437,10 @@ NowPlayingAssistant = Class.create({
             Mojo.Event.stopListening(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
             this.noDragHandler = null;
         }
+        this.npList.mojo.invalidateItems(0);
         this.npList.mojo.revealItem(AmpacheMobile.audioPlayer.currentPlayingTrack);
         
-        
+        window.onresize = null;
     },
                 
     
@@ -442,21 +448,30 @@ NowPlayingAssistant = Class.create({
     
 
     FitToWindow: function() {
-        var percentate = 0.89;
-        var coverArt = $('coverArt');
-        //var diff = window.innerHeight - height;
-        var height = coverArt.height;
-        var option1 = (window.innerHeight - 200);
-
-        if (option1 < 0) {
-            option1 = 0;
-        }
-        var option2 = window.innerWidth * percentate;
-        height = (option1 < option2) ? option1: option2;
-        coverArt.height = height;
-        coverArt.width = height;
         
-        var diff = window.innerHeight - height;
+       
+            var percentate = 1;
+            var coverArt = $('coverArt');
+            
+            var top = $('songTitle');
+            var bottom =  AmpacheMobile.audioPlayer.debug ? $('stream-debug') : $('progress-info');
+            
+            var header = $('albumArtist');
+            
+            var controlHeight = header.offsetTop + header.offsetHeight + 100 + bottom.offsetTop + bottom.offsetHeight - top.offsetTop;
+            
+            var height = coverArt.height;
+            var option1 = (window.innerHeight - controlHeight);
+    
+            if (option1 < 0) {
+                option1 = 0;
+            }
+            var option2 = window.innerWidth * percentate;
+            height = (option1 < option2) ? option1: option2;
+            coverArt.height = height;
+            coverArt.width = height;
+            
+            //var diff = window.innerHeight - height;
         
     },
 
@@ -652,23 +667,27 @@ NowPlayingAssistant = Class.create({
         }
     },
 
+    spinnerShown:false, //Spinner Mutex
+
     //*********************************************************************************************************************************
     //                                Spinner
     //*********************************************************************************************************************************
     showSpinner: function() {
         Mojo.Log.info("--> showSpinner");
 
-        this.cmdMenuModel.items[1].items[1] = this.loadingModel;
-        this.controller.modelChanged(this.cmdMenuModel);
-        this.loadingAnimation.start();
-        //this.spinnerModel.spinning = true;
-        //this.controller.modelChanged(this.spinnerModel);
+        if(this.spinnerShown ===false)
+        {
+            this.spinnerShown = true;
+            this.cmdMenuModel.items[1].items[1] = this.loadingModel;
+            this.controller.modelChanged(this.cmdMenuModel);
+            this.loadingAnimation.start();
+        }
         Mojo.Log.info("<-- showSpinner");
     },
     hideSpinner: function() {
         Mojo.Log.info("--> hideSpinner");
         this.loadingAnimation.stop();
-
+        this.spinnerShown = false;
         if (!this.playing) {
             this.cmdMenuModel.items[1].items[1] = this.playItem;
         } else {
@@ -680,13 +699,20 @@ NowPlayingAssistant = Class.create({
         //this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- hideSpinner");
     },
-
+    
+    lastPlayed:null,
+    currentPlayed:null,
     //*********************************************************************************************************************************
     //  Now Playing Song Info
     //*********************************************************************************************************************************
     NowPlayingDisplaySongInfo: function(playList, currentIndex) {
         var song = playList[currentIndex];
         
+        if(currentIndex != this.currentPlayed)
+        {
+            this.lastPlayed = this.currentPlayed;
+            this.currentPlayed = currentIndex;
+        }
         
         Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
         
@@ -715,8 +741,13 @@ NowPlayingAssistant = Class.create({
         {
             if(this.npList)
             {
-                this.npList.mojo.invalidateItems(0);
-                
+                if(this.lastPlayed!== null)
+                {
+                    this.npList.mojo.invalidateItems(this.lastPlayed, 1);
+                    this.lastPlayed =null;
+                    this.npList.mojo.invalidateItems(currentIndex, 1);
+                    
+                }
                 try {
                     this.npList.mojo.revealItem(currentIndex);
                 }
@@ -733,7 +764,7 @@ NowPlayingAssistant = Class.create({
     },
 
     streamDebug: function(state) {
-        var display = "";
+        var display = null;
         switch (state) {
         case "Downloading NaN%":
             display = "Download Starting";
@@ -756,11 +787,17 @@ NowPlayingAssistant = Class.create({
         case "load":
             display = "Fully Loaded";
             break;
+        case "timeupdate":
+            //Do nothing with this
+            break;
         default:
             display = state;
             break;
         }
-        this.controller.get('stream-debug').innerHTML = display;
+        if(display !== null)
+        {
+            this.controller.get('stream-debug').innerHTML = display;
+        }
     },
 
     setMenuControls: function() {
@@ -1062,7 +1099,8 @@ NowPlayingAssistant = Class.create({
         visible: true,
         items: [
         { label: "Preferences...",
-          command:"doPref-cmd"
+          command:"doPref-cmd",
+          shortcut:'p'
             },        
         /*{
             label: "Stream Info",
@@ -1070,11 +1108,13 @@ NowPlayingAssistant = Class.create({
         },*/
         {
             label: "Delete Now Playing",
-            command: "delete-np-cmd"
+            command: "delete-np-cmd",
+            shortcut:'d'
         },
         {
             label: "About...",
             command: "about-cmd"
+            
         }]
     }
 });

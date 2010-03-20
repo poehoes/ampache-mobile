@@ -157,17 +157,20 @@ AlbumsAssistant = Class.create({
 
         this.sortItems = [{
             label: "Alphabetical",
-            command: "doSort-alpha"
+            command: "doSort-alpha",
+            shortcut:'a'
             /*, toggleCmd: toggleAlpaha*/
         },
         {
             label: "Year",
-            command: "doSort-year"
+            command: "doSort-year",
+            shortcut:'y'
             /*,  toggleCmd: toggleYear*/
         },
         {
             label: "Artist",
-            command: "doSort-artist"
+            command: "doSort-artist",
+            shortcut:'s'
             /*, toggleCmd: toggleArtist*/
         }];
 
@@ -175,12 +178,20 @@ AlbumsAssistant = Class.create({
             visible: true,
             items: [{
                 label: "Preferences...",
-                command: "doPref-cmd"
+                command: "doPref-cmd",
+                shortcut:"p"
             },
             {
                 label: "Delete Now Playing",
                 disabled: !AmpacheMobile.audioPlayer.PlayListPending,
-                command: "delete-np-cmd"
+                command: "delete-np-cmd",
+                shortcut:"d"
+            },
+            {
+                label: "Goto Now Playing",
+                disabled: !AmpacheMobile.audioPlayer.PlayListPending,
+                command: "push-np-cmd",
+                shortcut:"n"
             },
             {
                 label: "Sort",
@@ -422,7 +433,8 @@ AlbumsAssistant = Class.create({
             event.stopPropagation();
             break;
         case "delete-np-cmd":
-            this.appMenuModel.items[1].disabled = true;
+            this.appMenuModel.items[1].items[0].disabled = true;
+            this.appMenuModel.items[1].items[1].disabled = true;
             break;
 
         }
@@ -534,7 +546,6 @@ AlbumsAssistant = Class.create({
 
     activate: function(event) {
         this.itemsHelper.Activate();
-        this.appMenuModel.items[1].disabled = !AmpacheMobile.audioPlayer.PlayListPending;
     },
 
     deactivate: function(event) {

@@ -1,4 +1,4 @@
-<div id="main" class="palm-dark">
+<div id="search-main" class="palm-dark">
     <div id="header" class="palm-header left truncating-text">
         <div class="palm-header-wrapper">
             <div id='now-playing-button' class="now-playing-button" x-mojo-tap-highlight="immediate">
@@ -17,26 +17,36 @@
     <div id="search-group" class="palm-group unlabeled palm-dark mainMenuList">
         <div id="search-list" class="palm-list">
             <div class="palm-row first">
-                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                <div class="palm-row-wrapper textfield-group"  x-mojo-focus-highlight="true">    
                     <div class="title">
-                        <!--<div class="image">
-                            <img class="mainMenuIcon" src="images/icons/search.png">
-                            </img>
-                        </div>-->
-                        <div class="label left">Find...</div>
-                        <div x-mojo-element="TextField" id="search-field"></div>
+                            <div class="icon search left"><img class="mainMenuIcon" src="images/icons/search.png"></div>                                       
+                            <span class="search-term-find" x-mojo-loc=''>Find...</span>
+                            <div id="search-field" class="search-test" x-mojo-element="TextField"></div>
                     </div>
                 </div>
+                
+                <!--<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">-->
+                <!--    <div class="title">-->
+                <!--        <!--<div class="image">-->
+                <!--            <img class="mainMenuIcon" src="images/icons/search.png">-->
+                <!--            </img>-->
+                <!--        </div>-->
+                <!--        <div class="label left">Find...</div>-->
+                <!--        <div class="search-term" x-mojo-element="TextField" id="search-field"></div>-->
+                <!--    </div>-->
+                <!--</div>-->
             </div>
             <div class="palm-row" id='searchArtists' x-Mojo-tap-highlight="momentary">
                 <div class="palm-row-wrapper">
                     <div class="mainMenuLeft">
                         <div class="mainMenuTitle">Artists</div>
                     </div>
-                    <div class="mainMenuRight">
+                    <div class="search-icon">
                         <img class="mainMenuIcon" src="images/icons/artists.png"></img>
                     </div>
-                    <div class="mainMenuClear"></div>
+                    <div class="search-enter">
+                        <img  id="search-Artists" ></img>
+                    </div>
                 </div>
             </div>
             <div class="palm-row" id='searchAlbums' x-Mojo-tap-highlight="momentary">
@@ -44,10 +54,12 @@
                     <div class="mainMenuLeft">
                         <div class="mainMenuTitle">Albums</div>
                     </div>
-                    <div class="mainMenuRight">
-                        <img class="mainMenuIcon" src="images/icons/albums.png"></img>
+                    <div class="search-icon">
+                        <img class="mainMenuIcon" src="images/icons/albums.png"></img>  
                     </div>
-                    <div class="mainMenuClear"></div>
+                    <div class="search-enter">
+                        <img  id="search-Albums"></img>
+                    </div>
                 </div>
             </div>
             <div class="palm-row" id='searchSongs' x-Mojo-tap-highlight="momentary">
@@ -55,10 +67,12 @@
                     <div class="mainMenuLeft">
                         <div class="mainMenuTitle">Songs</div>
                     </div>
-                    <div class="mainMenuRight">
+                    <div class="search-icon">
                         <img class="mainMenuIcon" src="images/icons/songs.png"></img>
                     </div>
-                    <div class="mainMenuClear"></div>
+                    <div class="search-enter">
+                        <img  id="search-Songs"></img>
+                    </div>
                 </div>
             </div>
 
@@ -67,10 +81,13 @@
                     <div class="mainMenuLeft">
                         <div class="mainMenuTitle">Playlists</div>
                     </div>
-                    <div class="mainMenuRight">
+                    <div class="search-icon">
                         <img class="mainMenuIcon" src="images/icons/playlists.png"></img>
+                         
                     </div>
-                    <div class="mainMenuClear"></div>
+                    <div class="search-enter">
+                        <img id="search-Playlists"></img>
+                    </div>
                 </div>
             </div>
             <!--
@@ -94,16 +111,17 @@
                     <div class="mainMenuLeft">
                         <div class="mainMenuTitle">Global</div>
                     </div>
-                    <div class="mainMenuRight">
+                    <div class="search-icon">
                         <img class="mainMenuIcon" src="images/icons/global.png"></img>
+                          
                     </div>
-                    <div class="mainMenuClear"></div>
+                    <div class="search-enter">
+                        <img  id="search-Global"></img>
+                    </div>
+                     
                 </div>
             </div>
         </div>
     </div>
-    <div class="ampache-version">
-                <span id="search-help" x-mojo-loc=''></span>
-     </div>
 </div>
 
