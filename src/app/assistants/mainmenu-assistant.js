@@ -43,7 +43,8 @@ MainmenuAssistant = Class.create({
             name: $L("Artists"),
             scene: $L("artists"),
             description: $L(AmpacheMobile.ampacheServer.artists.toString()),
-            icon: "images/icons/artists.png"
+            icon: "images/icons/artists.png",
+            index:0
         },
 
         {
@@ -53,7 +54,8 @@ MainmenuAssistant = Class.create({
             scene: $L("albums"),
             description: $L(AmpacheMobile.ampacheServer.albums.toString()),
             icon: "images/icons/albums.png",
-            displayCount: ""
+            displayCount: "",
+            index:1
         },
         {
             category: $L("bottom"),
@@ -62,16 +64,18 @@ MainmenuAssistant = Class.create({
             scene: "playlists",
             description: $L(AmpacheMobile.ampacheServer.playlists.toString()),
             icon: "images/icons/playlists.png",
-            displayCount: ""
+            displayCount: "",
+            index:2
         },
         {
             category: $L("bottom"),
             directory: $L("genres"),
             name: $L("Genres"),
             scene: "genres",
-            description: 0,
+            description: AmpacheMobile.ampacheServer.tags===null? 0: AmpacheMobile.ampacheServer.tags.toString(),
             icon: "images/icons/genres.png",
-            displayCount: "none"
+            displayCount: AmpacheMobile.ampacheServer.tags===null? "none":"" ,
+            index:3
         },
         {
             category: $L("bottom"),
@@ -80,7 +84,8 @@ MainmenuAssistant = Class.create({
             scene: "random",
             description: 0,
             icon: "images/icons/random.png",
-            displayCount: "none"
+            displayCount: "none",
+            index:4
         },
         {
             category: $L("bottom"),
@@ -89,7 +94,8 @@ MainmenuAssistant = Class.create({
             scene: "recent",
             description: 0,
             icon: "images/icons/recent.png",
-            displayCount: "none"
+            displayCount: "none",
+            index:5
         }
         ];
 
@@ -128,6 +134,10 @@ MainmenuAssistant = Class.create({
         //Key Handler
         this.pushSearch = this.pushSearch.bindAsEventListener(this);
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.pushSearch);
+        
+        //Hold Handler
+        this.listHeldHandler = this.listHeldHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('mainMenuList'), Mojo.Event.hold, this.listHeldHandler);
 
     },
 
@@ -138,6 +148,7 @@ MainmenuAssistant = Class.create({
         
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
+        Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.hold, this.listHeldHandler);
 
         if (AmpacheMobile.audioPlayer.PlayListPending === true) {
                 AmpacheMobile.audioPlayer.stop();
@@ -279,6 +290,69 @@ MainmenuAssistant = Class.create({
         }
         //this.controller.stageController.assistant.showScene(event.item.directory, event.item.scene)
         Mojo.Log.info("<-- listTapHandler");
+    },
+
+    listHeldHandler:function(event)
+    {
+        var node = event.down.target;
+        var regex = /row_([0-9+])_main/;
+        var index = null;
+        
+        while(node && (index===null))
+        {
+            var matches = node.id.match(new RegExp(regex));
+            if(matches)
+            {
+                index = Number(matches[1]);
+            }
+            else
+            {
+                node = node.parentNode;
+            }
+        }
+        
+        if(index)
+        {
+            switch(this.mainmenu[index].scene)
+            {
+                case "recent":
+                    fromDate = new Date();
+                    fromDate = AmpacheMobile.ampacheServer.add.clone();
+                    fromDate.addHours(-2);
+                    
+                    this.controller.stageController.pushScene({
+                            transition: AmpacheMobile.Transition,
+                            name: "songs"
+                        },
+                        {
+                            SceneTitle: "Recent Songs: Last Update",
+                            Type: "recent",
+                            DisplayArtistInfo: true,
+                            FromDate:fromDate
+                        });
+                    break;
+                case "recent":
+                    fromDate = new Date();
+                    fromDate = AmpacheMobile.ampacheServer.add.clone();
+                    fromDate.addHours(-2);
+                    
+                    this.controller.stageController.pushScene({
+                            transition: AmpacheMobile.Transition,
+                            name: "songs"
+                        },
+                        {
+                            SceneTitle: "Recent Songs: Last Update",
+                            Type: "recent",
+                            DisplayArtistInfo: true,
+                            FromDate:fromDate
+                        });
+                    break;
+            }
+            
+        }
+        
+        //this.showDialogBox("Held", index);
+        event.stop();
     },
 
     // This function will popup a dialog, displaying the message passed in.

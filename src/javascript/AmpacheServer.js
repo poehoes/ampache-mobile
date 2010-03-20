@@ -35,6 +35,7 @@ AmpacheServer = Class.create({
     playlists: "",
     videos: "",
     version:"",
+    tags:null,
     XMLFormattingIssue: "This happens due to songs with invalid characters information. <br><br> Look in the Ampache Web Interface for characters like  <img src='images/illegal_chars.png'/>.",
     ErrorEmptyResponse: "Response from server contained no information.  This usually happens when you don't have a solid connection to the server.  Please try again.",
 
@@ -251,6 +252,11 @@ AmpacheServer = Class.create({
                 this.artists = parseInt(response.getElementsByTagName("artists")[0].firstChild.data, 10);
                 this.playlists = parseInt(response.getElementsByTagName("playlists")[0].firstChild.data, 10);
                 this.videos = parseInt(response.getElementsByTagName("videos")[0].firstChild.data, 10);
+                var tags = response.getElementsByTagName("tags");
+                if(tags && tags.length!==0)
+                {
+                    this.tags = parseInt(tags[0].firstChild.data, 10);
+                }
                 Mojo.Log.info(" auth: " + this.auth + " api: " + this.api + " update: " + this.update + " add: " + this.add + " clean: " + this.clean + " songs: " + this.songs + " albums: " + this.albums + " artists: " + this.artists + " playlists: " + this.playlists + " videos: " + this.videos);
                 returnValue = "connected";
                 this.Connected = true;
