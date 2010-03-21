@@ -26,6 +26,12 @@ BackgroundAssistant = Class.create({
         this.CurrentOverlay = AmpacheMobile.settingsManager.settings.BackgroundOverlay;
         this.CurrentMode = AmpacheMobile.settingsManager.settings.BackgroundMode;
 
+        //**********************************************************************
+        // Setup Color Selector
+        this.ColorSelector = new ColorPicker(this.controller, this.CurrentColor, this.ColorChangedCallback.bind(this));
+        this.ColorSelector.makeColorSelectors();
+
+
         if (!this.CurrentMode) {
             this.CurrentMode = 0;
         }
@@ -52,6 +58,24 @@ BackgroundAssistant = Class.create({
             label: "Image From Device",
             disabled: false
         });
+
+
+        this.controller.setupWidget("btnGetTextColor", this.attributes = {},
+        this.model = {
+            label: "Grab Text Color",
+            disabled: false
+        });
+
+        this.grabTextColor = this.grabTextColor.bind(this);
+        Mojo.Event.listen(this.controller.get('btnGetTextColor'), Mojo.Event.tap, this.grabTextColor);
+
+        this.controller.setupWidget("btnThemeDefault", this.attributes = {},
+        this.model = {
+            label: "Use Theme Default",
+            disabled: false
+        });
+        this.useThemeDefault = this.useThemeDefault.bind(this);
+        Mojo.Event.listen(this.controller.get('btnThemeDefault'), Mojo.Event.tap, this.useThemeDefault);
 
         //***************************************************************
         // Included Photo picker
@@ -124,8 +148,13 @@ BackgroundAssistant = Class.create({
         this.controller.get('body_wallpaper').style.background = "url('" + AmpacheMobile.settingsManager.settings.BackgroundImage + "')";
         this.controller.get('body_wallpaper').style.backgroundColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
 
-        this.ColorSelector = new ColorPicker(this.controller, this.CurrentColor, this.ColorChangedCallback.bind(this));
-        this.ColorSelector.makeColorSelectors();
+        
+        if(AmpacheMobile.settingsManager.settings.BackgroundColor === "")
+        {
+            this.useThemeDefault();
+            //this.CurrentColor = "";
+        }
+        
 
         this.wallpaperTypeChanged();
 
@@ -143,6 +172,10 @@ BackgroundAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('wallpaperType'), Mojo.Event.propertyChange, this.wallPaperChangeHandler);
         Mojo.Event.stopListening(this.controller.get('btnChooseWallpaperImage'), Mojo.Event.tap, this.chooseWallpaerHandler);
         Mojo.Event.stopListening(this.controller.get('overlaySelector'), Mojo.Event.propertyChange, this.overlaySelectorChanged);
+        
+        Mojo.Event.stopListening(this.controller.get('btnThemeDefault'), Mojo.Event.tap, this.useThemeDefault);
+        Mojo.Event.stopListening(this.controller.get('btnGetTextColor'), Mojo.Event.tap, this.grabTextColor);
+
     },
 
     imageViewChanged: function(event) {
@@ -206,14 +239,14 @@ BackgroundAssistant = Class.create({
     },
 
     ColorChangedCallback: function(hexColor) {
-        this.CurrentMode = 0;
+        
         this.CurrentColor = hexColor;
         this.UpdateScreen();
 
     },
 
     overlaySelectorChanged: function(event) {
-        this.CurrentMode = 0;
+        
         this.CurrentOverlay = event.value;
         this.UpdateScreen();
     },
@@ -228,6 +261,29 @@ BackgroundAssistant = Class.create({
         this.controller.get('body_wallpaper').style.background = "url('" + this.CurrentImage + "')";
         this.controller.get('body_wallpaper').style.backgroundColor = this.CurrentColor;
     },
+
+    useThemeDefault:function()
+    {
+        this.CurrentColor = "";
+        this.ColorSelector.inputBox.value = "";
+        this.controller.get('body_wallpaper').style.backgroundColor = null;
+        //this.ColorSelector.inputBoxChanged();
+    },
+    
+    grabTextColor:function()
+    {
+        if(AmpacheMobile.settingsManager.settings.UseCustomColor)
+        {
+            this.CurrentColor = AmpacheMobile.settingsManager.settings.CustomColor;
+            this.ColorSelector.inputBox.value = this.CurrentColor;
+            this.ColorSelector.inputBoxChanged();
+        }
+        else
+        {
+            this.showDialogBox("No Color", "There is no text color currently selected.")
+        }
+    },
+
 
     handleChooseWallpaperImage: function() {
         Mojo.FilePicker.pickFile({
@@ -244,6 +300,8 @@ BackgroundAssistant = Class.create({
         // Color
         if (this.wallpaperTypeModel.value === 0) {
 
+            this.CurrentColor = this.ColorSelector.inputBox.value;
+            
             this.controller.get('image-container').style.display = 'none';
             this.controller.get('color-container').style.display = 'block';
 
@@ -334,7 +392,7 @@ BackgroundAssistant = Class.create({
 
     anyChanges: function() {
         var retVal = false;
-        if (AmpacheMobile.settingsManager.settings.BackgroundColor !== this.CurrentColor || AmpacheMobile.settingsManager.settings.BackgroundImage !== this.CurrentImage) {
+        if (AmpacheMobile.settingsManager.settings.BackgroundColor !== this.CurrentColor || AmpacheMobile.settingsManager.settings.BackgroundImage !== this.CurrentImage || AmpacheMobile.settingsManager.settings.BackgroundMode !== this.CurrentMode ) {
             retVal = true;
         }
         return retVal;
@@ -342,7 +400,7 @@ BackgroundAssistant = Class.create({
 
     deactivate: function() {
         this.controller.get('body_wallpaper').style.background = null;
-        this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
+        //this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
         Mojo.Event.stopListening(this.controller.get('myPhotoDiv'), Mojo.Event.imageViewChanged, this.imageViewChanged);
     }
 });

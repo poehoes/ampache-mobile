@@ -46,30 +46,28 @@ StageAssistant.appMenuAttr = {
 };
 StageAssistant.appMenuModel = {
     visible: true,
-    
-    
-    
+
     items: [
     //{label: "Test Connection", command: "doTest-cmd"},
     {
         label: "Preferences",
         command: "doPref-cmd",
-        shortcut:"p"
+        shortcut: "p"
     },
-    {   label:"Now Playing",
-        items:
-            [{
-                label: "Delete Now Playing",
-                disabled: true,
-                command: "delete-np-cmd",
-                shortcut:"d"
-            },
-            {
-                label: "Goto Now Playing",
-                disabled: true,
-                command: "push-np-cmd",
-                shortcut:"n"
-            }],
+    {
+        label: "Now Playing",
+        items: [{
+            label: "Delete Now Playing",
+            disabled: true,
+            command: "delete-np-cmd",
+            shortcut: "d"
+        },
+        {
+            label: "Goto Now Playing",
+            disabled: true,
+            command: "push-np-cmd",
+            shortcut: "n"
+        }],
         disabled: false
     },
     {
@@ -78,41 +76,32 @@ StageAssistant.appMenuModel = {
     }]
 };
 
-StageAssistant.prototype.onBlurHandler = function ()
-{
-    if (this.foregroundVolumeMarker){
-	this.foregroundVolumeMarker.cancel();
-	this.foregroundVolumeMarker = null;
-    }    
+StageAssistant.prototype.onBlurHandler = function() {
+    if (this.foregroundVolumeMarker) {
+        this.foregroundVolumeMarker.cancel();
+        this.foregroundVolumeMarker = null;
+    }
 };
 
-StageAssistant.prototype.onFocusHandler = function ()
-{
-    try{
-        if (!this.foregroundVolumeMarker)
-        {
-        
-        var parameters = {};
-        parameters.subscribe = true;
-        parameters.foregroundApp = true;
-                    
-        this.foregroundVolumeMarker = new Mojo.Service.Request(
-            "palm://com.palm.audio/media",
-            {
-                method: 'lockVolumeKeys',					
+StageAssistant.prototype.onFocusHandler = function() {
+    try {
+        if (!this.foregroundVolumeMarker) {
+
+            var parameters = {};
+            parameters.subscribe = true;
+            parameters.foregroundApp = true;
+
+            this.foregroundVolumeMarker = new Mojo.Service.Request("palm://com.palm.audio/media", {
+                method: 'lockVolumeKeys',
                 onSuccess: this.lockVolumeKeys,
                 parameters: parameters
-            }
-        );
+            });
         }
-    }
-    catch(ex)
-    {}
+    } catch(ex) {}
 };
 
-StageAssistant.prototype.lockVolumeKeys = function(event)
-{
-    
+StageAssistant.prototype.lockVolumeKeys = function(event) {
+
 };
 
 StageAssistant.prototype.setup = function() {
@@ -121,30 +110,28 @@ StageAssistant.prototype.setup = function() {
         transition: AmpacheMobile.Transition,
         name: "connection"
     });
-    
+
     window.document.addEventListener(Mojo.Event.deactivate, this.onBlurHandler.bind(this));
     window.document.addEventListener(Mojo.Event.activate, this.onFocusHandler.bind(this));
 };
-
-
 
 GotoPreferences = function() {
     AmpacheMobile.loadingPreferences = true;
     var controller = Mojo.Controller.getAppController().getFocusedStageController();
     var scenes = controller.getScenes();
-            
+
     for (var i = (scenes.length - 1); i !== 0; i--) {
         controller.popScene(scenes[i]);
     }
     var params = {
         settingsManager: AmpacheMobile.settingsManager
     };
-    
+
     controller.pushScene({
         transition: AmpacheMobile.Transition,
         name: "preferences"
-        },
-        params);
+    },
+    params);
 };
 
 StageAssistant.prototype.confirmGotoPrefs = function(value) {
@@ -153,9 +140,6 @@ StageAssistant.prototype.confirmGotoPrefs = function(value) {
     }
 };
 
-
-
-
 StageAssistant.prototype.handleCommand = function(event) {
     Mojo.Log.info("<-- StageAssistant.prototype.handleCommand");
     Mojo.Log.info("*** StageAssistant.prototype.handleCommand", event.type);
@@ -163,13 +147,13 @@ StageAssistant.prototype.handleCommand = function(event) {
     if (event.type === Mojo.Event.command) {
         switch (event.command) {
         case "doPref-cmd":
-            
+
             if (AmpacheMobile.audioPlayer.PlayListPending === true) {
                 event.preventDefault();
                 event.stopPropagation();
-                
+
                 var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
-                
+
                 controller.showAlertDialog({
                     onChoose: this.confirmGotoPrefs,
                     title: $L("Are you sure?"),
@@ -185,35 +169,29 @@ StageAssistant.prototype.handleCommand = function(event) {
                         type: 'negative'
                     }]
                 });
-            }
-            else
-            {
+            } else {
                 GotoPreferences();
             }
             break;
         case 'mojo-back':
         case "about-cmd":
-            
+
             serverinfo = "<div class='about'><BR><B>Server Info</B><div class='about-details'>";
-            if((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.Connected===true))
-            {
+            if ((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.Connected === true)) {
                 serverinfo += "Version: <font class='about-details-data'>" + AmpacheMobile.ampacheServer.version + "</font>";
-                serverinfo += "<BR>Link: <a class='about-details-data' href=" + AmpacheMobile.ampacheServer.URL +">" + AmpacheMobile.Account.AccountName + "</a>";
+                serverinfo += "<BR>Link: <a class='about-details-data' href=" + AmpacheMobile.ampacheServer.URL + ">" + AmpacheMobile.Account.AccountName + "</a>";
                 serverinfo += "<BR>Update:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.update, "medium") + "</font>";
                 serverinfo += "<BR>Add:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.add, "medium") + "</font>";
                 serverinfo += "<BR>Clean:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.clean, "medium") + "</font>";
-            }
-            else
-            {
+            } else {
                 serverinfo += "Not Connected";
             }
             serverinfo += "</div></div>";
-            
+
             currentScene.showAlertDialog({
-                onChoose:
-                function(value) {},
+                onChoose: function(value) {},
                 title: "Ampache Mobile - v" + Mojo.Controller.appInfo.version,
-                message: "Copyright 2009-2010, Bryce Geiser"+serverinfo,
+                message: "Copyright 2009-2010, Bryce Geiser" + serverinfo,
                 choices: [{
                     label: "OK",
                     value: ""
@@ -238,14 +216,12 @@ StageAssistant.prototype.handleCommand = function(event) {
             break;
         }
     }
-    
+
     Mojo.Log.info("--> StageAssistant.prototype.handleCommand");
 };
 
-StageAssistant.prototype.pushNowPlaying= function()
-{
-    if((AmpacheMobile.audioPlayer)&&(AmpacheMobile.audioPlayer.PlayListPending === true))
-    {
+StageAssistant.prototype.pushNowPlaying = function() {
+    if ((AmpacheMobile.audioPlayer) && (AmpacheMobile.audioPlayer.PlayListPending === true)) {
         Mojo.Controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "now-playing"
@@ -259,4 +235,76 @@ StageAssistant.prototype.pushNowPlaying= function()
 function CenterSpinner(spinner) {
     spinner.style.left = (window.innerWidth / 2 - 64) + "px";
     spinner.style.top = (window.innerHeight / 2 - 64) + "px";
-}
+};
+
+function SetExistingCSSColor(serachRule, newColor) {
+    var rule = this.GetCSSRule(serachRule);
+    if (rule) {
+        rule.style.color = newColor
+    }
+};
+
+function GetCSSRule(searchRule) {
+    var sheets = document.styleSheets;
+    for (j = 0; j < sheets.length; j++) {
+        var rules = sheets[j].cssRules;
+        for (i = 0; i < rules.length; i++) {
+            var rule = rules[i];
+            
+            if (rule.selectorText) {
+                //Mojo.Log.info("Sheet[" + j + "].Rule[" + i + "]=" + rule.selectorText);
+                if (rule.selectorText.toLowerCase() == searchRule) {
+                    return rule;
+                }
+            }
+        }
+    }
+    return null;
+};
+
+
+function SetBackground(controller, image, color) {
+        
+       
+            controller.get('body_wallpaper').style.background = "url(" + image + ") no-repeat";
+            controller.get('body_wallpaper').style.backgroundColor = color;
+          
+        
+};
+    
+function SetText(isCustomColor, Color, Theme )
+    {
+        var rowName = (Number(Theme)===THEME_DARK) ? ".palm-dark .palm-row" : ".palm-row"
+        
+        var rowRule = GetCSSRule(rowName);
+        var sceneRule = GetCSSRule('.ampache-mobile-scene');
+        
+        
+        if(isCustomColor)
+        {
+            rowRule.style.color = Color;
+            sceneRule.style.color = Color;
+        }
+        else
+        {
+            rowRule.style.color = null;
+            sceneRule.style.color = null;
+        }
+        
+        
+};
+
+function SetCSSTheme(controller, themeIndex)
+{
+    var body = controller.get('body_wallpaper');
+    var numThemes = THEMES.length;
+    for(var i=1; i<numThemes; i++)
+    {
+        body.removeClassName(THEMES[i]);
+    }
+    
+    if(themeIndex!==THEME_NONE)
+    {
+        body.addClassName(THEMES[themeIndex]);
+    }
+};

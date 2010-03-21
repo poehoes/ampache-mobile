@@ -72,11 +72,19 @@ SearchMenuAssistant = Class.create({
         this.keypressHandler = this.handleKeyPressEvent.bindAsEventListener(this);
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
+        
+        this.leaveSceneHandler = this.leaveSceneHandler.bindAsEventListener(this);
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keyup, this.leaveSceneHandler);
+        
     },
+
+    
+
 
     cleanup: function(event) {
         this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
         this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keydown, this.keypressHandler);
+        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keyup, this.leaveSceneHandler);
         this.controller.stopListening("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
         this.controller.stopListening(this.controller.get('searchArtists'), Mojo.Event.tap, this.artistSearchHandler);
         this.controller.stopListening(this.controller.get('searchAlbums'), Mojo.Event.tap, this.albumSearchHandler);
@@ -124,12 +132,29 @@ SearchMenuAssistant = Class.create({
          };
          */
         this.SetFocus();
-
+        search = this.controller.get('search-test');
         // var text = this.SearchField.mojo.getValue();
         // text += String.fromCharCode(event.originalEvent.keyCode);
         // his.SearchField.mojo.setValue(text);
         //var content = Mojo.View.render({template: "input/keyPress/evententry", object: eventModel});    
         //this.div.insert(content);
+    },
+
+    leaveSceneHandler:function(event)
+    {
+        
+        if(this.SearchField.mojo.getValue() === "")
+        {
+            if(this.exitOnDelete===true)
+            {
+                this.controller.stageController.popScene(); 
+            }
+            this.exitOnDelete = true;
+        }
+        else
+        {
+            this.exitOnDelete = false;
+        }
     },
 
     searchCriteria: function(numChars) {

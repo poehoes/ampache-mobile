@@ -12,6 +12,7 @@
     {"source": "javascript/ColorPicker.js"},
     {"source": "javascript/ItemsHelper.js"},
     {"source": "javascript/ISO8601.js"},
+    {"source": "javascript/SettingsManager.js"},
     {"source": "app/models/ArtistModel.js"},
     {"source": "app/models/AlbumModel.js"},
     {"source": "app/models/SongModel.js"},
@@ -43,7 +44,7 @@
         "scenes": "now-playing",
         "source": "app/assistants/now-playing-assistant.js"
     },
-    {"source": "javascript/SettingsManager.js"},
+    
     {
         "scenes": "account",
         "source": "app/assistants/account-assistant.js"
@@ -55,6 +56,10 @@
     {
         "scenes": "background",
         "source": "app/assistants/background-assistant.js"
+    },
+    {
+        "scenes": "textselect",
+        "source": "app/assistants/textselect-assistant.js"
     },
     {
         "scenes": "search-menu",

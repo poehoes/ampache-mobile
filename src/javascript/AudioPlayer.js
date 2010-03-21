@@ -778,13 +778,19 @@ AudioPlayer = Class.create({
             this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
         }
         
-        this.UpdateNowPlayingShowSpinner(stalled);
+        if(stalled===true)
+        {
+            this.UpdateNowPlayingShowSpinner(stalled);
+        }
     },
 
 
     handleAudioEvents: function(event) {
         Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
 
+        event.stop();
+        event.stopPropagation();
+    
         if (this.stallTimer && event.type !== "stalled") {
             this.kill_stall_timer();
         }
@@ -795,7 +801,13 @@ AudioPlayer = Class.create({
         switch (event.type) {
         case "canplay":
             this.UpdateNowPlayingShowSpinner(false);
-            this.player.play();
+            if(this.startPlayback===true) {
+                this.player.play();
+            }
+            else
+            {
+                this.Paused = true;
+            }
             break;
         case "stalled":
             if(!this.stallTimer)

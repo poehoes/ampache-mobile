@@ -141,7 +141,7 @@ ConnectionAssistant = Class.create({
             }
         }
         AmpacheMobile.audioPlayer.listIsShowing = AmpacheMobile.settingsManager.settings.npPlayingListView;
-        this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
+        this.SetSettingsCustomizations(this.controller);
         Mojo.Log.info("<-- StageAssistant.prototype.GotSettings");
     },
 
@@ -298,7 +298,7 @@ ConnectionAssistant = Class.create({
 
         if (AmpacheMobile.settingsManager.settings) {
             this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts, true);
-            this.SetBackground(AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
+            this.SetSettingsCustomizations(this.controller);
         }
 
         if ((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.pingTimer)) {
@@ -307,10 +307,14 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("<-- activate");
     },
 
-    SetBackground: function(image, color) {
-        this.controller.get('body_wallpaper').style.background = "url(" + image + ") no-repeat";
-        this.controller.get('body_wallpaper').style.backgroundColor = color;
+    SetSettingsCustomizations:function(controller)
+    {
+        SetCSSTheme(controller, AmpacheMobile.settingsManager.settings.CSSTheme);
+        SetBackground(controller, AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
+        SetText(AmpacheMobile.settingsManager.settings.UseCustomColor, AmpacheMobile.settingsManager.settings.CustomColor, AmpacheMobile.settingsManager.settings.CSSTheme);
     },
+
+    
 
     deactivate: function(event) {
         Mojo.Log.info("--> deactivate");

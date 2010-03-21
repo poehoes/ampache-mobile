@@ -32,7 +32,14 @@ SEARCH_TYPES[3] = "Songs";
 SEARCH_TYPES[4] = "Playlists";
 
 
+var THEME_NONE = 0;
+var THEME_DARK = 1;
+var THEMES = [];
+THEMES[0] = "";
+THEMES[1] = "palm-dark";
 
+CUSTOM_COLOR = 0;
+CUSTOM_IMAGE = 1;
 
 SettingsManager = Class.create({
     settings: null,
@@ -120,16 +127,17 @@ SettingsManager = Class.create({
     PopulateMissingDefaults: function() {
         if (this.settings) {
             if (!this.settings.BackgroundColor) {
-                this.settings.BackgroundColor = DEFAULT_COLOR;
+                this.settings.BackgroundColor = "";
             }
             if (!this.settings.BackgroundImage) {
                 this.settings.BackgroundImage = DEFAULT_IMAGE;
+                this.settings.BackgroundColor = DEFAULT_COLOR;
             }
             if (!this.settings.StreamDebug) {
                 this.settings.StreamDebug = false;
             }
             if (!this.settings.BackgroundMode) {
-                this.settings.BackgroundMode = 0;
+                this.settings.BackgroundMode = CUSTOM_COLOR;
             }
             if (!this.settings.AlbumsSort) {
                 this.settings.AlbumsSort = 0;
@@ -144,6 +152,18 @@ SettingsManager = Class.create({
             
             if (!this.settings.SearchType) {
                 this.settings.SearchType=SEARCH_GLOBAL;
+            }
+            
+            if (!this.settings.UseCustomColor) {
+                this.settings.UseCustomColor=false;
+            }
+            
+            if (!this.settings.CustomColor) {
+                this.settings.CustomColor='#FFFFFF';
+            }
+            
+            if (!this.settings.CSSTheme) {
+                this.settings.CSSTheme=THEME_DARK;
             }
             
             
@@ -211,11 +231,13 @@ Settings = Class.create({
     BackgroundColor: DEFAULT_COLOR,
     BackgroundImage: DEFAULT_IMAGE,
     BackgroundSolid: DEFAULT_IMAGE,
-    BackgroundMode: this.CUSTOM_COLOR,
+    BackgroundMode: CUSTOM_COLOR,
     BackgroundOverlay: DEFAULT_OVERLAY,
-    CUSTOM_COLOR: 0,
-    CUSTOM_IMAGE: 1,
+    
     AlbumsSort: 0,
     npPlayingListView:false,
-    SearchType:0
+    SearchType:0,
+    UseCustomColor:false,
+    CustomColor:'#FFFFFF', /*white*/
+    CSSTheme: THEME_DARK
 });
