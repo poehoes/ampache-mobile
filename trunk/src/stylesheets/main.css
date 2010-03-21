@@ -17,14 +17,30 @@
     You should have received a copy of the GNU General Public License
     along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+
 html, body {
 height: 100%;
 margin: 0;
 padding: 0;
 }
 
+.palm-row
+{
+}
+
+.palm-dark .palm-row
+{
+}
+
+
+.ampache-mobile-scene
+{
+    
+}
+
 a:link {
-COLOR: grey;
+    COLOR: grey;
 }
 
 .wallpaper{
@@ -60,6 +76,7 @@ COLOR: grey;
         font-size: 14px;
         font-weight:500;
         margin: 1px -2px 0px -2px;
+        color:white;
 }
 
 
@@ -92,12 +109,12 @@ COLOR: grey;
 
 .ampacheMobileTitle
 {
-    color: white;
+    /* /*color: white;*/
     padding: 5px 15px 5px 15px;
 }
 
 .ampacheMobileDesc {
-    color: white;
+    /* /*color: white;*/
     margin-top: -10px;
     padding: 0 15px 10px 15px;
     font-size:small;
@@ -324,77 +341,77 @@ COLOR: grey;
     top: 128px;
     font-size:smaller;
     text-align:center;
-    color:white;
+    /*color:white;*/
 }
 
 #overlaySelector
 {
-    color:white;
+    /*color:white;*/
 }
 
 #AccountList .AccountName {
-    color: white;
+     /*color: white;*/
     padding: 0 15px 10px 15px;
 }
 
 #AccountList .ServerURL {
-    color: white;
+     /*color: white;*/
     margin-top: -10px;
     padding: 0 15px 10px 15px;
     font-size:small;
 }
 
 .OneLineTitle {
-    color: white;
+     /*color: white;*/
     padding: 5px 15px 5px 15px;
 }
 
 .OneLineDesc {
     text-align:right;
-    color: white;
+     /*color: white;*/
     padding: 0px 15px 5px 15px;
     font-size:small;
 }
 
 .mainMenuDesc {
-    color: white;
+    /*color: white;*/
     /*margin-top: -10px;*/
     padding: 0 15px 10px 15px;
     font-size:small;
 }
 
 .mainMenuTitle {
-    color: white;
+    /*color: white;*/
     margin-top: 10px;
     padding: 0px 15px 10px 15px;
 }
 
 .mainMenuDesc {
-    color: white;
+    /*color: white;*/
     margin-top: -10px;
     padding: 0 15px 10px 15px;
     font-size:small;
 }
 
 .mainMenuTitle {
-    color: white;
+    /*color: white;*/
     padding: 0 15px 10px 15px;
 }
 
 .artistTitle
 {
-    color: white;
+    /*color: white;*/
     padding: 5px 15px 5px 15px;
 }
 
 .songTitle
 {
-    color: white;
+    /*color: white;*/
     padding: 5px 15px 5px 15px;
 }
 
 .songDesc {
-    color: white;
+    /*color: white;*/
     margin-top: -8px;
     padding: 0 15px 10px 15px;
     font-size:small;
@@ -402,7 +419,7 @@ COLOR: grey;
 
 #albumsFilterList .artistAlbumTitle
 {
-    color: white;
+    /*color: white;*/
     padding: 0 15px 10px 15px;
 }
 
@@ -426,7 +443,7 @@ COLOR: grey;
 
 
 #albumsFilterList .artistAlbumDesc {
-    color: white;
+     /*color: white;*/
     margin-top: -10px;
     padding: 0 15px 10px 15px;
     font-size:small;
@@ -449,14 +466,14 @@ body.palm-default {
 
 .music-streaming .title-left
 {
-    color: white;
+     /*color: white;*/
     font-size:small;
 }
 
 .music-streaming .stream-debug {
     position:relative;
     top:-29px;
-    color: white;
+     /*color: white;*/
     font-size:small;
     font-weight:bold;
     width:96%;
@@ -466,7 +483,7 @@ body.palm-default {
 
 .music-streaming .artist-album-title {
     margin-bottom:1px;
-    color: white;
+     /*color: white;*/
     font-size:small;
     font-weight:bold;
     width:96%;
@@ -477,7 +494,7 @@ body.palm-default {
 
 .music-streaming .stream-title {
     margin-top:-5px;
-    color: white;
+     /*color: white;*/
     font-size:medium;
     font-weight:bold;
     width:96%;
@@ -499,7 +516,6 @@ body.palm-default {
 .music-streaming .stream-info .duration {
     font-size: 14px;
     vertical-align: middle;
-    color: #FFF;
 }
 
 .music-streaming .stream-info .elapsed {
@@ -868,7 +884,7 @@ body.palm-default {
         max-width: 220px;
         padding-top: 20px;
         padding-bottom: 25px;
-        color: white;
+         /*color: white;*/
 }
 
 
@@ -1055,7 +1071,7 @@ margin-left:10px;
 .nplist-time {
     position:absolute;
     right:15px;
-    color: white;
+     /*color: white;*/
     font-size:small;
     /*border:solid;*/
 }
@@ -1097,7 +1113,7 @@ margin-left:10px;
 
 .search-test {   
 	display: inline-block;  
-	width: 168px;
+	/*width: 168px;*/
 	margin-left: 3px;       
 	height: 35px;
     
@@ -1113,7 +1129,39 @@ margin-left:10px;
 }
 .search-test input,
 .search-test .truncating-text {     
-	color: #fff;
-	text-align: right;
+        /*color: #fff;*/
+	/*text-align: right;*/
 	margin-right: -2px;
+}
+
+#search-main.icon
+{
+    width:24px;
+    height:24px;
+}
+
+/***********************************************/
+/*   Text Selector Scene
+/**********************************************/
+.example-color-text{
+    width:100%;
+    text-align:center;
+    /*border:solid;*/
+    position:relative;
+    margin-bottom:-10px;
+    margin-top:10px;
+}
+
+#use-color-group{
+    margin-top:-23px;
+}
+
+/***********************************************/
+/*   Preferences Scene
+/**********************************************/
+.preview-box
+{
+    width:320px;
+    height:480px;
+    -webkit-background-size : 100%;
 }

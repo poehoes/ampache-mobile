@@ -149,6 +149,7 @@ NowPlayingAssistant = Class.create({
         this.npList = this.controller.get('npList');
         
         
+        
 
          //List Tap
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
@@ -191,7 +192,9 @@ NowPlayingAssistant = Class.create({
         
         
         AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
-        
+        if(AmpacheMobile.audioPlayer.debug){
+            $('stream-debug').innerHTML = "Stream Debug";
+        }
         
 
         

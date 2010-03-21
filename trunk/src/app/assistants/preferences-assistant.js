@@ -26,11 +26,67 @@ PreferencesAssistant = Class.create({
     stylesheet: null,
 
     setup: function() {
+        
+        //**********************************************************************
+        // Setup Customization Settings
+        this.CSSTheme = AmpacheMobile.settingsManager.settings.CSSTheme;
+        
+        this.themeTypeModel = {
+                value:  this.CSSTheme,
+                disabled: false                
+        };        
 
+        this.controller.setupWidget("theme-selector",
+            this.attributes = {
+                labelPlacement: Mojo.Widget.labelPlacementLeft,
+                label: "Theme",
+                choices: [
+                    {label: "None", value: THEME_NONE},
+                    {label: THEMES[THEME_DARK], value: THEME_DARK}
+                   
+                ]
+            },this.themeTypeModel
+           
+        ); 
+        
+        
+        
+        this.themeSelectorChanged = this.themeSelectorChanged.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('theme-selector'), Mojo.Event.propertyChange, this.themeSelectorChanged);
+        
         //Mojo.loadStylesheet(this.controller.document, "stylesheets/preferences.css");
-        this.controller.get('body_wallpaper').style.background = null;
-        this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
+        SetBackground(this.controller, null, "");
+        SetText(false, null, AmpacheMobile.settingsManager.settings.CSSTheme);
+        //this.controller.get('body_wallpaper').style.backgroundColor = PREF_COLOR;
 
+        //**********************************************************************
+        //Setup Radio Button
+        this.prefTypeModel = {
+            value: 0,
+            disabled: false
+        };
+        
+        this.controller.setupWidget("preference-type", this.attributes = {
+            choices: [{
+                label: "Account",
+                value: 0
+            },
+            {
+                label: "Color",
+                value: 1
+            },
+            {
+                label: "More",
+                value: 2
+            }]
+        },
+        this.prefTypeModel);
+
+        this.prefTypeChangeHandler = this.prefTypeChangeHandler.bind(this);
+        Mojo.Event.listen(this.controller.get('preference-type'), Mojo.Event.propertyChange, this.prefTypeChangeHandler);
+
+        //**********************************************************************
+        // Setup Accounts
         this.accountsModel = {
             listTitle: $L('Accounts'),
             items: this.settingsManager.settings.Accounts
@@ -122,19 +178,33 @@ PreferencesAssistant = Class.create({
 
         this.controller.setupWidget('rotation-toggle', this.debugAttr, this.rotationModel);
 
-        //********************************************************************************************************
-        // Background button setup
-        this.button1Attributes = { //disabledProperty: 'disabled',
-            //type: 'default'
-        };
+        ////********************************************************************************************************
+        //// Background button setup
+        //this.button1Attributes = { //disabledProperty: 'disabled',
+        //    //type: 'default'
+        //};
+        //
+        //this.button1Model = {
+        //    buttonLabel: "Background Options",
+        //    buttonClass: 'primary'
+        //    //disabled: this.disabled
+        //};
+        //
+        //this.controller.setupWidget('backgroundBtn', this.button1Attributes, this.button1Model);
+        //
+        //// Background button setup
+        //this.button2Attributes = { //disabledProperty: 'disabled',
+        //    //type: 'default'
+        //};
+        //
+        //this.button2Model = {
+        //    buttonLabel: "Text Options",
+        //    buttonClass: 'primary'
+        //    //disabled: this.disabled
+        //};
+        //
+        //this.controller.setupWidget('textBtn', this.button2Attributes, this.button2Model);
 
-        this.button1Model = {
-            buttonLabel: "Background Options",
-            buttonClass: 'primary'
-            //disabled: this.disabled
-        };
-
-        this.controller.setupWidget('backgroundBtn', this.button1Attributes, this.button1Model);
 
         //Events
         this.listTapFunction = this.listTapHandler.bindAsEventListener(this);
@@ -156,7 +226,10 @@ PreferencesAssistant = Class.create({
         Mojo.Event.listen(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
 
         this.pushBackGroundHandler = this.PushBackground.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.pushBackGroundHandler);
+        Mojo.Event.listen(this.controller.get('background-row'), Mojo.Event.tap, this.pushBackGroundHandler);
+
+        this.pushTextHandler = this.pushTextHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('text-color-row'), Mojo.Event.tap, this.pushTextHandler);
 
         this.rotation_pressed = this.rotationPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
@@ -169,6 +242,8 @@ PreferencesAssistant = Class.create({
     cleanup: function(event) {
 
         Mojo.Log.info("--> PreferencesAssistant.prototype.cleanup");
+        Mojo.Event.stopListening(this.controller.get('preference-type'), Mojo.Event.propertyChange, this.prefTypeChangeHandler);
+        
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listTap, this.listTapFunction);
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listAdd, this.listAddFunction);
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
@@ -178,9 +253,33 @@ PreferencesAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
 
-        Mojo.Event.stopListening(this.controller.get('backgroundBtn'), Mojo.Event.tap, this.pushBackGroundHandler);
+        Mojo.Event.stopListening(this.controller.get('background-row'), Mojo.Event.tap, this.pushBackGroundHandler);
+        Mojo.Event.stopListening(this.controller.get('text-color-row'), Mojo.Event.tap, this.pushTextHandler);
         Mojo.Log.info("<-- PreferencesAssistant.prototype.cleanup");
     },
+
+    prefTypeChangeHandler:function(event){
+        switch(event.value)
+        {
+            case 0:
+                this.controller.get('accout-container').style.display = 'block';
+                this.controller.get('custom-container').style.display = 'none';
+                this.controller.get('more-container').style.display = 'none';
+                break;
+            case 1:
+                this.controller.get('accout-container').style.display = 'none';
+                this.controller.get('custom-container').style.display = 'block';
+                this.controller.get('more-container').style.display = 'none';
+                break;
+            case 2:
+                this.controller.get('accout-container').style.display = 'none';
+                this.controller.get('custom-container').style.display = 'none';
+                this.controller.get('more-container').style.display = 'block';
+                break;
+        }
+    
+    },
+
 
     PushBackground: function() {
         this.controller.stageController.pushScene({
@@ -189,6 +288,23 @@ PreferencesAssistant = Class.create({
         });
 
     },
+    
+    pushTextHandler: function() {
+        this.controller.stageController.pushScene({
+            transition: AmpacheMobile.Transition,
+            name: "textselect"
+        });
+
+    },
+    
+    themeSelectorChanged:function(event)
+    {
+        this.CSSTheme = event.value;
+        this.settingsManager.settings.CSSTheme = event.value;
+        SetCSSTheme(this.controller, this.CSSTheme);
+        this.settingsManager.SaveSettings();
+        
+    },   
 
     debugPressed: function(event) {
         //Display the value of the toggle
@@ -344,8 +460,68 @@ PreferencesAssistant = Class.create({
             this.UpdateSelector();
             this.newAccount = null;
         }
+        
+        this.DemoColors();
+        
 
     },
+
+    DemoColors:function(){
+        var textColorDisplay =this.controller.get("text-color-display");
+        var previewBox =this.controller.get("preview-box");
+        
+        if(this.settingsManager.settings.UseCustomColor)
+        {
+            textColorDisplay.style.color = this.settingsManager.settings.CustomColor;
+            textColorDisplay.innerHTML = this.settingsManager.settings.CustomColor+ "";;
+            
+            var nodes = previewBox.getElementsByClassName("mainMenuTitle")
+            for(var i =0; i<nodes.length;i++)
+            {
+                nodes[i].style.color = this.settingsManager.settings.CustomColor;
+            }
+        }
+        else
+        {
+            textColorDisplay.style.color = null;
+            textColorDisplay.innerHTML = "Theme Default";
+            var nodes = previewBox.getElementsByClassName("mainMenuTitle")
+            for(var i =0; i<nodes.length;i++)
+            {
+                nodes[i].style.color = null;
+            }
+        }
+        
+        var backgroundColorDisplay =this.controller.get("background-color-display");
+        if(this.settingsManager.settings.BackgroundMode === CUSTOM_COLOR)
+        {
+            backgroundColorDisplay.style.color = this.settingsManager.settings.BackgroundColor;
+            backgroundColorDisplay.innerHTML = this.settingsManager.settings.BackgroundColor ==""? "Theme Default" : this.settingsManager.settings.BackgroundColor ;
+        }
+        else
+        {
+            backgroundColorDisplay.style.color = null;
+            backgroundColorDisplay.innerHTML = "Image";
+        }
+        
+        
+        previewBox.style.background = "url('" + AmpacheMobile.settingsManager.settings.BackgroundImage + "')";
+        previewBox.style.backgroundColor = AmpacheMobile.settingsManager.settings.BackgroundColor;
+        
+        
+        
+    },
+    
+    getColor:function(color)
+    {
+        if(color.match(/#[A-Fa-f0-0]+/))
+        {
+            return color
+        }
+        
+        return null
+    },
+
 
     UpdateSelector: function() {
         this.UpdateSelectorAccounts();
