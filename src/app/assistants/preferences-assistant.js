@@ -135,13 +135,15 @@ PreferencesAssistant = Class.create({
         },
         this.selectorsModel);
 
-         this.searchTypeModel = {
+        this.searchTypeModel = {
                 value:  this.settingsManager.settings.SearchType,
                 disabled: false
         };
         
         this.controller.setupWidget("searchSelector",
             this.attributes = {
+                labelPlacement: Mojo.Widget.labelPlacementLeft,
+                label: "Default Search",
                 choices: [
                     {label: "Global", value: SEARCH_GLOBAL},
                     {label: "Artists", value: SEARCH_ARTISTS},
@@ -152,6 +154,28 @@ PreferencesAssistant = Class.create({
             },this.searchTypeModel
            
         ); 
+
+        this.recentTypeModel = {
+                value:  this.settingsManager.settings.Recent,
+                disabled: false
+        };
+        
+        this.recentChoices = [];
+        for(var i =0; i<RECENT_TYPES.length;i++)
+        {
+            this.recentChoices[i] = {label:RECENT_TYPES[i], value:i};
+        }
+        
+        this.controller.setupWidget("recentSelector",
+            this.attributes = {
+                labelPlacement: Mojo.Widget.labelPlacementLeft,
+                label: "Default Recent",
+                choices: this.recentChoices
+            },this.recentTypeModel
+           
+        ); 
+
+        
 
 
         //**********************************************************************************************************************
@@ -245,6 +269,9 @@ PreferencesAssistant = Class.create({
         this.searchSelectorChanged = this.searchSelectorChanged.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('searchSelector'), Mojo.Event.propertyChange, this.searchSelectorChanged);
         
+        this.recentSelectorChanged = this.recentSelectorChanged.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('recentSelector'), Mojo.Event.propertyChange, this.recentSelectorChanged);
+        
     },
 
     cleanup: function(event) {
@@ -257,6 +284,8 @@ PreferencesAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
         Mojo.Event.stopListening(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
+        Mojo.Event.stopListening(this.controller.get('recentSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
+        
 
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
@@ -384,6 +413,11 @@ PreferencesAssistant = Class.create({
         this.settingsManager.SaveSettings();
     },
 
+    recentSelectorChanged:function(event)
+    {
+        this.settingsManager.settings.Recent = parseInt(event.value, 10);
+        this.settingsManager.SaveSettings();
+    },
 
     listDeleteHandler: function(event) {
         // Remove the item from the model's list.

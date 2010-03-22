@@ -316,32 +316,36 @@ MainmenuAssistant = Class.create({
             switch(this.mainmenu[index].scene)
             {
                 case "recent":
+                    
+                    
                     fromDate = new Date();
-                    fromDate = AmpacheMobile.ampacheServer.add.clone();
-                    fromDate.addHours(-2);
+                    var fromDate = new Date();
+                    switch (AmpacheMobile.settingsManager.settings.Recent) {
+                        case 0: //"Last Update"
+                            fromDate = AmpacheMobile.ampacheServer.add.clone();
+                            fromDate.addHours( - 2);
+                            break;
+                        case 1://"1 Week"
+                            fromDate.addDays( - 7);
+                            break;
+                        case 2://"1 Month"
+                            fromDate.addMonths( - 1);
+                            break;
+                        case 3://"3 Months"
+                            fromDate.addMonths( - 3);
+                            break;
+                    }
+                    
+                    var fromDateStr = "Since " + Mojo.Format.formatDate(fromDate, {
+                        date: "short"
+                    });
                     
                     this.controller.stageController.pushScene({
                             transition: AmpacheMobile.Transition,
                             name: "songs"
                         },
                         {
-                            SceneTitle: "Recent Songs: Last Update",
-                            Type: "recent",
-                            DisplayArtistInfo: true,
-                            FromDate:fromDate
-                        });
-                    break;
-                case "recent":
-                    fromDate = new Date();
-                    fromDate = AmpacheMobile.ampacheServer.add.clone();
-                    fromDate.addHours(-2);
-                    
-                    this.controller.stageController.pushScene({
-                            transition: AmpacheMobile.Transition,
-                            name: "songs"
-                        },
-                        {
-                            SceneTitle: "Recent Songs: Last Update",
+                            SceneTitle: "Recent Songs: " + fromDateStr,
                             Type: "recent",
                             DisplayArtistInfo: true,
                             FromDate:fromDate

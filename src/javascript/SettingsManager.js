@@ -31,6 +31,7 @@ SEARCH_TYPES[2] = "Albums";
 SEARCH_TYPES[3] = "Songs";
 SEARCH_TYPES[4] = "Playlists";
 
+RECENT_TYPES = ["Last Update", "1 Week", "1 Month", "3 Months"];
 
 var THEME_NONE = 0;
 var THEME_DARK = 1;
@@ -166,6 +167,9 @@ SettingsManager = Class.create({
                 this.settings.CSSTheme=THEME_DARK;
             }
             
+            if (!this.settings.Recent) {
+                    this.settings.Recent = 0;
+                }
             
             //this.settings.Version = Mojo.Controller.appInfo.version;
 
@@ -181,6 +185,9 @@ SettingsManager = Class.create({
                 if (!this.settings.Accounts[i].StallRecovery) {
                     this.settings.Accounts[i].StallRecovery = false;
                 }
+                
+                
+                
             }
             this.SaveSettings(null, null);
         }
@@ -219,7 +226,8 @@ Account = Class.create({
     ServerURL: null,
     ExtraCoverArt: false,
     StallRecovery:false,
-    FetchSize: DEFAULT_FETCH_SIZE
+    FetchSize: DEFAULT_FETCH_SIZE,
+    
 });
 
 Settings = Class.create({
@@ -233,7 +241,7 @@ Settings = Class.create({
     BackgroundSolid: DEFAULT_IMAGE,
     BackgroundMode: CUSTOM_COLOR,
     BackgroundOverlay: DEFAULT_OVERLAY,
-    
+    Recent:0,
     AlbumsSort: 0,
     npPlayingListView:false,
     SearchType:0,

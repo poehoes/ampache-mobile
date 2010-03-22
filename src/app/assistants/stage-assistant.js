@@ -64,8 +64,27 @@ StageAssistant.nowPlayingMenu = {
             disabled: true,
             command: "push-np-cmd",
             shortcut: "n"
-        }],
-        disabled: false
+        },
+        //{
+        //    label: "Next Track",
+        //    disabled: true,
+        //    command: "push-np-next",
+        //    shortcut: "."
+        //},
+        //{
+        //    label: "Previous Track",
+        //    disabled: true,
+        //    command: "push-np-prev",
+        //    shortcut: Mojo.Char.sym
+        //},
+        {
+            label: "Play/Pause [Space]",
+            disabled: true,
+            command: "push-np-playPause",
+            shortcut: " "
+        }
+        ],
+        disabled: true
     };
 
 StageAssistant.preferencesMenu = {
@@ -209,6 +228,29 @@ StageAssistant.prototype.handleCommand = function(event) {
                 allowHTMLMessage: true
             });
             break;
+        case "push-np-prev":
+             if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+                AmpacheMobile.audioPlayer.play_prev();
+             }
+             break;
+        case "push-np-next":
+            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+                AmpacheMobile.audioPlayer.play_next();
+             }
+             break;
+            
+        case "push-np-playPause":
+            
+            
+       if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+        if (!AmpacheMobile.audioPlayer.player.paused) {
+            AmpacheMobile.audioPlayer.pause();
+        } else {
+            AmpacheMobile.audioPlayer.play();
+        }
+       }
+    
+            break;
         case "delete-np-cmd":
             if (AmpacheMobile.audioPlayer.PlayListPending === true) {
                 AmpacheMobile.audioPlayer.stop();
@@ -216,8 +258,11 @@ StageAssistant.prototype.handleCommand = function(event) {
                 var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
                 var button = controller.get('now-playing-button');
                 button.style.display = 'none';
-                StageAssistant.appMenuModel.items[1].items[0].disabled = true;
-                StageAssistant.appMenuModel.items[1].items[1].disabled = true;
+                
+                for(var j=0;j<StageAssistant.nowPlayingMenu.items.length;j++)
+                {
+                    StageAssistant.nowPlayingMenu.items[j].disabled = true;
+                }
             }
             break;
         case "mojo-up":
