@@ -30,8 +30,10 @@ NowPlayingAssistant = Class.create({
         this.type = params.type;
         this.pauseStopItem = this.pauseItem;
 
-        StageAssistant.appMenuModel.items[1].items[0].disabled = false;
-        StageAssistant.appMenuModel.items[1].items[1].disabled = false;
+        for(var j=0;j<StageAssistant.nowPlayingMenu.items.length;j++)
+                {
+                    StageAssistant.nowPlayingMenu.items[j].disabled = false;
+                }
 
         switch (params.type) {
         case "display":
@@ -227,6 +229,8 @@ NowPlayingAssistant = Class.create({
     },
     
     cleanup: function(event) {
+        AmpacheMobile.audioPlayer.clearNowPlaying();
+        
         this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
         
         this.slider = this.controller.get('sliderdiv');
@@ -246,7 +250,7 @@ NowPlayingAssistant = Class.create({
         this.loadingAnimation.stop();
         this.loadingAnimation = null;
         
-        AmpacheMobile.audioPlayer.clearNowPlaying();
+        //AmpacheMobile.audioPlayer.clearNowPlaying();
         window.onresize = null;
     },
     
@@ -286,15 +290,15 @@ NowPlayingAssistant = Class.create({
         
         switch (Number(event.originalEvent.keyCode)) {
             
-            case 113: // Q 
-            case  81: // Q + Caps
-            case  47: // Q + Orange
+            case  44: // (,) Comma
+            case  64: // (@) Comma
+            
             
                 AmpacheMobile.audioPlayer.play_prev();
                 break;
-            case 112: // P 
-            case  80: // P + Caps
-            case  61: // P + Orange
+            
+            case  46: // (.) Period Key
+            
                 AmpacheMobile.audioPlayer.play_next(true);
                 break;
             
@@ -311,13 +315,17 @@ NowPlayingAssistant = Class.create({
             case 50:  // R + Orange
                 this.toggleRepeat();
                 break;
-            case  46: // (.) Period Key
-            case   8: // Delete
+            
+            case 112: // P 
+            case  80: // P + Caps
+            case  61: // P + Orange
+            //case   8: // Delete
                 AmpacheMobile.audioPlayer.jump(15);
                 break;
-            case  44: // (,) Comma
-            case  64: // (@) Comma
-            case  97: // A
+            case 113: // Q 
+            case  81: // Q + Caps
+            case  47: // Q + Orange
+            //case  97: // A
                 AmpacheMobile.audioPlayer.jump(-15);
                 break;
             case 118: // V
@@ -346,16 +354,16 @@ NowPlayingAssistant = Class.create({
                     this.npList.mojo.revealItem(range.offset+Math.floor(range.limit/1.5), false);
                 }
                 break;
-            default:
-                this.controller.showAlertDialog({
-               title: $L("Unknown Keycode"),
-               message: "Key Code: " + event.originalEvent.keyCode,
-               choices: [{
-                   label: 'OK',
-                   value: "retry",
-                   type: 'primary'
-               }]});
-                break;
+            //default:
+            //    this.controller.showAlertDialog({
+            //   title: $L("Unknown Keycode"),
+            //   message: "Key Code: " + event.originalEvent.keyCode,
+            //   choices: [{
+            //       label: 'OK',
+            //       value: "retry",
+            //       type: 'primary'
+            //   }]});
+            //    break;
         }
     },
     
@@ -1134,11 +1142,11 @@ NowPlayingAssistant = Class.create({
             label: "Delete Now Playing",
             command: "delete-np-cmd",
             shortcut:'d'
-        },
+        }/*,
         {
             label: "About...",
             command: "about-cmd"
             
-        }]
+        }*/]
     }
 });

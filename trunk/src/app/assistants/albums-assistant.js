@@ -181,24 +181,7 @@ AlbumsAssistant = Class.create({
                 command: "doPref-cmd",
                 shortcut:"p"
             },
-            {
-                label: "Now Playing",
-                items: [
-                    {
-                    label: "Delete Now Playing",
-                    disabled: !AmpacheMobile.audioPlayer.PlayListPending,
-                    command: "delete-np-cmd",
-                    shortcut: "d"
-                    },
-                    {
-                    label: "Goto Now Playing",
-                    disabled:!AmpacheMobile.audioPlayer.PlayListPending,
-                    command: "push-np-cmd",
-                    shortcut: "n"
-                    }
-                ],
-                disabled: false
-            },
+            StageAssistant.nowPlayingMenu,
             {
                 label: "Sort",
                 items: this.sortItems
