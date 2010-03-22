@@ -220,7 +220,7 @@ StageAssistant.prototype.handleCommand = function(event) {
             currentScene.showAlertDialog({
                 onChoose: function(value) {},
                 title: "Ampache Mobile - v" + Mojo.Controller.appInfo.version,
-                message: "Copyright 2009-2010, Bryce Geiser <br><a style='font-size:small;' onclick='WhatsNew();'>Release Notes</a>" + serverinfo,
+                message: "Copyright 2009-2010, Bryce Geiser <br><a style='font-size:small;' onclick='WhatsNew(\"Release Notes\");'>Release Notes</a>" + serverinfo,
                 choices: [{
                     label: "OK",
                     value: ""
@@ -352,9 +352,13 @@ function SetCSSTheme(controller, themeIndex) {
     }
 };
 
-function WhatsNew() {
+function WhatsNew(type) {
     Mojo.Controller.stageController.pushScene({
         transition: AmpacheMobile.Transition,
         name: "whatsnew"
-    });
+    },
+    {
+        label:type
+    }
+    );
 };

@@ -14,13 +14,17 @@
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 WhatsnewAssistant = Class.create({
-    initialize: function() {},
+    initialize: function(params) {
+    this.label = params.label;
+    },
 
     setup: function() {
         //this.controller.get('old-versions').hide().addClassName('not-used');
         this.aboutDrawer = this.controller.get('old-version-drawer').hide();
         this.handleDrawerSelection = this.handleDrawerSelection.bind(this, this.aboutDrawer);
         
+	this.controller.get('title').innerHTML = this.label;
+	
         this.controller.listen('old-versions', Mojo.Event.tap, this.handleDrawerSelection);
         this.controller.get('old-version-text').innerHTML = Mojo.View.render({template: 'whatsnew/old-versions'});
 	this.controller.get('new-version-text').innerHTML = Mojo.View.render({template: 'whatsnew/new-version'});
@@ -144,13 +148,15 @@ WhatsnewAssistant = Class.create({
     },
 
     activate: function(event) {
-        SetText(false, null, AmpacheMobile.settingsManager.settings.CSSTheme);
+        SetCSSTheme(this.controller, THEME_NONE);
+	SetText(false, null, AmpacheMobile.settingsManager.settings.CSSTheme);
         SetBackground(this.controller, null, "");
     },
 
     deactivate: function(event) {
 
-        SetBackground(this.controller, AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
+        SetCSSTheme(this.controller, AmpacheMobile.settingsManager.settings.CSSTheme);
+	SetBackground(this.controller, AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
         SetText(AmpacheMobile.settingsManager.settings.UseCustomColor, AmpacheMobile.settingsManager.settings.CustomColor, AmpacheMobile.settingsManager.settings.CSSTheme);
  
     },

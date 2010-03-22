@@ -295,7 +295,7 @@ MainmenuAssistant = Class.create({
     listHeldHandler:function(event)
     {
         var node = event.down.target;
-        var regex = /row_([0-9+])_main/;
+        var regex = /row_([0-9]+)_main/;
         var index = null;
         
         while(node && (index===null))
