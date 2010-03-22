@@ -167,7 +167,7 @@ SettingsManager = Class.create({
             }
             
             
-            this.settings.Version = Mojo.Controller.appInfo.version;
+            //this.settings.Version = Mojo.Controller.appInfo.version;
 
             for (i = 0; i < this.settings.Accounts.length; i++) {
                 if (!this.settings.Accounts[i].FetchSize) {
@@ -226,7 +226,7 @@ Settings = Class.create({
     Accounts: null,
     CurrentAccountIndex: null,
     StreamDebug: false,
-    Version: "0.0.5",
+    Version: "unknown",
     AllowRotation: DEFAULT_ROTATION,
     BackgroundColor: DEFAULT_COLOR,
     BackgroundImage: DEFAULT_IMAGE,

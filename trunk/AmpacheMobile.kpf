@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="C41C918D-237A-45C5-BFB2-EE79481388DF" kpf_version="4" name="AmpacheMobile.kpf">
+<livefolder id="C41C918D-237A-45C5-BFB2-EE79481388DF/src/app/views/albums/artists" idref="C41C918D-237A-45C5-BFB2-EE79481388DF/src/app/views/albums" name="artists" url="src/app/views/artists">
+</livefolder>
 <preference-set idref="C41C918D-237A-45C5-BFB2-EE79481388DF">
   <boolean id="import_live">1</boolean>
 </preference-set>

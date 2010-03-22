@@ -21,8 +21,7 @@ RecentAssistant = Class.create({
         // Setup Menu
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 
-        this.randomMenu = [
-         {
+        this.randomMenu = [{
             type: $L("lastUpdate"),
             name: $L("Last Update"),
             icon: "images/icons/recent.png",
@@ -33,7 +32,7 @@ RecentAssistant = Class.create({
             type: $L("artists"),
             name: $L("Artists"),
             icon: "images/icons/artists.png",
-            items: ["Last Update","1 Week", "1 Month", "3 Months", "1 Year"],
+            items: ["Last Update", "1 Week", "1 Month", "3 Months", "Date"],
             displayCount: "none"
 
         },
@@ -42,7 +41,7 @@ RecentAssistant = Class.create({
             type: $L("albums"),
             name: $L("Albums"),
             icon: "images/icons/albums.png",
-            items: ["Last Update","1 Week", "1 Month", "3 Months", "1 Year"],
+            items: ["Last Update", "1 Week", "1 Month", "3 Months", "Date"],
             displayCount: "none"
         },
 
@@ -50,11 +49,10 @@ RecentAssistant = Class.create({
             type: $L("songs"),
             name: $L("Songs"),
             icon: "images/icons/songs.png",
-            items: ["Last Update","1 Week", "1 Month", "3 Months", "1 Year"],
+            items: ["Last Update", "1 Week", "1 Month", "3 Months", "Date"],
             displayCount: "none"
 
         }
-       
 
         ];
 
@@ -64,40 +62,48 @@ RecentAssistant = Class.create({
         {
             items: this.randomMenu
         });
-        
+
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('recentMenuList'), Mojo.Event.listTap, this.listTapHandler);
+
+        this.pickerModel = {
+            date: new Date()
+            
+        };
+        this.controller.setupWidget('timepicker', {
+            maxYear:Number(this.pickerModel.date.getFullYear()),
+            minYear:Number(this.pickerModel.date.getFullYear())-2
+        },
+        this.pickerModel);
 
     },
 
     cleanup: function(event) {
-             Mojo.Event.stopListening(this.controller.get('recentMenuList'), Mojo.Event.listTap, this.listTapHandler);
-   
+        Mojo.Event.stopListening(this.controller.get('recentMenuList'), Mojo.Event.listTap, this.listTapHandler);
+
     },
 
     listTapHandler: function(event) {
 
-        if(event.item.type ==="lastUpdate")
-        {
+        if (event.item.type === "lastUpdate") {
             fromDate = new Date();
             fromDate = AmpacheMobile.ampacheServer.add.clone();
-            fromDate.addHours(-2);
-            
-            this.controller.stageController.pushScene({
-                    transition: AmpacheMobile.Transition,
-                    name: "songs"
-                },
-                {
-                    SceneTitle: "Recent Songs: Last Update",
-                    Type: "recent",
-                    DisplayArtistInfo: true,
-                    FromDate:fromDate
-                });
-        }
-        
-        var item = event.item;
-        item._this = this;
+            fromDate.addHours( - 2);
 
+            this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "songs"
+            },
+            {
+                SceneTitle: "Recent Songs: Last Update",
+                Type: "recent",
+                DisplayArtistInfo: true,
+                FromDate: fromDate
+            });
+        }
+
+        var item = event.item;
+        //item._this = this;
         var items = [];
 
         for (i = 0; i < event.item.items.length; i++) {
@@ -107,8 +113,10 @@ RecentAssistant = Class.create({
             };
         }
 
+        this.tapTypeItem = event.item;
+
         this.controller.popupSubmenu({
-            onChoose: this.popupHandler.bind(item),
+            onChoose: this.popupHandler.bind(this),
             placeNear: event.originalEvent.target,
             items: items
         });
@@ -117,98 +125,94 @@ RecentAssistant = Class.create({
 
     popupHandler: function(event) {
         if (event) {
-            var item = this;
+            var item = this.tapTypeItem;
 
-            var controller = item._this.controller;
+            var controller = this.controller;
             var command = event.split(";");
             //var numItems = parseInt(command[1], 10);
             var fromDate = new Date();
-            switch(command[1])
-                {
-                    case "Last Update":
-                        fromDate = AmpacheMobile.ampacheServer.add.clone();
-                        fromDate.addHours(-2);
-                        break;
-                    case "1 Week":
-                        fromDate.addDays(-7);
-                        break;
-                    case "1 Month":
-                        fromDate.addMonths(-1);
-                        break;
-                    case "3 Months":
-                        fromDate.addMonths(-3);
-                        break;
-                    case "1 Year":
-                        fromDate.addYears(-1);
-                        break;
-                    
+            switch (command[1]) {
+            case "Last Update":
+                fromDate = AmpacheMobile.ampacheServer.add.clone();
+                fromDate.addHours( - 2);
+                break;
+            case "1 Week":
+                fromDate.addDays( - 7);
+                break;
+            case "1 Month":
+                fromDate.addMonths( - 1);
+                break;
+            case "3 Months":
+                fromDate.addMonths( - 3);
+                break;
+            case "Date":
+                this.doDatePickerDialog(command[0], event);
+                break;
+
+            }
+            if (command[1] !== "Date") {
+                if (command[0] === "artists") {
+
+                    controller.stageController.pushScene({
+                        transition: AmpacheMobile.Transition,
+                        name: "artists"
+                    },
+                    {
+                        SceneTitle: "Recent Artists: " + command[1],
+                        ExpectedArtists: 0,
+                        type: "recent",
+                        FromDate: fromDate
+                    });
                 }
 
+                else if (command[0] === "albums") {
+                    controller.stageController.pushScene({
+                        transition: AmpacheMobile.Transition,
+                        name: "albums"
+                    },
+                    {
+                        SceneTitle: "Recent Albums: " + command[1],
+                        Type: "recent",
+                        ExpectedAlbums: 0,
+                        FromDate: fromDate
+                    });
+                }
 
-            if (command[0] === "artists") {
-                
-                controller.stageController.pushScene({
-                    transition: AmpacheMobile.Transition,
-                    name: "artists"
-                },
-                {
-                    SceneTitle: "Recent Artists: " + command[1],
-                    ExpectedArtists: 0,
-                    type: "recent",
-                    FromDate: fromDate
-                });
-            }
+                else if (command[0] === "songs") {
 
-            else if (command[0] === "albums") {
-                controller.stageController.pushScene({
-                    transition: AmpacheMobile.Transition,
-                    name: "albums"
-                },
-                {
-                    SceneTitle: "Recent Albums: " + command[1],
-                    Type: "recent",
-                    ExpectedAlbums: 0,
-                    FromDate: fromDate
-                });
-            }
-
-            else if (command[0] === "songs") {
-                
-                
-                
-                controller.stageController.pushScene({
-                    transition: AmpacheMobile.Transition,
-                    name: "songs"
-                },
-                {
-                    SceneTitle: "Recent Songs: " + command[1],
-                    Type: "recent",
-                    DisplayArtistInfo: true,
-                    FromDate: fromDate
-                });
+                    controller.stageController.pushScene({
+                        transition: AmpacheMobile.Transition,
+                        name: "songs"
+                    },
+                    {
+                        SceneTitle: "Recent Songs: " + command[1],
+                        Type: "recent",
+                        DisplayArtistInfo: true,
+                        FromDate: fromDate
+                    });
+                }
             }
         }
     },
 
+    doDatePickerDialog: function(type, e) {
+        this.controller.showDialog({
+            template: 'recent/datepicker-dialog',
+            assistant: new DateDialogAssistant(this, type)
+        });
 
-
-    searchForAlbums: function() {
     },
 
+    searchForAlbums: function() {},
 
+    searchForSongs: function() {},
 
-    searchForSongs: function() {
-    },
-
-
-    searchForArtists: function() {
-    },
-
+    searchForArtists: function() {},
 
     // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function(title, message) {
         this.controller.showAlertDialog({
-            onChoose: this.SetFocus.bind(this),
+            onChoose: null,
             title: title,
             message: message,
             choices: [{
@@ -245,9 +249,106 @@ RecentAssistant = Class.create({
     },
 
     showNowPlaying: function() {
-        Mojo.Controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "now-playing"}, {
+        Mojo.Controller.stageController.pushScene({
+            transition: AmpacheMobile.Transition,
+            name: "now-playing"
+        },
+        {
             type: "display"
         });
     }
+
+});
+
+/*
+        Small controller class used for the dialog sample.
+*/
+var DateDialogAssistant = Class.create({
+
+    initialize: function(sceneAssistant, type) {
+        this.sceneAssistant = sceneAssistant;
+        this.controller = sceneAssistant.controller;
+        this.dialogType = type;
+    },
+
+    setup: function(widget) {
+        this.widget = widget;
+
+        this.controller.get('search-button-text').innerHTML = "Find recent " + this.dialogType;
+        //this.controller.get('date-dialog-title').innerHTML = "Find recent " + this.dialogType;
+        this.controller.get('search-button').addEventListener(Mojo.Event.tap, this.handleSearch.bindAsEventListener(this));
+        this.controller.get('cancel_button').addEventListener(Mojo.Event.tap, this.handleClose.bindAsEventListener(this));
+        this.controller.get('lastupdate-button').addEventListener(Mojo.Event.tap, this.lastUpdate.bindAsEventListener(this));
+        
+        
+    },
+
+    handleClose: function() {
+        this.widget.mojo.close();
+
+    },
+
+    lastUpdate:function()
+    {
+        this.controller.assistant.pickerModel.date = AmpacheMobile.ampacheServer.update.clone();
+        this.controller.modelChanged(this.controller.assistant.pickerModel);
+    },
+
+    handleSearch: function() {
+        var fromDate = this.controller.assistant.pickerModel.date;
+        var fromDateStr = "Since " + Mojo.Format.formatDate(fromDate, {
+            date: "short"
+        });
+
+        if (Number(fromDate) < Number(new Date())) {
+
+            if (this.dialogType === "artists") {
+
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "artists"
+                },
+                {
+                    SceneTitle: "Recent Artists: " + fromDateStr,
+                    ExpectedArtists: 0,
+                    type: "recent",
+                    FromDate: fromDate
+                });
+            }
+
+            else if (this.dialogType === "albums") {
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "albums"
+                },
+                {
+                    SceneTitle: "Recent Albums: " + fromDateStr,
+                    Type: "recent",
+                    ExpectedAlbums: 0,
+                    FromDate: fromDate
+                });
+            }
+
+            else if (this.dialogType === "songs") {
+
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "songs"
+                },
+                {
+                    SceneTitle: "Recent Songs: " + fromDateStr,
+                    Type: "recent",
+                    DisplayArtistInfo: true,
+                    FromDate: fromDate
+                });
+            }
+            this.widget.mojo.close();
+        }
+        else {
+            //this.widget.mojo.close();
+            this.controller.assistant.showDialogBox("Date Invalid", "Please select a date in the past.");
+        }
+        
+    },
 
 });

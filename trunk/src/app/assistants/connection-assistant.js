@@ -181,6 +181,7 @@ ConnectionAssistant = Class.create({
         this.TurnOffSpinner();
         var html;
         var DisplayMessage;
+        
         if (connectResult === "connected") {
             //Check ampache Version 
             var apiVersion = parseInt(AmpacheMobile.ampacheServer.api, 10);
@@ -272,7 +273,15 @@ ConnectionAssistant = Class.create({
          example, key handlers that are observing the document */
         if (account) {
 
-            if ((account.ServerURL === "") || (account.Password === "") || (account.UserName === "")) {
+            if(AmpacheMobile.settingsManager.settings.Version !== Mojo.Controller.appInfo.version){
+            //if(true){
+            //{
+                AmpacheMobile.settingsManager.settings.Version = Mojo.Controller.appInfo.version;
+                AmpacheMobile.settingsManager.SaveSettings();
+                WhatsNew();
+                
+            }
+            else if ((account.ServerURL === "") || (account.Password === "") || (account.UserName === "")) {
                 Mojo.Log.info("Try to load preferences");
                 this.controller.stageController.pushScene({
                     transition: AmpacheMobile.Transition,

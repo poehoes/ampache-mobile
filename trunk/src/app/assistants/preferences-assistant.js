@@ -49,7 +49,15 @@ PreferencesAssistant = Class.create({
            
         ); 
         
-        
+        this.controller.setupWidget(Mojo.Menu.appMenu,
+            this.attributes = {
+                omitDefaultItems: true
+            },
+            this.model = {
+                visible: false,
+                items: [ StageAssistant.aboutApp ]
+            }
+         );
         
         this.themeSelectorChanged = this.themeSelectorChanged.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('theme-selector'), Mojo.Event.propertyChange, this.themeSelectorChanged);
