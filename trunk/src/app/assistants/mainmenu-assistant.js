@@ -168,7 +168,7 @@ MainmenuAssistant = Class.create({
         {    
             params.key  = String.fromCharCode(event.originalEvent.keyCode);
             var myRegxp = /([a-zA-Z0-9]+)$/;
-            if(myRegxp.test(params.key)==true)
+            if(myRegxp.test(params.key) === true)
             { 
                 this.controller.stageController.pushScene(searchScene, params);
             }
@@ -318,20 +318,23 @@ MainmenuAssistant = Class.create({
                 case "recent":
                     
                     
-                    fromDate = new Date();
                     var fromDate = new Date();
                     switch (AmpacheMobile.settingsManager.settings.Recent) {
-                        case 0: //"Last Update"
+                        case 0:
+                        //"Last Update"
                             fromDate = AmpacheMobile.ampacheServer.add.clone();
                             fromDate.addHours( - 2);
                             break;
-                        case 1://"1 Week"
+                        case 1:
+                        //"1 Week"
                             fromDate.addDays( - 7);
                             break;
-                        case 2://"1 Month"
+                        case 2:
+                        //"1 Month"
                             fromDate.addMonths( - 1);
                             break;
-                        case 3://"3 Months"
+                        case 3:
+                        //"3 Months"
                             fromDate.addMonths( - 3);
                             break;
                     }

@@ -120,7 +120,7 @@ TextselectAssistant = Class.create({
         }
         else
         {
-            this.showDialogBox("No Color", "There is no background color currently selected.")
+            this.showDialogBox("No Color", "There is no background color currently selected.");
         }
         
         

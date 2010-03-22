@@ -280,7 +280,7 @@ BackgroundAssistant = Class.create({
         }
         else
         {
-            this.showDialogBox("No Color", "There is no text color currently selected.")
+            this.showDialogBox("No Color", "There is no text color currently selected.");
         }
     },
 

@@ -290,53 +290,51 @@ NowPlayingAssistant = Class.create({
         
         switch (Number(event.originalEvent.keyCode)) {
             
-            case  44: // (,) Comma
-            case  64: // (@) Comma
+            case  44: /* (,) Comma*/
+            case  64: /* (@) Comma */
             
             
                 AmpacheMobile.audioPlayer.play_prev();
                 break;
             
-            case  46: // (.) Period Key
+            case  46: /* (.) Period Key*/
             
                 AmpacheMobile.audioPlayer.play_next(true);
                 break;
             
-            case 32: // Space Bar Key
+            case 32: /* Space Bar Key */
                 this.togglePausePlay();
                 break;
-            case 115: // S 
-            case 83:  // S + Caps
-            case 45:  // S + Orange
+            case 115: /* S */
+            case 83:  /* S + Caps */
+            case 45:  /* S + Orange */
                 this.toggleShuffle();
                 break;
-            case 114: // R 
-            case 82:  // R + Caps
-            case 50:  // R + Orange
+            case 114: /* R */
+            case 82:  /* R + Caps */
+            case 50:  /* R + Orange */
                 this.toggleRepeat();
                 break;
             
-            case 112: // P 
-            case  80: // P + Caps
-            case  61: // P + Orange
-            //case   8: // Delete
+            case 112: /* P */
+            case  80: /* P + Caps */
+            case  61: /* P + Orange */
+            /*case   8:Delete */
                 AmpacheMobile.audioPlayer.jump(15);
                 break;
-            case 113: // Q 
-            case  81: // Q + Caps
-            case  47: // Q + Orange
-            //case  97: // A
+            case 113: /* Q */
+            case  81: /* Q + Caps */
+            case  47: /* Q + Orange */
                 AmpacheMobile.audioPlayer.jump(-15);
                 break;
-            case 118: // V
-            case  86: // V + Caps
+            case 118: /* V */
+            case  86: /* V + Caps */
                 this.toggleViews();
                 break;
                 
-            case 117: // U
-            case  85: // U + Caps
-            //case Mojo.Char.upArrow:
-            //case Mojo.Char.d:
+            case 117: /* U */
+            case  85: /* U + Caps */
+
                 if (AmpacheMobile.audioPlayer.listIsShowing === true)
                 {
                     var range = this.npList.mojo.getLoadedItemRange();
@@ -344,26 +342,25 @@ NowPlayingAssistant = Class.create({
                 }
                 break;
             
-            case 100:// D
-            case 68: // U + Caps
-            //case Mojo.Char.downArrow:
-            //case Mojo.Char.d:
+            case 100:/* D */
+            case 68: /* U + Caps */
+
                 if (AmpacheMobile.audioPlayer.listIsShowing === true)
                 {
                     var range = this.npList.mojo.getLoadedItemRange();
                     this.npList.mojo.revealItem(range.offset+Math.floor(range.limit/1.5), false);
                 }
                 break;
-            //default:
-            //    this.controller.showAlertDialog({
-            //   title: $L("Unknown Keycode"),
-            //   message: "Key Code: " + event.originalEvent.keyCode,
-            //   choices: [{
-            //       label: 'OK',
-            //       value: "retry",
-            //       type: 'primary'
-            //   }]});
-            //    break;
+            /*default:
+                this.controller.showAlertDialog({
+               title: $L("Unknown Keycode"),
+               message: "Key Code: " + event.originalEvent.keyCode,
+               choices: [{
+                   label: 'OK',
+                   value: "retry",
+                   type: 'primary'
+               }]});
+                break; */
         }
     },
     
@@ -740,13 +737,13 @@ NowPlayingAssistant = Class.create({
     NowPlayingDisplaySongInfo: function(playList, currentIndex) {
         var song = playList[currentIndex];
         
-        if(currentIndex != this.currentPlayed)
+        if(currentIndex !== this.currentPlayed)
         {
             this.lastPlayed = this.currentPlayed;
             this.currentPlayed = currentIndex;
         }
         
-        Mojo.Log.info("--> NowPlayingDisplaySongInfo song"); //: %j", song);
+        Mojo.Log.info("--> NowPlayingDisplaySongInfo song");
         
         if(AmpacheMobile.audioPlayer.listIsShowing === false)
         {

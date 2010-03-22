@@ -349,6 +349,6 @@ var DateDialogAssistant = Class.create({
             this.controller.assistant.showDialogBox("Date Invalid", "Please select a date in the past.");
         }
         
-    },
+    }
 
 });
