@@ -278,7 +278,7 @@ ConnectionAssistant = Class.create({
             //{
                 AmpacheMobile.settingsManager.settings.Version = Mojo.Controller.appInfo.version;
                 AmpacheMobile.settingsManager.SaveSettings();
-                WhatsNew();
+                WhatsNew("Whats new in " + Mojo.Controller.appInfo.version);
                 
             }
             else if ((account.ServerURL === "") || (account.Password === "") || (account.UserName === "")) {

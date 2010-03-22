@@ -143,7 +143,7 @@ PreferencesAssistant = Class.create({
         this.controller.setupWidget("searchSelector",
             this.attributes = {
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
-                label: "Default Search",
+                label: "Search",
                 choices: [
                     {label: "Global", value: SEARCH_GLOBAL},
                     {label: "Artists", value: SEARCH_ARTISTS},
@@ -169,7 +169,7 @@ PreferencesAssistant = Class.create({
         this.controller.setupWidget("recentSelector",
             this.attributes = {
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
-                label: "Default Recent",
+                label: "Recent",
                 choices: this.recentChoices
             },this.recentTypeModel
            

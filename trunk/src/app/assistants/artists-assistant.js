@@ -91,10 +91,15 @@ ArtistsAssistant = Class.create({
         //Events
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+    
+        //Hold Handler
+        this.listHeldHandler = this.listHeldHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.hold, this.listHeldHandler);
     },
 
     cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.hold, this.listHeldHandler);
         Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.divSelector);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
@@ -145,6 +150,57 @@ ArtistsAssistant = Class.create({
         }
     },
 
+    listHeldHandler:function(event)
+    {
+        var node = event.down.target;
+        var regex = /artist_([0-9]+)/;
+        var id = null;
+        
+        while(node && (id===null))
+        {
+            var matches = node.id.match(new RegExp(regex));
+            if(matches)
+            {
+                id = Number(matches[1]);
+            }
+            else
+            {
+                node = node.parentNode;
+            }
+        }
+        
+        
+        
+        if(id)
+        {
+            var item = null;
+            var index =0;
+            for(var i =0; i< this.itemsHelper.ItemsList.length; i++)
+            {
+                if(Number(this.itemsHelper.ItemsList[i].id)===id)
+                {
+                    item = this.itemsHelper.ItemsList[i];
+                    i = this.itemsHelper.ItemsList.length;
+                }
+            }
+            
+            
+            this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "songs"
+            },
+            {
+                SceneTitle: "All Songs: " + item.name,
+                Type: "artist-songs",
+                Artist_id: item.id,
+                Expected_items: item.songs
+            //Item: event.item
+            }
+            );
+        }
+       
+        event.stop();
+    },
 
     sortAlpha: function(a, b) {
 

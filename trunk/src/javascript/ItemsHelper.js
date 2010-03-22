@@ -32,6 +32,8 @@ ItemsHelper = Class.create({
         this.controller = params.controller;
         this.filterList = params.filterList;
         this.getItemsCallback = params.getItemsCallback;
+        
+        this.numItemsDisplay = params.numItemsDisplay;
         //this.ItemsList = params.ItemsList;
 
         //this.progressModel = params.progressModel;
@@ -187,13 +189,20 @@ ItemsHelper = Class.create({
                 this.percentDone = 1;
                 this.controller.setMenuVisible(Mojo.Menu.commandMenu, false);
                 this.LoadingFinished = true;
+                
             }
     
             else {
                 this.offset = this.ItemsList.length;
                 this.GetItems();
+                
             }
     
+            if(this.numItemsDisplay)
+            {
+                this.numItemsDisplay.innerHTML = this.ItemsList.length;
+            }
+            
             Mojo.Log.info("Progress: " + progress);
             Mojo.Log.info("<-- FinishedGettings");
         }
@@ -310,6 +319,7 @@ ItemsHelper = Class.create({
                 }
             }
         }
+        
         return subset;
     },
 

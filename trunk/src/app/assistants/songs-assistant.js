@@ -82,6 +82,7 @@ SongsAssistant = Class.create({
             //TurnOffSpinner: this.TurnOffSpinner.bind(this),
             filterList: this.controller.get('songsList'),
             getItemsCallback: this.GetSongs.bind(this),
+            numItemsDisplay:this.controller.get("numSongs"),
             listModel: this.listModel,
             //progressModel: this.songLoadModel,
             fetchLimit: AmpacheMobile.FetchSize,
