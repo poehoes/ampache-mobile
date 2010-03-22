@@ -182,16 +182,22 @@ AlbumsAssistant = Class.create({
                 shortcut:"p"
             },
             {
-                label: "Delete Now Playing",
-                disabled: !AmpacheMobile.audioPlayer.PlayListPending,
-                command: "delete-np-cmd",
-                shortcut:"d"
-            },
-            {
-                label: "Goto Now Playing",
-                disabled: !AmpacheMobile.audioPlayer.PlayListPending,
-                command: "push-np-cmd",
-                shortcut:"n"
+                label: "Now Playing",
+                items: [
+                    {
+                    label: "Delete Now Playing",
+                    disabled: !AmpacheMobile.audioPlayer.PlayListPending,
+                    command: "delete-np-cmd",
+                    shortcut: "d"
+                    },
+                    {
+                    label: "Goto Now Playing",
+                    disabled:!AmpacheMobile.audioPlayer.PlayListPending,
+                    command: "push-np-cmd",
+                    shortcut: "n"
+                    }
+                ],
+                disabled: false
             },
             {
                 label: "Sort",
@@ -289,7 +295,7 @@ AlbumsAssistant = Class.create({
             console.log(event);
             list = this.itemsHelper.filterList.mojo.getList();
             i = parseInt(event.split("-")[1],10);
-            list.mojo.revealItem(i);
+            list.mojo.revealItem(i, false);
         }
     },
 
@@ -546,6 +552,8 @@ AlbumsAssistant = Class.create({
 
     activate: function(event) {
         this.itemsHelper.Activate();
+        this.appMenuModel.items[1].items[0].disabled= !AmpacheMobile.audioPlayer.PlayListPending;
+        this.appMenuModel.items[1].items[1].disabled= !AmpacheMobile.audioPlayer.PlayListPending;
     },
 
     deactivate: function(event) {

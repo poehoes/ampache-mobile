@@ -141,7 +141,7 @@ ArtistsAssistant = Class.create({
             filterList = this.controller.get('artistFilterList');
             list = filterList.mojo.getList();
             i = parseInt(event.split("-")[1],10);
-            list.mojo.revealItem(i);
+            list.mojo.revealItem(i, false);
         }
     },
 

@@ -198,15 +198,15 @@ NowPlayingAssistant = Class.create({
         
 
         
-        this.controller.get('npList').hide();
+        this.controller.get('list-display').style.display = "none";
         //this.controller.get('playback-display').hide();
         
         if (AmpacheMobile.audioPlayer.listIsShowing === true){
-            this.controller.get('toggle-list-view').addClassName('depressed');        
+            this.controller.get('toggle-list-view').addClassName('depressed');
             this.controller.get('toggle-album-view').removeClassName('depressed');
         }
         else{
-            this.controller.get('toggle-list-view').removeClassName('depressed');        
+            this.controller.get('toggle-list-view').removeClassName('depressed');
             this.controller.get('toggle-album-view').addClassName('depressed');
            
         }
@@ -325,16 +325,37 @@ NowPlayingAssistant = Class.create({
                 this.toggleViews();
                 break;
                 
-            //default:
-            //    this.controller.showAlertDialog({
-            //   title: $L("Unknown Keycode"),
-            //   message: "Key Code: " + event.originalEvent.keyCode,
-            //   choices: [{
-            //       label: 'OK',
-            //       value: "retry",
-            //       type: 'primary'
-            //   }]});
-            //    break;
+            case 117: // U
+            case  85: // U + Caps
+            //case Mojo.Char.upArrow:
+            //case Mojo.Char.d:
+                if (AmpacheMobile.audioPlayer.listIsShowing === true)
+                {
+                    var range = this.npList.mojo.getLoadedItemRange();
+                    this.npList.mojo.revealItem(range.offset, false);
+                }
+                break;
+            
+            case 100:// D
+            case 68: // U + Caps
+            //case Mojo.Char.downArrow:
+            //case Mojo.Char.d:
+                if (AmpacheMobile.audioPlayer.listIsShowing === true)
+                {
+                    var range = this.npList.mojo.getLoadedItemRange();
+                    this.npList.mojo.revealItem(range.offset+Math.floor(range.limit/1.5), false);
+                }
+                break;
+            default:
+                this.controller.showAlertDialog({
+               title: $L("Unknown Keycode"),
+               message: "Key Code: " + event.originalEvent.keyCode,
+               choices: [{
+                   label: 'OK',
+                   value: "retry",
+                   type: 'primary'
+               }]});
+                break;
         }
     },
     
@@ -418,8 +439,8 @@ NowPlayingAssistant = Class.create({
         this.controller.get('toggle-list-view').removeClassName('depressed');        
         this.controller.get('toggle-album-view').addClassName('depressed');
         AmpacheMobile.audioPlayer.listIsShowing = false;
-        this.controller.get('npList').hide();
-        this.controller.get('playback-display').show();
+        this.controller.get('list-display').style.display = "none";
+        this.controller.get('playback-display').style.display = "block";
         this.noDragHandler = this.noDrag.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('now-playing'), Mojo.Event.dragStart, this.noDragHandler);
     
@@ -432,8 +453,8 @@ NowPlayingAssistant = Class.create({
         this.controller.get('toggle-list-view').addClassName('depressed');        
         this.controller.get('toggle-album-view').removeClassName('depressed');
         AmpacheMobile.audioPlayer.listIsShowing = true;
-        this.controller.get('playback-display').hide();
-        this.controller.get('npList').show();
+        this.controller.get('list-display').style.display = "block";
+        this.controller.get('playback-display').style.display = "none";
         
         if(this.noDragHandler)
         {
@@ -441,7 +462,7 @@ NowPlayingAssistant = Class.create({
             this.noDragHandler = null;
         }
         this.npList.mojo.invalidateItems(0);
-        this.npList.mojo.revealItem(AmpacheMobile.audioPlayer.currentPlayingTrack);
+        this.npList.mojo.revealItem(AmpacheMobile.audioPlayer.currentPlayingTrack, false);
         
         window.onresize = null;
     },
@@ -752,7 +773,7 @@ NowPlayingAssistant = Class.create({
                     
                 }
                 try {
-                    this.npList.mojo.revealItem(currentIndex);
+                    this.npList.mojo.revealItem(currentIndex, false);
                 }
                 catch(ex)
                 {}

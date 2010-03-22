@@ -76,5 +76,9 @@
     {
         "scenes": "recent",
         "source": "app/assistants/recent-assistant.js"
+    },
+    {
+        "scenes": "whatsnew",
+        "source": "app/assistants/whatsnew-assistant.js"
     }
 ]

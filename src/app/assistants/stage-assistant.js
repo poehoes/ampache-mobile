@@ -44,17 +44,14 @@ function StageAssistant(stageController) {
 StageAssistant.appMenuAttr = {
     omitDefaultItems: true
 };
-StageAssistant.appMenuModel = {
-    visible: true,
 
-    items: [
-    //{label: "Test Connection", command: "doTest-cmd"},
-    {
-        label: "Preferences",
-        command: "doPref-cmd",
-        shortcut: "p"
-    },
-    {
+StageAssistant.aboutApp = {
+        label: "About",
+        command: "about-cmd"
+    };
+
+
+StageAssistant.nowPlayingMenu = {
         label: "Now Playing",
         items: [{
             label: "Delete Now Playing",
@@ -69,11 +66,23 @@ StageAssistant.appMenuModel = {
             shortcut: "n"
         }],
         disabled: false
-    },
-    {
-        label: "About",
-        command: "about-cmd"
-    }]
+    };
+
+StageAssistant.preferencesMenu = {
+        label: "Preferences",
+        command: "doPref-cmd",
+        shortcut: "p"
+    };
+
+StageAssistant.appMenuModel = {
+    visible: true,
+
+    items: [
+    //{label: "Test Connection", command: "doTest-cmd"},
+    StageAssistant.preferencesMenu,
+    StageAssistant.nowPlayingMenu,
+    StageAssistant.aboutApp
+    ]
 };
 
 StageAssistant.prototype.onBlurHandler = function() {
@@ -180,6 +189,7 @@ StageAssistant.prototype.handleCommand = function(event) {
             if ((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.Connected === true)) {
                 serverinfo += "Version: <font class='about-details-data'>" + AmpacheMobile.ampacheServer.version + "</font>";
                 serverinfo += "<BR>Link: <a class='about-details-data' href=" + AmpacheMobile.ampacheServer.URL + ">" + AmpacheMobile.Account.AccountName + "</a>";
+                
                 serverinfo += "<BR>Update:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.update, "medium") + "</font>";
                 serverinfo += "<BR>Add:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.add, "medium") + "</font>";
                 serverinfo += "<BR>Clean:<font class='about-details-data'>" + Mojo.Format.formatDate(AmpacheMobile.ampacheServer.clean, "medium") + "</font>";
@@ -191,7 +201,7 @@ StageAssistant.prototype.handleCommand = function(event) {
             currentScene.showAlertDialog({
                 onChoose: function(value) {},
                 title: "Ampache Mobile - v" + Mojo.Controller.appInfo.version,
-                message: "Copyright 2009-2010, Bryce Geiser" + serverinfo,
+                message: "Copyright 2009-2010, Bryce Geiser <br><a style='font-size:small;' onclick='WhatsNew();'>Release Notes</a>" + serverinfo,
                 choices: [{
                     label: "OK",
                     value: ""
@@ -250,7 +260,7 @@ function GetCSSRule(searchRule) {
         var rules = sheets[j].cssRules;
         for (i = 0; i < rules.length; i++) {
             var rule = rules[i];
-            
+
             if (rule.selectorText) {
                 //Mojo.Log.info("Sheet[" + j + "].Rule[" + i + "]=" + rule.selectorText);
                 if (rule.selectorText.toLowerCase() == searchRule) {
@@ -262,49 +272,44 @@ function GetCSSRule(searchRule) {
     return null;
 };
 
-
 function SetBackground(controller, image, color) {
-        
-       
-            controller.get('body_wallpaper').style.background = "url(" + image + ") no-repeat";
-            controller.get('body_wallpaper').style.backgroundColor = color;
-          
-        
-};
-    
-function SetText(isCustomColor, Color, Theme )
-    {
-        var rowName = (Number(Theme)===THEME_DARK) ? ".palm-dark .palm-row" : ".palm-row"
-        
-        var rowRule = GetCSSRule(rowName);
-        var sceneRule = GetCSSRule('.ampache-mobile-scene');
-        
-        
-        if(isCustomColor)
-        {
-            rowRule.style.color = Color;
-            sceneRule.style.color = Color;
-        }
-        else
-        {
-            rowRule.style.color = null;
-            sceneRule.style.color = null;
-        }
-        
-        
+
+    controller.get('body_wallpaper').style.background = "url(" + image + ") no-repeat";
+    controller.get('body_wallpaper').style.backgroundColor = color;
+
 };
 
-function SetCSSTheme(controller, themeIndex)
-{
+function SetText(isCustomColor, Color, Theme) {
+    var rowName = (Number(Theme) === THEME_DARK) ? ".palm-dark .palm-row": ".palm-row"
+
+    var rowRule = GetCSSRule(rowName);
+    var sceneRule = GetCSSRule('.ampache-mobile-scene');
+
+    if (isCustomColor) {
+        rowRule.style.color = Color;
+        sceneRule.style.color = Color;
+    } else {
+        rowRule.style.color = null;
+        sceneRule.style.color = null;
+    }
+
+};
+
+function SetCSSTheme(controller, themeIndex) {
     var body = controller.get('body_wallpaper');
     var numThemes = THEMES.length;
-    for(var i=1; i<numThemes; i++)
-    {
+    for (var i = 1; i < numThemes; i++) {
         body.removeClassName(THEMES[i]);
     }
-    
-    if(themeIndex!==THEME_NONE)
-    {
+
+    if (themeIndex !== THEME_NONE) {
         body.addClassName(THEMES[themeIndex]);
     }
+};
+
+function WhatsNew() {
+    Mojo.Controller.stageController.pushScene({
+        transition: AmpacheMobile.Transition,
+        name: "whatsnew"
+    });
 };

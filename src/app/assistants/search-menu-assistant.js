@@ -47,6 +47,8 @@ SearchMenuAssistant = Class.create({
         
         this.SearchField = this.controller.get("search-field");
 
+        this.notifyUserBack = this.controller.get("notifyuser-back");
+
         //*****************************************************************************************************
         // Search Event
         this.searchTextChanged = this.searchTextChanged.bindAsEventListener(this);
@@ -145,6 +147,7 @@ SearchMenuAssistant = Class.create({
         
         if(this.SearchField.mojo.getValue() === "")
         {
+            this.notifyUserBack.style.display = "inline";
             if(this.exitOnDelete===true)
             {
                 this.controller.stageController.popScene(); 
@@ -153,6 +156,7 @@ SearchMenuAssistant = Class.create({
         }
         else
         {
+            this.notifyUserBack.style.display = "none";
             this.exitOnDelete = false;
         }
     },
