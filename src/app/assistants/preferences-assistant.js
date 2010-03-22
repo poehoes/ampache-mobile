@@ -515,9 +515,9 @@ PreferencesAssistant = Class.create({
         if(this.settingsManager.settings.UseCustomColor)
         {
             textColorDisplay.style.color = this.settingsManager.settings.CustomColor;
-            textColorDisplay.innerHTML = this.settingsManager.settings.CustomColor+ "";;
+            textColorDisplay.innerHTML = this.settingsManager.settings.CustomColor + "";
             
-            var nodes = previewBox.getElementsByClassName("mainMenuTitle")
+            var nodes = previewBox.getElementsByClassName("mainMenuTitle");
             for(var i =0; i<nodes.length;i++)
             {
                 nodes[i].style.color = this.settingsManager.settings.CustomColor;
@@ -527,7 +527,7 @@ PreferencesAssistant = Class.create({
         {
             textColorDisplay.style.color = null;
             textColorDisplay.innerHTML = "Theme Default";
-            var nodes = previewBox.getElementsByClassName("mainMenuTitle")
+            var nodes = previewBox.getElementsByClassName("mainMenuTitle");
             for(var i =0; i<nodes.length;i++)
             {
                 nodes[i].style.color = null;
@@ -558,10 +558,10 @@ PreferencesAssistant = Class.create({
     {
         if(color.match(/#[A-Fa-f0-0]+/))
         {
-            return color
+            return color;
         }
         
-        return null
+        return null;
     },
 
 

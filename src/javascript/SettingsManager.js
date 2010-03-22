@@ -226,7 +226,7 @@ Account = Class.create({
     ServerURL: null,
     ExtraCoverArt: false,
     StallRecovery:false,
-    FetchSize: DEFAULT_FETCH_SIZE,
+    FetchSize: DEFAULT_FETCH_SIZE
     
 });
 

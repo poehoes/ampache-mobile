@@ -285,7 +285,7 @@ StageAssistant.prototype.pushNowPlaying = function() {
             type: "display"
         });
     }
-}
+};
 
 function CenterSpinner(spinner) {
     spinner.style.left = (window.innerWidth / 2 - 64) + "px";
@@ -295,7 +295,7 @@ function CenterSpinner(spinner) {
 function SetExistingCSSColor(serachRule, newColor) {
     var rule = this.GetCSSRule(serachRule);
     if (rule) {
-        rule.style.color = newColor
+        rule.style.color = newColor;
     }
 };
 
@@ -325,7 +325,7 @@ function SetBackground(controller, image, color) {
 };
 
 function SetText(isCustomColor, Color, Theme) {
-    var rowName = (Number(Theme) === THEME_DARK) ? ".palm-dark .palm-row": ".palm-row"
+    var rowName = (Number(Theme) === THEME_DARK) ? ".palm-dark .palm-row": ".palm-row";
 
     var rowRule = GetCSSRule(rowName);
     var sceneRule = GetCSSRule('.ampache-mobile-scene');
