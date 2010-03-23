@@ -151,29 +151,31 @@ a:link {
 .songsMenuLeft
 {
     float:left;
-    width:80%;
-}
-
-.npIndex
-{
-    position:absolute;
-    margin-left:25px;
-    margin-top:12px;
-}
-
-.npMenuLeft
-{
-    position:absolute;
-    width:70%;
-    margin-left:50px;
+    width:90%;
 }
 
 .npListIcon
 {
    position:absolute;
-   left:0px;
+   left:-2px;
    margin-top:12px;
 }
+
+.npIndex
+{
+    float:left;
+    margin-left:24px;
+    margin-top:12px;
+}
+
+.npMenuLeft
+{
+    float:left;
+    width:76%;
+    margin-left:-5px;
+}
+
+
 
 .songsMenuRight
 {
@@ -1015,8 +1017,9 @@ body.palm-default {
         position: absolute;
         left: 0px;
         width: 0%;
-        height: 50px;
+        height: 51px;
         display: inline-block;
+        margin-top: -1px;
         /*float: left;*/
         background-color: #181818;
         z-index: -2;
@@ -1028,8 +1031,8 @@ body.palm-default {
         position: absolute;
         left: 0px;
         width: 0%;
-        height: 50px;
-        margin-top: 0px;
+        height: 51px;
+        margin-top: -1px;
         display: inline-block;
         float: left;
         background-color: #6095C1;
@@ -1084,7 +1087,7 @@ margin-left:10px;
 
 .nplist-time {
     position:absolute;
-    right:15px;
+    right:10px;
      /*color: white;*/
     font-size:small;
     /*border:solid;*/
@@ -1216,6 +1219,12 @@ margin-left:10px;
     height:480px;
     -webkit-background-size : 100%;
 }
+
+.pref-icon{
+    position:absolute;
+    left:260px;
+}
+
 
 /***********************************************/
 /*   Whats New Scene
