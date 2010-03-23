@@ -101,7 +101,8 @@ RecentAssistant = Class.create({
                 FromDate: fromDate
             });
         }
-
+        else
+        {
         var item = event.item;
         //item._this = this;
         var items = [];
@@ -120,7 +121,7 @@ RecentAssistant = Class.create({
             placeNear: event.originalEvent.target,
             items: items
         });
-
+        }
     },
 
     popupHandler: function(event) {
