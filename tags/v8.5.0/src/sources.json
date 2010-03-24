@@ -1,0 +1,84 @@
+[
+    {"source": "/usr/palm/frameworks/media/media.js"},
+    {"source": "/usr/palm/frameworks/media/Audio.js"},
+    {"source": "app/assistants/stage-assistant.js"},
+    {
+        "scenes": "preferences",
+        "source": "app/assistants/preferences-assistant.js"
+    },
+    {"source": "javascript/sha256.js"},
+    {"source": "javascript/AmpacheServer.js"},
+    {"source": "javascript/AudioPlayer.js"},
+    {"source": "javascript/ColorPicker.js"},
+    {"source": "javascript/ItemsHelper.js"},
+    {"source": "javascript/ISO8601.js"},
+    {"source": "javascript/SettingsManager.js"},
+    {"source": "app/models/ArtistModel.js"},
+    {"source": "app/models/AlbumModel.js"},
+    {"source": "app/models/SongModel.js"},
+    {"source": "app/models/TagModel.js"},
+    {"source": "app/models/PlaylistModel.js"},
+    {"source": "app/models/PingModel.js"},
+    
+    {
+        "scenes": "connection",
+        "source": "app/assistants/connection-assistant.js"
+    },
+    {
+        "scenes": "mainmenu",
+        "source": "app/assistants/mainmenu-assistant.js"
+    },
+    {
+        "scenes": "artists",
+        "source": "app/assistants/artists-assistant.js"
+    },
+    {
+        "scenes": "songs",
+        "source": "app/assistants/songs-assistant.js"
+    },
+    {
+        "scenes": "albums",
+        "source": "app/assistants/albums-assistant.js"
+    },
+    {
+        "scenes": "now-playing",
+        "source": "app/assistants/now-playing-assistant.js"
+    },
+    
+    {
+        "scenes": "account",
+        "source": "app/assistants/account-assistant.js"
+    },
+    {
+        "scenes": "playlists",
+        "source": "app/assistants/playlists-assistant.js"
+    },
+    {
+        "scenes": "background",
+        "source": "app/assistants/background-assistant.js"
+    },
+    {
+        "scenes": "textselect",
+        "source": "app/assistants/textselect-assistant.js"
+    },
+    {
+        "scenes": "search-menu",
+        "source": "app/assistants/search-menu-assistant.js"
+    },
+    {
+        "scenes": "genres",
+        "source": "app/assistants/genres-assistant.js"
+    },
+    {
+        "scenes": "random",
+        "source": "app/assistants/random-assistant.js"
+    },
+    {
+        "scenes": "recent",
+        "source": "app/assistants/recent-assistant.js"
+    },
+    {
+        "scenes": "whatsnew",
+        "source": "app/assistants/whatsnew-assistant.js"
+    }
+]

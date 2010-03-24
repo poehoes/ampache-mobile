@@ -1,0 +1,36 @@
+{
+  "id": "com.ampachemobile",
+  "version": "0.8.5",
+  "title": "Ampache Mobile",
+  "vendor": "Ampache Mobile Project",
+  "vendorurl": "http://code.google.com/p/ampache-mobile",
+  "main": "index.html",
+  "icon": "icon.png",
+  "smallicon": "miniicon.png",
+  "type": "web",
+  "theme": "dark",
+  "noWindow": false,
+  "noDeprecatedStyles": true,
+  "splashicon": "icon-256x256.png",
+  "splashBackground": "images/splash-ampache-mobile.png",
+  "copyright": "Copyright 2009-2010 Bryce Geiser",
+  "support": {
+    "email": {
+      "address": "ampache-mobile@googlegroups.com",
+      "subject": "Support"
+    },
+    "resources": [
+    {
+      "type": "web",
+      "label": "Common Issues",
+      "url": "http://code.google.com/p/ampache-mobile/wiki/CommonIssues"
+    },
+    {
+      "type": "web",
+      "label": "Discussion Forums",
+      "url": "http://forums.precentral.net/homebrew-apps/200423-ampache-mobile.html"
+    }
+    ]
+  },
+  "keywords": ["Audio", "Music", "Songs"]
+}
