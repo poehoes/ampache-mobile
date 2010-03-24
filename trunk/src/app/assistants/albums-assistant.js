@@ -186,10 +186,9 @@ AlbumsAssistant = Class.create({
                 label: "Sort",
                 items: this.sortItems
             },
-            {
-                label: "About...",
-                command: "about-cmd"
-            }]
+            StageAssistant.helpMenu,
+            StageAssistant.aboutApp
+            ]
         };
 
         this.controller.setupWidget(Mojo.Menu.appMenu, appMenuAttr, this.appMenuModel);

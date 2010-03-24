@@ -141,13 +141,17 @@ AudioPlayer = Class.create({
         if (event.state === "up") {
             if (event.key === "play") {
                 this.play();
+                AmpacheMobile.vibrate();
             } else if ((event.key === "pause") || (event.key === "stop")) {
-                this.Paused = true;
+                AmpacheMobile.vibrate();
                 this.pause();
+                AmpacheMobile.vibrate();
             } else if (event.key === "next") {
                 this.play_next(true);
+                AmpacheMobile.vibrate();
             } else if (event.key === "prev") {
                 this.play_prev();
+                AmpacheMobile.vibrate();
             }
         }
     },
@@ -161,16 +165,21 @@ AudioPlayer = Class.create({
     },
 
     handleSingleButton: function(event) {
+        
         if (event.state === "single_click") {
+            
+            AmpacheMobile.vibrate();
             if (!this.Paused) {
-                this.Paused = true;
                 this.pause();
             } else {
                 this.play();
             }
         } else if (event.state === "double_click") {
+            AmpacheMobile.vibrate();
+            this.Paused = false;
             this.play_next(true);
         } else if (event.state === "hold") {
+            AmpacheMobile.vibrate();
             this.play_prev();
         }
     },

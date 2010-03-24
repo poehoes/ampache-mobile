@@ -1225,6 +1225,17 @@ margin-left:10px;
     left:260px;
 }
 
+.pref-help{
+    position:absolute;
+    
+    background: url(../images/icons/help.png) center left no-repeat;
+    width:32px;
+    height:32px;
+    display:block;
+    /*border:solid;*/
+    margin-top:-40px;
+}
+
 
 /***********************************************/
 /*   Whats New Scene

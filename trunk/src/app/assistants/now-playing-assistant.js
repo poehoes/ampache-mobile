@@ -19,6 +19,9 @@
 // *********************************************************************************************************************************
  */
 NowPlayingAssistant = Class.create({
+    
+    firstActivate:true,
+    
     initialize: function(params) {
         Mojo.Log.info("--> NowPlayingAssistant.prototype.constuctor");
         
@@ -224,6 +227,7 @@ NowPlayingAssistant = Class.create({
     
     ready: function(event) {
         Mojo.Log.info("--> activate");
+        
         AmpacheMobile.audioPlayer.setNowPlaying(this);
         Mojo.Log.info("<-- activate");
     },
@@ -256,7 +260,7 @@ NowPlayingAssistant = Class.create({
     
     activate:function()
     {
-        if(!this.firstActivate)
+        if(this.firstActivate===true)
         {
             this.firstActivate = false;
             this.updateBuffering(0,AmpacheMobile.audioPlayer.downloadPercentage/100);
@@ -972,6 +976,18 @@ NowPlayingAssistant = Class.create({
                 this.showPauseButton();
                 AmpacheMobile.audioPlayer.play();
                 break;
+            case "keyboardCtrls-cmd":
+                this.controller.showAlertDialog({
+                    title: "Keyboard Controls",
+                    message: Mojo.View.render({template:"now-playing/button-help"}),
+                    allowHTMLMessage:true,
+                    choices: [{
+                        label: $L('OK'),
+                        value: "cancel",
+                        type: 'dismiss'
+                    }]
+                });
+                break;
             case "doStreamingInfo-cmd":
                 this.controller.showAlertDialog({
                     // onChoose: this.onErrorDialogDismiss.bind(this),
@@ -1139,7 +1155,16 @@ NowPlayingAssistant = Class.create({
             label: "Delete Now Playing",
             command: "delete-np-cmd",
             shortcut:'d'
-        }/*,
+        },
+        
+        {
+            label: "Keyboard Controls",
+            command: "keyboardCtrls-cmd"
+            
+        },
+        StageAssistant.helpMenu,
+        StageAssistant.aboutApp
+        /*,
         {
             label: "About...",
             command: "about-cmd"
