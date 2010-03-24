@@ -36,10 +36,10 @@ AmpacheMobile.AclErrorHelp = "You are so close! You likely need to configure an 
 AmpacheMobile.EmptyResponseErrorHelp = "Phone not connecting to Ampache." + "<br>" + "<ul>" + "<li>Can you connect to Ampache with a PC?</li>" + "<li>Server URL (Must include http://)</li>" + "<li>Firewall Port Forwarding</li>" + "<li>DNS or IP Address (192.168.x.x will not work on EVDO)</li>" + "<li>Does your ISP  block port 80?</li>" + "</ul>";
 
 
-AmpacheMobile.vibrate = function()
-{
-    //Mojo.Controller.getAppController().playSoundNotification("vibrate", "", 1);
-};
+//AmpacheMobile.vibrate = function()
+//{
+//    //Mojo.Controller.getAppController().playSoundNotification("vibrate", "", 1);
+//};
 
 
 function StageAssistant(stageController) {

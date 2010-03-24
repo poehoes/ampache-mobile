@@ -86,19 +86,7 @@ NowPlayingAssistant = Class.create({
         
         
         
-        /*
-        Mojo.Log.info("Setup spinnnerAttrs");
-        this.spinnerAttrs = {
-            spinnerSize: 'large'
-        };
-
-        Mojo.Log.info("Setup spinnerModel");
-        this.spinnerModel = {
-            spinning: false
-        };
-
-        Mojo.Log.info("Setup spinner");
-        this.controller.setupWidget('spinner', this.spinnerAttrs, this.spinnerModel);*/
+       
 
         this.sliderModel = {
             value: 0,
@@ -804,6 +792,7 @@ NowPlayingAssistant = Class.create({
             break;
         case "Downloading 100%":
             display = "Downloading Finished";
+            this.hideSpinner();
             break;
         case "loadstart":
             display = "Starting Stream";

@@ -1017,9 +1017,9 @@ body.palm-default {
         position: absolute;
         left: 0px;
         width: 0%;
-        height: 51px;
+        height: 53px;
         display: inline-block;
-        margin-top: -1px;
+        margin-top: -3px;
         /*float: left;*/
         background-color: #181818;
         z-index: -2;
@@ -1031,8 +1031,8 @@ body.palm-default {
         position: absolute;
         left: 0px;
         width: 0%;
-        height: 51px;
-        margin-top: -1px;
+        height: 53px;
+        margin-top: -3px;
         display: inline-block;
         float: left;
         background-color: #6095C1;

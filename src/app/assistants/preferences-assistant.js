@@ -377,13 +377,13 @@ PreferencesAssistant = Class.create({
 
     recentPopup:function()
     {
-        this.showDialogBox("Default Recent Type", "This sets the type of recent songs search the application will do if the user taps and holds the 'Recent' option on the main menu.")
+        this.showDialogBox("Default Recent Type", "This sets the type of recent songs search the application will do if the user taps and holds the 'Recent' option on the main menu.");
     
     },
 
     searchPopup :function()
     {
-        this.showDialogBox("Default Search Type", "This sets the search type which will be used by default when a user presses enter on the search screen.  Choice is indinicated on the search page by a image of the enter key.")
+        this.showDialogBox("Default Search Type", "This sets the search type which will be used by default when a user presses enter on the search screen.  Choice is indinicated on the search page by a image of the enter key.");
     },
 
     // This function will popup a dialog, displaying the message passed in.
@@ -560,7 +560,7 @@ PreferencesAssistant = Class.create({
         if(this.settingsManager.settings.BackgroundMode === CUSTOM_COLOR)
         {
             backgroundColorDisplay.style.color = this.settingsManager.settings.BackgroundColor;
-            backgroundColorDisplay.innerHTML = this.settingsManager.settings.BackgroundColor ==""? "Theme Default" : this.settingsManager.settings.BackgroundColor ;
+            backgroundColorDisplay.innerHTML = this.settingsManager.settings.BackgroundColor ===""? "Theme Default" : this.settingsManager.settings.BackgroundColor ;
         }
         else
         {
