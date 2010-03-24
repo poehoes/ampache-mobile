@@ -141,17 +141,17 @@ AudioPlayer = Class.create({
         if (event.state === "up") {
             if (event.key === "play") {
                 this.play();
-                AmpacheMobile.vibrate();
+                //AmpacheMobile.vibrate();
             } else if ((event.key === "pause") || (event.key === "stop")) {
-                AmpacheMobile.vibrate();
+                //AmpacheMobile.vibrate();
                 this.pause();
-                AmpacheMobile.vibrate();
+                //AmpacheMobile.vibrate();
             } else if (event.key === "next") {
                 this.play_next(true);
-                AmpacheMobile.vibrate();
+                //AmpacheMobile.vibrate();
             } else if (event.key === "prev") {
                 this.play_prev();
-                AmpacheMobile.vibrate();
+                //AmpacheMobile.vibrate();
             }
         }
     },
@@ -168,18 +168,18 @@ AudioPlayer = Class.create({
         
         if (event.state === "single_click") {
             
-            AmpacheMobile.vibrate();
+            //AmpacheMobile.vibrate();
             if (!this.Paused) {
                 this.pause();
             } else {
                 this.play();
             }
         } else if (event.state === "double_click") {
-            AmpacheMobile.vibrate();
+            //AmpacheMobile.vibrate();
             this.Paused = false;
             this.play_next(true);
         } else if (event.state === "hold") {
-            AmpacheMobile.vibrate();
+            //AmpacheMobile.vibrate();
             this.play_prev();
         }
     },

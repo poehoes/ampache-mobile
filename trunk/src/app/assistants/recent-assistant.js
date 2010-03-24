@@ -89,13 +89,17 @@ RecentAssistant = Class.create({
             fromDate = new Date();
             fromDate = AmpacheMobile.ampacheServer.add.clone();
             fromDate.addHours( - 2);
-
+            
+            fromDateStr = "Since " + Mojo.Format.formatDate(fromDate, {
+                date: "short"
+            });
+            
             this.controller.stageController.pushScene({
                 transition: AmpacheMobile.Transition,
                 name: "songs"
             },
             {
-                SceneTitle: "Recent Songs: Last Update",
+                SceneTitle: "Recent Songs: " + fromDateStr,
                 Type: "recent",
                 DisplayArtistInfo: true,
                 FromDate: fromDate
@@ -151,6 +155,11 @@ RecentAssistant = Class.create({
                 break;
 
             }
+            
+            var fromDateStr = "Since " + Mojo.Format.formatDate(fromDate, {
+            date: "short"
+            });
+            
             if (command[1] !== "Date") {
                 if (command[0] === "artists") {
 
@@ -159,7 +168,7 @@ RecentAssistant = Class.create({
                         name: "artists"
                     },
                     {
-                        SceneTitle: "Recent Artists: " + command[1],
+                        SceneTitle: "Recent Artists: " +fromDateStr,
                         ExpectedArtists: 0,
                         type: "recent",
                         FromDate: fromDate
@@ -172,7 +181,7 @@ RecentAssistant = Class.create({
                         name: "albums"
                     },
                     {
-                        SceneTitle: "Recent Albums: " + command[1],
+                        SceneTitle: "Recent Albums: " + fromDateStr,
                         Type: "recent",
                         ExpectedAlbums: 0,
                         FromDate: fromDate
@@ -186,7 +195,7 @@ RecentAssistant = Class.create({
                         name: "songs"
                     },
                     {
-                        SceneTitle: "Recent Songs: " + command[1],
+                        SceneTitle: "Recent Songs: " + fromDateStr,
                         Type: "recent",
                         DisplayArtistInfo: true,
                         FromDate: fromDate
@@ -291,7 +300,7 @@ var DateDialogAssistant = Class.create({
 
     lastUpdate:function()
     {
-        this.controller.assistant.pickerModel.date = AmpacheMobile.ampacheServer.update.clone();
+        this.controller.assistant.pickerModel.date = AmpacheMobile.ampacheServer.add.clone();
         this.controller.modelChanged(this.controller.assistant.pickerModel);
     },
 
