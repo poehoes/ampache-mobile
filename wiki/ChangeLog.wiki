@@ -1,5 +1,61 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
+===Version 0.8.5 (Beta) (03/24/2010)===
+
+*New Features*
+----
+  * Search Recent Additions
+    * Find Arists, Albums and Songs recently added to your server
+    * Choices include: Last Update, 1 Week, 1 Month, Custom Date
+    * Tap and hold from main menu for quick access, timespan configurable in preferences
+    * NOTE: This is the date files where scanned into your server, not the timestamps on the files. It will be most useful for servers that have been running awhile and have had music added periodically.
+  * Theme and Text Configuration    
+    * Customizations preview in preferences
+    * Selection of text color
+    * Selection of theme, current options: none and palm-dark
+  * Keyboard Commands
+    * Type to Search
+      * Just start typing while on the main screen and a search will start.
+      * Default search type is denoted with an enter image, configurable in preferences
+      * Tap Delete twice to exit.
+    * Now Playing Screen    
+      * Previous Track: @ (Left of space bar)
+      * Next Track: Period (Right of space bar)
+      * Skip 15 second ahead: P (Upper Right Key)
+      * Skip 15 second back: Q (Upper Left Key)
+      * Toggle Play/Pause: Space Bar
+      * Toggle Shuffle Mode: S
+      * Toggle Repeat Mode: R
+      * Toggle View: V
+    * Global Commands
+      * Note: Hold finger in gesture area for Meta
+      * Meta + P: Preferences
+      * Meta + D: Delete Now Playing
+      * Meta + N: Goto Now Playing
+      * Meta + [Space]: Play/Pause
+  * Improving user experience
+    * Release Notes
+    * Help Page
+    * Keyboard Commands Popup
+
+*Improvements*
+----
+  * Tap and hold an Artist to skip the albums screen and go straight to all songs.
+  * Many optimizations to Now Playing screen, should improve performance
+  * Numerous formating fixes
+  * Release Notes Link in About
+  * Added time countdown to now playing playlist.
+  * Added new icons to various scenes: Connection, Preferences, Accounts
+
+*Bug Fixes*
+----
+  * Fixed a bug which caused buttons to not work correctly while a song was loading on the now playing screen.
+  * Update to Now Playing button so it clearly shows its been pressed (turns blue).
+  * Alpha Divider rendering incorrectly
+  * Hold single song to play/enqueue, broke with jslint changes.
+  * Enqueueing the same song more than once broke the playlist.
+  * Date in "About.." was incorrect.
+
 ===Version 0.8.0 (Beta) (03/14/2010)====
   * New Feature: Playlist view added to now playing screen.
     * Application saves last view state between sessions
