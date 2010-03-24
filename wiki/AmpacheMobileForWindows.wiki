@@ -2,7 +2,7 @@
 ==Introduction==
 Want to try Ampache Mobile and don't actually have a WebOS phone.  Or do you use Ampache Mobile on your phone and want to use it on your PC.  Well now you can!!  WebOS is a combination Javascript, CSS and HTML.  It runs the WebKit browser (the same foundation that Safari and Google Chrome are built on).  The one missing piece to running a WebOS app on windows, or any other desktop operating system are the javascript and css libraries which palm created, otherwise known as the Mojo SDK.  If you can get the SDK on your PC then you can use it to run Ampache Mobile on your Windows computer.
 
-http://i607.photobucket.com/albums/tt151/bjgeiser/windows.png?t=1253249742
+http://lh4.ggpht.com/_IXK8RpquMHQ/S6qTdZBQ-1I/AAAAAAAAAGM/rFRDwvuJfWY/windows.png
 
 ==Installation==
   # Download and Install Safari for Windows (Only tested with Safari 4.x, Chrome wont work) [http://www.apple.com/safari link]
