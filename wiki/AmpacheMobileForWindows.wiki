@@ -5,7 +5,7 @@ Want to try Ampache Mobile and don't actually have a WebOS phone.  Or do you use
 http://i607.photobucket.com/albums/tt151/bjgeiser/windows.png?t=1253249742
 
 ==Installation==
-  # Download and Install Safari for Windows (Only tested with Safari 4.0.2) [http://www.apple.com/safari link]
+  # Download and Install Safari for Windows (Only tested with Safari 4.x, Chrome wont work) [http://www.apple.com/safari link]
   # Mojo Libraries (NOTE: Distribution of the Mojo Framework is not legal)
     * You are going to have to find this on your own
     * [http://forums.precentral.net/web-os-development/185038-develop-pre-apps-safari-without-sdk.html PreCentral Thread on this Topic]
@@ -29,7 +29,6 @@ Otherwise its mouse driven.
 ==Known Issues==
   * Device Image will not work for the Backgrounds, because there is no Device.
   * This is pretty processor intensive, running lots of javascript.
-  * Resizing the Safari window will break some of the formatting.
   * Disable your popup blocker
 
 ==Special Notes==
