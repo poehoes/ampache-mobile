@@ -37,7 +37,8 @@ WhatsnewAssistant = Class.create({
             this.model = {
                 visible: false,
                 items: [ StageAssistant.preferencesMenu,
-                        StageAssistant.aboutApp
+                        StageAssistant.aboutApp,
+			StageAssistant.helpMenu
                         ]
             }
          );

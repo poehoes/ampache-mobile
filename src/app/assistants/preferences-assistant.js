@@ -272,6 +272,12 @@ PreferencesAssistant = Class.create({
         this.recentSelectorChanged = this.recentSelectorChanged.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('recentSelector'), Mojo.Event.propertyChange, this.recentSelectorChanged);
         
+        
+        Mojo.Event.listen(this.controller.get('search-help'), Mojo.Event.tap, this.searchPopup.bind(this));
+        Mojo.Event.listen(this.controller.get('recent-help'), Mojo.Event.tap, this.recentPopup.bind(this));
+        
+
+        
     },
 
     cleanup: function(event) {
@@ -286,12 +292,17 @@ PreferencesAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
         Mojo.Event.stopListening(this.controller.get('recentSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
         
+        
 
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
 
         Mojo.Event.stopListening(this.controller.get('background-row'), Mojo.Event.tap, this.pushBackGroundHandler);
         Mojo.Event.stopListening(this.controller.get('text-color-row'), Mojo.Event.tap, this.pushTextHandler);
+        
+        Mojo.Event.stopListening(this.controller.get('search-help'), Mojo.Event.tap, this.searchPopup);
+        Mojo.Event.stopListening(this.controller.get('recent-help'), Mojo.Event.tap, this.recentPopup);
+        
         Mojo.Log.info("<-- PreferencesAssistant.prototype.cleanup");
     },
 
@@ -362,6 +373,17 @@ PreferencesAssistant = Class.create({
         }
         this.settingsManager.SaveSettings();
 
+    },
+
+    recentPopup:function()
+    {
+        this.showDialogBox("Default Recent Type", "This sets the type of recent songs search the application will do if the user taps and holds the 'Recent' option on the main menu.")
+    
+    },
+
+    searchPopup :function()
+    {
+        this.showDialogBox("Default Search Type", "This sets the search type which will be used by default when a user presses enter on the search screen.  Choice is indinicated on the search page by a image of the enter key.")
     },
 
     // This function will popup a dialog, displaying the message passed in.
