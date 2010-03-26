@@ -1,1 +1,0 @@
-start "%programfiles%\Safari\Safari.exe" "%CD%\safari_loader.html"
