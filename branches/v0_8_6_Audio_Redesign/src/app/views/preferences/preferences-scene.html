@@ -1,0 +1,211 @@
+<div id="main" class="palm-hasheader preferences">
+    <div id="header" class="palm-header left truncating-text">
+        <div class="palm-header-wrapper">
+            <div class='header-body'>
+                <div class='icon'><img class="icon-img" src='images/icons/settings.png'></div>
+
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>
+                    Ampache Mobile Preferences
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div x-mojo-element="RadioButton" id="preference-type" class="radiobuttonClass"></div>
+
+    <div id="accout-container" style="display:block ;">
+        <div class="palm-group">
+            <div class="palm-group-title">
+                Startup Account
+            </div>
+
+            <div class="palm-list">
+                <div class="palm-row first last" x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <div id="accountSelector" x-mojo-element="ListSelector"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="e_example">
+            <div id="innerList" x-mojo-element="List"></div>
+        </div>
+    </div>
+
+    <div id="custom-container" style="display:none ;">
+        <div class="palm-list">
+            <div class="palm-row first" x-mojo-tap-highlight="momentary" id="background-row">
+                <div class="palm-row-wrapper">
+                    <div class="palm-list-selector right">
+                        <div class='title'>
+                            <div class="label truncated-text">
+                                Background
+                            </div>
+
+                            <div id="background-color-display" class="list-selector-value truncated-text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palm-row" x-mojo-tap-highlight="momentary" id="text-color-row">
+                <div class="palm-row-wrapper">
+                    <div class="palm-list-selector right">
+                        <div class='title'>
+                            <div class="label truncated-text">
+                                Text
+                            </div>
+
+                            <div id="text-color-display" class="list-selector-value truncated-text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palm-row last" x-mojo-tap-highlight="momentary" id="theme-row">
+                <div class="palm-row-wrapper">
+                    <div id="theme-selector" x-mojo-element="ListSelector"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-box" id="preview-box">
+        <div style="height: 20px;width: 100%;"></div>
+        <div class="palm-group">
+            <div class="palm-group-title">
+                Preview
+            </div>
+            
+            <div class="wallpaper palm-list" >
+                <div class="palm-row preview-box-row" id='searchArtists' x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <div class="mainMenuLeft">
+                            <div class="mainMenuTitle">
+                                Artists
+                            </div>
+                        </div>
+
+                        <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/artists.png"></div>
+
+                        <div class="search-enter"><img id="search-Artists" name="search-Artists"></div>
+                    </div>
+                </div>
+
+                <div class="palm-row" id='searchAlbums' x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <div class="mainMenuLeft">
+                            <div class="mainMenuTitle">
+                                Albums
+                            </div>
+                        </div>
+
+                        <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/albums.png"></div>
+
+                        <div class="search-enter"><img id="search-Albums" name="search-Albums"></div>
+                    </div>
+                </div>
+
+                <div class="palm-row" id='searchSongs' x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <div class="mainMenuLeft">
+                            <div class="mainMenuTitle">
+                                Songs
+                            </div>
+                        </div>
+
+                        <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/songs.png"></div>
+
+                        <div class="search-enter"><img id="search-Songs" name="search-Songs"></div>
+                    </div>
+                </div>
+
+                <div class="palm-row" id='searchPlaylists' x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <div class="mainMenuLeft">
+                            <div class="mainMenuTitle">
+                                Playlists
+                            </div>
+                        </div>
+
+                        <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/playlists.png"></div>
+
+                        <div class="search-enter"><img id="search-Playlists" name="search-Playlists"></div>
+                    </div>
+                </div>
+
+                <div class="palm-row last" id='searchGlobal' x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <div class="mainMenuLeft">
+                            <div class="mainMenuTitle">
+                                Global
+                            </div>
+                        </div>
+
+                        <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/global.png"></div>
+
+                        <div class="search-enter"><img id="search-Global"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div x-mojo-element="Button" id="backgroundBtn"></div>-->
+        </div>
+        
+        <!---->
+        <!--<div x-mojo-element="Button" id="textBtn"></div>-->
+    </div>
+
+    <div id="more-container" style="display:none ;">
+        <div class="palm-group">
+            <div class="palm-group-title">
+               More Options
+            </div>
+
+            <div class="palm-list">
+                <div class="palm-row first" x-mojo-tap-highlight="momentary">
+                    
+                    <div class="palm-row-wrapper">
+                        <div id="searchSelector" x-mojo-element="ListSelector"></div>
+                    </div>
+                    <div class="pref-help" style="left:90px;" id="search-help"></div>
+                </div>
+
+                <div class="palm-row first" x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <div id="recentSelector" x-mojo-element="ListSelector"></div>
+                    </div>
+                    <div class="pref-help" style="left:90px;" id="recent-help"></div>
+                </div>
+
+                <div class="palm-row" x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <table class="palm-list-section-label">
+                            <tr>
+                                <td width="85%"><span class="palm-text-wrapper" x-mojo-loc="">Stream Debug</span></td>
+
+                                <td width="15%">
+                                    <div id="stream-debug-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="palm-row last" x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <table class="palm-list-section-label">
+                            <tr>
+                                <td width="85%"><span class="palm-text-wrapper" x-mojo-loc="">Allow Rotation</span></td>
+
+                                <td width="15%">
+                                    <div id="rotation-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
