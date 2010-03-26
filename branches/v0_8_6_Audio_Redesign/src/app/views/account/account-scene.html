@@ -1,0 +1,118 @@
+<div id="main" class="palm-hasheader">
+    <div id="header" class="palm-header left truncating-text">
+        <div class="palm-header-wrapper">
+            <div class='header-body'>
+                <div class='icon'><img class="icon-img" src='images/icons/accounts.png'/></div>
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>Account Editor</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="palm-group">
+        <div class="palm-group-title" x-mojo-loc=''>
+            Ampache Server Settings
+        </div>
+
+        <div class="palm-list">
+            <div class="palm-row first">
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <div class="label" x-mojo-loc=''>
+                            Account Name
+                        </div>
+
+                        <div class="AccountNameField" id="AccountNameField" x-mojo-element="TextField"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palm-row">
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <div class="label" x-mojo-loc=''>
+                            URL
+                        </div>
+
+                        <div class="ServerURLField" id="ServerURLField" x-mojo-element="TextField"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palm-row">
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <div class="label" x-mojo-loc=''>
+                            Username
+                        </div>
+
+                        <div id="userNameField" x-mojo-element="TextField"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palm-row">
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <div class="label" x-mojo-loc=''>
+                            Password
+                        </div>
+
+                        <div id="passwordField" x-mojo-element="PasswordField"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palm-row last">
+                <div class="palm-row-wrapper" x-mojo-focus-highlight="true">
+                    <div x-mojo-element="Button" id="btnTestConnection"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="palm-group">
+        <div class="palm-group-title" x-mojo-loc=''>
+            Account Specific Settings
+        </div>
+
+        <div class="palm-list">
+            <div class="palm-row first" x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <table class="palm-list-section-label">
+                        <tr>
+                             <td width=85%><span class="palm-text-wrapper" x-mojo-loc="">Artist Albums Art</span></td>
+
+                             <td width=15%>
+                                <div id="art-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="palm-row" x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <table class="palm-list-section-label">
+                        <tr>
+                            <td width=85%><span class="palm-text-wrapper" x-mojo-loc="">Stall Recovery</span></td>
+
+                            <td width=15%>
+                                <div id="stall-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="palm-row last" x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <span class="palm-text-wrapper" x-mojo-loc="">List Fetch Size</span>
+
+                    <div id="slider" x-mojo-element="Slider"></div><span id="fetchSize" class="palm-text-wrapper" x-mojo-loc="">Items:</span>
+
+                    <table class="palm-list-section-label"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

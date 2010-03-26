@@ -1,0 +1,140 @@
+<div id="search-main">
+    <div id="header" class="palm-header left truncating-text">
+        <div class="palm-header-wrapper">
+            <div id='now-playing-button' class="now-playing-button" x-mojo-tap-highlight="immediate">
+                <div class="now-playing-wrapper">
+                    <span x-mojo-loc=''>Now Playing</span>
+                </div>
+            </div>
+
+            <div class='header-body'>
+                <div class='icon'><img class="icon-img" src='images/icons/search.png'></div>
+
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>
+                    Search
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="spacerDiv" class="music-header-spacer"></div>
+
+    <div id="search-group" class="palm-group unlabeled mainMenuList">
+        <div id="search-list" class="palm-list">
+            <div class="palm-row first">
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <!--<div class="icon search left"><img class="mainMenuIcon" src="images/icons/search.png"></div>                                       -->
+                        <span class="search-term-find" x-mojo-loc=''>Find...</span>
+
+                        <div id="search-field" class="search-test" x-mojo-element="TextField"></div>
+                    </div>
+
+                    <div id="notifyuser-back" class="notifyuser-back">
+                        <div class="search-back-text">
+                            Press
+                        </div>
+                        <div class="search-back-icon"></div>
+                        <div class="search-back-text">
+                            again to exit
+                        </div>
+                    </div>
+                </div><!--<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">-->
+                <!--    <div class="title">-->
+                <!--        <!==<div class="image">-->
+                <!--            <img class="mainMenuIcon" src="images/icons/search.png">-->
+                <!--            </img>-->
+                <!--        </div>-->
+                <!--        <div class="label left">Find...</div>-->
+                <!--        <div class="search-term" x-mojo-element="TextField" id="search-field"></div>-->
+                <!--    </div>-->
+                <!--</div>-->
+            </div>
+
+            <div class="palm-row" id='searchArtists' x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">
+                            Artists
+                        </div>
+                    </div>
+
+                    <div class="search-icon"><img class="mainMenuIcon" src="images/icons/artists.png"></div>
+
+                    <div class="search-enter"><img id="search-Artists" name="search-Artists"></div>
+                </div>
+            </div>
+
+            <div class="palm-row" id='searchAlbums' x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">
+                            Albums
+                        </div>
+                    </div>
+
+                    <div class="search-icon"><img class="mainMenuIcon" src="images/icons/albums.png"></div>
+
+                    <div class="search-enter"><img id="search-Albums" name="search-Albums"></div>
+                </div>
+            </div>
+
+            <div class="palm-row" id='searchSongs' x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">
+                            Songs
+                        </div>
+                    </div>
+
+                    <div class="search-icon"><img class="mainMenuIcon" src="images/icons/songs.png"></div>
+
+                    <div class="search-enter"><img id="search-Songs" name="search-Songs"></div>
+                </div>
+            </div>
+
+            <div class="palm-row" id='searchPlaylists' x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">
+                            Playlists
+                        </div>
+                    </div>
+
+                    <div class="search-icon"><img class="mainMenuIcon" src="images/icons/playlists.png"></div>
+
+                    <div class="search-enter"><img id="search-Playlists" name="search-Playlists"></div>
+                </div>
+            </div><!--
+            <div class="palm-row" id='searchGenres' x-Mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">
+                            Genres
+                        </div>
+                    </div>
+                    <div class="mainMenuRight">
+                        <img class="mainMenuIcon" src="images/icons/genres.png">
+                        </img>
+                    </div>
+                    <div class="mainMenuClear">
+                    </div>
+                </div>
+            </div>-->
+
+            <div class="palm-row last" id='searchGlobal' x-mojo-tap-highlight="momentary">
+                <div class="palm-row-wrapper">
+                    <div class="mainMenuLeft">
+                        <div class="mainMenuTitle">
+                            Global
+                        </div>
+                    </div>
+
+                    <div class="search-icon"><img class="mainMenuIcon" src="images/icons/global.png"></div>
+
+                    <div class="search-enter"><img id="search-Global" name="search-Global"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1245 @@
+/*
+    Copyright (c) Ampache Mobile
+    All rights reserved.
+
+    This file is part of Ampache Mobile.
+
+    Ampache Mobile is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Ampache Mobile is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/***********************************************/
+/*   Global CSS
+/**********************************************/
+.palm-scrim{
+    z-index:10000; 
+}
+
+html, body {
+height: 100%;
+margin: 0;
+padding: 0;
+}
+
+.palm-row
+{
+}
+
+.palm-dark .palm-row
+{
+}
+
+
+.ampache-mobile-scene
+{
+    
+}
+
+a:link {
+    COLOR: grey;
+}
+
+.wallpaper{
+        -webkit-background-size : 100%;
+        background-repeat:no-repeat;
+}
+
+/*#ampache-main*/
+/*{*/
+/*  width: 100%;*/
+/*  margin: 0 0 0 0;*/
+/*  clear: both;*/
+/*  z-index: 1;*/
+/*  position: relative;*/
+/*  text-align: left;*/
+/*}*/
+
+
+
+.count-pill-container {
+        height: 26px;
+        border-width: 0px 11px;
+        -webkit-border-image: url(../images/count-pill-9tile.png) 0 11 0 11 repeat repeat;
+        -webkit-box-sizing: border-box;
+        position: absolute;
+        z-index: 5;
+        right: 65px;
+        text-align: center;
+        margin-top: 3px;
+}              
+
+.count-pill-wrapper {
+        font-size: 14px;
+        font-weight:500;
+        margin: 1px -2px 0px -2px;
+        color:white;
+}
+
+
+.progress-widget-width {
+    width: 200px;
+}
+
+
+.customBackgroundSolid{
+    background-size: 100%;
+    z-index: -1;
+    opacity:0.5;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 320px;
+    height: 480px;
+}
+
+.customBackgroundImage{
+    background: url(../images/background_alpha.png) top left repeat;
+    background-size: 100%;
+    z-index: -1;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.ampacheMobileTitle
+{
+    /* /*color: white;*/
+    padding: 5px 15px 5px 15px;
+}
+
+.ampacheMobileDesc {
+    /* /*color: white;*/
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
+}
+
+.shuffleRow{
+        /*
+        border:solid;
+        border-width:thin;
+        border-color:white;*/
+}
+.shuffleLeft
+{
+    float:left;
+}
+
+.shuffleAllText
+{
+    vertical-align:bottom;
+    margin:15px 0px 0px 15px;
+}
+
+.shuffleAllIcon
+{
+    margin:10px 0px 0px 10px;
+}
+
+.songsMenuLeft
+{
+    float:left;
+    width:90%;
+}
+
+.npListIcon
+{
+   position:absolute;
+   left:-2px;
+   margin-top:12px;
+}
+
+.npIndex
+{
+    float:left;
+    margin-left:24px;
+    margin-top:12px;
+}
+
+.npMenuLeft
+{
+    float:left;
+    width:76%;
+    margin-left:-5px;
+}
+
+
+
+.songsMenuRight
+{
+    position:absolute;
+    right:0px;
+    /*float:right;
+    width:20%;*/
+}
+
+.npMenuRight
+{
+    position:absolute;
+    right:0px;
+    margin-top:35px;
+    /*float:right;
+    width:20%;*/
+}
+
+.songsMenuIcon
+{
+    margin:5px 5px 5px 0px;
+    height:40px;
+    width:40px;
+}
+
+.mainMenuLeft
+{
+    float:left;
+    width:80%;
+}
+
+.mainMenuRight
+{
+    position:absolute;
+    right:5px;
+    /*float:right;
+    width:20%;*/
+}
+
+.mainMenuClear
+{
+    float:none;
+}
+
+.mainMenuIcon
+{
+    margin:5px 20px 5px 0px;
+    height:40px;
+    width:40px;
+}
+
+.extended-alpha
+{
+    position:relative;
+    top:-6px;
+    left:-480px;
+}
+
+.extend-alpha
+{
+    position:relative;
+    left:480px;
+    width:100%;
+    margin-bottom:10px;
+    z-index:-1;
+    background: url(../images/thick-border.png) repeat-x bottom;
+}
+
+.shuffleRight
+{
+    float:right;
+    margin-right:20px;
+}
+.shuffleClear
+{
+    float:none;
+}
+
+.shuffleIcon
+{
+    background-image: url(../images/big-shuffle.png);
+}
+
+.albumLeft
+{
+    float:left;
+    width:85%;
+}
+
+.albumRight
+{
+    float:right;
+    width:15%;
+}
+
+.albumClear
+{
+    float:none;
+}
+
+.center-text{
+    text-align:center;
+}
+.small-font{
+    font-size:small;
+}
+
+.listArt
+{
+    margin: 3px 10px 3px 3px;
+}
+
+.random-album-spinner
+{
+    position:absolute;
+    z-index: 5;
+    top:150px;
+}
+
+.spinner-center{
+    left: 150px;
+}
+
+
+
+.spinner-right{
+    right: 30px;
+}
+
+.spinner-left
+{
+   
+}
+
+.arrow-right{
+    right: 30px;
+}
+
+.arrow-left
+{
+   left:30px;
+}
+
+
+.spinner-arrow{
+
+    z-index: 4;
+}
+
+
+
+
+
+.centerSpinner{
+    position:fixed;
+    left: 96px;
+    top: 120px;
+    z-index: 98001;
+}
+
+.nowPlayingSpinner{
+    position:fixed;
+    z-index: 10;
+}
+
+.spinner-message
+{
+    position:absolute;
+    /*left: 20%;*/
+    width:inherit;
+    top: 128px;
+    font-size:smaller;
+    text-align:center;
+    /*color:white;*/
+}
+
+#overlaySelector
+{
+    /*color:white;*/
+}
+
+#AccountList .AccountName {
+     /*color: white;*/
+    padding: 0 15px 10px 15px;
+}
+
+#AccountList .ServerURL {
+     /*color: white;*/
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
+}
+
+.OneLineTitle {
+     /*color: white;*/
+    padding: 5px 15px 5px 15px;
+}
+
+.OneLineDesc {
+    text-align:right;
+     /*color: white;*/
+    padding: 0px 15px 5px 15px;
+    font-size:small;
+}
+
+.mainMenuDesc {
+    /*color: white;*/
+    /*margin-top: -10px;*/
+    padding: 0 15px 10px 15px;
+    font-size:small;
+}
+
+.mainMenuTitle {
+    /*color: white;*/
+    margin-top: 10px;
+    padding: 0px 15px 10px 15px;
+}
+
+.mainMenuDesc {
+    /*color: white;*/
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
+}
+
+.mainMenuTitle {
+    /*color: white;*/
+    padding: 0 15px 10px 15px;
+}
+
+.artistTitle
+{
+    /*color: white;*/
+    padding: 5px 15px 5px 15px;
+}
+
+.songTitle
+{
+    /*color: white;*/
+    padding: 5px 15px 5px 15px;
+}
+
+.songDesc {
+    /*color: white;*/
+    margin-top: -8px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
+}
+
+#albumsFilterList .artistAlbumTitle
+{
+    /*color: white;*/
+    padding: 0 15px 10px 15px;
+}
+
+.artistAlbumDescRight
+{
+    float: right;
+    margin-left:-300px;
+    margin-top: -10px;
+    padding: 0 15px 10px 2px;
+    font-size:small;
+}
+
+.artistAlbumDescLeft
+{
+    float: left;
+    margin-right:-300px;
+    margin-top: -10px;
+    padding: 0 2px 10px 15px;
+    font-size:small;
+}
+
+
+#albumsFilterList .artistAlbumDesc {
+     /*color: white;*/
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
+}
+
+
+
+.palm-menu.view-menu.palm-default,
+.palm-menu.command-menu.palm-default,
+.palm-menu .palm-menu-fade {
+    background: none !important;
+}
+
+body.wallpaper,
+body.palm-default {
+    background-size: 100%;
+}
+
+
+
+.music-streaming .title-left
+{
+     /*color: white;*/
+    font-size:small;
+}
+
+.music-streaming .stream-debug {
+    position:relative;
+    top:-29px;
+     /*color: white;*/
+    font-size:small;
+    font-weight:bold;
+    width:96%;
+    left:2%;
+    text-align:center;
+}
+
+.music-streaming .artist-album-title {
+    margin-bottom:1px;
+     /*color: white;*/
+    font-size:small;
+    font-weight:bold;
+    width:96%;
+    left: 2%;
+    text-align:center;
+    position: relative;
+}
+
+.music-streaming .stream-title {
+    margin-top:-5px;
+     /*color: white;*/
+    font-size:medium;
+    font-weight:bold;
+    width:96%;
+    left: 2%;
+    text-align:center;
+    position: relative;
+    
+}
+
+
+
+
+.music-streaming .stream-info {
+    position:relative;
+    top:-13px;
+}
+
+.music-streaming .stream-info .elapsed,
+.music-streaming .stream-info .duration {
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.music-streaming .stream-info .elapsed {
+    text-align: left;
+}
+
+.music-streaming .stream-info .elapsed,
+.music-streaming .stream-info .duration {
+    font-size: 14px;
+    display: table-cell;
+    text-align: center;
+    width: 20%;
+}
+
+.buffering-animation-container {
+    position: relative;
+    width: 128px;
+    height: 167px;
+    margin: 0px auto;
+    padding-top: 95px;
+}
+
+/*
+.stream-buffer-bar {
+    width: 200px;
+}*/
+
+
+.palm-menu-icon.load-progress {
+                background-image: url(../images/progress-indicator.png);
+                width: 48px;
+                height: 48px;
+                left: -24px;
+                margin-top: -8px;
+}
+
+
+.palm-menu-icon.load-progress.progress-0 {
+                background-position: 0px 0px;
+}
+.palm-menu-icon.load-progress.progress-1 {
+                background-position: 0px -48px;
+}
+.palm-menu-icon.load-progress.progress-2 {
+                background-position: 0px -96px;
+}
+.palm-menu-icon.load-progress.progress-3 {
+                background-position: 0px -144px;
+}
+.palm-menu-icon.load-progress.progress-4 {
+                background-position: 0px -192px;
+}
+.palm-menu-icon.load-progress.progress-5 {
+                background-position: 0px -240px;
+}
+.palm-menu-icon.load-progress.progress-6 {
+                background-position: 0px -288px;
+}
+.palm-menu-icon.load-progress.progress-7 {
+                background-position: 0px -336px;
+}
+.palm-menu-icon.load-progress.progress-8 {
+                background-position: 0px -384px;
+}
+.palm-menu-icon.load-progress.progress-9 {
+                background-position: 0px -432px;
+}
+.palm-menu-icon.load-progress.progress-10 {
+                background-position: 0px -480px;
+}
+.palm-menu-icon.load-progress.progress-11 {
+                background-position: 0px -528px;
+}
+.palm-menu-icon.load-progress.progress-12 {
+                background-position: 0px -576px;
+}
+.palm-menu-icon.load-progress.progress-13 {
+                background-position: 0px -624px;
+}
+.palm-menu-icon.load-progress.progress-14 {
+                background-position: 0px -672px;
+}
+.palm-menu-icon.load-progress.progress-15 {
+                background-position: 0px -720px;
+}
+.palm-menu-icon.load-progress.progress-16 {
+                background-position: 0px -768px;
+}
+.palm-menu-icon.load-progress.progress-17 {
+                background-position: 0px -816px;
+}
+.palm-menu-icon.load-progress.progress-18 {
+                background-position: 0px -864px;
+}
+.palm-menu-icon.load-progress.progress-19 {
+                background-position: 0px -912px;
+}
+.palm-menu-icon.load-progress.progress-20 {
+                background-position: 0px -960px;
+}
+.palm-menu-icon.load-progress.progress-21 {
+                background-position: 0px -1008px;
+}
+.palm-menu-icon.load-progress.progress-22 {
+                background-position: 0px -1056px;
+}
+.palm-menu-icon.load-progress.progress-23 {
+                background-position: 0px -1104px;
+}
+.palm-menu-icon.load-progress.progress-24 {
+                background-position: 0px -1152px;
+}
+.palm-menu-icon.load-progress.progress-25 {
+                background-position: 0px -1200px;
+}
+
+
+.palm-menu-icon.buffering {
+                background-image: url(../images/progress-spinner.png);
+                width: 32px;
+                height: 32px;
+                left: -16px;
+                /*margin-top: -8px;*/
+}
+.palm-menu-icon.buffering.progress-0 {
+                background-position: 0px 0px;
+}
+.palm-menu-icon.buffering.progress-1 {
+                background-position: 0px -32px;
+}
+.palm-menu-icon.buffering.progress-2 {
+                background-position: 0px -64px;
+}
+.palm-menu-icon.buffering.progress-3 {
+                background-position: 0px -96px;
+}
+.palm-menu-icon.buffering.progress-4 {
+                background-position: 0px -128px;
+}
+.palm-menu-icon.buffering.progress-5 {
+                background-position: 0px -160px;
+}
+.palm-menu-icon.buffering.progress-6 {
+                background-position: 0px -192px;
+}
+.palm-menu-icon.buffering.progress-7 {
+                background-position: 0px -224px;
+}
+.palm-menu-icon.buffering.progress-8 {
+                background-position: 0px -256px;
+}
+.palm-menu-icon.buffering.progress-9 {
+                background-position: 0px -288px;
+}
+.palm-menu-icon.buffering.progress-10 {
+                background-position: 0px -320px;
+}
+.palm-menu-icon.buffering.progress-11 {
+                background-position: 0px -352px;
+}
+.palm-menu-icon.buffering.progress-12 {
+                background-position: 0px -384px;
+}
+
+
+
+.palm-menu-icon.ampache-spinner {
+                background-image: url(../images/gnome-spinner.png);
+                width: 32px;
+                height: 32px;
+                left: -16px;
+                /*margin-top: -8px;*/
+}
+.palm-menu-icon.ampache-spinner.progress-0 {
+                background-position: 0px 0px;
+}
+.palm-menu-icon.ampache-spinner.progress-1 {
+                background-position: -32px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-2 {
+                background-position: -64px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-3 {
+                background-position: -96px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-4 {
+                background-position: -128px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-5 {
+                background-position: -160px -0px;
+}
+.palm-menu-icon.ampache-spinner.progress-6 {
+                background-position: 0px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-7 {
+                background-position: -32px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-8 {
+                background-position: -64px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-9 {
+                background-position: -96px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-10 {
+                background-position: -128px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-11 {
+                background-position: -160px -32px;
+}
+.palm-menu-icon.ampache-spinner.progress-12 {
+                background-position: -0px -64px;
+}
+.palm-menu-icon.ampache-spinner.progress-13 {
+                background-position: -32px -64px;
+}
+.palm-menu-icon.ampache-spinner.progress-14 {
+                background-position: -64px -64px;
+}
+.palm-menu-icon.ampache-spinner.progress-15 {
+                background-position: 96px 64px;
+}
+.palm-menu-icon.ampache-spinner.progress-16 {
+                background-position: 128px 64px;
+}
+.palm-menu-icon.ampache-spinner.progress-17 {
+                background-position: 160px 64px;
+}
+
+
+
+
+
+.palm-menu-icon.load-search {
+                background-image: url(../images/browser-indeterminate-progress.png);
+                width: 48px;
+                height: 48px;
+                left: -24px;
+                margin-top: -8px;
+}
+.palm-menu-icon.load-search.progress-0 {
+                background-position: 0px 0px;
+}
+.palm-menu-icon.load-search.progress-1 {
+                background-position: 0px -48px;
+}
+.palm-menu-icon.load-search.progress-2 {
+                background-position: 0px -96px;
+}
+.palm-menu-icon.load-search.progress-3 {
+                background-position: 0px -144px;
+}
+.palm-menu-icon.load-search.progress-4 {
+                background-position: 0px -192px;
+}
+.palm-menu-icon.load-search.progress-5 {
+                background-position: 0px -240px;
+}
+.palm-menu-icon.load-search.progress-6 {
+                background-position: 0px -288px;
+}
+.palm-menu-icon.load-search.progress-7 {
+                background-position: 0px -336px;
+}
+.palm-menu-icon.load-search.progress-8 {
+                background-position: 0px -384px;
+}
+.palm-menu-icon.load-search.progress-9 {
+                background-position: 0px -432px;
+}
+.palm-menu-icon.load-search.progress-10 {
+                background-position: 0px -480px;
+}
+.palm-menu-icon.load-search.progress-11 {
+                background-position: 0px -528px;
+}
+.palm-menu-icon.load-search.progress-12 {
+                background-position: 0px -576px;
+}
+
+
+
+
+.palm-menu-icon.music-shuffle { background-image: url(../images/player/shuffle.png); }
+.palm-menu-icon.music-forward { background-image: url(../images/player/forward.png); }
+.palm-menu-icon.music-play { background-image: url(../images/player/play.png); }
+.palm-menu-icon.music-rewind { background-image: url(../images/player/backward.png); }
+.palm-menu-icon.music-forward-disabled { background-image: url(../images/player/menu-icon-music-forward-disabled.png); }
+.palm-menu-icon.music-play-disabled { background-image: url(../images/player/menu-icon-music-play-disabled.png); }
+.palm-menu-icon.music-rewind-disabled { background-image: url(../images/player/menu-icon-music-rewind-disabled.png); }
+.palm-menu-icon.music-pause { background-image: url(../images/player/pause.png); }
+.palm-menu-icon.music-stop { background-image: url(../images/player/menu-icon-music-stop.png); }
+.palm-menu-icon.music-repeat-one { background-image: url(../images/player/menu-icon-music-repeat-one.png); }
+.palm-menu-icon.music-repeat { background-image: url(../images/player/menu-icon-music-repeat.png); }
+
+
+/*
+ * Now Playing in Header 
+ */
+
+.palm-header { overflow: visible; } 
+.now-playing-button { display: none; }
+
+.palm-header .palm-header-wrapper {
+    margin: 0 -15px 0px 0px;
+}
+
+.now-playing-button {
+    height: 33px;
+    border-width: 0px 15px;
+    -webkit-border-image: url(../images/selector-header-gray.png) 0 15 0 15 stretch stretch;
+    -webkit-box-sizing: border-box;
+    float: right;
+    margin-top: 9px;
+}
+
+.now-playing-button.selected {
+    -webkit-border-image: url(../images/selector-headerpress-gray.png) 0 15 0 15 stretch stretch;
+}
+
+.now-playing-button .now-playing-wrapper {
+    margin: 0 -5px;
+    line-height: 30px;
+}
+
+
+
+
+.header-body .icon
+{
+    position:relative;
+    margin-left:-5px;
+    width:32px;
+    height:32px;
+}
+
+.header-body .icon .icon-img
+{
+    margin-top:9px;
+    width:32px;
+    height:32px;
+}
+.header-body .scene-title
+{
+    position:relative;
+    margin-top:-31px;
+    margin-left:33px;
+}
+
+.music-header-spacer {
+  height: 50px;
+  width: 100%;
+}
+
+
+.artist-header-spacer {
+  height: 55px;
+  width: 100%;
+}
+
+
+
+
+
+
+
+
+
+.shuffle-all-list-item .title {
+        max-width: 220px;
+        padding-top: 20px;
+        padding-bottom: 25px;
+         /*color: white;*/
+}
+
+
+.thick-bottom-border {
+        height: 7px;
+        background: url(../images/thick-border.png) repeat-x bottom;
+}
+
+
+.palm-header .toggle-view-icon {
+    width: 30px;
+    height: 48px;
+    float: left;
+}
+
+.palm-header .toggle-view-icon.list {
+    background: url(../images/list-view-header-icon.png) left center no-repeat;
+}
+
+.palm-header .toggle-view-icon.album {
+    background: url(../images/album-view-header-icon.png) left center no-repeat;
+}
+
+.palm-header .song-x-of-y {
+    font-size: 14px;
+    color: #999;
+    float: right;
+    margin-right: 15px;
+    text-align: right;
+}
+
+/* 
+ * Now Playing More Popup 
+ */
+.toggle-inlay {
+        float: right;
+        width: 120px;
+        height: 50px;
+        margin-right: -3px;
+        margin-left: -26px;
+}
+.toggle-list-view,
+.toggle-album-view {
+        float: right;
+        height: 50px;
+        width: 50px;
+        margin: 0px;
+        border-width: 0 25px;
+        -webkit-box-sizing: border-box;
+}
+.toggle-list-view > img,
+.toggle-album-view > img {
+        margin: 9px 0px 0px -18px;
+}
+.toggle-list-view > img {
+  margin-left: -12px;
+}
+
+.toggle-list-view {
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
+}                             
+.toggle-album-view {          
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
+}                             
+.toggle-list-view.depressed { 
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
+}                             
+.toggle-album-view.depressed {
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
+}
+
+.toggle-list-view.selected  {
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
+}                             
+.toggle-album-view.selected {          
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
+}                             
+.toggle-list-view.depressed.selected { 
+        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
+}                             
+.toggle-album-view.depressed.selected {
+        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
+}
+
+
+.palm-alpha-divider.black-glass {
+    background: url(../images/alpha-divider-black-glass.png) center left no-repeat;
+    height: 20px;
+}
+
+.palm-alpha-divider.black-glass div {
+    top: 0;
+    margin-top: -4px;
+}
+
+.palm-divider.labeled .left {
+    height: 20px;
+    background: url(../images/thick-border.png) repeat-x center;
+}
+
+.palm-divider.labeled .right {
+    margin-top: 50px;
+    background: url(../images/thick-border.png) repeat-x left;
+}
+
+.palm-divider .label {
+    color: #FFFFFF;
+    text-shadow: #000000 0px 1px 0px;
+}
+
+
+
+
+.filter-field-container-height {
+  height: 96px;
+}
+
+.progressDone {
+        position: absolute;
+        left: 0px;
+        width: 0%;
+        height: 51px;
+        display: inline-block;
+        margin-top: -1px;
+        /*float: left;*/
+        background-color: #181818;
+        z-index: -2;
+        opacity:0.6;
+        
+}
+
+.timeLoaded {
+        position: absolute;
+        left: 0px;
+        width: 0%;
+        height: 51px;
+        margin-top: -1px;
+        display: inline-block;
+        float: left;
+        background-color: #6095C1;
+        z-index: -1;
+        opacity:0.9;
+}
+
+.ampache-version{
+        /*position:absolute;
+        right:10px;*/
+        bottom:10px;
+        position:fixed;
+        margin-top:10px;
+        width:100%;
+        text-align:center;
+        font-size:11px;
+        color:white;
+}
+
+.about
+{
+     font-size:smaller;   
+}
+
+.about-details
+{
+margin-left:10px;       
+}
+
+.about-details-data
+{
+        position:absolute;
+        left:55px;
+}
+
+#playback-display
+{
+        position:fixed;
+        top:50px;
+        width:100%;
+        /*display:none;*/
+}
+
+#list-display{
+    /*display:none;*/
+}
+
+.loaded-display
+{
+        
+}
+
+.nplist-time {
+    position:absolute;
+    right:10px;
+     /*color: white;*/
+    font-size:small;
+    /*border:solid;*/
+}
+
+.nplist-progess
+{
+   margin-top:8px;
+}
+.nplist-remaining
+{
+   margin-top:28px;
+}
+
+/***********************************************/
+/*   Search Menu
+/**********************************************/
+.search-text
+{
+    text-align:right;
+    width:100%;
+}
+
+.search-enter{
+    position:absolute;
+    margin-top:15px;
+    right:70px;
+    height:17px;
+    width:19px;
+}
+
+.search-icon
+{
+    position:absolute;
+    right:5px;
+}
+
+
+
+
+.search-test {   
+	display: inline-block;  
+	/*width: 168px;*/
+	margin-left: 3px;       
+	height: 35px;
+    
+}
+.search-test.text-hidden {
+	font-size:0px; 
+	opacity: 0;
+    
+}
+.search-test-find {
+	padding-left: 8px;
+    
+}
+.search-test input,
+.search-test .truncating-text {     
+        /*color: #fff;*/
+	/*text-align: right;*/
+	margin-right: -2px;
+}
+
+#search-main.icon
+{
+    width:24px;
+    height:24px;
+}
+
+.notifyuser-back
+{
+    font-size:14px;
+    /*border:solid;*/
+    height:14px;
+    /*width:130px;*/
+    top: 80px;
+    right: 20px;
+    position:absolute;
+    display:none;
+    
+}
+
+.search-back-icon{
+    background: url(../images/back.png) center left no-repeat;
+    height:13px;
+    width:13px;
+    -webkit-background-size : 100%;
+    float:left;
+    vertical-align:bottom;
+    display:inline;
+    position:relative;
+    bottom:-3px;
+    opacity:0.4;
+    
+}
+
+.search-back-text{
+    float:left;
+    height:inherit;
+    vertical-align:middle;
+    margin:0px 3px 0px 3px;
+    font-weight:bold;
+    opacity:0.4;
+}
+
+/***********************************************/
+/*   Text Selector Scene
+/**********************************************/
+.example-color-text{
+    width:100%;
+    text-align:center;
+    /*border:solid;*/
+    position:relative;
+    margin-bottom:-10px;
+    margin-top:10px;
+    
+}
+
+#use-color-group{
+    margin-top:-23px;
+}
+
+/***********************************************/
+/*   Preferences Scene
+/**********************************************/
+.preview-box
+{
+    width:320px;
+    height:480px;
+    -webkit-background-size : 100%;
+}
+
+.pref-icon{
+    position:absolute;
+    left:260px;
+}
+
+
+/***********************************************/
+/*   Whats New Scene
+/**********************************************/
+.new-version-header{
+   font-size:small;
+   font-weight:bold;
+}
+
+.new-version-list
+{
+    font-size:small;
+    margin-left:-15px;
+}
+
+.collapsor {
+	overflow: hidden; 
+}   
