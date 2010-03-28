@@ -445,7 +445,7 @@ RandomAssistant = Class.create({
     activate: function(event) {
         // Now Playing Button
         var button = this.controller.get('now-playing-button');
-        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block': 'none';
+        button.style.display = AmpacheMobile.audioPlayer.hasPlayList ? 'block': 'none';
         this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
     },

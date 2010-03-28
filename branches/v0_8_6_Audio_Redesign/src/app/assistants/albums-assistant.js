@@ -534,8 +534,8 @@ AlbumsAssistant = Class.create({
 
     activate: function(event) {
         this.itemsHelper.Activate();
-        this.appMenuModel.items[1].items[0].disabled= !AmpacheMobile.audioPlayer.PlayListPending;
-        this.appMenuModel.items[1].items[1].disabled= !AmpacheMobile.audioPlayer.PlayListPending;
+        this.appMenuModel.items[1].items[0].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
+        this.appMenuModel.items[1].items[1].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
     },
 
     deactivate: function(event) {

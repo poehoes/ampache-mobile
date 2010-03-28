@@ -161,7 +161,7 @@ SongsAssistant = Class.create({
                 command: "play-justone"
             };
 
-            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+            if (AmpacheMobile.audioPlayer.hasPlayList === true) {
 
                 filteredCmd[i++] = {
                     label: "Enqueue " + song.title,
@@ -260,7 +260,7 @@ SongsAssistant = Class.create({
             return;
         }
 
-        if (!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === false)) {
+        if (!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.hasPlayList === false)) {
 
             if (this.itemsHelper.ItemsList.length > 0) {
                 this.controller.stageController.pushScene({
@@ -280,7 +280,7 @@ SongsAssistant = Class.create({
             var i = 0;
             var filteredCmd = [];
 
-            if (this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.PlayListPending === true)) {
+            if (this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.hasPlayList === true)) {
                 filteredCmd[i++] = {
                     label: "Shuffle All Songs",
                     command: "play-songs-shuffle"
@@ -295,14 +295,14 @@ SongsAssistant = Class.create({
                 };
             }
 
-            if (this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === true)) {
+            if (this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.hasPlayList === true)) {
                 filteredCmd[i++] = {
                     label: "Enqueue Filtered Shuffled",
                     command: "enqueue-filtered-shuffle"
                 };
             }
 
-            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+            if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                 filteredCmd[i++] = {
                     label: "Enqueue All Shuffled",
                     command: "enqueue-songs-shuffle"
@@ -453,7 +453,7 @@ SongsAssistant = Class.create({
                 items: editCmd
             });
         } else {
-            if (!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === false)) {
+            if (!this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.hasPlayList === false)) {
                 var playList = this.itemsHelper.ItemsList;
                 this.controller.stageController.pushScene({
                     transition: AmpacheMobile.Transition,
@@ -473,7 +473,7 @@ SongsAssistant = Class.create({
                 item._this = this;
                 item._event = event;
 
-                if (this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.PlayListPending === true)) {
+                if (this.itemsHelper.IsFiltered() || (AmpacheMobile.audioPlayer.hasPlayList === true)) {
                     filteredCmd[i++] = {
                         label: "Play All Songs",
                         command: "play-songs"
@@ -488,14 +488,14 @@ SongsAssistant = Class.create({
                     };
                 }
 
-                if (this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.PlayListPending === true)) {
+                if (this.itemsHelper.IsFiltered() && (AmpacheMobile.audioPlayer.hasPlayList === true)) {
                     filteredCmd[i++] = {
                         label: "Enqueue Filtered Songs",
                         command: "enqueue-filtered"
                     };
                 }
 
-                if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+                if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                     filteredCmd[i++] = {
                         label: "Enqueue All Songs",
                         command: "enqueue-songs"

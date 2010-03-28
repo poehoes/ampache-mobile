@@ -150,9 +150,9 @@ MainmenuAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.hold, this.listHeldHandler);
 
-        if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+        if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                 AmpacheMobile.audioPlayer.stop();
-                AmpacheMobile.audioPlayer.PlayListPending = false;
+                AmpacheMobile.audioPlayer.hasPlayList = false;
         }
         
         
@@ -403,7 +403,7 @@ MainmenuAssistant = Class.create({
     activate: function(event) {
         // Now Playing Button
         var button = this.controller.get('now-playing-button');
-        button.style.display = AmpacheMobile.audioPlayer.PlayListPending ? 'block': 'none';
+        button.style.display = AmpacheMobile.audioPlayer.hasPlayList ? 'block': 'none';
         this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
         
@@ -458,13 +458,13 @@ MainmenuAssistant = Class.create({
         
         if(event.type === Mojo.Event.forward)
         {
-            if(AmpacheMobile.audioPlayer.PlayListPending === true)
+            if(AmpacheMobile.audioPlayer.hasPlayList === true)
             {
                 this.showNowPlaying();
             }
         }
         else if (event.type === Mojo.Event.back) {
-            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+            if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                 event.preventDefault();
                 event.stopPropagation();
                 this.controller.showAlertDialog({
