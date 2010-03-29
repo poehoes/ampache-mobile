@@ -150,7 +150,8 @@ removeSong: function(index){
        
         var currentSong = this.songs[this.current];
         this.songs.splice(this.current, 1);
-        this.songs.sort(this.randBool);       
+        this.songs.sort(this.randBool);
+        this.songs.sort(this.randBool);    
         this.songs.unshift(currentSong);
         for (var i = 0; i < this.songs.length; i++) {
             this.songs[i].index = i+1;
