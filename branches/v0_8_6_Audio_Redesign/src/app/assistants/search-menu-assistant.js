@@ -176,7 +176,7 @@ SearchMenuAssistant = Class.create({
     },
 
     searchForAlbums: function() {
-        if (this.searchCriteria(3)) {
+        if (this.searchCriteria(2)) {
             var numAlbums = parseInt(AmpacheMobile.ampacheServer.albums, 10);
             if (numAlbums !== 0) {
                 this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "albums"}, {
@@ -190,7 +190,7 @@ SearchMenuAssistant = Class.create({
     },
 
     searchForPlaylists: function() {
-        if (this.searchCriteria(3)) {
+        if (this.searchCriteria(2)) {
             var numPlaylists = parseInt(AmpacheMobile.ampacheServer.playlists, 10);
             if (numPlaylists !== 0) {
                 this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "playlists"}, {
@@ -203,7 +203,7 @@ SearchMenuAssistant = Class.create({
     },
 
     searchForGenres: function() {
-        if (this.searchCriteria(3)) {
+        if (this.searchCriteria(2)) {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10); //using numsongs because there is no num genres (numsongs is worst case)
             this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "genres"}, {
                 SceneTitle: "Genre Search: " + this.searchText,
@@ -213,7 +213,7 @@ SearchMenuAssistant = Class.create({
     },
 
     searchForSongs: function() {
-        if (this.searchCriteria(3)) {
+        if (this.searchCriteria(2)) {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
             this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "songs"}, {
                 SceneTitle: "Song Search: " + this.searchText,
@@ -226,7 +226,7 @@ SearchMenuAssistant = Class.create({
     },
 
     searchForGlobal: function() {
-        if (this.searchCriteria(3)) {
+        if (this.searchCriteria(2)) {
             var numSongs = parseInt(AmpacheMobile.ampacheServer.songs, 10);
             this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "songs"}, {
                 Type: "search-global",
@@ -239,7 +239,7 @@ SearchMenuAssistant = Class.create({
     },
 
     searchForArtists: function() {
-        if (this.searchCriteria(3)) {
+        if (this.searchCriteria(2)) {
             var numArtists = parseInt(AmpacheMobile.ampacheServer.artists, 10);
             if (numArtists !== 0) {
                 this.controller.stageController.pushScene({

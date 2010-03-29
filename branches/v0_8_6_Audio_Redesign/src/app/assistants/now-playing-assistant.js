@@ -206,9 +206,11 @@ NowPlayingAssistant = Class.create({
         }
         
         
+        this.keydownHandler = this.keydownHandler.bindAsEventListener(this);
+        this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.keydownHandler);
+        
         this.keypressHandler = this.handleKeyPressEvent.bindAsEventListener(this);
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
-        
         
         
         Mojo.Log.info("<-- setup");
@@ -225,6 +227,7 @@ NowPlayingAssistant = Class.create({
         AmpacheMobile.audioPlayer.clearNowPlaying();
         
         this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
+        this.controller.stopListening(this.controller.sceneElement, Mojo.Event.keydown, this.keydownHandler);
         
         this.slider = this.controller.get('sliderdiv');
         Mojo.Event.stopListening(this.slider, Mojo.Event.propertyChange, this.seekHandler);
@@ -271,6 +274,24 @@ NowPlayingAssistant = Class.create({
         
     },
     
+    
+    keydownHandler: function(event) {
+        
+        switch (Number(event.originalEvent.keyCode)) {
+            
+            
+           
+            case Mojo.Char.sym:
+                AmpacheMobile.audioPlayer.jump(10);
+                break;
+           
+            case Mojo.Char.shift:
+                AmpacheMobile.audioPlayer.jump(-10);
+                break;
+        }
+    },
+    
+    
     handleKeyPressEvent: function(event) {
         /*
          var eventModel =
@@ -309,17 +330,6 @@ NowPlayingAssistant = Class.create({
                 this.toggleRepeat();
                 break;
             
-            case 112: /* P */
-            case  80: /* P + Caps */
-            case  61: /* P + Orange */
-            /*case   8:Delete */
-                AmpacheMobile.audioPlayer.jump(15);
-                break;
-            case 113: /* Q */
-            case  81: /* Q + Caps */
-            case  47: /* Q + Orange */
-                AmpacheMobile.audioPlayer.jump(-15);
-                break;
             case 118: /* V */
             case  86: /* V + Caps */
                 this.toggleViews();
@@ -1040,7 +1050,7 @@ NowPlayingAssistant = Class.create({
                 break;
             case "keyboardCtrls-cmd":
                 this.controller.showAlertDialog({
-                    title: "Keyboard Controls",
+                    title: "Now Playing Controls",
                     message: Mojo.View.render({template:"now-playing/button-help"}),
                     allowHTMLMessage:true,
                     choices: [{
@@ -1228,7 +1238,7 @@ NowPlayingAssistant = Class.create({
         },
         
         {
-            label: "Keyboard Controls",
+            label: "Controls",
             command: "keyboardCtrls-cmd"
             
         },
