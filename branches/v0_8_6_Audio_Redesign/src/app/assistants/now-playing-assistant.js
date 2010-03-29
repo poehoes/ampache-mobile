@@ -186,7 +186,8 @@ NowPlayingAssistant = Class.create({
         
         AmpacheMobile.audioPlayer.debug = AmpacheMobile.settingsManager.settings.StreamDebug;
         if(AmpacheMobile.audioPlayer.debug){
-            $('stream-debug').innerHTML = "Stream Debug";
+            $('player-debug').innerHTML = "Player Debug";
+            $('buffer-debug').innerHTML = "Buffer Debug";
         }
         
 
@@ -286,7 +287,7 @@ NowPlayingAssistant = Class.create({
             case  64: /* (@) Comma */
             
             
-                AmpacheMobile.audioPlayer.previous();
+                AmpacheMobile.audioPlayer.previous(true);
                 break;
             
             case  46: /* (.) Period Key*/
@@ -390,6 +391,8 @@ NowPlayingAssistant = Class.create({
         
     },
     
+    
+    
     listReorderHandler:function(event)
     {
         AmpacheMobile.audioPlayer.reorder(event);
@@ -478,7 +481,7 @@ NowPlayingAssistant = Class.create({
             var coverArt = $('coverArt');
             
             var top = $('songTitle');
-            var bottom =  AmpacheMobile.audioPlayer.debug ? $('stream-debug') : $('progress-info');
+            var bottom =  AmpacheMobile.audioPlayer.debug ? $('buffer-debug') : $('progress-info');
             
             var header = $('albumArtist');
             
@@ -514,7 +517,7 @@ NowPlayingAssistant = Class.create({
             //this.moveArt();
         }
         if (event.velocity.x > 1500) {
-            AmpacheMobile.audioPlayer.previous();
+            AmpacheMobile.audioPlayer.previous(true);
         }
         Mojo.Log.info("<-- handleFlick");
     },
@@ -714,7 +717,7 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("--> hideSpinner");
         this.loadingAnimation.stop();
         this.spinnerShown = false;
-        if (!this.playing) {
+        if (AmpacheMobile.audioPlayer.player.paused) {
             this.cmdMenuModel.items[1].items[1] = this.playItem;
         } else {
             this.cmdMenuModel.items[1].items[1] = this.pauseStopItem;
@@ -734,6 +737,47 @@ NowPlayingAssistant = Class.create({
     InvalidateSong: function(song, index) {
         this.npList.mojo.invalidateItems(index, 1);
     },
+    
+    SetSongPointer:function(index, state)
+    {
+        var node = this.npList.mojo.getNodeByIndex(index);
+            
+                if(node)
+                {
+                    if(state === true)
+                    {
+                        node.getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
+                         try {
+                            this.npList.mojo.revealItem(index, false);
+                        }
+                        catch(ex)
+                        {}
+                    }
+                    else
+                    {
+                        node.getElementsByClassName("npListIcon")[0].src =  "images/player/empty.png";
+                    }
+                }
+    },
+    
+    SetBufferWait:function(index, state)
+    {
+        var node = this.npList.mojo.getNodeByIndex(index);
+            
+                if(node)
+                {
+                    if(state === true)
+                    {
+                        node.getElementsByClassName("npListIcon")[0].src = "images/icons/loading.png";
+                    }
+                    else
+                    {
+                        node.getElementsByClassName("npListIcon")[0].src =  "images/player/empty.png";
+                    }
+                }
+    },
+    
+    
     
     DisplaySongInfo: function(song, currentIndex) {
         
@@ -801,7 +845,8 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("<-- NowPlayingDisplaySongInfo");
     },
 
-    streamDebug: function(state) {
+    printDebug: function(state, isPlayer) {
+        state = event.type;
         var display = null;
         switch (state) {
         case "Downloading NaN%":
@@ -818,7 +863,8 @@ NowPlayingAssistant = Class.create({
             display = "Can Play Through";
             break;
         case "progress":
-            display = "Downloading";
+            var amtDownloaded = Math.round(event.currentTarget.amtBuffered*100)+ "%";
+            display = "Downloading " + amtDownloaded;
             break;
         case "stalled":
             display = "Stream loading stalled";
@@ -829,13 +875,23 @@ NowPlayingAssistant = Class.create({
         case "timeupdate":
             //Do nothing with this
             break;
+        case "durationchange":
+            display = "Found song length";
+            break;
         default:
             display = state;
             break;
         }
         if(display !== null)
         {
-            this.controller.get('stream-debug').innerHTML = display;
+        if(isPlayer===true)
+        {
+            this.controller.get('player-debug').innerHTML = "Player "+ event.currentTarget.song.index +": "+ display;
+        }
+        else
+        {
+            this.controller.get('buffer-debug').innerHTML = "Track "+ event.currentTarget.song.index +": " + display;
+        }
         }
     },
 
@@ -958,7 +1014,7 @@ NowPlayingAssistant = Class.create({
                 AmpacheMobile.audioPlayer.next(true);
                 break;
             case "rewind":
-                AmpacheMobile.audioPlayer.previous();
+                AmpacheMobile.audioPlayer.previous(true);
                 break;
             case "pause":
                 this.showPlayButton();
@@ -1076,11 +1132,19 @@ NowPlayingAssistant = Class.create({
     toggleShuffle: function() {
         this.shuffle = !this.shuffle;
         if (this.shuffle) {
-            AmpacheMobile.audioPlayer.toggleShuffleOn();
+            AmpacheMobile.audioPlayer.playList.shuffleOn();
+            
         } else {
-            AmpacheMobile.audioPlayer.toggleShuffleOff();
+            AmpacheMobile.audioPlayer.playList.shuffleOff();
         }
         this.setMenuControls();
+        this.npList.mojo.invalidateItems(0);
+        this.npList.mojo.revealItem(AmpacheMobile.audioPlayer.playList.current, false);
+        AmpacheMobile.audioPlayer.audioBuffers.sort(AmpacheMobile.audioPlayer.sortBuffers);
+        if(AmpacheMobile.audioPlayer.player.fullyBuffered === true)
+        {
+            AmpacheMobile.audioPlayer.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
+        }
     },
 
     playItem: {

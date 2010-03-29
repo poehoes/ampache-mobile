@@ -48,12 +48,15 @@ AudioPlayer = Class.create({
         //Create 2 audio objects to toggle between streaming and buffering
         //this.audioBuffers = [];
         this.audioBuffers = new Array();
+        this.bufferPool = new Array();
         var audioObj = null;
         for(var i =0; i < 3; i++) {
             audioObj = this.createAudioObj(i);
             this.addBufferingListeners(audioObj);
-            this.audioBuffers.push(audioObj);
+            this.bufferPool.push(audioObj);
         }
+        //this.player = this.audioBuffers[this.audioBuffers.length-1];
+        
     },
 
     createAudioObj: function (index) {
@@ -103,76 +106,131 @@ AudioPlayer = Class.create({
         }
         return null;
     },
+    
+    findActiveBuffer:function(){
+        for(var i=0; i<this.audioBuffers.length; i++) 
+        {
+            if((this.audioBuffers[i].fullyBuffered === false) && (this.audioBuffers[i].startedBuffering===true))
+            {
+                return this.audioBuffers[i];
+            }
+        }
+        return null;
+    },
 
-    moveToPlayer:function(song, reverse) {
+    getActiveBuffer:function(song)
+    {
+        for(var i=0; i<this.audioBuffers.length; i++) 
+        {
+            if((this.audioBuffers[i].isSong(song) === true) && (this.audioBuffers[i].startedBuffering===true))
+            {
+                return this.audioBuffers[i];
+            }
+            
+        }
+        return null;
+    },
+    
+    putThisBufferIntoPool:function(buffer)
+    {
+         for(var i=0; i<this.audioBuffers.length; i++) 
+        {
+            if(this.audioBuffers[i] === buffer)
+            {
+                this.removeBufferingListeners(buffer); 
+                                buffer.src = null;
+                buffer.fullyBuffered = false;
+                buffer.startedBuffering = false;
+                this.UIInvalidateSong(buffer.song);
+                buffer.song = this.blankSong;
+                
+                this.bufferPool.push(buffer);
+                buffer.empty();
+                this.audioBuffers.splice(i, 1);
+                this.audioBuffers.sort(_this.sortBuffers);
+            }
+            
+        }
+    },
+
+    loadSongIntoPlayer:function(player, song)
+    {
+        player.pause();
+        player.src = song.url;
+        player.song = song;
+        player.fullyBuffered = false;
+        player.startedBuffering=false;
+        player.amtBuffered = 0;
+        player.load();
+        this.UIShowSpinner(true);
+        return player;
+    },
+
+
+    moveToPlayer:function(song) {
         
         var player = null;
         var playerIndex =0;
-        //var shiftedPlayer=false;
+        var reverse = false;
         
+        
+        
+        
+        
+        //Capture Old buffers
         var oldTracks = []
         for(var i=0; i<this.audioBuffers.length; i++) 
         {
             oldTracks[i] = this.audioBuffers[i].song;
         }
         
-        
-        
-        if(this.player === null)
-        {
-            this.player=this.audioBuffers[0];
-        }
-        
-        this.removeStreamingListeners(this.player);
-        this.addBufferingListeners(this.player);
-
-
-        
-
-
-        for(var i=0; i<this.audioBuffers.length; i++) 
-        {
-            if((this.audioBuffers[i].isSong(song) === true) && (this.audioBuffers[i].startedBuffering===true))
+        //Cleanup old player
+        if(this.player)
+        {  
+            var direction = song.index - this.player.song.index;
+            if(direction<0)
             {
-                player = this.audioBuffers[i];
-                break;
+                reverse = true;
             }
+            this.removeStreamingListeners(this.player);
+            this.addBufferingListeners(this.player);
+        }
+    
+        
+        //first check if we've already buffered the song
+        player = this.getActiveBuffer(song);
+        
+        if(player === null)
+        {   //Song no currently in a buffer
             
-        }
+            //Check if there is another active buffer we can use
+            player = this.findActiveBuffer();
         
-        this.audioBuffers.sort(this.sortBuffers);
-        if(reverse === true)
-        {
-            this.audioBuffers.reverse();
-            oldSong = this.audioBuffers[0].song;
-        }
-        
-        //Song not already loaded in an audio object;
-        if(player===null)
-        {
-
-            if(this.player.fullyBuffered === false)
+            //If no active buffer, next check the buffer pool for a free buffer
+            if( (player===null) && (this.bufferPool.length!== 0) )
             {
-                player = this.player
-            }
-            else
-            {
-                player = this.audioBuffers.shift();
+                player = this.bufferPool.pop();
                 this.audioBuffers.push(player);
             }
-          
-            
-            
-            
-            player.pause();
-            player.src = song.url;
-            player.song = song;
-            player.fullyBuffered = false;
-            player.startedBuffering=false;
-            player.amtBuffered = 0;
-            player.load();
-            
-           
+        
+            //Player Requires load
+            if(player !== null)
+            {
+                 player = this.loadSongIntoPlayer(player,song);
+            }
+        }
+        
+        //at this point no active, pooled or buffered
+        if(player===null)
+        {
+            this.audioBuffers.sort(this.sortBuffers);
+            if(reverse === true)
+            {
+                this.audioBuffers.reverse();
+            }
+            player = this.audioBuffers.shift();
+            this.audioBuffers.push(player);  
+            player = this.loadSongIntoPlayer(player,song);
         }
         
         this.audioBuffers.sort(this.sortBuffers);
@@ -252,49 +310,85 @@ AudioPlayer = Class.create({
             var buffered = false;
             var buffer=null;
             //Is Song Already Buffered
-            for(var i=0; i<this.audioBuffers.length; i++) 
-            { 
-                //index = (index +i) % this.audioBuffers.length;
+            buffer = this.getActiveBuffer(song);
             
-                if((this.audioBuffers[i].isSong(song) === true) && (this.audioBuffers[i].startedBuffering===true))//if(this.audioBuffers[i].isSong(song) === true)
+          
+            
+                if(buffer !== null)
                 {
                     buffered = true;
-                    buffer = this.audioBuffers[i];
+                    //buffer = this.audioBuffers[i];
                     buffer.currentTime = 0;
-                }
+                    if(buffer.startedBuffering===false)
+                    {
+                        buffer.fullyBuffered = false;
+                        buffer.startedBuffering = false;
+                        buffer.amtBuffered = 0;
+                        this.UISetBufferWait(song, true);
+                        buffer.load();
+                        buffer.autoplay = false;
+                    }
+                
             }
+            
+
             
             if(buffered === false)
             {
+                if(this.bufferPool.length!== 0 )
+                {
+                    buffer = this.bufferPool.pop();
+                    this.audioBuffers.push(buffer);
+                    buffer.src = song.url;
+                    buffer.song = song;
+                    buffer.fullyBuffered = false;
+                    buffer.startedBuffering = false;
+                    buffer.amtBuffered = 0;
+                    this.UISetBufferWait(song, true);
+                    buffer.load();
+                    buffer.autoplay = false;
+                    buffered = true;
                     this.audioBuffers.sort(this.sortBuffers);
+                }
+                else
+                {
                     if(this.audioBuffers[0] != this.player)
-                    {
-                       
+                    {  //If the top buffer is not the the player take it and use it to buffer up the next song
+                            buffer = this.audioBuffers.shift();
+                        }
+                        else
+                        {
+                            var bottomSong = this.playList.peekSongAheadOffset(this.player.song, this.audioBuffers.length-1);   
+                            if(song.index<=bottomSong.index)
+                            {
+                                buffer = this.audioBuffers.pop();
+                            }
+                        }
                         
-                        
-                        buffer = this.audioBuffers.shift();
-                        
+                        if(buffer!==null)
+                        {   //if this is set we have decided that we are going to buffer the next song
                             if(buffer.song)
                             {
-                                this.UIInvalidateSong(buffer.song);
-                            }
-                    
-                            buffer.pause();
-                            //
-                            buffer.src = song.url;
-                            buffer.song = song;
-                            buffer.fullyBuffered = false;
-                            buffer.startedBuffering = false;
-                            buffer.amtBuffered = 0;
-                            buffer.load();
-                            buffer.autoplay = false;
-                    
-                            
-                            
+                                    this.UIInvalidateSong(buffer.song);
+                                }
                         
-                        this.audioBuffers.push(buffer);
-                        this.audioBuffers.sort(this.sortBuffers);
+                                buffer.pause();
+                                //
+                                buffer.src = song.url;
+                                buffer.song = song;
+                                buffer.fullyBuffered = false;
+                                buffer.startedBuffering = false;
+                                buffer.amtBuffered = 0;
+                                this.UISetBufferWait(song, true);
+                                buffer.load();
+                                buffer.autoplay = false;
+                            
+                                this.audioBuffers.push(buffer);
+                                this.audioBuffers.sort(this.sortBuffers);
+                            
+                        }
                     }
+                    
             }
             else
             {
@@ -384,7 +478,7 @@ AudioPlayer = Class.create({
     newPlayList: function(newPlayList, _shuffleOn, _startIndex) {
         this.playList = new PlayList(newPlayList, _shuffleOn, 0, _startIndex);
         //Setup Player for new playlist
-        this.moveToPlayer(this.playList.getCurrentSong(), false);
+        this.moveToPlayer(this.playList.getCurrentSong());
         this.hasPlayList = true;
     },
     
@@ -418,17 +512,41 @@ AudioPlayer = Class.create({
         this.player.pause();
     },
     
-    next:function()
+    next:function(clicked)
     {
+        this.UISetPointer(this.playList.getCurrentSong(), false);
         if(this.playList.moveCurrentToNext() === true)
         {
-            this.removeStreamingListeners(this.player);
+            this.UISetPointer(this.playList.getCurrentSong(), true);
+            
+            if (clicked) {
+                this.kill_play_change_interval();
+                this.play_change_interval = window.setInterval(this.do_play.bind(this), 500);
+            }
+            else
+            {
+                this.do_play();
+            }
+            
+           
+            
+        }
+        else
+        {
+            this.UISetPointer(this.playList.getCurrentSong(), true);
+        }
+    },
+    
+    do_play:function()
+    {
+        this.kill_play_change_interval()
+        this.removeStreamingListeners(this.player);
             
             //Stop Currently playing song
             this.pause();
             this.seek(0);
             var nextSong = this.playList.getCurrentSong();
-            this.moveToPlayer(nextSong, false);
+            this.moveToPlayer(nextSong);
             
             this.play();
             //this.seek(0);
@@ -439,31 +557,57 @@ AudioPlayer = Class.create({
             {
                 this.bufferNextSong(nextSong);
             }
-           
-            
-        }
     },
     
-    previous:function()
-    {
+    
+    previous:function(clicked)
+    {   this.UISetPointer(this.playList.getCurrentSong(), false);
         if(this.playList.moveCurrentToPrevious() === true)
         {
-            //Stop Currently playing song
-            this.pause();
-            var nextSong = this.playList.getCurrentSong();
-            this.moveToPlayer(nextSong, true);
-            this.play();
-            //this.seek(0);
-            if(this.player.fullyBuffered === false)
+            
+            this.UISetPointer(this.playList.getCurrentSong(), true);
+            ////Stop Currently playing song
+            //this.pause();
+            //var nextSong = this.playList.getCurrentSong();
+            //this.moveToPlayer(nextSong, true);
+            //this.play();
+            ////this.seek(0);
+            //if(this.player.fullyBuffered === false)
+            //{
+            //    //this.bufferNextSong(nextSong);
+            //}
+            if (clicked) {
+                this.kill_play_change_interval();
+                this.play_change_interval = window.setInterval(this.do_play.bind(this), 500);
+            }
+            else
             {
+                this.do_play();
             }
             
         }
+        else
+        {
+            this.UISetPointer(this.playList.getCurrentSong(), true);
+        }
     },
     
-    gotoTrack:function(track)
+    
+    play_change_interval: null,
+
+    kill_play_change_interval: function() {
+        if (this.play_change_interval) {
+            window.clearInterval(this.play_change_interval);
+            this.play_change_interval = null;
+        }
+    },
+    
+    playTrack:function(index)
     {
-        
+        if(this.playList.moveToSong(index) ===true)
+        {
+            this.do_play();
+        }
     },
     
     
@@ -543,13 +687,13 @@ AudioPlayer = Class.create({
             case "error":
                 //Received error buffer is no longer valid throw it away and resort the available buffer stack
                 
-                event.currentTarget.src = null;
-                event.currentTarget.fullyBuffered = false;
-                event.currentTarget.startedBuffering = false;
-                this.UIInvalidateSong(event.currentTarget.song);
-                event.currentTarget.song = this.blankSong;
-                _this.audioBuffers.sort(_this.sortBuffers);
+                _this.putThisBufferIntoPool(event.currentTarget);
                 
+
+                
+                break;
+            case "loadstart":
+                event.currentTarget.startedBuffering = true;
                 break;
             
             case "load":
@@ -557,11 +701,13 @@ AudioPlayer = Class.create({
                 _this.bufferNextSong(event.currentTarget.song);
                 break;
             case "progress":
+                _this.UISetBufferWait(event.currentTarget.song, false);
                 event.currentTarget.startedBuffering = true;
                 _this.updateBuffering(event.currentTarget)
                 break;
+            
         }
-        
+        _this.UIPrintDebug(event, false);
         //Mojo.Log.info("<------ AudioPlayer.prototype.handleBufferEvents AudioEvent:", event.type);
     },
     
@@ -569,22 +715,30 @@ AudioPlayer = Class.create({
      handleAudioEvents: function(event) {
         //Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
         var _this = this.context;
-        //_this.logAudioEvent("handleAudioEvents", event);
+        _this.logAudioEvent("handleAudioEvents", event);
     
         event.stop();
         event.stopPropagation();
     
         switch(event.type)
         {
+            
             case "load":
+                _this.UIShowSpinner(false);
                 _this.bufferingFinished(event.currentTarget);
-                _this.bufferNextSong(event.currentTarget.song);
+                _this.bufferNextSong(_this.player.song);
+                break;
+            case "loadstart":
+                _this.UIShowSpinner(true);
+                event.currentTarget.startedBuffering = true;
                 break;
             case "progress":
+                _this.UIShowSpinner(false);
                 event.currentTarget.startedBuffering = true;
                 _this.updateBuffering(event.currentTarget);
                 break;
             case "ended":
+                _this.UIShowSpinner(false);
                 _this.UIStopPlaybackTimer();
                 _this.next(false);
                 break;
@@ -595,14 +749,22 @@ AudioPlayer = Class.create({
                 _this.UIUpdatePlaybackTime();
                 break;
             case "play":
+                if(event.currentTarget.amtBuffered!== 0)
+                {
+                    _this.UIShowPause();
+                }
                 _this.UIUpdatePlaybackTime();
                 _this.UIStartPlaybackTimer();
                 break;
             case "pause":
+                _this.UIShowPlay();
                 _this.UIStopPlaybackTimer();
                 break;
+            case "stalled":
+                _this.UIShowSpinner(true);
+                break;
         }
-        
+        _this.UIPrintDebug(event, true);
     },
     
     
@@ -1600,6 +1762,47 @@ AudioPlayer = Class.create({
         }
     },
     
+    UIShowSpinner: function(_spinnerOn) {
+        if (this.UIHandler) {
+            if (_spinnerOn === true) {
+                this.UIHandler.showSpinner();
+            } else if (_spinnerOn === false) {
+                this.UIHandler.hideSpinner();
+            } else {}
+        }
+    },
+    
+    UIShowPause: function() {
+        if (this.UIHandler) {
+            this.UIHandler.hideSpinner();
+            this.UIHandler.showPauseButton();
+        }
+    },
+
+    UIShowPlay: function() {
+        if (this.UIHandler) {
+            this.UIHandler.hideSpinner();
+            this.UIHandler.showPlayButton();
+        }
+    },
+    UISetPointer: function(song, state) {
+        if (this.UIHandler) {
+            this.UIHandler.SetSongPointer(song.index-1, state);
+        }
+    },
+    
+    UISetBufferWait:function(song, state)
+    {
+        if (this.UIHandler) {
+            this.UIHandler.SetBufferWait(song.index-1, state);
+        }
+    },
+    
+    UIPrintDebug: function(event, isPlayer) {
+        if (this.UIHandler && this.debug) {
+            this.UIHandler.printDebug(event, isPlayer);
+        }
+    },
     
     //
     //
@@ -1608,6 +1811,10 @@ AudioPlayer = Class.create({
     setNowPlaying: function(UIHandler) {
         this.UIHandler = UIHandler;
         
+        if(this.player && this.player.song)
+        {
+            this.UIUpdateSongInfo(this.player.song)
+        }
         
         //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
         //this._updateBuffering();
@@ -1621,8 +1828,8 @@ AudioPlayer = Class.create({
         //}
     },
     //
-    //clearNowPlaying: function() {
-    //    this.NowPlayingStopPlaybackTimer();
-    //    this.NowPlaying = null;
-    //}
+    clearNowPlaying: function() {
+        this.UIStopPlaybackTimer();
+        this.UIHandler = null;
+    }
 });
