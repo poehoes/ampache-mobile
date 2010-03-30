@@ -33,7 +33,8 @@
         * When you set up a port forwarding rule, you are basically unlocking an outside door so everyone can come in whenever they like and building a hallway in the building that goes directly to one suite in the building. As an example: unlock door 80 and build a hallway that goes to suite 192.168.x.x, office 80 
         * Some ISPs block door 80: they install a lock on the outside of the door and you cannot unlock it...or you may have a router that is already running a web server on the public side of your router on port 80 (You see a web page for your router whenever you point a web browser at your public IP address) :
             * To get around this, you open up another door...as an example door 8080. At the same time you build a hallway in the building so anyone coming in on door 8080 is automatically directed to suite 192.168.x.x, office 80. 
-            * To use the new door, add a ":port_number" to your URL. Example: http://music_server.dyndns.com:8080 
+            * To use the new door, add a ":port_number" to your URL. Example: http://music_server.dyndns.com:8080
+            * Note: If you are using a secure server (i.e. https), you many need to also forward port 443 request.
     
     * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most webservers default to running on port 80.  But you can choose any port you like as long as your configure your web server as such. 
   * Could be an ACL issue. Ampache uses Access Control Lists to restrict access to the music server (see http://ampache.org/wiki/config:acl). You will need to create a an ACL rule for EVDO access
