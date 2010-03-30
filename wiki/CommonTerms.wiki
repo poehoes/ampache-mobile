@@ -84,6 +84,13 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://en.wikipedia.org/wiki/Php  Wikipedia]
 
+*Port 80* : default port number for HTTP traffic.
+
+*Port 443* : default port number for HTTPS traffic. All traffic is encrypted using the SSL/TLS protocol.
+
+    * more information :
+       * [http://http://en.wikipedia.org/wiki/Https  Wikipedia]
+
 *Port Forwarding* : allows computers on the Internet to connect to a specific computer on a private network. On most home networks, Amapche is not accessible from the Internet. One or more "port forwarding" rules must be created to forward request from the Internet to Ampache on the home network.
  
     You will only need to setup port forwarding if you want to use *Ampache mobile* when you are away from home and not on the same private network as your *Ampache* server.
@@ -127,6 +134,10 @@ kinds of access to Ampache based on the remote computer's IP address.
     * more information :
        * [http://ampache.org/wiki/config:acl Ampache Access Control Lists]
 
+*SSL/TLS* : protocol used to provide encryption for all traffic when using a HTTPS server.
+
+    * more information :
+       * [http://ampache.org/wiki/Transport_Layer_Security Wikipedia]
 
 *Static IP address* : an IP address that does not change, even when the device is powered off and back on.
 
