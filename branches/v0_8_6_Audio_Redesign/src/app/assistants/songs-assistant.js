@@ -64,7 +64,8 @@ SongsAssistant = Class.create({
 
         var attributes = {
             filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
-            itemTemplate: template
+            itemTemplate: template,
+            hasNoWidgets:true
             //dividerTemplate: 'artist-albums/divider',
             //dividerFunction: this.dividerFunc.bind(this),
         };

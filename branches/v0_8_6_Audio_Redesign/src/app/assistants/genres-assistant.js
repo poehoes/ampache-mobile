@@ -32,7 +32,8 @@ GenresAssistant = Class.create({
             itemTemplate: 'genres/listitem',
             dividerTemplate: 'genres/divider',
             dividerFunction: this.dividerFunc.bind(this),
-            filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper)
+            filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
+            hasNoWidgets:true
         };
         this.listModel = {
             disabled: false,

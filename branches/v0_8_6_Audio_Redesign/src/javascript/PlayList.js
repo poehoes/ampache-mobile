@@ -25,7 +25,7 @@ PlayList = Class.create({
         this.current = startIndex;
 
         for (var i = 0; i < this.songs.length; i++) {
-            this.songs[i].index = i+1;
+            this.songs[i].index = i + 1;
             this.songs[i].i = i;
         }
 
@@ -40,56 +40,51 @@ PlayList = Class.create({
     enqueueSongs: function(songsList, shuffleMode) {
         if (this.songs) {
             //Combine lists
-           
-            
+
             offset = this.songs.length;
             for (var i = 0; i < songsList.length; i++) {
-            
-                this.songs[i+offset] = songsList[i].clone();
-                this.songs[i+offset].index = i+offset+1;
-                this.songs[i+offset].i = i+offset;
+
+                this.songs[i + offset] = songsList[i].clone();
+                this.songs[i + offset].index = i + offset + 1;
+                this.songs[i + offset].i = i + offset;
             }
-            
+
             //this.playback = this.getSequentialIntArray();
-            
-            if (shuffleMode || this.shuffleOn === true) {
+
+            if (shuffleMode || this.shuffle === true) {
                 this.shuffleOn();
             }
 
         }
 
-},
+    },
 
-removeSong: function(index){
+    removeSong: function(index) {
         //if(index === this.currentPlayingTrack)
         //{
         //    this.play_next(false);
         //}
-        
-        
-        var playlist = this.songs;        
-        playlist.splice(index,1);
-        
+
+        var playlist = this.songs;
+        playlist.splice(index, 1);
+
         for (var i = 0; i < playlist.length; i++) {
-            playlist[i].index = i+1;
+            playlist[i].index = i + 1;
             playlist[i].i = i;
         }
-        this.songs = playlist;
+        //this.songs = playlist;
         //this.playback = this.getSequentialIntArray();
-        
-        if(index < this.current)
-        {
+
+        if (index < this.current) {
             this.current--;
         }
-        
-        if(this.shuffle===true)
-        {
-            this.shuffleOn();
-        }
-        
+
+        //if (this.shuffle === true) {
+        //    this.shuffleOn();
+        //}
+
         //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-        
-        
+
     },
 
     /********************************************/
@@ -99,77 +94,84 @@ removeSong: function(index){
     *  \param mojo reorder list event
     *  \return 
     ***********************************************/
-    reorder:function(event)
-    {
+    reorder: function(event) {
         var item = this.songs[event.fromIndex];
-        if(event.fromIndex<event.toIndex) 
-        {   //Dragging down list
-            
-            this.songs.splice(event.fromIndex,1);
-            this.songs.splice(event.toIndex,0,item);
-            if(event.fromIndex ===this.current)
-            {
-                this.current=event.toIndex;
-            }
-            else if((event.fromIndex<this.current)&&(event.toIndex>=this.current))
-            {
+        if (event.fromIndex < event.toIndex) { //Dragging down list
+
+            this.songs.splice(event.fromIndex, 1);
+            this.songs.splice(event.toIndex, 0, item);
+            if (event.fromIndex === this.current) {
+                this.current = event.toIndex;
+            } else if ((event.fromIndex < this.current) && (event.toIndex >= this.current)) {
                 this.current--;
             }
-            
-        }
-        else
-        {   //Dragging up list
-            this.songs.splice(event.fromIndex,1);
-            this.songs.splice(event.toIndex,0,item);
-            if(event.fromIndex ===this.current)
-            {
-                this.current=event.toIndex;
-            }
-            else if((event.fromIndex>this.current)&&(event.toIndex<=this.current))
-            {
+
+        } else { //Dragging up list
+            this.songs.splice(event.fromIndex, 1);
+            this.songs.splice(event.toIndex, 0, item);
+            if (event.fromIndex === this.current) {
+                this.current = event.toIndex;
+            } else if ((event.fromIndex > this.current) && (event.toIndex <= this.current)) {
                 this.current++;
             }
         }
-        
+
         for (var i = 0; i < this.songs.length; i++) {
-            this.songs[i].index = i+1;
+            this.songs[i].index = i + 1;
         }
-        
+
         //this.playback = this.getSequentialIntArray();
         //if(this.shuffle===true)
         //{
         //    this.shuffleOn();
         //}
-        
+
         //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
         //_updateBuffering();
-        
+
     },
 
     shuffleOn: function() {
-       
-        var currentSong = this.songs[this.current];
-        this.songs.splice(this.current, 1);
-        this.songs.sort(this.randBool);
-        this.songs.sort(this.randBool);    
-        this.songs.unshift(currentSong);
-        for (var i = 0; i < this.songs.length; i++) {
-            this.songs[i].index = i+1;
+
+        //Save the current song for the top of the list
+        var currentSong = this.songs.splice(this.current, 1)[0];
+        
+        var to;
+        var from;
+        
+        //Shuffle (the bigger the multiplier the more shuffle)
+        for(var i =0; i<(this.songs.length*3);i++)
+        {
+            to = Math.floor(Math.random() * this.songs.length);
+            from = Math.floor(Math.random() * this.songs.length);
+            
+            this.songs.splice(to, 0, this.songs.splice(from, 1)[0]);
         }
+        
+        //Put the current song on the top of the list
+        this.songs.unshift(currentSong);
+        
+        //Reindex
+        for(var i =0; i<this.songs.length;i++)
+        {
+            this.songs[i].index = i + 1;
+        }
+       
+        
         this.current = 0;
-        this.shuffled = true;
-     
+        this.shuffle = true;
+
     },
 
     shuffleOff: function() {
         var song = this.songs[this.current];
-        this.songs.sort(this.orderAdded);   
+        this.songs.sort(this.orderAdded);
         for (var i = 0; i < this.songs.length; i++) {
-            this.songs[i].index = i+1;
+            this.songs[i].index = i + 1;
         }
         this.current = song.i;
-        
-        this.shuffled = false;
+
+        this.shuffle = false;
     },
 
     randBool: function() {
@@ -179,7 +181,10 @@ removeSong: function(index){
     orderAdded: function(a, b) {
         return a.i - b.i;
     },
-
+    
+    orderIndex: function(a, b) {
+        return a.index - b.index;
+    },
 
     /********************************************/
     /**
@@ -247,16 +252,15 @@ removeSong: function(index){
             //need a way to change the button here
             break;
         }
-        
+
         return moved;
     },
-    
-    moveToSong:function(index){
-       var moved = false;
-        if((index >=0) && (index<this.songs.length))
-        {
+
+    moveToSong: function(index) {
+        var moved = false;
+        if ((index >= 0) && (index < this.songs.length)) {
             this.current = index;
-            moved=true;
+            moved = true;
         }
         return moved;
     },
@@ -275,57 +279,49 @@ removeSong: function(index){
             this.current = this.current - 1;
         } else {
             switch (this.repeat) {
-                case RepeatModeType.no_repeat:
-                    moved = false;
-                    break;
-                case RepeatModeType.repeat_once:
-                case RepeatModeType.repeat_forever:
-                    this.current = (this.current - 1) % this.songs.length;
-                    break;
+            case RepeatModeType.no_repeat:
+                moved = false;
+                break;
+            case RepeatModeType.repeat_once:
+            case RepeatModeType.repeat_forever:
+                this.current = (this.current - 1) % this.songs.length;
+                break;
             }
         }
         return moved;
     },
-    
+
     /********************************************/
     /**
     *  Given a song this will find the next song in the playback array
     *
     *  \returns Returns song is there is next song, null if not
     ***********************************************/
-    peekNextSong:function(song)
-    {
-        searchIndex =song.index;
+    peekNextSong: function(song) {
+        searchIndex = song.index;
         nextSong = null;
-        
-        if(searchIndex != this.songs.length)
-        {
-            return this.songs[searchIndex]; 
-        }
-        else
-        {
+
+        if (searchIndex != this.songs.length) {
+            return this.songs[searchIndex];
+        } else {
             return null;
         }
-            
-            
-        
-       return null;
+
+        return null;
     },
-    
+
     /********************************************/
     /**
     *  Given a song this will find the song it will find the offset
     *
     *  \returns Returns song is there is next song, null if not
     ***********************************************/
-    peekSongAheadOffset:function(song, offset){
-        
-        for(var i=0; i<offset && song !==null ; i++)
-        {
+    peekSongAheadOffset: function(song, offset) {
+
+        for (var i = 0; i < offset && song !== null; i++) {
             song = this.peekNextSong(song);
         }
-        return song;  
+        return song;
     },
-    
 
 });

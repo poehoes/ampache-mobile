@@ -58,7 +58,8 @@ ArtistsAssistant = Class.create({
             itemTemplate: 'artists/listitem',
             dividerTemplate: 'artists/divider',
             dividerFunction: (this.type === "random") ? null: this.dividerFunc.bind(this),
-            filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper)
+            filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
+            hasNoWidgets:true
         };
         this.listModel = {
             disabled: false,

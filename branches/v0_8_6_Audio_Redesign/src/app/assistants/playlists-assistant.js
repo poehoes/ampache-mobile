@@ -36,7 +36,8 @@ PlaylistsAssistant = Class.create({
             itemTemplate: 'playlists/listitem',
             dividerTemplate: 'playlists/divider',
             dividerFunction: this.dividerFunc.bind(this),
-            filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper)
+            filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
+            hasNoWidgets:true
         };
         this.listModel = {
             disabled: false,

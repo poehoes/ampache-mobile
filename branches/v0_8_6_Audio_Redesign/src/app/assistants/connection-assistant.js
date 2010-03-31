@@ -25,6 +25,7 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("--> setup");
 
         AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
+        AmpacheMobile.webos = new WebOSInterface(AmpacheMobile.audioPlayer, this.controller);
 
         
         //******************************************************************************************************
@@ -338,6 +339,9 @@ ConnectionAssistant = Class.create({
         /* this function should do any cleanup needed before the scene is destroyed as 
          a result of being popped off the scene stack */
         Mojo.Event.stopListening(this.controller.get('selectorList'), Mojo.Event.listTap, this.listTapHandler);
+        
+        AmpacheMobile.audioPlayer.cleanup();
+        AmpacheMobile.audioPlayer = null;
         Mojo.Log.info("<-- cleanup");
     },
 
