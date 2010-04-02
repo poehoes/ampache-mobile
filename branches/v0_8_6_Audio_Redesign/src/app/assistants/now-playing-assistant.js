@@ -41,22 +41,22 @@ NowPlayingAssistant = Class.create({
         switch (params.type) {
         case "display":
             this.repeatMode = AmpacheMobile.audioPlayer.playList.repeat;
-            this.shuffle = AmpacheMobile.audioPlayer.playList.shuffle;
+            //this.shuffle = AmpacheMobile.audioPlayer.playList.shuffle;
             this.pauseStopItem = this.pauseItem;
             break;
         case "play":
             this.playList = params.playList;
             this.startIndex = params.startIndex;
-            this.shuffle = params.shuffle;
+            //this.shuffle = ;
             this.repeatMode = 0;
             AmpacheMobile.audioPlayer.stop();
-            AmpacheMobile.audioPlayer.newPlayList(this.playList, this.shuffle, this.startIndex);
+            AmpacheMobile.audioPlayer.newPlayList(this.playList, params.shuffle, this.startIndex);
             break;
         case "enqueue":
             this.repeatMode = AmpacheMobile.audioPlayer.playList.repeat;
             this.pauseStopItem = this.pauseItem;
-            this.shuffle = params.shuffle || AmpacheMobile.audioPlayer.playList.shuffle;
-            AmpacheMobile.audioPlayer.enqueuePlayList(params.playList, this.shuffle);
+            var shuffle = params.shuffle || AmpacheMobile.audioPlayer.playList.shuffle;
+            AmpacheMobile.audioPlayer.enqueuePlayList(params.playList, shuffle);
             if(AmpacheMobile.audioPlayer.player.fullyBuffered === true)
             {
                 AmpacheMobile.audioPlayer.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
@@ -75,7 +75,7 @@ NowPlayingAssistant = Class.create({
 
     setup: function() {
         Mojo.Log.info("--> setup");
-        this.playing = false;
+        //this.playing = false;
         if (this.type === "play") {
             this.DisplaySongInfo(this.playList[this.startIndex], this.startIndex);
         }
@@ -421,19 +421,10 @@ NowPlayingAssistant = Class.create({
     },
     
     renderPlaylist:function(listWidget, itemModel, itemNode){
-        var playingSong= AmpacheMobile.audioPlayer.playList.getCurrentSong();
-        //audio = AmpacheMobile.audioPlayer.getAudioBuffer(itemModel.index);
-        //if(audio){
-            itemNode.getElementsByClassName("progressDone")[0].style.width = itemModel.amtBuffered +"%";
-            //itemNode.getElementsByClassName("timeLoaded")[0].style.width =  AmpacheMobile.audioPlayer.timePercentage +"%";
         
-            if(itemModel === playingSong){
-                itemNode.getElementsByClassName("npListIcon")[0].src = "images/player/play.png";
-                itemNode.getElementsByClassName("timeLoaded")[0].style.width =  AmpacheMobile.audioPlayer.timePercentage +"%";
-            }
-        //}
-        //itemNode.getElementsByClassName("npIndex")[0].innerHTML = itemModel.index;
-        
+        if(itemNode.index === (AmpacheMobile.audioPlayer.player.song.index-1)){
+            itemNode.getElementsByClassName("timeLoaded")[0].style.width =  AmpacheMobile.audioPlayer.timePercentage +"%";
+        }
     },
     
     toggleViews: function(){
@@ -786,6 +777,7 @@ NowPlayingAssistant = Class.create({
     
     SetBufferWait:function(index, state)
     {
+        /*
         if(AmpacheMobile.audioPlayer.listIsShowing === true)
         {
         var node = this.npList.mojo.getNodeByIndex(index);
@@ -802,6 +794,7 @@ NowPlayingAssistant = Class.create({
                     }
                 }
         }
+        */
     },
     
     
@@ -938,7 +931,7 @@ NowPlayingAssistant = Class.create({
         var forwardButton = this.forwardItem;
         var pauseButton = this.pauseStopItem;
         centerGroup[0] = rewindButton;
-        if (!this.playing) {
+        if (AmpacheMobile.audioPlayer.player.paused===true) {
             centerGroup[1] = playButton;
         } else {
             centerGroup[1] = pauseButton;
@@ -1030,12 +1023,12 @@ NowPlayingAssistant = Class.create({
     },
 
     showPauseButton: function() {
-        this.playing = true;
+        //this.playing = true;
         this.setMenuControls();
     },
 
     showPlayButton: function() {
-        this.playing = false;
+        //this.playing = false;
         this.setMenuControls();
     },
 
@@ -1110,7 +1103,7 @@ NowPlayingAssistant = Class.create({
         var icon;
         var toggleCmd;
 
-        if (this.shuffle === true) {
+        if (AmpacheMobile.audioPlayer.playList.shuffle === true) {
             icon = "music-shuffle";
             toggleCmd = 'toggleShuffle';
         } else {
@@ -1163,8 +1156,8 @@ NowPlayingAssistant = Class.create({
     },
 
     toggleShuffle: function() {
-        this.shuffle = !this.shuffle;
-        if (this.shuffle) {
+        //this.shuffle = !this.shuffle;
+        if (AmpacheMobile.audioPlayer.playList.shuffle===false) {
             AmpacheMobile.audioPlayer.playList.shuffleOn();
             
         } else {

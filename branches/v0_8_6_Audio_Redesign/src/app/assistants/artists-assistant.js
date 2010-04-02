@@ -16,6 +16,15 @@
 ArtistsAssistant = Class.create({
 
     initialize: function(params) {
+        if(params.CanSave)
+        {
+            this.CanSave = true;
+        }
+        else
+        {
+            this.CanSave = false;
+        }
+        
         this.SceneTitle = params.SceneTitle;
         this.ExpectedArtists = params.ExpectedArtists;
         this.itemsHelper = new ItemsHelper();
@@ -79,6 +88,7 @@ ArtistsAssistant = Class.create({
             getItemsCallback: this.GetArtists.bind(this),
             //listModel: this.listModel,
             //progressModel: this.artistLoadModel,
+            onLoadingFinished:this.artistLoadingFinished.bind(this),
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedArtists,
             SortFunction: sorting,
@@ -227,7 +237,7 @@ ArtistsAssistant = Class.create({
         params.offset = offset;
         params.limit = limit;
         params.FromDate = this.FromDate;
-        
+        params.CheckSaved = this.CanSave;
         
         
         
@@ -253,6 +263,15 @@ ArtistsAssistant = Class.create({
         return false;
     },
 
+    artistLoadingFinished:function()
+    {
+        if(this.CanSave)
+        {
+            AmpacheMobile.settingsManager.SaveArtists(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature())
+        }
+    },
+
+
     listTapHandler: function(event) {
         Mojo.Log.info("--> listTapHandler", event.item.name);
         this.RequestedArtist = event.item;
@@ -273,6 +292,24 @@ ArtistsAssistant = Class.create({
 
     handleCommand: function(event) {
         this.itemsHelper.handleCommand(event);
+        
+        if (event.type === Mojo.Event.back) {
+            if(AmpacheMobile.settingsManager.artistsSavePending===true)
+            {
+                event.preventDefault();
+                event.stopPropagation();
+                this.controller.showAlertDialog({
+                    title: $L("Save Pending..."),
+                    message: "Please wait until the pending save of artists is complete.",
+                    choices: [{
+                        label: $L('OK'),
+                        value: 'ok',
+                        type: 'primary'
+                    }]
+                });
+            }
+        }
+        
     },
     /*
     TurnOnSpinner: function () {

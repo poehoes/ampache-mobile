@@ -15,24 +15,112 @@ WebOSInterface = Class.create({
         //    onSuccess: this.screenEvent.bind(this)
         //});
 
-        this.controller.serviceRequest('palm://com.palm.keys/headset', {
+        this.buttonService = this.controller.serviceRequest('palm://com.palm.keys/headset', {
             method: 'status',
             parameters: {
                 subscribe: true
             },
             onSuccess: this.handleSingleButton.bind(this),
-            onFailure: this.handleSingleButtonFailure.bind(this)
+            onFailure: this.webOSFailure.bind(this)
         });
 
-        this.controller.serviceRequest('palm://com.palm.keys/media', {
+        this.btService = this.controller.serviceRequest('palm://com.palm.keys/media', {
             method: 'status',
             parameters: {
                 subscribe: true
             },
             onSuccess: this.btEventsCallbacks.bind(this),
-            onFailure: this.btEventsFailure.bind(this)
+            onFailure: this.webOSFailure.bind(this)
         });
+        
+      
+        this.connectionService = new Mojo.Service.Request('palm://com.palm.connectionmanager', {
+            method:"getstatus",
+            parameters: {
+                subscribe:true
+            },
+            onSuccess: this.networkStatusCallback.bind(this),
+            onFailure: this.webOSFailure.bind(this)
+        });
+        
+        
     },
+    
+    cleanup:function()
+    {
+        this.connectionService.cancel();
+        this.btService.cancel();
+        this.buttonService.cancel();
+        
+    },
+
+    wifiState:"disconnected",
+    
+    networkStatusCallback:function(response)
+    {
+        var network = Object.toJSON(response);     
+        
+        var attemptRecovery = false;
+        if((response.wan) &&  (response.wan.state === "connected"))
+        {
+            switch(response.wan.network)
+            {
+                //2 G
+                case "unknown":
+                case "1x":
+                case "unusable":
+                case "gprs": 
+                    attemptRecovery = false;
+                    breakl
+                
+                default:
+                    attemptRecovery = true;
+                    break;
+            }
+        }
+        
+        
+        //reload if the wifi state has changed from disconnected to connected
+        if((response.wifi) && (response.wifi.state === "connected") && (wifiState==="disconnected"))
+        {
+            
+            attemptRecovery = true;
+        }
+        
+        try{
+            if((this.ampachePlayer.hasPlayList=== true) && (attemptRecovery === true))
+            {
+                this.ampachePlayer.recoverStalledBuffers();
+                this.ampachePlayer.bufferNextSong(this.ampachePlayer.player.song);
+            }
+            else
+            {
+                //if(response.wifi.state === "connected")
+                //this.ampachePlayer.recoverStalledBuffers();
+            }
+            
+        }
+        catch(ex)
+        {
+            this.showDialogBox("Network Event", network+ Object.toJSON(ex));
+        }
+        //Save wifi state
+        wifiState = response.wifi.state;
+    },
+
+    playSystemSound:function(sound)
+    {
+        this.controller.serviceRequest('palm://com.palm.audio/systemsounds', {
+            method:"playFeedback",
+            parameters:{
+             name:sound
+            },
+            onSuccess:{},
+            onFailure:{}
+        });    
+    },
+    
+
 
     btEventsCallbacks: function(event) {
         if (event.state === "up") {
@@ -47,16 +135,14 @@ WebOSInterface = Class.create({
                 this.ampachePlayer.next(true);
                 //AmpacheMobile.vibrate();
             } else if (event.key === "prev") {
-                this.ampachePlayer.prev(true);
+                this.ampachePlayer.previous(true);
                 //AmpacheMobile.vibrate();
             }
         }
     },
-        btEventsFailure: function (event) {
-        //Mojo.Controller.errorDialog("Bluetooth Error");
-    },
+      
 
-    handleSingleButtonFailure: function(event) {
+    webOSFailure: function(event) {
         //Mojo.Controller.errorDialog("Headset Error");
     },
 
@@ -65,7 +151,7 @@ WebOSInterface = Class.create({
         if (event.state === "single_click") {
             
             //AmpacheMobile.vibrate();
-            if (!ampachePlayer.player.paused) {
+            if (!this.ampachePlayer.player.paused) {
                 this.ampachePlayer.pause();
             } else {
                 this.ampachePlayer.play();
@@ -75,7 +161,7 @@ WebOSInterface = Class.create({
             this.ampachePlayer.next(true);
         } else if (event.state === "hold") {
             //AmpacheMobile.vibrate();
-            this.ampachhePlayer.prev(true);
+            this.ampachePlayer.previous(true);
         }
     },
 

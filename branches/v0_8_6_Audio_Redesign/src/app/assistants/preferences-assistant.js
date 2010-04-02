@@ -444,7 +444,9 @@ PreferencesAssistant = Class.create({
     listDeleteHandler: function(event) {
         // Remove the item from the model's list.
         // Warning: By not checking which model we're modifying here, we implicitly assume that they share the same structure.
+        AmpacheMobile.settingsManager.discardSavedData(event.item);
         event.model.items.splice(event.model.items.indexOf(event.item), 1); //Remove from items list
+        
         //this.settings.Accounts.splice(event.model.items.indexOf(event.item),1); //Remove from 
         
         this.UpdateSelector();

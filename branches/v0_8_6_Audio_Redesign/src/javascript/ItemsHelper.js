@@ -42,6 +42,8 @@ ItemsHelper = Class.create({
         this.ExpectedItems = params.ExpectedItems;
         this.SortFunction = params.SortFunction;
 
+        this.onLoadingFinished = params.onLoadingFinished;
+
         //this.listModel = params.listModel;
         this.MatchFunction = params.MatchFunction;
 
@@ -189,7 +191,10 @@ ItemsHelper = Class.create({
                 this.percentDone = 1;
                 this.controller.setMenuVisible(Mojo.Menu.commandMenu, false);
                 this.LoadingFinished = true;
-                
+                if(this.onLoadingFinished)
+                {
+                    this.onLoadingFinished();
+                }
             }
     
             else {
@@ -203,7 +208,7 @@ ItemsHelper = Class.create({
                 this.numItemsDisplay.innerHTML = this.ItemsList.length;
             }
             
-            Mojo.Log.info("Progress: " + progress);
+            
             Mojo.Log.info("<-- FinishedGettings");
         }
     },
@@ -229,7 +234,7 @@ ItemsHelper = Class.create({
         //Add to list   
         if (!this.IsFiltered()) {
             this.Matches = this.ItemsList;
-            this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
+            this.filterList.mojo.noticeUpdatedItems(0, this.Matches);
         } else //list currently has a filter
         {
             this.Matches = this.GetAllMatches(this.filterString);

@@ -157,6 +157,7 @@ MainmenuAssistant = Class.create({
         
         
         AmpacheMobile.ampacheServer.disconnect();
+        AmpacheMobile.Account = null;
         Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
     },    
 
@@ -191,7 +192,8 @@ MainmenuAssistant = Class.create({
                 },
                 {
                     SceneTitle: "Artists",
-                    ExpectedArtists: numArtists
+                    ExpectedArtists: numArtists,
+                    CanSave:true
                 });
             }
             this.getPending = false;
@@ -208,7 +210,8 @@ MainmenuAssistant = Class.create({
                 {
                     SceneTitle: "Albums",
                     DisplayArtistInfo: true,
-                    ExpectedAlbums: numAlbums
+                    ExpectedAlbums: numAlbums,
+                    CanSave:true
                     //AlbumsList: _albumsList,
                 });
             }

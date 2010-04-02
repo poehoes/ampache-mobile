@@ -54,6 +54,7 @@ SongModel = Class.create({
         this.artist_id = _artist_id;
         this.played = false;
         this.amtBuffered = 0;
+        this.plIcon = "images/player/blank.png";
         //Mojo.Log.info("<-- SongModel constructor " + _title);
         
         minutes = Math.floor(this.time/60);

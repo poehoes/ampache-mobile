@@ -42,6 +42,7 @@ AmpacheMobile.EmptyResponseErrorHelp = "Phone not connecting to Ampache." + "<br
 //};
 
 
+
 function StageAssistant(stageController) {
     //AmpacheMobile.stageController = stageController;
     //AmpacheMobile.audioPlayer = new AudioPlayer(stageController);
@@ -76,6 +77,7 @@ StageAssistant.nowPlayingMenu = {
             command: "push-np-cmd",
             shortcut: "n"
         },
+        
         //{
         //    label: "Next Track",
         //    disabled: true,
@@ -103,6 +105,9 @@ StageAssistant.preferencesMenu = {
         command: "doPref-cmd",
         shortcut: "p"
     };
+
+
+
 
 StageAssistant.appMenuModel = {
     visible: true,
@@ -265,6 +270,14 @@ StageAssistant.prototype.handleCommand = function(event) {
        }
     
             break;
+        case "doDiscard-cmd":
+            if(AmpacheMobile.Account!==null)
+            {
+                AmpacheMobile.settingsManager.discardSavedData(AmpacheMobile.Account);
+            }
+            break;
+        
+        
         case "delete-np-cmd":
             if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                 AmpacheMobile.audioPlayer.stop();

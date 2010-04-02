@@ -38,9 +38,11 @@ AudioPlayer = Class.create({
     
     //buffer:null,
 
-    streamingEvents : ["play", "pause", "abort", "error", "ended", "canplay",
-                      "canplaythrough", "emptied", "load", "loadstart", "seeked",
-                      "seeking", "waiting", "progress", "durationchange", "x-palm-disconnect"],
+    streamingEvents : ["play", "pause", "error", "ended", "canplay",
+                      "emptied", "load", "loadstart",
+                      "waiting", "progress"],
+    
+    //seeked seeking, "durationchange" "canplaythrough", "abort",  
 
     //bufferingEvents : ["abort", "error", "ended", "emptied", "load", "loadstart",
     //                   "waiting", "progress", "durationchange", "x-palm-disconnect"],
@@ -48,15 +50,15 @@ AudioPlayer = Class.create({
 
     initialize: function () {
         
-        this.blankSong = new SongModel(0, "", "", 0, "", 0, 0, 0, "", 0, "", "");
-        this.blankSong.index = 0;
+        //this.blankSong = new SongModel(0, "", "", 0, "", 0, 0, 0, "", 0, "", "");
+        //this.blankSong.index = 0;
         
         //Create 2 audio objects to toggle between streaming and buffering
         //this.audioBuffers = [];
         this.audioBuffers = new Array();
         this.bufferPool = new Array();
         var audioObj = null;
-        for(var i =0; i < 4; i++) {
+        for(var i =0; i < 2; i++) {
             audioObj = this.createAudioObj(i);
             audioObj.ampacheType = AudioType.pool;
             this.addStreamingListeners(audioObj);
@@ -77,7 +79,7 @@ AudioPlayer = Class.create({
         //audioObj.amtBuffered = null;
         
         audioObj.name = "Buffer " + index;
-        audioObj.song = this.blankSong;
+        //audioObj.song = this.blankSong;
         this.setAudioToBuffer(audioObj);
         
         audioObj.mojo.audioClass = "media";
@@ -127,7 +129,7 @@ AudioPlayer = Class.create({
         return null;
     },
 
-    getActiveBuffer:function(song)
+    getBufferedSong:function(song)
     {
         for(var i=0; i<this.audioBuffers.length; i++) 
         {
@@ -140,6 +142,22 @@ AudioPlayer = Class.create({
             
         }
         return null;
+    },
+    
+    
+    recoverStalledBuffers:function()
+    {
+        //var tempArray = new Array();
+         for(var i=0; i<this.audioBuffers.length; i++) 
+        {
+            if((this.audioBuffers[i].fullyBuffered ===  false) && (this.audioBuffers[i] !== this.player))
+            {
+                this.putThisBufferIntoPool(this.popThisBuffer(this.audioBuffers[i]));
+                i=-1;
+            }
+            
+        }
+        
     },
     
     popThisBuffer:function(buffer)
@@ -159,17 +177,18 @@ AudioPlayer = Class.create({
     
     putThisBufferIntoPool:function(buffer)
     {
-        
-        buffer.ampacheType = AudioType.pool;
-        buffer.src = "../media/empty.mp3";
-        buffer.load();
-        buffer.autoplay = false;
-        buffer.fullyBuffered = false;
-        buffer.song.amtBuffered = 0;
-        this.UIInvalidateSong(buffer.song);
-        buffer.song = this.blankSong;        
-        this.bufferPool.push(buffer);
-        
+        if(buffer!== null)
+        {
+            buffer.ampacheType = AudioType.pool;
+            buffer.src = "../media/empty.mp3";
+            buffer.load();
+            buffer.autoplay = false;
+            buffer.fullyBuffered = false;
+            buffer.song.amtBuffered = 0;
+            this.UIInvalidateSong(buffer.song);
+            buffer.song = null;     
+            this.bufferPool.push(buffer);
+        }
     },
 
     loadSongIntoPlayer:function(player, song)
@@ -177,6 +196,7 @@ AudioPlayer = Class.create({
         player.ampacheType = AudioType.player;
         //player.pause();
         //player.empty();
+        player.song.plIcon = "images/player/blank.png";
         
         player.song.amtBuffered = 0;
         this.UIInvalidateSong(player.song);
@@ -185,6 +205,7 @@ AudioPlayer = Class.create({
         player.fullyBuffered = false;
         //player.startedBuffering=false;
         player.song.amtBuffered = 0;
+        player.song.plIcon = "images/player/play.png";
         this.UIInvalidateSong(player.song);
         player.load();
         player.audioplay = true;
@@ -193,14 +214,28 @@ AudioPlayer = Class.create({
     },
 
 
+    bufferMutex:false,
+    waitForBufferMutex:function(){
+        if(this.bufferMutex===true)
+        {
+                Mojo.Controller.errorDialog("Buffer Mutex: " + this.bufferMutex);
+        }
+        while(this.bufferMutex===true)
+        {
+            
+        }
+        
+    },
+    
+
     moveToPlayer:function(song) {
         
         var player = null;
         //var playerIndex =0;
         var reverse = false;
         
-        
-        
+        this.waitForBufferMutex();
+        this.bufferMutex = true;
         
         
         //Capture Old buffers
@@ -223,7 +258,7 @@ AudioPlayer = Class.create({
     
         
         //first check if we've already buffered the song
-        player = this.getActiveBuffer(song);
+        player = this.getBufferedSong(song);
         
         if(player === null)
         {   //Song no currently in a buffer
@@ -235,6 +270,7 @@ AudioPlayer = Class.create({
             if( (player===null) && (this.bufferPool.length!== 0) )
             {
                 player = this.bufferPool.pop();
+                player.song = song;
                 this.audioBuffers.push(player);
             }
         
@@ -243,6 +279,23 @@ AudioPlayer = Class.create({
             {
                  player = this.loadSongIntoPlayer(player,song);
             }
+        }
+        else
+        {
+            if(player.readyState>=player.HAVE_FUTURE_DATA)
+            {
+                player.play();
+            }
+            else if(player.readyState===player.HAVE_NOTHING)
+            {   //Attempt to recover a stalled out buffer
+                player.load()
+                player.audioplay = true;
+            }
+            else
+            {   
+                player.audioplay = true;
+            }
+            
         }
         
         
@@ -277,7 +330,7 @@ AudioPlayer = Class.create({
         //}
         
         this.UIUpdateSongInfo(this.player.song);
-        
+        this.bufferMutex = false;
     },
     
     
@@ -291,7 +344,7 @@ AudioPlayer = Class.create({
             var buffered = false;
             var buffer=null;
             //Is Song Already Buffered
-            buffer = this.getActiveBuffer(song);
+            buffer = this.getBufferedSong(song);
             
           
             
@@ -323,6 +376,7 @@ AudioPlayer = Class.create({
                 if(this.bufferPool.length!== 0 )
                 {
                     buffer = this.bufferPool.pop();
+                    buffer.song = song;
                     this.audioBuffers.push(buffer);
                     this.setAudioToBuffer(buffer);
                     buffer.song.amtBuffered = 0;
@@ -434,23 +488,19 @@ AudioPlayer = Class.create({
     
     
     addStreamingListeners:function(audioObj)
-    {
-        Mojo.Log.info(" streaming events: " +  audioObj.name);
-        
-        eventHandler = this.handleAudioEvents.bindAsEventListener(this);    
+    {   
+        var eventHandler = this.handleAudioEvents.bindAsEventListener(this);    
         for(var i=0; i<this.streamingEvents.length; i++)
         {
             
             audioObj.addEventListener(this.streamingEvents[i], eventHandler);
         }
-        audioObj.hasAmpacheStreamEvents = true;
-        
+        audioObj.hasAmpacheStreamEvents = true;   
     },
     
     setAudioToPlayer:function(audioObj){
         audioObj.ampacheType = AudioType.player;
         audioObj.autoplay = true;
-        audioObj.play();
     },
     
     setAudioToBuffer:function(audioObj){
@@ -469,6 +519,9 @@ AudioPlayer = Class.create({
     *
     ***************************************************************************/
     newPlayList: function(newPlayList, _shuffleOn, _startIndex) {
+        
+        this.stop();
+        this.player = null;
         this.playList = new PlayList(newPlayList, _shuffleOn, 0, _startIndex);
         //Setup Player for new playlist
         this.moveToPlayer(this.playList.getCurrentSong());
@@ -479,6 +532,10 @@ AudioPlayer = Class.create({
         if(this.playList)
         {
             this.playList.enqueueSongs(newPlayList, _shuffleOn);
+            if(this.player.fullyBuffered === true)
+            {
+                this.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
+            }
         }
     },
     
@@ -547,10 +604,10 @@ AudioPlayer = Class.create({
         this.ampachePaused = this.player.paused;
         
         //this.UISetPointer(this.playList.getCurrentSong(), false);
-        
+        this.player.pause();
         if(this.playList.moveCurrentToPrevious() === true)
         {
-            this.pause();
+            
             this.timePercentage=0;
             this.UIUpdateSongInfo(this.playList.getCurrentSong());
             //this.UISetPointer(this.playList.getCurrentSong(), true);
@@ -620,12 +677,13 @@ AudioPlayer = Class.create({
     playTrack:function(index)
     {
         //this.UISetPointer(this.playList.getCurrentSong(), false);
+        this.player.pause;
         if(this.playList.moveToSong(index) ===true)
         {
-            this.pause();
             this.timePercentage=0;
             this.UIUpdateSongInfo(this.playList.getCurrentSong());
-            this.do_play();
+            this.kill_play_change_interval();
+            this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
         }
     },
     
@@ -702,7 +760,7 @@ AudioPlayer = Class.create({
         }
         else
         {
-            _this.UIPrintDebug(event, false);
+            this.UIPrintDebug(event, false);
         }
     },
     
@@ -721,12 +779,7 @@ AudioPlayer = Class.create({
         {
             case "error":
                 //Received error buffer is no longer valid throw it away and resort the available buffer stack
-                
-                var errorBuf = popThisBuffer(event.currentTarget)
-                if(errorBuf !== null)
-                {
-                    _this.putThisBufferIntoPool(event.currentTarget);
-                }
+                this.recoverStalledBuffers();
 
                 
                 break;
@@ -745,7 +798,7 @@ AudioPlayer = Class.create({
                 break;
             
             case "emptied":
-                event.currentTarget.fulllyBuffered = false;
+                event.currentTarget.fullyBuffered = false;
                 //event.currentTarget.startedBuffering = false;
                 _this.updateBuffering(event.currentTarget);
                 break;
@@ -791,9 +844,9 @@ AudioPlayer = Class.create({
                 _this.UIStopPlaybackTimer();
                 _this.next(false);
                 break;
-            case "durationchange":
-                _this.UIUpdatePlaybackTime();
-                break;
+            //case "durationchange":
+             //   _this.UIUpdatePlaybackTime();
+             //   break;
             case "timeupdate":
                 _this.UIUpdatePlaybackTime();
                 break;
@@ -814,7 +867,7 @@ AudioPlayer = Class.create({
                 _this.UIShowSpinner(true);
                 break;
             case "emptied":
-                event.currentTarget.fulllyBuffered = false;
+                event.currentTarget.fullyBuffered = false;
                 //event.currentTarget.startedBuffering = false;
                 _this.updateBuffering(event.currentTarget);
                 break;
@@ -828,902 +881,11 @@ AudioPlayer = Class.create({
     
     
     
-        //if (this.stallTimer && event.type !== "stalled") {
-        //    this.kill_stall_timer();
-        //}
-        //
-        //this.NowPlayingStreamDebug(event.type);
-        //
-        //
-        //switch (event.type) {
-        //case "canplay":
-        //    this.UpdateNowPlayingShowSpinner(false);
-        //    if(this.startPlayback===true) {
-        //        this.player.play();
-        //    }
-        //    else
-        //    {
-        //        this.Paused = true;
-        //    }
-        //    break;
-        //case "stalled":
-        //    if(!this.stallTimer)
-        //    {
-        //        this.SetStalled(true);
-        //    }
-        //    break;
-        //case "durationchange":
-        //    this.UpdateNowPlayingTime();
-        //    break;
-        //case "timeupdate":
-        //    this.UpdateNowPlayingTime();
-        //    break;
-        //case "progress":
-        //    this.SetStalled(false);
-        //    this._updateBuffering();
-        //    break;
-        //case "load":
-        //    this.SetStalled(false);
-        //    this._bufferingFinished();
-        //    break;
-        //case "play":
-        //    this.Paused = false;
-        //    this.NowPlayingStartPlaybackTimer();
-        //    this.NowPlayingShowPause();
-        //    this.kill_stall_timer();
-        //    break;
-        //case "pause":
-        //    this.Paused = true;
-        //    this.NowPlayingShowPlay();
-        //    break;
-        //case "abort":
-        //    this.ClearNowPlayingTime();
-        //    break;
-        //case "x-palm-disconnect":
-        //    this.NowPlayingDisplayError("Palm Audio Service failed");
-        //    break;
-        //case "error":
-        //
-        //    var errorString = this.streamErrorCodeLookup(event.error);
-        //    this.NowPlayingDisplayError(errorString);
-        //    break;
-        //case "ended":
-        //    
-        //    this.play_next(false);
-        //    this.NowPlayingStopPlaybackTimer();
-        //    break;
-        //case "x-palm-connect":
-        //    //this.PlayerReady = true;
-        //    //break;
-        //case "loadstart":
-        //case "canplaythrough":
-        //case "seeked":
-        //case "seeking":
-        //case "waiting":
-        //case "emptied":
-        //    break;
-        //default:
-        //    this.streamingError("Event:" + event.type);
-        //    break;
-        //
-        //}
-        //Mojo.Log.info("<------ AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
-    //},
     
-    
-    
-    //btEventsCallbacks: function (event) {
-    //    if (event.state === "up") {
-    //        if (event.key === "play") {
-    //            this.play();
-    //            //AmpacheMobile.vibrate();
-    //        } else if ((event.key === "pause") || (event.key === "stop")) {
-    //
-    //            this.pause();
-    //            //AmpacheMobile.vibrate();
-    //        } else if (event.key === "next") {
-    //            this.play_next(true);
-    //            //AmpacheMobile.vibrate();
-    //        } else if (event.key === "prev") {
-    //            this.play_prev();
-    //            //AmpacheMobile.vibrate();
-    //        }
-    //    }
-    //},
-    //
-    //btEventsFailure: function (event) {
-    //    //Mojo.Controller.errorDialog("Bluetooth Error");
-    //},
-    //
-    //handleSingleButtonFailure: function(event) {
-    //    //Mojo.Controller.errorDialog("Headset Error");
-    //},
-    //
-    //handleSingleButton: function(event) {
-    //    
-    //    if (event.state === "single_click") {
-    //        
-    //        //AmpacheMobile.vibrate();
-    //        if (!this.Paused) {
-    //            this.pause();
-    //        } else {
-    //            this.play();
-    //        }
-    //    } else if (event.state === "double_click") {
-    //        //AmpacheMobile.vibrate();
-    //        this.Paused = false;
-    //        this.play_next(true);
-    //    } else if (event.state === "hold") {
-    //        //AmpacheMobile.vibrate();
-    //        this.play_prev();
-    //    }
-    //},
-    //
-    //registerForMediaEvents: function(callback) {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.registerForMediaEvents");
-    //    var parameters = {};
-    //    parameters.appName = Mojo.appName;
-    //    parameters.subscribe = "true";
-    //    return new Mojo.Service.Request(MediaEventsService.identifier = 'palm://com.palm.mediaevents', {
-    //        method: 'mediaEvents',
-    //        onSuccess: callback,
-    //        parameters: parameters
-    //
-    //    },
-    //    true);
-    //    //Mojo.Log.info("<-- AudioPlayer.prototype.registerForMediaEvents");
-    //},
-    //
-    //getStreamInfo: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.getStreamInfo");
-    //    var info = "Info Unavailable";
-    //    if (this.player.palm) {
-    //        info = "bitrate estimated: " + this.player.palm.bitrate.audio.estimate + "\r\n";
-    //        info += "bitrate avg: " + this.player.palm.bitrate.audio.average.toString() + "\r\n";
-    //        info += "bitrate max: " + this.player.palm.bitrate.audio.maximum.toString();
-    //    }
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.getStreamInfo");
-    //    return info;
-    //},
-    //
-    ////ConnectedToServer: function(event) {
-    ////    Mojo.Log.info("--> AudioPlayer.prototype.ConnectedToServer");
-    ////    //this.playList = newPlayList;
-    ////    this.PlayerReady = true;
-    ////    if (this.RequestedPlayBeforeReady === true) {
-    ////        this.RequestedPlayBeforeReady = false;
-    ////        this.play();
-    ////    }
-    ////    Mojo.Log.info("<-- AudioPlayer.prototype.ConnectedToServer");
-    ////},
-    //
-    //
-    //removeSong: function(index){
-    //    if(index === this.currentPlayingTrack)
-    //    {
-    //        this.play_next(false);
-    //    }
-    //    
-    //    
-    //    var playlist = this.playList;        
-    //    playlist.splice(index,1);
-    //    
-    //    for (var i = 0; i < playlist.length; i++) {
-    //        playlist[i].index = i+1;
-    //    }
-    //    this.playList = playlist;
-    //    this.playOrderList = this.createOrderList();
-    //    
-    //    if(index < this.currentPlayingTrack)
-    //    {
-    //        this.currentPlayingIndex--;
-    //        this.currentPlayingTrack--;
-    //    }
-    //    
-    //    if(this.shuffleOn===true)
-    //    {
-    //        this.toggleShuffleOn();
-    //    }
-    //    
-    //    //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-    //    
-    //    
-    //},
-    //
-    //reorder:function(event)
-    //{
-    //    var item = this.playList[event.fromIndex];
-    //    if(event.fromIndex<event.toIndex) 
-    //    {   //Dragging down list
-    //        
-    //        this.playList.splice(event.fromIndex,1);
-    //        this.playList.splice(event.toIndex,0,item);
-    //        if(event.fromIndex ===this.currentPlayingTrack)
-    //        {
-    //            this.currentPlayingIndex=event.toIndex;
-    //            this.currentPlayingTrack=event.toIndex;
-    //        }
-    //        else if((event.fromIndex<this.currentPlayingTrack)&&(event.toIndex>=this.currentPlayingTrack))
-    //        {
-    //            this.currentPlayingIndex--;
-    //            this.currentPlayingTrack--;
-    //        }
-    //        
-    //    }
-    //    else
-    //    {   //Dragging up list
-    //        this.playList.splice(event.fromIndex,1);
-    //        this.playList.splice(event.toIndex,0,item);
-    //        if(event.fromIndex ===this.currentPlayingTrack)
-    //        {
-    //            this.currentPlayingIndex=event.toIndex;
-    //            this.currentPlayingTrack=event.toIndex;
-    //        }
-    //        else if((event.fromIndex>this.currentPlayingTrack)&&(event.toIndex<=this.currentPlayingTrack))
-    //        {
-    //            this.currentPlayingIndex++;
-    //            this.currentPlayingTrack++;
-    //        }
-    //    }
-    //    
-    //    for (var i = 0; i < this.playList.length; i++) {
-    //        this.playList[i].index = i+1;
-    //    }
-    //    this.playOrderList = this.createOrderList();
-    //    if(this.shuffleOn===true)
-    //    {
-    //        this.toggleShuffleOn();
-    //    }
-    //    
-    //    //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-    //    //_updateBuffering();
-    //    
-    //},
-    //
-    //setCurrentTrack:function(currentIndex)
-    //{
-    //    this.currentPlayingIndex = currentIndex;
-    //    this.currentPlayingTrack = currentIndex;
-    //    if(this.shuffleOn===true)
-    //    {
-    //        this.toggleShuffleOn();
-    //    }
-    //},
-    //
-    //
-    //newPlayList: function(newPlayList, _shuffleOn, _startIndex) {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.addPlayList");
-    //    this.stop();
-    //    this.hasPlayList = true;
-    //    this.playList = [];
-    //    for (var i = 0; i < newPlayList.length; i++) {
-    //        
-    //        this.playList[i] = newPlayList[i];
-    //        this.playList[i].index = i+1;
-    //    }
-    //
-    //    //this.markPlayListUnplayed();
-    //    this.playOrderList = this.createOrderList();
-    //    this.shuffleOn = _shuffleOn;
-    //    if (_shuffleOn) {
-    //        this.playOrderList.sort(this.randOrd);
-    //        //this.playOrderList.sort(this.randOrd);
-    //        this.currentPlayingIndex = 0;
-    //        this.currentPlayingTrack = this.playOrderList[0];
-    //    } else {
-    //        this.currentPlayingTrack = _startIndex;
-    //        this.currentPlayingIndex = _startIndex;
-    //    }
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.addPlayList");
-    //},
-    //
-    //enqueuePlayList: function(newPlayList, _shuffleOn) {
-    //    if (this.playList) {
-    //        //Combine lists
-    //       
-    //        
-    //        offset = this.playList.length;
-    //        for (var i = 0; i < newPlayList.length; i++) {
-    //        
-    //            this.playList[i+offset] = newPlayList[i].clone();
-    //        }
-    //        
-    //       
-    //        for (var i = 0; i < this.playList.length; i++) {
-    //        
-    //            this.playList[i].index = i+1;
-    //        }
-    //        
-    //        this.playOrderList = this.createOrderList();
-    //        
-    //        if (_shuffleOn || this.shuffleOn === true) {
-    //            this.toggleShuffleOn();
-    //        }
-    //
-    //    }
-    //},
-    //
-    //
-    //
-    ////**********************************************************************************************************************
-    ////Code for shuffle
-    ////**********************************************************************************************************************
-    ////markPlayListUnplayed: function() {
-    ////    var i = 0;
-    ////    do {
-    ////        this.playList[i].played = false;
-    ////    } while (++ i < this . playList . length );
-    ////},
-    //
-    //createOrderList: function() {
-    //    //Inititialize an array to randomize;
-    //    var newList = [];
-    //    var i = 0;
-    //    do {
-    //        newList[i] = i;
-    //    } while (++ i < this.playList.length );
-    //    return newList;
-    //},
-    //
-    //randOrd: function() {
-    //    return (Math.round(Math.random()) - 0.5);
-    //},
-    //
-    //printPlayOrderList: function() {
-    //    Mojo.Log.info("printPlayOrderList: %j", this.playOrderList);
-    //    Mojo.Log.info("currentPlayingTrack: " + this.currentPlayingTrack);
-    //    Mojo.Log.info("currentPlayingIndex: " + this.currentPlayingIndex);
-    //},
-    //
-    //toggleShuffleOff: function() {
-    //    this.playOrderList = this.createOrderList();
-    //    this.currentPlayingIndex = this.currentPlayingTrack;
-    //    //this.printPlayOrderList();
-    //    this.shuffleOn = false;
-    //},
-    //
-    //toggleShuffleOn: function() {
-    //    this.playOrderList.sort(this.randOrd);
-    //    var i = this.playList.length;
-    //    do {
-    //        if (this.playOrderList[i] === this.currentPlayingTrack) {
-    //            temp = this.playOrderList[0];
-    //            this.playOrderList[0] = this.currentPlayingTrack;
-    //            this.playOrderList[i] = temp;
-    //            break;
-    //        }
-    //    } while (-- i );
-    //    this.currentPlayingIndex = 0;
-    //    //this.printPlayOrderList();
-    //    this.shuffleOn = true;
-    //},
-    //
-    ////**********************************************************************************************************************
-    ////Code for repeat
-    ////**********************************************************************************************************************
-    //setRepeatMode: function(type) {
-    //    this.repeatMode = type;
-    //},
-    //
-    //getNextTrack: function() {
-    //    if ((this.currentPlayingIndex + 1) < (this.playList.length)) {
-    //        this.currentPlayingIndex++;
-    //        return this.playOrderList[this.currentPlayingIndex];
-    //    } else {
-    //        return - 1;
-    //    }
-    //},
-    //
-    //getPrevTrack: function() {
-    //    if ((this.currentPlayingIndex - 1) > -1) {
-    //        this.currentPlayingIndex--;
-    //        return this.playOrderList[this.currentPlayingIndex];
-    //    } else {
-    //        return - 1;
-    //    }
-    //},
-    //
-    ////**********************************************************************************************************************
-    ////                        Playback Controls
-    ////**********************************************************************************************************************
-    //play: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.play");
-    //    //if (this.PlayerReady === true) {
-    //        this.internal_play();
-    //    //} else {
-    //    //    this.RequestedPlayBeforeReady = true;
-    //    //}
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.play");
-    //},
-    //
-    //
-    //
-    //stop: function() {
-    //    this.NowPlayingStopPlaybackTimer();
-    //    if (this.player.src) {
-    //
-    //        this.pause();
-    //        this.Paused = null;
-    //        this.player.src = null;
-    //        this.playFinished = true;
-    //    }
-    //},
-    //
-    //pause: function() {
-    //    this.NowPlayingStopPlaybackTimer();
-    //    this.Paused = true;
-    //    this.player.pause();
-    //    
-    //},
-    //
-    //playFinished: false,
-    //play_finished: function() {
-    //    
-    //    this.currentPlayingIndex = 0;
-    //    this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
-    //    this.Paused = false;
-    //    switch (this.repeatMode) {
-    //    case RepeatModeType.no_repeat:
-    //        this.hasPlayList = false;
-    //        this.playFinished = true;
-    //        this.stop();
-    //        this.NowPlayingShowPlay();
-    //        this.UpdateNowPlayingBuffering(0, 0);
-    //        this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-    //        this.NowPlayingResetTime();
-    //        this.TurnOffNowPlayingButton();
-    //        break;
-    //    case RepeatModeType.repeat_forever:
-    //        this.internal_play();
-    //        break;
-    //    case RepeatModeType.repeat_once:
-    //        this.repeatMode = RepeatModeType.no_repeat;
-    //        this.NowPlayingSetRepeatMode();
-    //        this.internal_play();
-    //        break;
-    //    }
-    //},
-    //
-    //_seek:function(seekTime)
-    //{
-    //    try {
-    //        this.player.currentTime = seekTime;
-    //        if(this.Paused)
-    //        {
-    //            this.UpdateNowPlayingTime();
-    //        }
-    //    }
-    //    catch(e) {
-    //        Mojo.Log.error("Error setting currentTime: %j", e);
-    //    }
-    //},
-    //
-    //seek:function(seekTime)
-    //{
-    //    if(seekTime < this.player.duration)
-    //    {
-    //        if(seekTime >= 0)
-    //        {
-    //            this._seek(seekTime);
-    //        }
-    //        else
-    //        {
-    //            this._seek(0);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        this._seek(this.player.duration-1);
-    //    }
-    //},
-    //
-    //jump:function(seconds)
-    //{
-    //    this.seek(this.player.currentTime+seconds);
-    //},
-    //
-    //seekPercentage:function(percent)
-    //{
-    //    var secs = this.player.currentTime;
-    //    var duration = this.player.duration;
-    //    if ((duration) && (duration !== 0)) {
-    //        var secs = Math.round(percent * duration);
-    //    }
-    //
-    //    this.seek(secs);
-    //   
-    //},
-    //
-    //
-    //TurnOffNowPlayingButton: function() {
-    //    var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
-    //    var button = controller.get('now-playing-button');
-    //    button.style.display = 'none';
-    //},
-    //
-    //kill_stall_timer: function() {
-    //    window.clearInterval(this.stallTimer);
-    //    this.stallTimer = null;
-    //    this.stalled = false;
-    //},
-    //
-    //play_change_interval: null,
-    //
-    //kill_play_change_interval: function() {
-    //    if (this.play_change_interval) {
-    //        window.clearInterval(this.play_change_interval);
-    //        this.play_change_interval = null;
-    //    }
-    //},
-    //
-    //
-    //playTrack:function(track)
-    //{
-    //    if(track !== this.currentPlayingTrack ){
-    //    
-    //        this.Paused = false;
-    //        this.stop();
-    //        
-    //        this.downloadPercentage = 0;
-    //        this.timePercentage = 0;
-    //        
-    //        this.currentPlayingTrack = track;
-    //        
-    //        if(this.shuffleOn===true)
-    //        {
-    //            this.toggleShuffleOn();
-    //        }
-    //        else
-    //        {
-    //            this.currentPlayingIndex = track;
-    //        }
-    //        
-    //        this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-    //        this.internal_play();
-    //    }
-    //},
-    //
-    //play_next: function(clicked) {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.play_next");
-    //    //this.printPlayOrderList();
-    //    //this.playList[this.currentPlayingTrack].played = true;
-    //    this.prevPlayingTrack = this.currentPlayingTrack;
-    //    this.currentPlayingTrack = this.getNextTrack();
-    //    if (this.currentPlayingTrack > -1) {
-    //        this.Paused = false;
-    //        this.stop();
-    //        
-    //        this.downloadPercentage = 0;
-    //        this.timePercentage = 0;
-    //        
-    //        this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-    //        //Add a little bit of delay after a next request to allow for rapid song switching.
-    //        if (clicked) {
-    //            this.kill_play_change_interval();
-    //            this.play_change_interval = window.setInterval(this.delayed_play.bind(this), 500);
-    //        } else {
-    //            this.internal_play();
-    //        }
-    //    } else {
-    //        if ((!clicked) || (this.repeatMode !== RepeatModeType.no_repeat)) {
-    //            this.play_finished();
-    //        } else { //last track
-    //            this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
-    //        }
-    //    }
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.play_next");
-    //},
-    //
-    //play_prev: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.play_prev");
-    //    
-    //    this.currentPlayingTrack = this.getPrevTrack();
-    //    if (this.currentPlayingTrack > -1) {
-    //        this.Paused = false;
-    //        this.stop();
-    //        
-    //        this.downloadPercentage = 0;
-    //        this.timePercentage = 0;
-    //        
-    //        this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-    //        this.kill_play_change_interval();
-    //        this.play_change_interval = window.setInterval(this.delayed_play.bind(this), 500);
-    //    } else { //first track
-    //        this.currentPlayingTrack = this.playOrderList[this.currentPlayingIndex];
-    //    }
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.play_prev");
-    //},
-    //
-    //delayed_play: function() {
-    //    this.Paused = false;
-    //    this.internal_play();
-    //},
-    //
-    //play_previous: function() {},
-    //
-    //internal_play: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.internal_play");
-    //    
-    //    this.kill_play_change_interval();
-    //    if ((this.Paused) && (!this.playFinished)) {
-    //        this.player.play();
-    //    } else {
-    //        this.playFinished = false;
-    //        Mojo.Log.info("Starting play of " + this.playList[this.currentPlayingTrack].artist + " - " + this.playList[this.currentPlayingTrack].album + " - " + this.playList[this.currentPlayingTrack].track + " - " + this.playList[this.currentPlayingTrack].title);
-    //        Mojo.Log.info("URL play of " + this.playList[this.currentPlayingTrack].url);
-    //        this.ClearNowPlayingTime();
-    //        this.UpdateNowPlayingBuffering(0, 0);
-    //        this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-    //        this.UpdateNowPlayingShowSpinner(true);
-    //        this.player.src = this.playList[this.currentPlayingTrack].url;
-    //        this.player.load();
-    //    }
-    //    this.Paused = false;
-    //    //Mojo.Log.info("Audio() URL play of " + 
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.internal_play");
-    //},
-    //
 
-    //
-    //SetStalled:function(stalled)
-    //{
-    //    if( (stalled === true) && (this.StallRecovery === true) ) 
-    //    {
-    //        this.kill_stall_timer();
-    //        this.stallTimer = window.setInterval(this.internal_play.bind(this), STALL_RETRY_TIME);
-    //    }
-    //    
-    //    if(this.isFullyBuffered() === false){
-    //        stalled = false;
-    //    }
-    //    
-    //    this.UpdateNowPlayingShowSpinner(stalled);
-    //    
-    //},
-    //
-    //
-    //handleAudioEvents: function(event) {
-    //    Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
-    //
-    //    event.stop();
-    //    event.stopPropagation();
-    //
-    //    if (this.stallTimer && event.type !== "stalled") {
-    //        this.kill_stall_timer();
-    //    }
-    //
-    //    this.NowPlayingStreamDebug(event.type);
-    //    
-    //
-    //    switch (event.type) {
-    //    case "canplay":
-    //        this.UpdateNowPlayingShowSpinner(false);
-    //        if(this.startPlayback===true) {
-    //            this.player.play();
-    //        }
-    //        else
-    //        {
-    //            this.Paused = true;
-    //        }
-    //        break;
-    //    case "stalled":
-    //        if(!this.stallTimer)
-    //        {
-    //            this.SetStalled(true);
-    //        }
-    //        break;
-    //    case "durationchange":
-    //        this.UpdateNowPlayingTime();
-    //        break;
-    //    case "timeupdate":
-    //        this.UpdateNowPlayingTime();
-    //        break;
-    //    case "progress":
-    //        this.SetStalled(false);
-    //        this._updateBuffering();
-    //        break;
-    //    case "load":
-    //        this.SetStalled(false);
-    //        this._bufferingFinished();
-    //        break;
-    //    case "play":
-    //        this.Paused = false;
-    //        this.NowPlayingStartPlaybackTimer();
-    //        this.NowPlayingShowPause();
-    //        this.kill_stall_timer();
-    //        break;
-    //    case "pause":
-    //        this.Paused = true;
-    //        this.NowPlayingShowPlay();
-    //        break;
-    //    case "abort":
-    //        this.ClearNowPlayingTime();
-    //        break;
-    //    case "x-palm-disconnect":
-    //        this.NowPlayingDisplayError("Palm Audio Service failed");
-    //        break;
-    //    case "error":
-    //
-    //        var errorString = this.streamErrorCodeLookup(event.error);
-    //        this.NowPlayingDisplayError(errorString);
-    //        break;
-    //    case "ended":
-    //        
-    //        this.play_next(false);
-    //        this.NowPlayingStopPlaybackTimer();
-    //        break;
-    //    case "x-palm-connect":
-    //        //this.PlayerReady = true;
-    //        //break;
-    //    case "loadstart":
-    //    case "canplaythrough":
-    //    case "seeked":
-    //    case "seeking":
-    //    case "waiting":
-    //    case "emptied":
-    //        break;
-    //    default:
-    //        this.streamingError("Event:" + event.type);
-    //        break;
-    //
-    //    }
-    //    Mojo.Log.info("<------ AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
-    //},
-    //
-    ////******************************************************************************************************************
-    //// Now Playing updaters
-    //UpdateNowPlayingTime: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingTime");
-    //    if (this.NowPlaying) {
-    //        var currentTime = 0;
-    //        if (this.player.currentTime) {
-    //            currentTime = this.player.currentTime;
-    //        }
-    //        var duration = 0;
-    //        if (this.player.duration) {
-    //            duration = this.player.duration;
-    //        }
-    //        if (duration != "Infinity") {
-    //            
-    //            this.timePercentage = 0;
-    //            if (duration === 0) {
-    //                duration = this.playList[this.currentPlayingTrack].time;
-    //            }
-    //            this.timePercentage = (currentTime / duration) * 100;
-    //            
-    //            this.NowPlaying.updateTime(currentTime, duration, this.timePercentage);
-    //        }
-    //        else
-    //        {
-    //            this.timePercentage = 0;
-    //        }
-    //    }
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingTime");
-    //},
-    //
-    //
-    //ClearNowPlayingTime: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.ClearNowPlayingTime");
-    //    if (this.NowPlaying) {
-    //        var trackLength = this.isValidTrack(this.currentPlayingTrack) ? this.playList[this.currentPlayingTrack].time : 0;
-    //        this.NowPlaying.updateTime(0, trackLength, 0);
-    //        this.timePercentage = 0;
-    //    }
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.ClearNowPlayingTime");
-    //},
-    //
-    UpdateNowPlayingBuffering: function(start, end) {
-        //this.downloadPercentage = Math.floor( end*100);
-        //Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
-        if (this.NowPlaying) {
-            
-            this.NowPlaying.updateBuffering(start, end);
-        }
-        //Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
-    },
     
     
     
-    //
-    //UpdateNowPlayingShowSpinner: function(_spinnerOn) {
-    //    if (this.NowPlaying) {
-    //        if (_spinnerOn === true) {
-    //            this.NowPlaying.showSpinner();
-    //        } else if (_spinnerOn === false) {
-    //            this.NowPlaying.hideSpinner();
-    //        } else {}
-    //    }
-    //},
-    //
-    //NowPlayingShowPause: function() {
-    //    if (this.NowPlaying) {
-    //        this.NowPlaying.hideSpinner();
-    //        this.NowPlaying.showPauseButton();
-    //    }
-    //},
-    //
-    //NowPlayingShowPlay: function() {
-    //    if (this.NowPlaying) {
-    //        this.NowPlaying.hideSpinner();
-    //        this.NowPlaying.showPlayButton();
-    //    }
-    //},
-    //
-    //NowPlayingStreamDebug: function(eventText) {
-    //    if (this.NowPlaying && this.debug) {
-    //        this.NowPlaying.streamDebug(eventText);
-    //    }
-    //},
-    //
-    //NowPlayingStartPlaybackTimer: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStartPlaybackTimer");
-    //    if (this.NowPlaying && !this.timeInterval) {
-    //        this.timeInterval = this.NowPlaying.controller.window.setInterval(this.UpdateNowPlayingTime.bind(this), 450);
-    //    } else {
-    //        Mojo.Log.info("***********************************************************");
-    //    }
-    //    Mojo.Log.info("<-- AudioPlayer.prototype.NowPlayingStartPlaybackTimer");
-    //},
-    //
-    //NowPlayingStopPlaybackTimer: function() {
-    //    Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer");
-    //    if ((this.NowPlaying) && (this.timeInterval)) {
-    //        this.NowPlaying.controller.window.clearInterval(this.timeInterval);
-    //        this.timeInterval = null;
-    //    }
-    //    Mojo.Log.info("--> AudioPlayer.prototype.NowPlayingStopPlaybackTimer");
-    //},
-    //
-    //NowPlayingUpdateSongInfo: function(index) {
-    //    if (this.NowPlaying) {
-    //        this.NowPlaying.NowPlayingDisplaySongInfo(this.playList, index);
-    //    }
-    //},
-    //
-
-    //
-    //NowPlayingResetTime: function() {
-    //    if (this.NowPlaying) {
-    //        this.NowPlaying.updateTime(0, 0, 0);
-    //        this.timePercentage =0;
-    //    }
-    //},
-    //
-    //isValidTrack:function(index)
-    //{
-    //    if((this.currentPlayingTrack>=0) && (this.currentPlayingTrack<this.playList.length))
-    //    {
-    //        return true;
-    //    }
-    //    return false;
-    //},
-    //
-    //NowPlayingSetRepeatMode: function() {
-    //    if (this.NowPlaying) {
-    //        this.NowPlaying.setRepeatMode(this.repeatMode);
-    //    }
-    //},
-    //
-    //_bufferingFinished: function()
-    //{
-    //        var startPercentage = (this.player.buffered.start(0) / this.player.duration);
-    //        var endPercentage = 1;
-    //        this.UpdateNowPlayingBuffering(startPercentage, endPercentage);
-    //        if (this.debug) {
-    //            var percentage = (Math.round(endPercentage * 10000) / 100);
-    //            this.NowPlayingStreamDebug("Download Complete");
-    //        }  
-    //    
-    //},
-    //
-    //
-    //isFullyBuffered:function()
-    //{
-    //    var endPercentage = (this.player.buffered.end(0) / this.player.duration);
-    //    return endPercentage === 100? true : false ;
-    //},
-    //
-    //
     
     MEDIA_ERR_SRC_NOT_SUPPORTED: 4,
 
@@ -2038,9 +1200,22 @@ AudioPlayer = Class.create({
     
     UISetBufferWait:function(song, state)
     {
-        if (this.UIHandler) {
-            this.UIHandler.SetBufferWait(song.index-1, state);
+        if(state === true)
+        {
+            song.plIcon = "images/icons/loading.png";
         }
+        else
+        {
+            if(song!==this.player.song)
+            {
+                song.plIcon = "images/player/blank.png";
+            }
+            else
+            {
+                song.plIcon = "images/player/play.png";
+            }
+        }
+        this.UIInvalidateSong(song)
     },
     
     UIPrintDebug: function(event, isPlayer) {

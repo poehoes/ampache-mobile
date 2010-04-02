@@ -10,30 +10,38 @@ PlayList = Class.create({
     //Array of songs in the order they were added to the class
     //playback: null,
     //Array of indexes into the songs array, this array stores the playback order.
-    current: null,
+    current: 0,
     //Index into the playback array
 
     repeat: 0,
     shuffle: false,
 
     initialize: function(songsList, shuffle, repeat, startIndex) {
-        this.songs = songsList;
+        this.songs = new Array();
         this.shuffle = shuffle;
         this.repeat = repeat;
 
-        //this.playback = this.getSequentialIntArray();
-        this.current = startIndex;
-
-        for (var i = 0; i < this.songs.length; i++) {
+       
+        for (var i = 0; i < songsList.length; i++) {
+            this.songs[i] = songsList[i];
             this.songs[i].index = i + 1;
             this.songs[i].i = i;
         }
 
+         //this.playback = this.getSequentialIntArray();
+        this.current = startIndex;
+        this.songs[this.current].plIcon = "images/player/play.png";
+
+
         if (this.shuffle === true) {
+            this.songs[this.current].plIcon = "images/player/blank.png";
             //if shuffled is on, then user couldnt have selected a track, so 
             this.current = Math.floor(Math.random() * this.songs.length);
             this.shuffleOn();
+            this.songs[this.current].plIcon = "images/player/play.png";
         }
+        
+        
 
     },
 
@@ -133,6 +141,7 @@ PlayList = Class.create({
 
     shuffleOn: function() {
 
+        //AmpacheMobile.webos.playSystemSound("shuffling_01");
         //Save the current song for the top of the list
         var currentSong = this.songs.splice(this.current, 1)[0];
         
@@ -140,13 +149,15 @@ PlayList = Class.create({
         var from;
         
         //Shuffle (the bigger the multiplier the more shuffle)
-        for(var i =0; i<(this.songs.length*3);i++)
+        for(var i =0; i<(this.songs.length);i++)
         {
             to = Math.floor(Math.random() * this.songs.length);
             from = Math.floor(Math.random() * this.songs.length);
             
             this.songs.splice(to, 0, this.songs.splice(from, 1)[0]);
         }
+        
+        //this.songs.sort(this.randBool);
         
         //Put the current song on the top of the list
         this.songs.unshift(currentSong);
@@ -162,6 +173,9 @@ PlayList = Class.create({
         this.shuffle = true;
 
     },
+
+    
+    
 
     shuffleOff: function() {
         var song = this.songs[this.current];
@@ -233,6 +247,8 @@ PlayList = Class.create({
     ***********************************************/
     moveCurrentToNext: function() {
 
+         this.songs[this.current].plIcon = "images/player/blank.png";
+
         var moved = true;
 
         switch (this.repeat) {
@@ -253,15 +269,19 @@ PlayList = Class.create({
             break;
         }
 
+        this.songs[this.current].plIcon = "images/player/play.png";
+
         return moved;
     },
 
     moveToSong: function(index) {
+        this.songs[this.current].plIcon = "images/player/blank.png";
         var moved = false;
         if ((index >= 0) && (index < this.songs.length)) {
             this.current = index;
             moved = true;
         }
+        this.songs[this.current].plIcon = "images/player/play.png";
         return moved;
     },
 
@@ -274,7 +294,8 @@ PlayList = Class.create({
     moveCurrentToPrevious: function() {
 
         var moved = true;
-
+        this.songs[this.current].plIcon = "images/player/blank.png";
+         
         if (this.current !== 0) {
             this.current = this.current - 1;
         } else {
@@ -288,6 +309,9 @@ PlayList = Class.create({
                 break;
             }
         }
+        
+        this.songs[this.current].plIcon = "images/player/play.png";
+        
         return moved;
     },
 
