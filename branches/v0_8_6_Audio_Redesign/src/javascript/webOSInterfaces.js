@@ -52,6 +52,10 @@ WebOSInterface = Class.create({
         this.btService.cancel();
         this.buttonService.cancel();
         
+        this.connectionService=null;
+        this.btService=null;
+        this.buttonService=null;
+        
     },
 
     wifiState:"disconnected",
@@ -71,7 +75,7 @@ WebOSInterface = Class.create({
                 case "unusable":
                 case "gprs": 
                     attemptRecovery = false;
-                    breakl
+                    break;
                 
                 default:
                     attemptRecovery = true;
@@ -81,7 +85,7 @@ WebOSInterface = Class.create({
         
         
         //reload if the wifi state has changed from disconnected to connected
-        if((response.wifi) && (response.wifi.state === "connected") && (wifiState==="disconnected"))
+        if((response.wifi) && (response.wifi.state === "connected") && (this.wifiState==="disconnected"))
         {
             
             attemptRecovery = true;
@@ -92,11 +96,9 @@ WebOSInterface = Class.create({
             {
                 this.ampachePlayer.recoverStalledBuffers();
                 this.ampachePlayer.bufferNextSong(this.ampachePlayer.player.song);
-            }
-            else
-            {
-                //if(response.wifi.state === "connected")
-                //this.ampachePlayer.recoverStalledBuffers();
+                
+                
+                
             }
             
         }
@@ -105,7 +107,7 @@ WebOSInterface = Class.create({
             this.showDialogBox("Network Event", network+ Object.toJSON(ex));
         }
         //Save wifi state
-        wifiState = response.wifi.state;
+        this.wifiState = response.wifi.state;
     },
 
     playSystemSound:function(sound)

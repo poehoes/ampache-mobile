@@ -40,7 +40,7 @@ NowPlayingAssistant = Class.create({
 
         switch (params.type) {
         case "display":
-            this.repeatMode = AmpacheMobile.audioPlayer.playList.repeat;
+            //this.repeatMode = AmpacheMobile.audioPlayer.playList.repeat;
             //this.shuffle = AmpacheMobile.audioPlayer.playList.shuffle;
             this.pauseStopItem = this.pauseItem;
             break;
@@ -48,26 +48,26 @@ NowPlayingAssistant = Class.create({
             this.playList = params.playList;
             this.startIndex = params.startIndex;
             //this.shuffle = ;
-            this.repeatMode = 0;
+            
             AmpacheMobile.audioPlayer.stop();
             AmpacheMobile.audioPlayer.newPlayList(this.playList, params.shuffle, this.startIndex);
+            AmpacheMobile.audioPlayer.playList.repeat = 0;
             break;
         case "enqueue":
-            this.repeatMode = AmpacheMobile.audioPlayer.playList.repeat;
+            //this.repeatMode = AmpacheMobile.audioPlayer.playList.repeat;
             this.pauseStopItem = this.pauseItem;
             var shuffle = params.shuffle || AmpacheMobile.audioPlayer.playList.shuffle;
             AmpacheMobile.audioPlayer.enqueuePlayList(params.playList, shuffle);
-            if(AmpacheMobile.audioPlayer.player.fullyBuffered === true)
-            {
-                AmpacheMobile.audioPlayer.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
-            }
+            
+            AmpacheMobile.audioPlayer.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
+            
             break;
         }
 
         if(params.repeat)
         {
-            this.repeatMode = params.repeat;
-            AmpacheMobile.audioPlayer.repeatMode = this.repeatMode;
+            //this.repeatMode = ;
+            AmpacheMobile.audioPlayer.repeatMode = params.repeat;
         }
 
         Mojo.Log.info("<-- NowPlayingAssistant.prototype.constuctor");
@@ -131,7 +131,7 @@ NowPlayingAssistant = Class.create({
         
         var attributes = {
             itemTemplate: 'now-playing/listitem_w_artist',
-            autoconfirmDelete:false,
+            autoconfirmDelete:true,
             swipeToDelete:true,
             reorderable:true,
             onItemRendered:this.renderPlaylist
@@ -392,18 +392,22 @@ NowPlayingAssistant = Class.create({
                 i=AmpacheMobile.audioPlayer.playList.songs.length;
             }
         }
-        AmpacheMobile.audioPlayer.playList.removeSong(event.index);
+        AmpacheMobile.audioPlayer.removeSong(event.index);
         
-        //Update XofY
-        var xofy = (AmpacheMobile.audioPlayer.player.song.index) + "/" + AmpacheMobile.audioPlayer.playList.songs.length;
-        this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
-    
         //Close Now Playing if there are no more tracks left
         if(AmpacheMobile.audioPlayer.playList.songs.length===0)
         {
             AmpacheMobile.audioPlayer.hasPlayList = false;
             this.controller.stageController.popScene();
         }
+        else
+        {
+        
+            //Update XofY
+            var xofy = (AmpacheMobile.audioPlayer.player.song.index) + "/" + AmpacheMobile.audioPlayer.playList.songs.length;
+            this.controller.get('song-x-of-y').innerHTML = xofy.escapeHTML();
+        }
+        
         
     },
     
@@ -412,7 +416,18 @@ NowPlayingAssistant = Class.create({
     listReorderHandler:function(event)
     {
         AmpacheMobile.audioPlayer.reorder(event);
-
+        //this.npList.mojo.invalidateItems(0, AmpacheMobile.audioPlayer.playList.songs.length);
+        ////Update Printouts
+        for(var i=event.index; i<AmpacheMobile.audioPlayer.playList.songs.length; i++)
+        {
+            try{
+                this.npList.mojo.getNodeByIndex(i).getElementsByClassName("npIndex")[0].innerHTML = i;
+            }
+            catch(ex)
+            {
+                i=AmpacheMobile.audioPlayer.playList.songs.length;
+            }
+        }
         
         //Update XofY
         var xofy = (AmpacheMobile.audioPlayer.player.song.index) + "/" + AmpacheMobile.audioPlayer.playList.songs.length;
@@ -435,6 +450,11 @@ NowPlayingAssistant = Class.create({
             }
             else {
                 this.showListView();
+            }
+            
+            if(AmpacheMobile.audioPlayer.player === null)
+            {
+                AmpacheMobile.audioPlayer.moveToPlayer(AmpacheMobile.audioPlayer.playList.getCurrentSong());
             }
             
             AmpacheMobile.settingsManager.settings.npPlayingListView = AmpacheMobile.audioPlayer.listIsShowing;
@@ -725,7 +745,7 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("--> hideSpinner");
         this.loadingAnimation.stop();
         this.spinnerShown = false;
-        if (AmpacheMobile.audioPlayer.player.paused) {
+        if (AmpacheMobile.audioPlayer.player && AmpacheMobile.audioPlayer.player.paused) {
             this.cmdMenuModel.items[1].items[1] = this.playItem;
         } else {
             this.cmdMenuModel.items[1].items[1] = this.pauseStopItem;
@@ -797,7 +817,10 @@ NowPlayingAssistant = Class.create({
         */
     },
     
-    
+    GetSongNode:function(song)
+    {
+        return this.npList.mojo.getNodeByIndex(song.index-1);
+    },
     
     DisplaySongInfo: function(song, currentIndex) {
         
@@ -847,7 +870,7 @@ NowPlayingAssistant = Class.create({
                     //this.npList.mojo.invalidateItems(0);
                     this.npList.mojo.invalidateItems(this.lastPlayed, 1);
                     //this.lastPlayed =null;
-                    this.npList.mojo.invalidateItems(currentIndex, 1);
+                    //this.npList.mojo.invalidateItems(currentIndex, 1);
                     
                 }
                 try {
@@ -865,7 +888,7 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("<-- NowPlayingDisplaySongInfo");
     },
 
-    printDebug: function(state, isPlayer) {
+    printDebug: function(event, isPlayer) {
         state = event.type;
         var display = null;
         switch (state) {
@@ -881,7 +904,11 @@ NowPlayingAssistant = Class.create({
             display = "Can Play Through";
             break;
         case "progress":
-            var amtDownloaded = Math.round(event.currentTarget.song.amtBuffered)+ "%";
+            var amtDownloaded ="";
+            if(event.currentTarget.song)
+            {
+                amtDownloaded = Math.round(event.currentTarget.song.amtBuffered)+ "%";
+            }
             display = "Downloading " + amtDownloaded;
             break;
         case "stalled":
@@ -912,11 +939,27 @@ NowPlayingAssistant = Class.create({
         {
         if(isPlayer===true)
         {
-            this.controller.get('player-debug').innerHTML = "Current ("+ event.currentTarget.song.index +"): "+ display;
+            if(event.currentTarget.song)
+            {
+                this.controller.get('player-debug').innerHTML = "Current ("+ event.currentTarget.song.index +"): "+ display;
+            }
+            else
+            {
+                this.controller.get('player-debug').innerHTML = "Current: "+ display;
+            }
         }
         else
         {
+            if(event.currentTarget.song)
+            {
             this.controller.get('buffer-debug').innerHTML = "Buffer ("+ event.currentTarget.song.index +"): " + display;
+            }
+            else
+            {
+                this.controller.get('buffer-debug').innerHTML = "Pool: " + display;
+            }
+            
+        
         }
         }
     },
@@ -931,7 +974,7 @@ NowPlayingAssistant = Class.create({
         var forwardButton = this.forwardItem;
         var pauseButton = this.pauseStopItem;
         centerGroup[0] = rewindButton;
-        if (AmpacheMobile.audioPlayer.player.paused===true) {
+        if (AmpacheMobile.audioPlayer.player && AmpacheMobile.audioPlayer.player.paused===true) {
             centerGroup[1] = playButton;
         } else {
             centerGroup[1] = pauseButton;
@@ -1123,9 +1166,9 @@ NowPlayingAssistant = Class.create({
         //var repeatMode = this.musicPlayer.getRepeatMode();
         var icon;
         var toggleCmd;
-        if (this.repeatMode === 0) {
+        if (AmpacheMobile.audioPlayer.playList.repeat === 0) {
             icon = 'music-repeat';
-        } else if (this.repeatMode === 1) {
+        } else if (AmpacheMobile.audioPlayer.playList.repeat === 1) {
             icon = 'music-repeat';
             toggleCmd = 'toggleRepeat';
         } else {
@@ -1143,15 +1186,14 @@ NowPlayingAssistant = Class.create({
     },
 
     toggleRepeat: function() {
-        this.repeatMode++;
-        this.repeatMode = this.repeatMode % 3;
-        Mojo.Log.info("--> toggleRepeat  repeatMode:", this.repeatMode);
-        AmpacheMobile.audioPlayer.setRepeatMode(this.repeatMode);
+        AmpacheMobile.audioPlayer.playList.repeat++;
+        AmpacheMobile.audioPlayer.playList.repeat = AmpacheMobile.audioPlayer.playList.repeat % 3;
+        //Mojo.Log.info("--> toggleRepeat  repeatMode:", this.repeatMode);
+        //AmpacheMobile.audioPlayer.setRepeatMode(AmpacheMobile.audioPlayer.playList.repeat);
         this.setMenuControls();
     },
 
-    setRepeatMode: function(mode) {
-        this.repeatMode = mode;
+    setRepeatMode: function() {
         this.setMenuControls();
     },
 
@@ -1168,10 +1210,9 @@ NowPlayingAssistant = Class.create({
         //this.npList.mojo.noticeUpdatedItems(0, AmpacheMobile.audioPlayer.playList.songs);
         this.npList.mojo.revealItem(AmpacheMobile.audioPlayer.playList.current, false);
         AmpacheMobile.audioPlayer.audioBuffers.sort(AmpacheMobile.audioPlayer.sortBuffers);
-        if(AmpacheMobile.audioPlayer.player.fullyBuffered === true)
-        {
-            AmpacheMobile.audioPlayer.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
-        }
+        
+        AmpacheMobile.audioPlayer.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
+        
     },
 
     playItem: {

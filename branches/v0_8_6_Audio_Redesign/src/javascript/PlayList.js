@@ -1,7 +1,7 @@
 var RepeatModeType = {
     "no_repeat": 0,
     "repeat_forever": 1,
-    "repeat_once": 2
+    "repeat_song": 2
 };
 
 PlayList = Class.create({
@@ -63,15 +63,15 @@ PlayList = Class.create({
                 this.shuffleOn();
             }
 
+            Mojo.Controller.getAppController().showBanner(songsList.length + " songs added to playlist", {
+                source: 'notification'
+            });
         }
 
     },
 
     removeSong: function(index) {
-        //if(index === this.currentPlayingTrack)
-        //{
-        //    this.play_next(false);
-        //}
+        
 
         var playlist = this.songs;
         playlist.splice(index, 1);
@@ -87,12 +87,21 @@ PlayList = Class.create({
             this.current--;
         }
 
+        
+        
+        
         //if (this.shuffle === true) {
         //    this.shuffleOn();
         //}
 
         //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-
+        //if(current === true)
+        //{
+        //    AmpacheMobile.audioPlayer.player = null;
+        //    AmpacheMobile.audioPlayer.moveToPlayer(this.getCurrentSong());
+        //    AmpacheMobile.audioPlayer.UIInvalidateSong(this.getCurrentSong());
+        //}
+        //AmpacheMobile.audioPlayer.bufferNextSong(this.getCurrentSong());
     },
 
     /********************************************/
@@ -103,29 +112,32 @@ PlayList = Class.create({
     *  \return 
     ***********************************************/
     reorder: function(event) {
-        var item = this.songs[event.fromIndex];
+        //var item = this.songs[event.fromIndex];
+        var newCurrent = -1;
+        this.songs.splice(event.toIndex, 0, this.songs.splice(event.fromIndex, 1)[0]);
+        if (event.fromIndex === this.current) {
+            newCurrent = event.toIndex;
+        }
+        
+        
         if (event.fromIndex < event.toIndex) { //Dragging down list
-
-            this.songs.splice(event.fromIndex, 1);
-            this.songs.splice(event.toIndex, 0, item);
-            if (event.fromIndex === this.current) {
-                this.current = event.toIndex;
-            } else if ((event.fromIndex < this.current) && (event.toIndex >= this.current)) {
+            if ((event.fromIndex < this.current) && (event.toIndex >= this.current)) {
                 this.current--;
             }
 
         } else { //Dragging up list
-            this.songs.splice(event.fromIndex, 1);
-            this.songs.splice(event.toIndex, 0, item);
-            if (event.fromIndex === this.current) {
-                this.current = event.toIndex;
-            } else if ((event.fromIndex > this.current) && (event.toIndex <= this.current)) {
+            if ((event.fromIndex > this.current) && (event.toIndex <= this.current)) {
                 this.current++;
             }
         }
 
         for (var i = 0; i < this.songs.length; i++) {
             this.songs[i].index = i + 1;
+        }
+
+        if(newCurrent!== -1)
+        {
+            this.current = newCurrent;
         }
 
         //this.playback = this.getSequentialIntArray();
@@ -149,7 +161,7 @@ PlayList = Class.create({
         var from;
         
         //Shuffle (the bigger the multiplier the more shuffle)
-        for(var i =0; i<(this.songs.length);i++)
+        for(var i =0; i<(this.songs.length*2);i++)
         {
             to = Math.floor(Math.random() * this.songs.length);
             from = Math.floor(Math.random() * this.songs.length);
@@ -157,7 +169,7 @@ PlayList = Class.create({
             this.songs.splice(to, 0, this.songs.splice(from, 1)[0]);
         }
         
-        //this.songs.sort(this.randBool);
+        this.songs.sort(this.randBool);
         
         //Put the current song on the top of the list
         this.songs.unshift(currentSong);
@@ -229,6 +241,50 @@ PlayList = Class.create({
         return song;
     },
 
+
+    /********************************************/
+    /**
+    *  Checks if a given track is within the currently playing window
+    *  
+    *  \return True if
+    ***********************************************/
+    isInCurrentWindow:function(song,size)
+    { 
+        var window = this.getCurrentWindow(size);
+        var isIn = false;
+        for(var i =0; (i<window.length) && (isIn===false);i++)
+        {
+            if(song.index===window[i])
+            {
+                isIn=true;
+            }
+        }
+        return isIn;
+    },
+    
+    getCurrentWindow:function(size)
+    {
+        var winSize = size-1;
+        var window = new Array();
+        var song = this.getCurrentSong();
+        window.push(song.index);
+        while(winSize !== 0)
+        {
+            song = this.peekNextSong(song);
+            if(song!==null)
+            {
+                window.push(song.index);
+                winSize--;
+            }
+            else
+            {
+                winSize =0;
+            }
+        }
+        return window;
+    },
+
+
     /********************************************/
     /**
     *  Determines if we are pointing to the end of a playlist
@@ -252,6 +308,7 @@ PlayList = Class.create({
         var moved = true;
 
         switch (this.repeat) {
+        case RepeatModeType.repeat_song:
         case RepeatModeType.no_repeat:
             if ((this.current + 1) < this.songs.length) {
                 this.current = this.current + 1;
@@ -261,11 +318,6 @@ PlayList = Class.create({
             break;
         case RepeatModeType.repeat_forever:
             this.current = (this.current + 1) % this.songs.length;
-            break;
-        case RepeatModeType.repeat_once:
-            this.current = (this.current + 1) % this.songs.length;
-            this.repeat = RepeatModeType.no_repeat;
-            //need a way to change the button here
             break;
         }
 
@@ -296,19 +348,30 @@ PlayList = Class.create({
         var moved = true;
         this.songs[this.current].plIcon = "images/player/blank.png";
          
-        if (this.current !== 0) {
+        
+        switch (this.repeat) {
+        case RepeatModeType.repeat_song:
+        case RepeatModeType.no_repeat:
+            if (this.current !== 0) {
             this.current = this.current - 1;
         } else {
-            switch (this.repeat) {
-            case RepeatModeType.no_repeat:
                 moved = false;
-                break;
-            case RepeatModeType.repeat_once:
-            case RepeatModeType.repeat_forever:
-                this.current = (this.current - 1) % this.songs.length;
-                break;
             }
+            break;
+        case RepeatModeType.repeat_forever:
+            if(this.current === 0)
+            {
+                this.current = this.songs.length-1
+            }
+            else
+            {
+                this.current = (this.current - 1) % this.songs.length;
+            }
+            break;
         }
+        
+        
+
         
         this.songs[this.current].plIcon = "images/player/play.png";
         
@@ -322,6 +385,8 @@ PlayList = Class.create({
     *  \returns Returns song is there is next song, null if not
     ***********************************************/
     peekNextSong: function(song) {
+        if(song!==null)
+        {
         searchIndex = song.index;
         nextSong = null;
 
@@ -330,7 +395,7 @@ PlayList = Class.create({
         } else {
             return null;
         }
-
+        }
         return null;
     },
 

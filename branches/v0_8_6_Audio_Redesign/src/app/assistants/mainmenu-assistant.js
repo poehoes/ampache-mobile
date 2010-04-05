@@ -20,6 +20,9 @@ MainmenuAssistant = Class.create({
         this.ArtistList = null;
         this.AlbumsList = null;
         this.SongsList = null;
+        
+        AmpacheMobile.audioPlayer.setNumBuffers(AmpacheMobile.Account.NumBuffers);
+        
     },
 
     setup: function() {

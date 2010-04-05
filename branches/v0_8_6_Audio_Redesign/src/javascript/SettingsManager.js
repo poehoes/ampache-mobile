@@ -58,6 +58,7 @@ SettingsManager = Class.create({
         };
         //Create a database when the scene is generated
         this.depot = new Mojo.Depot(options, this.dbSuccess, this.dbFailure);
+        this.getSize
     },
 
     dbSuccess: function() {
@@ -67,6 +68,16 @@ SettingsManager = Class.create({
     dbFailure: function(transaction, result) {
         console.log("***** depot failure: ");
         Mojo.Controller.errorDialog("This is not good!.  Settings database failed to load.  Error Message: ");
+    },
+
+    getSize:function()
+    {
+        this.depot.getBucketSize("defaultbucket", this.gotSize.bind(this), null);
+    },
+
+    gotSize:function(size)
+    {
+        this.depotSize = size;
     },
 
     CreateSettings: function() {
@@ -106,7 +117,7 @@ SettingsManager = Class.create({
         var current = false;
         var key = "artists_" + account.uniqueID;
         var currentSignature = server.getServerDataTimeSignature();
-        if ((account.ArchivedArtists.key === key) && (account.ArchivedArtists.archiveSignature === currentSignature) && (server.artists === account.ArchivedArtists.numItems)) {
+        if ((account.ArchivedArtists) && (account.ArchivedArtists.key === key) && (account.ArchivedArtists.archiveSignature === currentSignature) && (server.artists === account.ArchivedArtists.numItems)) {
             current = true;
         } else {
             this.DumpSavedArtists(account, "Artists are not current, erasing");
@@ -122,7 +133,7 @@ SettingsManager = Class.create({
         }
 
 
-        if (account.ArchivedArtists.key !== "") {
+        if (account.ArchivedArtists && account.ArchivedArtists.key !== "") {
             this.depot.discard(account.ArchivedArtists.key, this.bannerMessage.bind(this, dumpString),
             function() {
                 Mojo.Controller.errorDialog("Error attempting to erase artists")
@@ -188,7 +199,7 @@ SettingsManager = Class.create({
         var current = false;
         var key = "albums_" + account.uniqueID;
         var currentSignature = server.getServerDataTimeSignature();
-        if ((account.ArchivedAlbums.key === key) && (account.ArchivedAlbums.archiveSignature === currentSignature) && (server.albums === account.ArchivedAlbums.numItems)) {
+        if ((account.ArchivedAlbums) && (account.ArchivedAlbums.key === key) && (account.ArchivedAlbums.archiveSignature === currentSignature) && (server.albums === account.ArchivedAlbums.numItems)) {
             current = true;
         } else {
             this.DumpSavedAlbums(account,  "Albums are not current, erasing");
@@ -204,7 +215,7 @@ SettingsManager = Class.create({
             dumpString = "Saved albums have been erased.";
         }
 
-        if (account.ArchivedAlbums.key !== "") {
+        if (account.ArchivedAlbums && account.ArchivedAlbums.key !== "") {
             this.depot.discard(account.ArchivedAlbums.key, this.bannerMessage.bind(this, dumpString),
             function() {
                 Mojo.Controller.errorDialog("Error dumping albums")
@@ -373,6 +384,16 @@ SettingsManager = Class.create({
                     var date = new Date();
                     this.settings.Accounts[i].uniqueID = this.settings.Accounts[i].AccountName + "_" + date.getTime();
                 }
+                
+                if (!this.settings.Accounts[i].NumBuffers) {    
+                    this.settings.Accounts[i].NumBuffers = 2;
+                }
+                
+                if (!this.settings.Accounts[i].ApacheTimeout) {    
+                    this.settings.Accounts[i].ApacheTimeout = 120;
+                }
+                
+                
 
             }
             this.SaveSettings(null, null);
@@ -432,7 +453,9 @@ Account = Class.create({
     StallRecovery: false,
     FetchSize: DEFAULT_FETCH_SIZE,
     ArchivedArtists: null,
-    ArchivedAlbums: null
+    ArchivedAlbums: null,
+    NumBuffers:2,
+    ApacheTimeout:120
 
 });
 

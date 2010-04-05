@@ -53,7 +53,37 @@ AccountAssistant = Class.create({
         },
         this.accountTypeModel);
 
+        this.numBuffTypeModel = {
+                value:  this.Account.NumBuffers,
+                disabled: false                
+        };        
 
+        this.controller.setupWidget("num-buffers-selector",
+            this.attributes = {
+                labelPlacement: Mojo.Widget.labelPlacementLeft,
+                label: "# of Buffers",
+                choices: [
+                    {label: "1", value:1},
+                     {label: "2", value:2},
+                      {label: "3", value:3},
+                       {label: "4", value:4},
+                        {label: "5", value:5}
+                    
+                ]
+            },this.numBuffTypeModel
+           
+        ); 
+
+        this.controller.setupWidget("apache-timeout",
+            this.attributes = {
+                //hintText: $L('Type Password')
+                charsAllow:this.IsNumeric
+            },
+            this.model = {
+                value: this.Account.ApacheTimeout
+            }
+        );
+        
 
         this.context = this;
 
@@ -98,10 +128,14 @@ AccountAssistant = Class.create({
 
         Mojo.Event.listen(this.controller.get('btnTestConnection'), Mojo.Event.tap, this.callStartTest.bind(this));
 
+        this.controller.listen("num-buffers-selector", Mojo.Event.propertyChange, this.numBuffersChanged.bindAsEventListener(this));
+
         this.controller.listen("AccountNameField", Mojo.Event.propertyChange, this.changeAccountName.bindAsEventListener(this));
         this.controller.listen("ServerURLField", Mojo.Event.propertyChange, this.changeURL.bindAsEventListener(this));
         this.controller.listen("passwordField", Mojo.Event.propertyChange, this.changePassword.bindAsEventListener(this));
         this.controller.listen("userNameField", Mojo.Event.propertyChange, this.changeUserName.bindAsEventListener(this));
+        this.controller.listen("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout.bindAsEventListener(this));
+    
 
         //*****************************************************************************
         // Fetch Size Setup
@@ -175,6 +209,19 @@ AccountAssistant = Class.create({
         
 
     },
+
+     IsNumeric:function(val) {
+
+    if ((val < 48) || (val> 57)) {
+
+          return false;
+
+     }
+
+     return true
+
+    },
+
 
     ValidSettings: function(account) {
         var retVal = true;
@@ -345,6 +392,11 @@ AccountAssistant = Class.create({
          */
     },
 
+    numBuffersChanged:function()
+    {
+        this.Account.NumBuffers = event.value;
+    },
+
     //Logarithmic scale for the FetchSize
     FetchSizeChanged: function(event) {
         var value = Math.pow(DEFAULT_MAX_FETCH, this.sliderModel.value);
@@ -388,6 +440,12 @@ AccountAssistant = Class.create({
         this.Account.UserName = event.value;
     },
 
+    changeApacheTimeout:function(event)
+    {
+        this.Account.ApacheTimeout = Number(event.value);
+    },
+    
+
     activate: function(event) {
         /* put in event handlers here that should only be in effect when this scene is active. For
          example, key handlers that are observing the document */
@@ -422,6 +480,8 @@ AccountAssistant = Class.create({
         this.controller.stopListening(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
         this.controller.stopListening(this.controller.get('deleteArtists'), Mojo.Event.tap, this.deleteArtistsHandler);
         this.controller.stopListening(this.controller.get('deleteAlbums'), Mojo.Event.tap, this.deleteAlbumnHandler);
+        this.controller.stopListening("num-buffers-selector", Mojo.Event.propertyChange, this.numBuffersChanged);
+        this.controller.stopListening("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout);
     },
 
     deleteAllHandler:function()

@@ -20,6 +20,8 @@
 
 var STALL_RETRY_TIME = "20000";
 
+var PLAYBACK_TIMERTICK = 1000;
+//var TCP_TIMEOUT = 120 * 1000; //in secs
 var AudioType = {
     "pool": 0,
     "player": 1,
@@ -27,177 +29,206 @@ var AudioType = {
 };
 
 AudioPlayer = Class.create({
-    
-    playList:null,
 
-    hasPlayList:false,
-    
-    player:null,
-    audioBuffers:null,
-    bufferPool:null,
-    
+    playList: null,
+
+    hasPlayList: false,
+
+    player: null,
+    audioBuffers: null,
+    bufferPool: null,
+
     //buffer:null,
+    streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "timeupdate"],
 
-    streamingEvents : ["play", "pause", "error", "ended", "canplay",
-                      "emptied", "load", "loadstart",
-                      "waiting", "progress"],
-    
     //seeked seeking, "durationchange" "canplaythrough", "abort",  
-
     //bufferingEvents : ["abort", "error", "ended", "emptied", "load", "loadstart",
     //                   "waiting", "progress", "durationchange", "x-palm-disconnect"],
-    
+    initialize: function() {
 
-    initialize: function () {
-        
         //this.blankSong = new SongModel(0, "", "", 0, "", 0, 0, 0, "", 0, "", "");
         //this.blankSong.index = 0;
-        
         //Create 2 audio objects to toggle between streaming and buffering
         //this.audioBuffers = [];
-        this.audioBuffers = new Array();
-        this.bufferPool = new Array();
-        var audioObj = null;
-        for(var i =0; i < 2; i++) {
-            audioObj = this.createAudioObj(i);
-            audioObj.ampacheType = AudioType.pool;
-            this.addStreamingListeners(audioObj);
-            this.bufferPool.push(audioObj);
-        }
-        //this.player = this.audioBuffers[this.audioBuffers.length-1];
-        
+        this.audioBuffers = [];//new Array();
+        this.bufferPool = [];//new Array();
+        this.numBuffers = 0;
     },
 
-    createAudioObj: function (index) {
+    setNumBuffers: function(numBuffers) {
+        this.stop();
+        var buffDiff = numBuffers - this.numBuffers;
+
+        var audioObj = null;
+        if (buffDiff > 0) {
+            for (var i = 0; i < buffDiff; i++) {
+                audioObj = this.createAudioObj(i);
+                audioObj.ampacheType = AudioType.pool;
+                this.addStreamingListeners(audioObj);
+                this.bufferPool.push(audioObj);
+            }
+        } else if (buffDiff < 0) {
+            for (var j = 0; j < ( - 1 * buffDiff); j++) {
+                this.bufferPool.pop(audioObj);
+            }
+        }
+        this.numBuffers = numBuffers;
         
+        this.tcpTimeout = (AmpacheMobile.Account.ApacheTimeout-10) *1000;
+    },
+
+    createAudioObj: function(index) {
+
         var audioObj = new Audio();
         audioObj.hasAmpacheStreamEvents = false;
         audioObj.hasAmpacheBufferEvents = false;
         audioObj.fullyBuffered = false;
         //audioObj.startedBuffering = false;
-        
         //audioObj.amtBuffered = null;
-        
+        audioObj.tcpActivity = 0;
         audioObj.name = "Buffer " + index;
         //audioObj.song = this.blankSong;
         this.setAudioToBuffer(audioObj);
-        
+
         audioObj.mojo.audioClass = "media";
-    
-        audioObj.isSong = function(song){
-          return (audioObj.src === song.url) ? true : false;
+
+        audioObj.isSong = function(song) {
+            return (audioObj.src === song.url) ? true: false;
         };
-    
-        audioObj.context = this;
-        
+
         return audioObj;
     },
 
+    sortBuffers: function(a, b) {
 
-    isSongLoaded:function(song)
-    {
-       
-    },
-
-    sortBuffers:function(a, b){
-       
         return a.song.index - b.song.index;
     },
 
-    getAudioBuffer:function(songIndex)
-    {
-        for(var i=0; i<this.audioBuffers.length; i++) 
-        {
-            if(this.audioBuffers[i].song.index === songIndex)
-            {
+    getAudioBuffer: function(songIndex) {
+        for (var i = 0; i < this.audioBuffers.length; i++) {
+            if (this.audioBuffers[i].song.index === songIndex) {
                 return this.audioBuffers[i];
-                
+
             }
         }
         return null;
     },
-    
-    findActiveBuffer:function(){
-        for(var i=0; i<this.audioBuffers.length; i++) 
-        {
+
+    findActiveBuffer: function() {
+        for (var i = 0; i < this.audioBuffers.length; i++) {
             //if((this.audioBuffers[i].fullyBuffered === false) && (this.audioBuffers[i].startedBuffering===true))
-            if(this.audioBuffers[i].networkState===this.audioBuffers[i].NETWORK_LOADING)
-            {
+            if (this.audioBuffers[i].fullyBuffered === false) {
                 return this.audioBuffers[i];
             }
         }
         return null;
     },
 
-    getBufferedSong:function(song)
-    {
-        for(var i=0; i<this.audioBuffers.length; i++) 
-        {
+    getBufferedSong: function(song) {
+        for (var i = 0; i < this.audioBuffers.length; i++) {
             //if((this.audioBuffers[i].isSong(song) === true) && (this.audioBuffers[i].startedBuffering===true))
             //if((this.audioBuffers[i].isSong(song) === true) && (this.audioBuffers[i].networkState===this.audioBuffers[i].NETWORK_LOADING))
-            if(this.audioBuffers[i].isSong(song) === true)
-            {
+            if (this.audioBuffers[i].isSong(song) === true) {
                 return this.audioBuffers[i];
             }
-            
+
         }
         return null;
     },
-    
-    
-    recoverStalledBuffers:function()
-    {
+
+    recoverStalledBuffers: function() {
+        this.bufferMutex = true;
         //var tempArray = new Array();
-         for(var i=0; i<this.audioBuffers.length; i++) 
-        {
-            if((this.audioBuffers[i].fullyBuffered ===  false) && (this.audioBuffers[i] !== this.player))
-            {
+        for (var i = 0; i < this.audioBuffers.length; i++) {
+            if ((this.audioBuffers[i].fullyBuffered === false) && (this.audioBuffers[i] !== this.player)) {
                 this.putThisBufferIntoPool(this.popThisBuffer(this.audioBuffers[i]));
-                i=-1;
+                i = -1;
             }
-            
+
         }
-        
+        this.bufferMutex = false;
     },
-    
-    popThisBuffer:function(buffer)
-    {
-        for(var i=0; i<this.audioBuffers.length; i++) 
-        {
-            if(this.audioBuffers[i] === buffer)
-            {
-                this.audioBuffers.splice(i,1);
+
+    rebufferSong: function(audioObj) {
+        audioObj.src = "media/empty.mp3";
+        audioObj.load();
+        audioObj.autoplay = false;
+
+        audioObj.src = audioObj.song.url;
+        audioObj.load();
+        audioObj.song.amtBuffered = 0;
+        audioObj.autoplay = true;
+
+        this.UIInvalidateSong(audioObj.song);
+    },
+
+    recoverFromAudioServiceFailure: function() {
+        Mojo.Controller.getAppController().showBanner("webOS Audio Crash, Recovering", {
+            source: 'notification'
+        });
+        //var song = this.player.song;
+        this.UIStopPlaybackTimer();
+        this.rebufferSong(this.player);
+        //this.stop();
+        //this.player = this.bufferPool.pop();
+        //this.audioBuffers.push(this.player);
+
+    },
+
+    recoverBufferMemory: function() {
+        this.bufferMutex = true;
+        //var tempArray = new Array();
+        var i =0;
+        while (i < this.audioBuffers.length) {
+
+            if (this.audioBuffers[i] != this.player) {
+                //Mojo.Controller.getAppController().showBanner("Recovering " + this.audioBuffers[i].song.title, {
+                //    source: 'notification'
+                //});
+                this.putThisBufferIntoPool(this.popThisBuffer(this.audioBuffers[i]));
+                i = 0;
+            } else {
+                i++;
+            }
+        }
+
+        this.bufferMutex = false;
+    },
+
+    popThisBuffer: function(buffer) {
+        this.bufferMutex = true;
+        for (var i = 0; i < this.audioBuffers.length; i++) {
+            if (this.audioBuffers[i] === buffer) {
+                this.audioBuffers.splice(i, 1);
                 this.audioBuffers.sort(this.sortBuffers);
+                this.bufferMutex = false;
                 return buffer;
             }
         }
-        
+        this.bufferMutex = false;
         return null;
     },
-    
-    putThisBufferIntoPool:function(buffer)
-    {
-        if(buffer!== null)
-        {
+
+    putThisBufferIntoPool: function(buffer) {
+        if (buffer !== null) {
             buffer.ampacheType = AudioType.pool;
-            buffer.src = "../media/empty.mp3";
+            buffer.src = "media/empty.mp3";
             buffer.load();
             buffer.autoplay = false;
             buffer.fullyBuffered = false;
             buffer.song.amtBuffered = 0;
             this.UIInvalidateSong(buffer.song);
-            buffer.song = null;     
+            buffer.song = null;
             this.bufferPool.push(buffer);
         }
     },
 
-    loadSongIntoPlayer:function(player, song)
-    {
+    loadSongIntoPlayer: function(player, song) {
         player.ampacheType = AudioType.player;
         //player.pause();
         //player.empty();
         player.song.plIcon = "images/player/blank.png";
-        
+
         player.song.amtBuffered = 0;
         this.UIInvalidateSong(player.song);
         player.src = song.url;
@@ -213,111 +244,121 @@ AudioPlayer = Class.create({
         return player;
     },
 
+    removeBuffersOutsideWindow: function() {
+        this.bufferMutex = true;
+        var i = 0;
 
-    bufferMutex:false,
-    waitForBufferMutex:function(){
-        if(this.bufferMutex===true)
-        {
-                Mojo.Controller.errorDialog("Buffer Mutex: " + this.bufferMutex);
+        while (i < this.audioBuffers.length) {
+
+            if (this.playList.isInCurrentWindow(this.audioBuffers[i].song, this.numBuffers) === false) {
+                //Mojo.Controller.getAppController().showBanner("Recovering " + this.audioBuffers[i].song.title, {
+                //    source: 'notification'
+                //});
+                this.putThisBufferIntoPool(this.popThisBuffer(this.audioBuffers[i]));
+                i = 0;
+            } else {
+                i++;
+            }
         }
-        while(this.bufferMutex===true)
-        {
-            
-        }
-        
+        this.bufferMutex = false;
     },
-    
 
-    moveToPlayer:function(song) {
-        
+    bufferMutex: false,
+    waitForBufferMutex: function() {
+        if (this.bufferMutex === true) {
+            Mojo.Controller.errorDialog("Buffer Mutex: " + this.bufferMutex);
+        }
+        while (this.bufferMutex === true) {
+
+}
+
+    },
+
+    moveToPlayer: function(song) {
+
         var player = null;
         //var playerIndex =0;
         var reverse = false;
-        
-        this.waitForBufferMutex();
+
+        this.stopBufferRecovery();
+
+        //this.waitForBufferMutex();
         this.bufferMutex = true;
-        
-        
+
         //Capture Old buffers
         //var oldTracks = []
         //for(var i=0; i<this.audioBuffers.length; i++) 
         //{
         //    oldTracks[i] = this.audioBuffers[i].song;
         //}
-        
         //Cleanup old player
-        if(this.player)
-        {  
+        if (this.player) {
             var direction = song.index - this.player.song.index;
-            if(direction<0)
-            {
+            if (direction < 0) {
                 reverse = true;
             }
             this.setAudioToBuffer(this.player);
         }
-    
-        
+
         //first check if we've already buffered the song
         player = this.getBufferedSong(song);
-        
-        if(player === null)
-        {   //Song no currently in a buffer
-            
+
+        if (player === null) { //Song no currently in a buffer
             //Check if there is another active buffer we can use
             player = this.findActiveBuffer();
-        
+
             //If no active buffer, next check the buffer pool for a free buffer
-            if( (player===null) && (this.bufferPool.length!== 0) )
-            {
+            if ((player === null) && (this.bufferPool.length !== 0)) {
                 player = this.bufferPool.pop();
                 player.song = song;
                 this.audioBuffers.push(player);
             }
-        
+
             //Player Requires load
-            if(player !== null)
-            {
-                 player = this.loadSongIntoPlayer(player,song);
+            if (player !== null) {
+                player = this.loadSongIntoPlayer(player, song);
             }
-        }
-        else
-        {
-            if(player.readyState>=player.HAVE_FUTURE_DATA)
-            {
+        } else {
+            //Song already buffered
+            var timeSinceTCP = this.getCurrentMsSecs() - player.tcpActivity;
+            if ((timeSinceTCP > this.tcpTimeout) && (player.fullyBuffered === false)) { //Socket Timed Out
+                //Mojo.Controller.getAppController().showBanner("Buffer Timeout, Restarting", {
+                //    source: 'notification'
+                //});
+                this.rebufferSong(player);
+            } else {
                 player.play();
             }
-            else if(player.readyState===player.HAVE_NOTHING)
-            {   //Attempt to recover a stalled out buffer
-                player.load()
-                player.audioplay = true;
-            }
-            else
-            {   
-                player.audioplay = true;
-            }
-            
+
+            //if (player.readyState >= player.HAVE_FUTURE_DATA) {
+            //    player.play();
+            //} else if (player.readyState === player.HAVE_NOTHING) { //Attempt to recover a stalled out buffer
+            //    player.load();
+            //    player.audioplay = true;
+            //} else {
+            //    player.audioplay = true;
+            //}
         }
-        
-        
+
         //at this point no active, pooled or buffered
-        if(player===null)
-        {
+        if (player === null) {
             this.audioBuffers.sort(this.sortBuffers);
-            if(reverse === true)
-            {
+            if (reverse === true) {
                 this.audioBuffers.reverse();
             }
             player = this.audioBuffers.shift();
-            this.audioBuffers.push(player);  
-            player = this.loadSongIntoPlayer(player,song);
+            this.audioBuffers.push(player);
+            player = this.loadSongIntoPlayer(player, song);
         }
-        
+
         this.audioBuffers.sort(this.sortBuffers);
         this.player = player;
         this.setAudioToPlayer(this.player);
         this.UIInvalidateSong(this.player.song);
+
+        this.startBufferRecovery();
+        //this.removeBuffersOutsideWindow();
         //this.UIInvalidateSong(player.song);
-        
         //redraw UI to reflect changes
         //for(var i=0; i<oldTracks.length; i++) 
         //{
@@ -328,53 +369,43 @@ AudioPlayer = Class.create({
         //{
         //    this.UIInvalidateSong(this.audioBuffers[i]);   
         //}
-        
         this.UIUpdateSongInfo(this.player.song);
         this.bufferMutex = false;
     },
-    
-    
-    bufferNextSong:function(lastSongLoaded) {
+
+    bufferNextSong: function(lastSongLoaded) {
         //Check if the song is alreay in an object
-        var song = this.playList.peekNextSong(lastSongLoaded)
+        //this.waitForBufferMutex();
+        this.bufferMutex = true;
+
+        var song = this.playList.peekNextSong(lastSongLoaded);
         var index = 0;
-        
-        if(song !== null)
-        {
+
+        if ((song !== null) && (this.player.fullyBuffered === true)) {
             var buffered = false;
-            var buffer=null;
+            var buffer = null;
             //Is Song Already Buffered
             buffer = this.getBufferedSong(song);
-            
-          
-            
-                if(buffer !== null)
-                {
-                    buffered = true;
-                    
-                    //Check if we have enough data to seek
-                    if(buffer.readyState>buffer.HAVE_NOTHING)
-                    {
-                        buffer.currentTime = 0;
-                    }
-                    else
-                    {   //Attempt to reload the buffer if we have no data
-                        buffer.fullyBuffered = false;
-                        //buffer.startedBuffering = false;
-                        buffer.song.amtBuffered = 0;
-                        this.UISetBufferWait(song, true);
-                        buffer.load();
-                        buffer.autoplay = false;
-                    }
-                
-            }
-            
 
-            
-            if(buffered === false)
-            {
-                if(this.bufferPool.length!== 0 )
-                {
+            if (buffer !== null) {
+                buffered = true;
+
+                //Check if we have enough data to seek
+                if (buffer.readyState > buffer.HAVE_NOTHING) {
+                    //buffer.currentTime = 0;
+                } else { //Attempt to reload the buffer if we have no data
+                    buffer.fullyBuffered = false;
+                    //buffer.startedBuffering = false;
+                    buffer.song.amtBuffered = 0;
+                    this.UISetBufferWait(song, true);
+                    buffer.load();
+                    buffer.autoplay = false;
+                }
+
+            }
+
+            if (buffered === false) {
+                if (this.bufferPool.length !== 0) {
                     buffer = this.bufferPool.pop();
                     buffer.song = song;
                     this.audioBuffers.push(buffer);
@@ -392,80 +423,66 @@ AudioPlayer = Class.create({
                     buffer.autoplay = false;
                     buffered = true;
                     this.audioBuffers.sort(this.sortBuffers);
-                }
-                else
-                {
-                    if(this.audioBuffers[0] != this.player)
-                    {  //If the top buffer is not the the player take it and use it to buffer up the next song
-                            buffer = this.audioBuffers.shift();
-                        }
-                        else
-                        {
-                            var bottomSong = this.playList.peekSongAheadOffset(this.player.song, this.audioBuffers.length-1);   
-                            if(song.index<=bottomSong.index)
-                            {
-                                buffer = this.audioBuffers.pop();
-                            }
-                        }
-                        
-                        if(buffer!==null)
-                        {   //if this is set we have decided that we are going to buffer the next song
-                            if(buffer.song)
-                            {
-                                this.UIInvalidateSong(buffer.song);
-                            }
-                        
-                                //buffer.pause();
-                                //
-                                buffer.song.amtBuffered = 0;
-                                this.UIInvalidateSong(buffer.song);
-                                buffer.src = song.url;
-                                buffer.song = song;
-                                buffer.fullyBuffered = false;
-                                //buffer.startedBuffering = false;
-                                buffer.song.amtBuffered = 0;
-                                //this.UIInvalidateSong(buffer.song);
-                                this.UISetBufferWait(song, true);
-                                buffer.load();
-                                buffer.autoplay = false;
-                            
-                                this.audioBuffers.push(buffer);
-                                this.audioBuffers.sort(this.sortBuffers);
-                            
+                } else {
+                    if (this.audioBuffers[0] !== this.player) { //If the top buffer is not the the player take it and use it to buffer up the next song
+                        buffer = this.audioBuffers.shift();
+                    } else {
+                        var bottomSong = this.playList.peekSongAheadOffset(this.player.song, this.audioBuffers.length - 1);
+                        if (song.index <= bottomSong.index) {
+                            buffer = this.audioBuffers.pop();
                         }
                     }
-                    
-            }
-            else
-            {
-                if((buffer.fullyBuffered === true))
-                {
+
+                    if (buffer !== null) { //if this is set we have decided that we are going to buffer the next song
+                        //if (buffer.song) {
+                        //    this.UIInvalidateSong(buffer.song);
+                        //}
+                        //buffer.pause();
+                        //
+                        buffer.song.amtBuffered = 0;
+                        this.UIInvalidateSong(buffer.song);
+                        buffer.src = song.url;
+                        buffer.song = song;
+                        buffer.fullyBuffered = false;
+                        //buffer.startedBuffering = false;
+                        buffer.song.amtBuffered = 0;
+                        //this.UIInvalidateSong(buffer.song);
+                        this.UISetBufferWait(song, true);
+                        buffer.load();
+                        buffer.autoplay = false;
+
+                        this.audioBuffers.push(buffer);
+                        this.audioBuffers.sort(this.sortBuffers);
+
+                    }
+                }
+
+            } else {
+                if ((buffer.fullyBuffered === true)) {
+                    this.bufferMutex = false;
                     this.bufferNextSong(song);
                 }
             }
         }
+        this.bufferMutex = false;
     },
-    
 
-    recoverFromSleep:function()
-    {
-        var onString ="";
+    recoverFromSleep: function() {
+        var onString = "";
         //var emptied = (this.audioBuffers.length!==0);
-        for(var i=0; i<this.audioBuffers.length; i++) 
-        {
-            onString+="<BR>Buffer: " + i;
-            onString+="<BR>readyState:" + this.audioBuffers[i].readyState;
-            onString+="<BR>networkState:"+ this.audioBuffers[i].networkState;
-            onString+="<BR>Connected:"+ this.audioBuffers[i].mojo.connected
-            
+        for (var i = 0; i < this.audioBuffers.length; i++) {
+            onString += "<BR>Buffer: " + i;
+            onString += "<BR>readyState:" + this.audioBuffers[i].readyState;
+            onString += "<BR>networkState:" + this.audioBuffers[i].networkState;
+            onString += "<BR>Connected:" + this.audioBuffers[i].mojo.connected;
+
             //if(this.audioBuffers[i].readyState !== this.audioBuffers[i].HAVE_NOTHING)
             //{
             //    //emptied = false;
             //}
         }
         return onString;
-        
-        
+
         //if(emptied === true)
         //{
         //     //Capture Old buffers
@@ -484,42 +501,38 @@ AudioPlayer = Class.create({
         //}
         //return emptied;
     },
-    
-    
-    
-    addStreamingListeners:function(audioObj)
-    {   
-        var eventHandler = this.handleAudioEvents.bindAsEventListener(this);    
-        for(var i=0; i<this.streamingEvents.length; i++)
-        {
-            
+
+    addStreamingListeners: function(audioObj) {
+        var eventHandler = this.handleAudioEvents.bindAsEventListener(this);
+        for (var i = 0; i < this.streamingEvents.length; i++) {
+
             audioObj.addEventListener(this.streamingEvents[i], eventHandler);
         }
-        audioObj.hasAmpacheStreamEvents = true;   
+        audioObj.hasAmpacheStreamEvents = true;
     },
-    
-    setAudioToPlayer:function(audioObj){
+
+    setAudioToPlayer: function(audioObj) {
         audioObj.ampacheType = AudioType.player;
         audioObj.autoplay = true;
+        if (audioObj.readyState > audioObj.HAVE_NOTHING) {
+            this._seek(0);
+        }
     },
-    
-    setAudioToBuffer:function(audioObj){
+
+    setAudioToBuffer: function(audioObj) {
         audioObj.ampacheType = AudioType.buffer;
         audioObj.autoplay = false;
-        if(audioObj.readyState > audioObj.HAVE_NOTHING)
-        {
-            this.player.currentTime = 0;
-           
-        }      
+
         //audioObj.pause();
     },
-    
-    /***********************************************************************//*
+
+    /***********************************************************************/
+    /*
     * Playlist Functions
     *
     ***************************************************************************/
     newPlayList: function(newPlayList, _shuffleOn, _startIndex) {
-        
+
         this.stop();
         this.player = null;
         this.playList = new PlayList(newPlayList, _shuffleOn, 0, _startIndex);
@@ -527,144 +540,190 @@ AudioPlayer = Class.create({
         this.moveToPlayer(this.playList.getCurrentSong());
         this.hasPlayList = true;
     },
-    
+
     enqueuePlayList: function(newPlayList, _shuffleOn) {
-        if(this.playList)
-        {
+        if (this.playList) {
             this.playList.enqueueSongs(newPlayList, _shuffleOn);
-            if(this.player.fullyBuffered === true)
-            {
-                this.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
-            }
+            this.bufferNextSong(AmpacheMobile.audioPlayer.player.song);
         }
     },
-    
 
-    
-    /***********************************************************************//*
+
+    removeSong:function(index)
+    {
+        var current = false;
+        var current = false;
+        if(index === this.playList.current)
+        {
+            current = true;
+            this.next(false);
+        }
+        
+        
+        var buffer = this.getBufferedSong(this.playList.songs[index]);
+        if(buffer !== null)
+        {
+            this.putThisBufferIntoPool(this.popThisBuffer(buffer));
+        }
+
+        
+        this.playList.removeSong(index);
+        this.bufferNextSong(this.player.song);
+        this.UIInvalidateSong(this.playList.songs[index]);
+    },
+
+    /********************************************/
+    /**
+    *  Function to be called in response to a reorder list mojo event.
+    *
+    *  \param mojo reorder list event
+    *  \return 
+    ***********************************************/
+    reorder: function(event) {
+        this.playList.reorder(event);
+        //this.removeBuffersOutsideWindow();
+        //this.bufferNextSong(this.player.song);
+    },
+
+    /***********************************************************************/
+    /*
     * External Playback controls
     *
     ***************************************************************************/
-    play: function(){
-        this.player.play();
-        this.UIStartPlaybackTimer();
+    play: function() {
+        if (this.bufferMutex === false) {
+            var timeSinceTCP = this.getCurrentMsSecs() - this.player.tcpActivity;
+            if ((this.player.fullyBuffered === false) && (timeSinceTCP > this.tcpTimeout)) { //Socket Timed Out
+                Mojo.Controller.getAppController().showBanner("Buffer Timeout, Restarting", {
+                    source: 'notification'
+                });
+                this.rebufferSong(this.player);
+            } else {
+                this.player.play();
+                this.UIStartPlaybackTimer();
+            }
+
+        }
     },
-    
-    stop:function(){
+
+    stop: function() {
         var buffer;
-        while(this.audioBuffers.length!== 0) 
-        {
+        while (this.audioBuffers.length !== 0) {
             buffer = this.audioBuffers.pop();
-            this.putThisBufferIntoPool(buffer);            
+            this.putThisBufferIntoPool(buffer);
+        }
+        this.stopBufferRecovery();
+    },
+
+    pause: function() {
+        if (this.bufferMutex === false) {
+            this.player.pause();
+            this.UIStopPlaybackTimer();
         }
     },
-    
-    pause:function(){
-        this.player.pause();
-        this.UIStopPlaybackTimer();
+
+    next: function(clicked) {
+        if (this.bufferMutex === false) {
+            this.stopBufferRecovery();
+            this.ampachePaused = this.player.paused;
+
+            //this.UISetPointer(this.playList.getCurrentSong(), false);
+            if (this.playList.moveCurrentToNext() === true) {
+
+                //this.UISetPointer(this.playList.getCurrentSong(), true);
+                if(!this.play_change_interval){
+                    this.pause();
+                    this._seek(0);
+                    this.player.ampacheType = AudioType.buffer;
+                    this.timePercentage = 0;
+                    this.UIUpdatePlaybackTime();
+                }
+                this.UIUpdateSongInfo(this.playList.getCurrentSong());
+                
+                if (clicked) {
+                    this.kill_play_change_interval();
+                    this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
+                } else {
+                    this.do_play();
+                }
+
+            } else { //playlist complete
+                this.stop();
+                this.playList.current = 0;
+                this.UIUpdateSongInfo(this.playList.songs[0]);
+
+            }
+
+        }
     },
-    
-    next:function(clicked)
-    {
-        this.ampachePaused = this.player.paused;
-        
-        
-        //this.UISetPointer(this.playList.getCurrentSong(), false);
-        if(this.playList.moveCurrentToNext() === true)
-        {
+
+    previous: function(clicked) {
+        if (this.bufferMutex === false) {
+            this.stopBufferRecovery();
+            this.ampachePaused = this.player.paused;
+
+            if (this.playList.moveCurrentToPrevious() === true) {
+                
+                if(!this.play_change_interval){
+                    this.pause();
+                    this._seek(0);
+                    this.player.ampacheType = AudioType.buffer;
+                    
+                    this.timePercentage = 0;
+                    this.UIUpdatePlaybackTime();
+                }
+                this.UIUpdateSongInfo(this.playList.getCurrentSong());
+               
+               
+                if (clicked) {
+                    this.kill_play_change_interval();
+                    this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
+                } else {
+                    this.do_play();
+                }
+
+            }
+        }
+    },
+
+
+    playTrack: function(index) {
+        if (this.bufferMutex === false) {
             
-            //this.UISetPointer(this.playList.getCurrentSong(), true);
-            this.pause();
-            this.timePercentage=0;
-            this.UIUpdateSongInfo(this.playList.getCurrentSong());
-            
-            if (clicked) {
+            if (this.playList.moveToSong(index) === true) {
+                
+                if(!this.play_change_interval){
+                    this.pause();
+                    this._seek(0);
+                    this.player.ampacheType = AudioType.buffer;
+                    this.timePercentage = 0;
+                    this.UIUpdatePlaybackTime();
+                }
+                
+                
+                this.UIUpdateSongInfo(this.playList.getCurrentSong());
+                
+                
                 this.kill_play_change_interval();
                 this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
             }
-            else
-            {
-                this.do_play();
-            }
-            
-           
-            
         }
-        //else
-        //{
-            //this.UISetPointer(this.playList.getCurrentSong(), true);
-        //}
     },
-    
-    
-    
-    
-    previous:function(clicked)
-    {
-        this.ampachePaused = this.player.paused;
+
+
+    do_play: function() {
         
-        //this.UISetPointer(this.playList.getCurrentSong(), false);
-        this.player.pause();
-        if(this.playList.moveCurrentToPrevious() === true)
-        {
-            
-            this.timePercentage=0;
-            this.UIUpdateSongInfo(this.playList.getCurrentSong());
-            //this.UISetPointer(this.playList.getCurrentSong(), true);
-            ////Stop Currently playing song
-            //this.pause();
-            //var nextSong = this.playList.getCurrentSong();
-            //this.moveToPlayer(nextSong, true);
-            //this.play();
-            ////this.seek(0);
-            //if(this.player.fullyBuffered === false)
-            //{
-            //    //this.bufferNextSong(nextSong);
-            //}
-            if (clicked) {
-                this.kill_play_change_interval();
-                this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
-            }
-            else
-            {
-                this.do_play();
-            }
-            
-        }
-        //else
-        //{
-        //    this.UISetPointer(this.playList.getCurrentSong(), true);
-        //}
-    },
-    
-    do_play:function()
-    {
         this.kill_play_change_interval();
-        this.timePercentage =0;
-        //this.removeStreamingListeners(this.player);
-        //this.player.ampacheType = AudioType.buffer;
-        //this.player.autoplay = false;
-            
-            //Stop Currently playing song
-            //this.pause();
-            //this.seek(0);
-            
-            var nextSong = this.playList.getCurrentSong();
-            this.moveToPlayer(nextSong);
-            //if(this.ampachePaused === false)
-            //{
-            //    this.play();
-            //}
-            //this.seek(0);
-            
-            
-            //If the current song is already fully buffered then buffer the next
-            if(this.player.fullyBuffered === true)
-            {
-                this.bufferNextSong(nextSong);
-            }
+        this.timePercentage = 0;
+        
+        var nextSong = this.playList.getCurrentSong();
+        this.moveToPlayer(nextSong);
+        
+        //If the current song is already fully buffered then buffer the next
+        this.bufferNextSong(this.player.song);
+        
     },
-    
+
     play_change_interval: null,
 
     kill_play_change_interval: function() {
@@ -673,268 +732,303 @@ AudioPlayer = Class.create({
             this.play_change_interval = null;
         }
     },
-    
-    playTrack:function(index)
-    {
-        //this.UISetPointer(this.playList.getCurrentSong(), false);
-        this.player.pause;
-        if(this.playList.moveToSong(index) ===true)
-        {
-            this.timePercentage=0;
-            this.UIUpdateSongInfo(this.playList.getCurrentSong());
-            this.kill_play_change_interval();
-            this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
+
+
+
+    //Buffer Recovery Worker
+    runBufferRecoveryWorker: function() {
+        this.stopBufferRecovery();
+        this.removeBuffersOutsideWindow();
+        this.bufferNextSong(this.player.song);
+        for (var i = 0; i < this.audioBuffers.length; i++) {
+
+            var player = this.audioBuffers[i];
+            if (player !== this.player) {
+                var timeSinceTCP = this.getCurrentMsSecs() - player.tcpActivity;
+                if ((timeSinceTCP > this.tcpTimeout) && (player.fullyBuffered === false)) { //Socket Timed Out
+                    //Mojo.Controller.getAppController().showBanner("Buffer Timeout, Restarting", {
+                    //    source: 'notification'
+                    //});
+                    player.src = "media/empty.mp3";
+                    player.load();
+                    player.autoplay = false;
+
+                    player.src = player.song.url;
+                    player.load();
+                    player.song.amtBuffered = 0;
+                    player.autoplay = false;
+
+                    this.UIInvalidateSong(player.song);
+                }
+            }
+        }
+        this.startBufferRecovery();
+    },
+
+    stopBufferRecovery: function() {
+        if (this.buffer_recovery_interval) {
+            window.clearInterval(this.buffer_recovery_interval);
+            this.buffer_recovery_interval = null;
         }
     },
-    
-    
-    seek:function(seekTime)
-    {
-        if(seekTime < this.player.duration)
-        {
-            if(seekTime >= 0)
-            {
+
+    startBufferRecovery: function() {
+        if (!this.buffer_recovery_interval) {
+            this.buffer_recovery_interval = window.setInterval(this.runBufferRecoveryWorker.bind(this), 10000);
+        }
+    },
+
+    seek: function(seekTime) {
+        if (seekTime < this.player.duration) {
+            if (seekTime >= 0) {
                 this._seek(seekTime);
-            }
-            else
-            {
+            } else {
                 this._seek(0);
             }
-        }
-        else
-        {
-            this._seek(this.player.duration-1);
+        } else {
+            this._seek(this.player.duration - 1);
         }
     },
-    
-    jump:function(seconds)
-    {
-        this.seek(this.player.currentTime+seconds);
+
+    jump: function(seconds) {
+        this.seek(this.player.currentTime + seconds);
     },
-    
-    seekPercentage:function(percent)
-    {
+
+    seekPercentage: function(percent) {
         var secs = this.player.currentTime;
         var duration = this.player.duration;
         if ((duration) && (duration !== 0)) {
             var secs = Math.round(percent * duration);
         }
-    
+
         this.seek(secs);
-       
+
     },
-    
-    
-    /***********************************************************************//*
+
+    /***********************************************************************/
+    /*
     * Internal Playback controls and user feedback
     *
     ***************************************************************************/
-    _seek:function(seekTime)
-    {
-        if(this.player.readyState > this.player.HAVE_NOTHING)
-        {
-            this.player.currentTime = seekTime;
-            if(this.player.paused)
-            {
-                this.UIUpdatePlaybackTime();
+    _seek: function(seekTime) {
+        if (this.player.readyState > this.player.HAVE_NOTHING) {
+            var timeDiff = seekTime - this.player.currentTime;
+            if (timeDiff < 0) { //Make difference positive
+                timeDiff = timeDiff * -1;
             }
-        }        
+
+            if (timeDiff > 1) { //only seek if the diff is greater than 1 secs
+                this.player.currentTime = seekTime;
+
+                if (this.player.paused) {
+                    this.UIUpdatePlaybackTime();
+                }
+            }
+        }
     },
-    
-    logAudioEvent:function(source, event)
-    {
-        Mojo.Log.info(source +" AudioEvent: "+ event.type);
+
+    logAudioEvent: function(source, event) {
+        Mojo.Log.info(source + " AudioEvent: " + event.type);
         Mojo.Log.info("Player " + event.currentTarget.name);
-        Mojo.Log.info("Song: "+ event.currentTarget.song.title);
+        Mojo.Log.info("Song: " + event.currentTarget.song.title);
     },
-    
-    
+
     handleAudioEvents: function(event) {
-        if(event.currentTarget.ampacheType === AudioType.buffer)
-        {
+        if (event.currentTarget.ampacheType === AudioType.buffer) {
             this.handleBufferEvents(event);
-        }
-        else if(event.currentTarget.ampacheType === AudioType.player)
-        {
+        } else if (event.currentTarget.ampacheType === AudioType.player) {
             this.handlePlayerEvents(event);
-        }
-        else
-        {
+        } else {
             this.UIPrintDebug(event, false);
         }
     },
-    
-    
-    
+
+    getCurrentMsSecs: function() {
+        var time = new Date();
+        return time.getTime();
+    },
+
     handleBufferEvents: function(event) {
         //Mojo.Log.info("------> AudioPlayer.prototype.handleBufferEvents AudioEvent:", event.type);
-        var _this = this;
-        
-        //_this.logAudioEvent("handleBufferEvents", event);
-    
+        //this.logAudioEvent("handleBufferEvents", event);
         event.stop();
         event.stopPropagation();
-        
-        switch(event.type)
-        {
-            case "error":
-                //Received error buffer is no longer valid throw it away and resort the available buffer stack
-                this.recoverStalledBuffers();
 
-                
-                break;
-            case "loadstart":
-                //event.currentTarget.startedBuffering = true;
-                break;
-            
-            case "load":
-                _this.bufferingFinished(event.currentTarget);
-                _this.bufferNextSong(event.currentTarget.song);
-                break;
-            case "progress":
-                _this.UISetBufferWait(event.currentTarget.song, false);
-                //event.currentTarget.startedBuffering = true;
-                _this.updateBuffering(event.currentTarget)
-                break;
-            
-            case "emptied":
-                event.currentTarget.fullyBuffered = false;
-                //event.currentTarget.startedBuffering = false;
-                _this.updateBuffering(event.currentTarget);
-                break;
-             case "error":
-                var errorString = this.streamErrorCodeLookup(event);
-                this.UIDisplayError(errorString, event.currentTarget.song);
-                break;
+        switch (event.type) {
+        case "error":
+            //Received error buffer is no longer valid throw it away and resort the available buffer stack
+            this.recoverStalledBuffers();
+            Mojo.Controller.errorDialog("Buffering Error");
 
-            
+            break;
+        case "loadstart":
+            //event.currentTarget.startedBuffering = true;
+            event.currentTarget.tcpActivity = this.getCurrentMsSecs();
+            break;
+
+        case "load":
+            event.currentTarget.tcpActivity = this.getCurrentMsSecs();
+            this.bufferingFinished(event.currentTarget);
+            this.UISetBufferWait(event.currentTarget.song, false);
+            this.bufferNextSong(event.currentTarget.song);
+
+            break;
+        case "progress":
+            event.currentTarget.tcpActivity = this.getCurrentMsSecs();
+            //if (event.currentTarget.fullyBuffered === true) {
+            //    Mojo.Controller.errorDialog("The webOS audio service has crashed.  Attempting recovery.");
+            //    this.recoverFromAudioServiceFailure();
+            //
+            //} else {
+           
+           
+           
+                //Downloading a song above the current in the list so lets pop that off
+                if (event.currentTarget.song.index < this.player.song.index) {
+                    this.putThisBufferIntoPool(this.popThisBuffer(event.currentTarget));
+                }
+
+                this.updateBuffering(event.currentTarget);
+                if (event.currentTarget.song.amtBuffered !== 0) {
+                    this.UISetBufferWait(event.currentTarget.song, false);
+                }
+            //}
+            break;
+
+        case "emptied":
+            event.currentTarget.fullyBuffered = false;
+            //event.currentTarget.startedBuffering = false;
+            this.updateBuffering(event.currentTarget);
+            break;
+        case "error":
+            var errorString = this.streamErrorCodeLookup(event);
+            this.UIDisplayError(errorString, event.currentTarget.song);
+            break;
+
         }
-        _this.UIPrintDebug(event, false);
+        this.UIPrintDebug(event, false);
         //Mojo.Log.info("<------ AudioPlayer.prototype.handleBufferEvents AudioEvent:", event.type);
     },
-    
-    
-     handlePlayerEvents: function(event) {
+
+    handlePlayerEvents: function(event) {
         //Mojo.Log.info("------> AudioPlayer.prototype.handleAudioEvents AudioEvent:", event.type);
-        var _this = this;
-        _this.logAudioEvent("handleAudioEvents", event);
-    
+        this.logAudioEvent("handleAudioEvents", event);
+
         event.stop();
         event.stopPropagation();
-    
-        switch(event.type)
-        {
-            
-            case "load":
-                _this.UIShowSpinner(false);
-                _this.bufferingFinished(event.currentTarget);
-                _this.bufferNextSong(_this.player.song);
-                break;
-            case "loadstart":
-                _this.UIShowSpinner(true);
-                //event.currentTarget.startedBuffering = true;
-                break;
-            case "progress":
-                _this.UIShowSpinner(false);
-                //event.currentTarget.startedBuffering = true;
-                _this.updateBuffering(event.currentTarget);
-                break;
-            case "ended":
-                _this.UIShowSpinner(false);
-                _this.UIStopPlaybackTimer();
-                _this.next(false);
-                break;
-            //case "durationchange":
-             //   _this.UIUpdatePlaybackTime();
-             //   break;
-            case "timeupdate":
-                _this.UIUpdatePlaybackTime();
-                break;
-            case "play":
-                if(event.currentTarget.song.amtBuffered!== 0)
-                {
-                    _this.UIShowPause();
-                }
-                _this.UIUpdatePlaybackTime();
-                _this.UIStartPlaybackTimer();
-                break;
-            case "pause":
-                _this.UIShowPlay();
-                _this.UIStopPlaybackTimer();
-                break;
-            case "waiting":
-            case "stalled":
-                _this.UIShowSpinner(true);
-                break;
-            case "emptied":
-                event.currentTarget.fullyBuffered = false;
-                //event.currentTarget.startedBuffering = false;
-                _this.updateBuffering(event.currentTarget);
-                break;
-            case "error":
-                var errorString = _this.streamErrorCodeLookup(event);
-                _this.UIDisplayError(errorString, event.currentTarget.song);
-                break;
-        }
-        _this.UIPrintDebug(event, true);
-    },
-    
-    
-    
-    
 
-    
-    
-    
-    
+        switch (event.type) {
+
+        case "load":
+            event.currentTarget.tcpActivity = this.getCurrentMsSecs();
+            this.UIShowSpinner(false);
+            this.bufferingFinished(event.currentTarget);
+            this.bufferNextSong(this.player.song);
+            break;
+        case "loadstart":
+            event.currentTarget.tcpActivity = this.getCurrentMsSecs();
+            this.UIShowSpinner(true);
+            //event.currentTarget.startedBuffering = true;
+            break;
+        case "progress":
+            event.currentTarget.tcpActivity = this.getCurrentMsSecs();
+
+            if(event.currentTarget.fullyBuffered===true)
+           {
+                this.recoverBufferMemory();
+           }
+            
+
+            this.updateBuffering(event.currentTarget);
+            if (event.currentTarget.song.amtBuffered !== 0) {
+                this.UIShowSpinner(false);
+            }
+            break;
+        case "ended":
+            this.UIShowSpinner(false);
+            this.UIStopPlaybackTimer();
+            if (this.playList.repeat === RepeatModeType.repeat_song) {
+                this.playTrack(this.playList.current);
+            } else {
+                this.next(false);
+            }
+
+            break;
+            //case "durationchange":
+            //   this.UIUpdatePlaybackTime();
+            //   break;
+        case "timeupdate":
+            this.UIUpdatePlaybackTime();
+            break;
+        case "play":
+            if (event.currentTarget.song.amtBuffered !== 0) {
+                this.UIShowPause();
+            }
+            this.UIUpdatePlaybackTime();
+            this.UIStartPlaybackTimer();
+            break;
+        case "pause":
+            this.UIShowPlay();
+            this.UIStopPlaybackTimer();
+            break;
+        case "waiting":
+        case "stalled":
+            this.UIShowSpinner(true);
+            break;
+        case "emptied":
+            event.currentTarget.fullyBuffered = false;
+            //event.currentTarget.startedBuffering = false;
+            this.updateBuffering(event.currentTarget);
+            break;
+        case "error":
+            var errorString = this.streamErrorCodeLookup(event);
+            this.UIDisplayError(errorString, event.currentTarget.song);
+            break;
+        }
+        this.UIPrintDebug(event, true);
+    },
+
     MEDIA_ERR_SRC_NOT_SUPPORTED: 4,
 
     streamErrorCodeLookup: function(event) {
-        
+
         //refrence: http://dev.w3.org/html5/spc/Overview.html#dom-mediaerror-media_err_network
         // http://developer.palm.com/index.php?option=com_content&view=article&id=1539
         var error = event.currentTarget.error;
         var errorString = "Unknown Error";
-        
-        if(error.code === error.MEDIA_ERR_ABORTED){
+
+        if (error.code === error.MEDIA_ERR_ABORTED) {
             errorString = "The audio stream was aborted by WebOS. Most often this happens when you do not have a fast enough connection to support an audio stream.";
             errorString += this.moreErrorInfo("MEDIA_ERR_ABORTED", event);
-        }
-        else if(error.code === error.MEDIA_ERR_NETWORK){
+        } else if (error.code === error.MEDIA_ERR_NETWORK) {
             errorString = "A network error has occured. The network cannot support an audio stream at this time.";
             errorString += this.moreErrorInfo("MEDIA_ERR_NETWORK", event);
-        }
-        else if(error.code === error.MEDIA_ERR_DECODE){
+        } else if (error.code === error.MEDIA_ERR_DECODE) {
             errorString = "An error has occurred while attempting to play the file. The file is either corrupt or an unsupported format (ex: m4p, ogg, flac).  Transcoding may be required to play this file.";
             errorString += this.moreErrorInfo("MEDIA_ERR_DECODE", event);
-        }
-        else if(error.code === error.MEDIA_ERR_SRC_NOT_SUPPORTED){
-    
+        } else if (error.code === error.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+
             errorString = "The file is not suitable for streaming";
             errorString += this.moreErrorInfo("MEDIA_ERR_SRC_NOT_SUPPORTED", event);
-        }
-        else{
+        } else {
             errorString = "ErrorCode: " + errorCode;
             errorString += this.moreErrorInfo("", event);
-        }    
-        
+        }
+
         return errorString;
     },
 
     moreErrorInfo: function(type, event) {
         var player = event.currentTarget;
         var moreInfo = "<br><br><font style='{font-size:smaller;}'><b>Debug Info:</b>";
-        if(type)
-        {
+        if (type) {
             moreInfo += "<br>Error Type: " + type;
         }
-        
-        
+
         if (player.mojo) {
             var errorClass = player.mojo.getErrorClass();
             var errorCode = player.mojo.getErrorCode();
             //var errorValue = player.mojo.getErrorValue();
-        
             //var errorDetails = player.mojo.getErrorValue;
             //Mojo.Log.info("Error Details: %j", errorDetails);
             //var errorClassString = "Unknown: (0x" + errorClass.toString(16).toUpperCase() + ")";
@@ -987,12 +1081,12 @@ AudioPlayer = Class.create({
         moreInfo += "<br>Song Link: <a href=" + player.song.url + ">Stream Link</a></font>";
         return moreInfo;
     },
-    
+
     UIDisplayError: function(message, song) {
 
         this.errorSong = song;
         this.streamingError(message, null);
-        
+
     },
 
     onStreamingErrorDismiss: function(value) {
@@ -1024,7 +1118,7 @@ AudioPlayer = Class.create({
         this.errorSong = null;
         Mojo.Log.info("<-- onErrorDialogDismiss");
     },
-    
+
     streamingError: function(errorText, song) {
         //this.errorSong = song;
         var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
@@ -1047,73 +1141,107 @@ AudioPlayer = Class.create({
             allowHTMLMessage: true
         });
     },
-    
-    
-    bufferingFinished: function(audioObj)
-    {
-            audioObj.fullyBuffered = true;
-            
-            var startPercentage = (this.player.buffered.start(0) / this.player.duration);
-            var endPercentage = 1;
-            var primary = (this.player === audioObj);
-            
-            
-            audioObj.song.amtBuffered = endPercentage*100;
-            this.UIPrintBuffered(startPercentage, endPercentage, audioObj.song.index-1, primary);
-            if (this.debug) {
-                var percentage = (Math.round(endPercentage * 10000) / 100);
-                //this.NowPlayingStreamDebug("Download Complete");
-            }  
-        
+
+    bufferingFinished: function(audioObj) {
+        audioObj.fullyBuffered = true;
+
+        var startPercentage = (this.player.buffered.start(0) / this.player.duration);
+        var endPercentage = 1;
+        var primary = (this.player === audioObj);
+
+        audioObj.song.amtBuffered = endPercentage * 100;
+        this.UIPrintBuffered(startPercentage, endPercentage, audioObj.song.index - 1, primary);
+        if (this.debug) {
+            var percentage = (Math.round(endPercentage * 10000) / 100);
+            //this.NowPlayingStreamDebug("Download Complete");
+        }
+
     },
-    
-    
+
     UIStartPlaybackTimer: function() {
         if (this.UIHandler && !this.timeInterval) {
-            this.timeInterval = this.UIHandler.controller.window.setInterval(this.UIUpdatePlaybackTime.bind(this), 1000);
+            this.timeInterval = this.UIHandler.controller.window.setInterval(this.UIUpdatePlaybackTime.bind(this), PLAYBACK_TIMERTICK);
         }
     },
-    
+
     UIStopPlaybackTimer: function() {
         if ((this.UIHandler) && (this.timeInterval)) {
             this.UIHandler.controller.window.clearInterval(this.timeInterval);
             this.timeInterval = null;
         }
     },
-    
+
+    //timeIndex:0,
+    ticksUnchanged: 0,
+    lastTickValue: 0,
+
     UIUpdatePlaybackTime: function() {
-        
-        if (this.UIHandler && this.player) {
+
+        if (this.ticksUnchanged > 20) {
+            this.UIStopPlaybackTimer();
+            this.timePercentage = 0;
+            this.recoverFromAudioServiceFailure();
+
+            this.lastTickValue = 0;
+            this.ticksUnchanged = 0;
+        } else if (this.player) {
+
+            //if(this.player.paused)
+            //{
+            //    this.UIStopPlaybackTimer();
+            //}
             var duration = 0;
             var currentTime = 0;
-            if(this.player.readyState >= this.player.HAVE_ENOUGH_DATA)
-            {    
+
+            if (this.player.readyState !== this.player.HAVE_NOTHING) {
                 currentTime = Number(this.player.currentTime);
+            }
+
+            if (this.player.readyState >= this.player.HAVE_ENOUGH_DATA) {
+
                 duration = Number(this.player.duration);
             }
-            if(duration === 0)
-            {
-                    duration = Number(this.player.song.time); 
+            if (duration === 0) {
+                duration = Number(this.player.song.time);
             }
-            
-            this.timePercentage = (currentTime / duration) * 100;    
-            this.UIHandler.updateTime(currentTime, duration, this.timePercentage, this.player.song.index-1);
-       
-            
+
+            this.timePercentage = (currentTime / duration) * 100;
+
+            if (this.timePercentage === this.lastTickValue) {
+                this.ticksUnchanged++;
+                //if(this.ticksUnchanged>4)
+                //{
+                //    if((this.ticksUnchanged%5)==0)
+                //    {
+                //        Mojo.Controller.getAppController().showBanner("Time Unchanged for "+ this.ticksUnchanged + " ticks", {
+                //        source: 'notification'
+                //        });
+                //    }
+                //}
+            } else {
+                this.lastTickValue = this.timePercentage;
+                this.ticksUnchanged = 0;
+            }
+
+            if (this.UIHandler) {
+                this.UIHandler.updateTime(currentTime, duration, this.timePercentage, this.player.song.index - 1);
+            }
+            //var event = {"type":"Current Time ("+this.timeIndex+"): "+ currentTime};
+            //this.UIPrintDebug(event, false);
+            //this.timeIndex++;
         }
     },
-    
-    
+
     UIPrintBuffered: function(start, end, index, primary) {
         //this.downloadPercentage = Math.floor( end*100);
         //Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
         if (this.UIHandler) {
-            
+
             this.UIHandler.updateBuffering(start, end, index, primary);
         }
         //Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
     },
-    
+
     //UIUpdateAllBuffering:function()
     //{
     //    for(var i=0; i<this.audioBuffers.length; i++) 
@@ -1121,54 +1249,46 @@ AudioPlayer = Class.create({
     //        this.updateBuffering(this.audioBuffers[i]);
     //    }
     //},
-    
     updateBuffering: function(audioObj) {
         //Mojo.Log.info("--> AudioPlayer.prototype._updateBuffering")
-
-        var start =0;
+        var start = 0;
         var end = 0;
-    
-        if(audioObj.readyState < audioObj.HAVE_ENOUGH_DATA)
-        {   
+
+        if (audioObj.readyState < audioObj.HAVE_ENOUGH_DATA) {
             duration = Number(audioObj.song.time);
-        }
-        else
-        {
+        } else {
             duration = audioObj.duration;
-            start =  audioObj.buffered.start(0);
+            start = audioObj.buffered.start(0);
             end = audioObj.buffered.end(0);
         }
-        
+
         var startPercentage = start / duration;
         var endPercentage = end / duration;
-        
 
-        var primary = (this.player === audioObj)
-        this.UIPrintBuffered(startPercentage, endPercentage, audioObj.song.index-1, primary);
-            
-        audioObj.song.amtBuffered = endPercentage*100;
+        var primary = (this.player === audioObj);
+
+        this.UIPrintBuffered(startPercentage, endPercentage, audioObj.song.index - 1, primary);
+
+        audioObj.song.amtBuffered = endPercentage * 100;
 
     },
-    
+
     UIUpdateSongInfo: function(song) {
         if (this.UIHandler) {
-            this.UIHandler.DisplaySongInfo(song, song.index-1);
+            this.UIHandler.DisplaySongInfo(song, song.index - 1);
         }
     },
-    
-    UIInvalidateSong:function(song){
-     if (this.UIHandler) {
-            if(song)
-            {
+
+    UIInvalidateSong: function(song) {
+        if (this.UIHandler) {
+            if (song) {
                 this.UIHandler.InvalidateSong(song, song.index - 1);
-            }
-            else
-            {
-               Mojo.Log.info("Missing Song"); 
+            } else {
+                Mojo.Log.info("Missing Song");
             }
         }
     },
-    
+
     UIShowSpinner: function(_spinnerOn) {
         if (this.UIHandler) {
             if (_spinnerOn === true) {
@@ -1178,7 +1298,7 @@ AudioPlayer = Class.create({
             } else {}
         }
     },
-    
+
     UIShowPause: function() {
         if (this.UIHandler) {
             this.UIHandler.hideSpinner();
@@ -1197,77 +1317,61 @@ AudioPlayer = Class.create({
     //        this.UIHandler.SetSongPointer(song.index-1, state);
     //    }
     //},
-    
-    UISetBufferWait:function(song, state)
-    {
-        if(state === true)
-        {
+    UISetBufferWait: function(song, state) {
+        node = this.UIGetSongNode(song);
+
+        if (state === true) {
             song.plIcon = "images/icons/loading.png";
-        }
-        else
-        {
-            if(song!==this.player.song)
-            {
+        } else {
+            if ((song.index - 1) !== this.playList.current) {
                 song.plIcon = "images/player/blank.png";
-            }
-            else
-            {
+            } else {
                 song.plIcon = "images/player/play.png";
             }
         }
-        this.UIInvalidateSong(song)
+        if (node) {
+            node.getElementsByClassName("npListIcon")[0].src = song.plIcon;
+        }
+
     },
-    
+
+    UIGetSongNode: function(song) {
+        if (this.UIHandler && this.listIsShowing === true) {
+            return this.UIHandler.GetSongNode(song);
+        }
+        return null;
+    },
+
     UIPrintDebug: function(event, isPlayer) {
         if (this.UIHandler && this.debug) {
             this.UIHandler.printDebug(event, isPlayer);
         }
     },
-    
-    //
-    //
-    //
-    //
+
     setNowPlaying: function(UIHandler) {
         this.UIHandler = UIHandler;
-        
-        if(this.player && this.player.song)
-        {
-            this.UIUpdateSongInfo(this.player.song)
+
+        if (this.player && this.player.song) {
+            this.UIUpdateSongInfo(this.player.song);
         }
-        if(this.player.paused === false)
-        {
+        if (this.player.paused === false) {
             this.UIStartPlaybackTimer();
         }
-        //this.UIUpdateAllBuffering();
-        //this.UIUpdatePlaybackTime();
-        //this.NowPlayingUpdateSongInfo(this.currentPlayingTrack);
-        //this._updateBuffering();
-        //this.UpdateNowPlayingTime();
-        //
-        //if (this.Paused === false) {
-        //    this.NowPlayingStartPlaybackTimer();
-        //    this.NowPlayingShowPause();
-        //} else {
-        //    this.NowPlayingShowPlay();
-        //}
+
     },
-    //
+
     clearNowPlaying: function() {
         this.UIStopPlaybackTimer();
         this.UIHandler = null;
     },
-    
-    cleanup:function()
-    {
+
+    cleanup: function() {
         this.stop();
         this.player = null;
-        while(this.audioBuffers.length !== 0)
-        {
+        while (this.audioBuffers.length !== 0) {
             this.audioBuffers.pop();
         }
-        while(this.bufferPool.length!=0)
-        {
+        while (this.bufferPool.length !== 0) {
             this.bufferPool.pop();
         }
         this.playList = null;
