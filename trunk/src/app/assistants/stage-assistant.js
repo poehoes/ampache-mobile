@@ -42,6 +42,7 @@ AmpacheMobile.EmptyResponseErrorHelp = "Phone not connecting to Ampache." + "<br
 //};
 
 
+
 function StageAssistant(stageController) {
     //AmpacheMobile.stageController = stageController;
     //AmpacheMobile.audioPlayer = new AudioPlayer(stageController);
@@ -76,6 +77,7 @@ StageAssistant.nowPlayingMenu = {
             command: "push-np-cmd",
             shortcut: "n"
         },
+        
         //{
         //    label: "Next Track",
         //    disabled: true,
@@ -103,6 +105,9 @@ StageAssistant.preferencesMenu = {
         command: "doPref-cmd",
         shortcut: "p"
     };
+
+
+
 
 StageAssistant.appMenuModel = {
     visible: true,
@@ -188,7 +193,7 @@ StageAssistant.prototype.handleCommand = function(event) {
         switch (event.command) {
         case "doPref-cmd":
 
-            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+            if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                 event.preventDefault();
                 event.stopPropagation();
 
@@ -243,20 +248,20 @@ StageAssistant.prototype.handleCommand = function(event) {
             });
             break;
         case "push-np-prev":
-             if (AmpacheMobile.audioPlayer.PlayListPending === true) {
-                AmpacheMobile.audioPlayer.play_prev();
+             if (AmpacheMobile.audioPlayer.hasPlayList === true) {
+                AmpacheMobile.audioPlayer.previous();
              }
              break;
         case "push-np-next":
-            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
-                AmpacheMobile.audioPlayer.play_next();
+            if (AmpacheMobile.audioPlayer.hasPlayList === true) {
+                AmpacheMobile.audioPlayer.next();
              }
              break;
             
         case "push-np-playPause":
             
             
-       if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+       if (AmpacheMobile.audioPlayer.hasPlayList === true) {
         if (!AmpacheMobile.audioPlayer.player.paused) {
             AmpacheMobile.audioPlayer.pause();
         } else {
@@ -265,10 +270,18 @@ StageAssistant.prototype.handleCommand = function(event) {
        }
     
             break;
+        case "doDiscard-cmd":
+            if(AmpacheMobile.Account!==null)
+            {
+                AmpacheMobile.settingsManager.discardSavedData(AmpacheMobile.Account);
+            }
+            break;
+        
+        
         case "delete-np-cmd":
-            if (AmpacheMobile.audioPlayer.PlayListPending === true) {
+            if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                 AmpacheMobile.audioPlayer.stop();
-                AmpacheMobile.audioPlayer.PlayListPending = false;
+                AmpacheMobile.audioPlayer.hasPlayList = false;
                 var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
                 var button = controller.get('now-playing-button');
                 button.style.display = 'none';
@@ -290,7 +303,7 @@ StageAssistant.prototype.handleCommand = function(event) {
 };
 
 StageAssistant.prototype.pushNowPlaying = function() {
-    if ((AmpacheMobile.audioPlayer) && (AmpacheMobile.audioPlayer.PlayListPending === true)) {
+    if ((AmpacheMobile.audioPlayer) && (AmpacheMobile.audioPlayer.hasPlayList === true)) {
         Mojo.Controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "now-playing"

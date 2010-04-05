@@ -9,6 +9,8 @@
     {"source": "javascript/sha256.js"},
     {"source": "javascript/AmpacheServer.js"},
     {"source": "javascript/AudioPlayer.js"},
+    {"source": "javascript/webOSInterfaces.js"},
+    {"source": "javascript/PlayList.js"},
     {"source": "javascript/ColorPicker.js"},
     {"source": "javascript/ItemsHelper.js"},
     {"source": "javascript/ISO8601.js"},

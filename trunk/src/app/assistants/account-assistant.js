@@ -31,9 +31,60 @@ AccountAssistant = Class.create({
         /* setup widgets here */
         /* add event handlers to listen to events from widgets */
         Mojo.Log.info("Account assistant activating");
-        //Mojo.Log.info("Loading Password:", AmpacheMobile.Password);
-        //Mojo.Log.info("Loading ServerURL:", AmpacheMobile.ServerURL);
-        //Mojo.Log.info("Loading UserName:", AmpacheMobile.UserName);
+
+         this.accountTypeModel = {
+            value: 0,
+            disabled: false
+        };
+
+        this.controller.setupWidget("accountScreens", this.attributes = {
+            choices: [{
+                label: "Login",
+                value: 0
+            },
+            {
+                label: "Extras",
+                value: 1
+            },
+            {
+                label: "Saved",
+                value: 2
+            }]
+        },
+        this.accountTypeModel);
+
+        this.numBuffTypeModel = {
+                value:  this.Account.NumBuffers,
+                disabled: false                
+        };        
+
+        this.controller.setupWidget("num-buffers-selector",
+            this.attributes = {
+                labelPlacement: Mojo.Widget.labelPlacementLeft,
+                label: "# of Buffers",
+                choices: [
+                    {label: "1", value:1},
+                     {label: "2", value:2},
+                      {label: "3", value:3},
+                       {label: "4", value:4},
+                        {label: "5", value:5}
+                    
+                ]
+            },this.numBuffTypeModel
+           
+        ); 
+
+        this.controller.setupWidget("apache-timeout",
+            this.attributes = {
+                //hintText: $L('Type Password')
+                charsAllow:this.IsNumeric
+            },
+            this.model = {
+                value: this.Account.ApacheTimeout
+            }
+        );
+        
+
         this.context = this;
 
         this.controller.setupWidget("AccountNameField", this.attributes = {
@@ -77,10 +128,14 @@ AccountAssistant = Class.create({
 
         Mojo.Event.listen(this.controller.get('btnTestConnection'), Mojo.Event.tap, this.callStartTest.bind(this));
 
+        this.controller.listen("num-buffers-selector", Mojo.Event.propertyChange, this.numBuffersChanged.bindAsEventListener(this));
+
         this.controller.listen("AccountNameField", Mojo.Event.propertyChange, this.changeAccountName.bindAsEventListener(this));
         this.controller.listen("ServerURLField", Mojo.Event.propertyChange, this.changeURL.bindAsEventListener(this));
         this.controller.listen("passwordField", Mojo.Event.propertyChange, this.changePassword.bindAsEventListener(this));
         this.controller.listen("userNameField", Mojo.Event.propertyChange, this.changeUserName.bindAsEventListener(this));
+        this.controller.listen("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout.bindAsEventListener(this));
+    
 
         //*****************************************************************************
         // Fetch Size Setup
@@ -92,12 +147,12 @@ AccountAssistant = Class.create({
             updateInterval: 0.1
         };
 
-        this.model = {
+        this.sliderModel = {
             value: Math.log(this.Account.FetchSize) / Math.log(DEFAULT_MAX_FETCH)
             //width: 15
         };
 
-        this.controller.setupWidget('slider', this.attributes, this.model);
+        this.controller.setupWidget('slider', this.attributes, this.sliderModel);
         this.propertyChanged = this.FetchSizeChanged.bindAsEventListener(this);
         this.controller.listen('slider', Mojo.Event.propertyChange, this.propertyChanged);
         $('fetchSize').innerHTML = "Items: " + this.Account.FetchSize;
@@ -138,7 +193,35 @@ AccountAssistant = Class.create({
         this.StallPressedHandler = this.StallPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('stall-toggle'), Mojo.Event.propertyChange, this.StallPressedHandler);
         
+        
+        this.screenChangeHandler = this.screenChangeHandler.bind(this);
+        Mojo.Event.listen(this.controller.get('accountScreens'), Mojo.Event.propertyChange, this.screenChangeHandler);
+        this.screenChangeHandler();
+        
+        this.deleteAllHandler = this.deleteAllHandler.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
+        
+        this.deleteArtistsHandler = this.deleteArtistsHandler.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('deleteArtists'), Mojo.Event.tap, this.deleteArtistsHandler);
+        
+        this.deleteAlbumnHandler = this.deleteAlbumnHandler.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('deleteAlbums'), Mojo.Event.tap, this.deleteAlbumnHandler);
+        
+
     },
+
+     IsNumeric:function(val) {
+
+    if ((val < 48) || (val> 57)) {
+
+          return false;
+
+     }
+
+     return true
+
+    },
+
 
     ValidSettings: function(account) {
         var retVal = true;
@@ -309,9 +392,14 @@ AccountAssistant = Class.create({
          */
     },
 
+    numBuffersChanged:function()
+    {
+        this.Account.NumBuffers = event.value;
+    },
+
     //Logarithmic scale for the FetchSize
     FetchSizeChanged: function(event) {
-        var value = Math.pow(DEFAULT_MAX_FETCH, this.model.value);
+        var value = Math.pow(DEFAULT_MAX_FETCH, this.sliderModel.value);
         value = Math.round(value);
         if (value === 0) {
             value = 1;
@@ -322,23 +410,41 @@ AccountAssistant = Class.create({
 
     changeAccountName: function(event) {
         Mojo.Log.info("Account Name Changed; value = ", event.value);
+        
+        AmpacheMobile.settingsManager.discardSavedData(this.Account);
+        
         this.Account.AccountName = event.value;
+        var date = new Date();
+        this.Account.uniqueID = this.Account.AccountName + "_" +date.getTime();
+             
     },
 
     changeURL: function(event) {
         Mojo.Log.info("Server URL Changed; value = ", event.value);
+        AmpacheMobile.settingsManager.discardSavedData(this.Account);
+        
         this.Account.ServerURL = event.value;
     },
 
     changePassword: function(event) {
         Mojo.Log.info("Server Password Changed; value = ", event.value);
+        //AmpacheMobile.settingsManager.discardSavedData(this.Account);
+        
         this.Account.Password = event.value;
     },
 
     changeUserName: function(event) {
         Mojo.Log.info("Server UserName Changed; value = ", event.value);
+        AmpacheMobile.settingsManager.discardSavedData(this.Account);
+        
         this.Account.UserName = event.value;
     },
+
+    changeApacheTimeout:function(event)
+    {
+        this.Account.ApacheTimeout = Number(event.value);
+    },
+    
 
     activate: function(event) {
         /* put in event handlers here that should only be in effect when this scene is active. For
@@ -370,7 +476,49 @@ AccountAssistant = Class.create({
     cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
         Mojo.Event.stopListening(this.controller.get('stall-toggle'), Mojo.Event.propertyChange, this.StallPressedHandler);
+        Mojo.Event.stopListening(this.controller.get('accountScreens'), Mojo.Event.propertyChange, this.screenChangeHandler);
+        this.controller.stopListening(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
+        this.controller.stopListening(this.controller.get('deleteArtists'), Mojo.Event.tap, this.deleteArtistsHandler);
+        this.controller.stopListening(this.controller.get('deleteAlbums'), Mojo.Event.tap, this.deleteAlbumnHandler);
+        this.controller.stopListening("num-buffers-selector", Mojo.Event.propertyChange, this.numBuffersChanged);
+        this.controller.stopListening("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout);
     },
+
+    deleteAllHandler:function()
+    {
+        AmpacheMobile.settingsManager.discardSavedData(this.Account);
+    },
+    deleteArtistsHandler:function()
+    {
+        AmpacheMobile.settingsManager.DumpSavedArtists(this.Account);
+    },
+    deleteAlbumnHandler:function()
+    {
+        AmpacheMobile.settingsManager.DumpSavedAlbums(this.Account);
+    },
+
+    screenChangeHandler:function()
+    {
+        switch(this.accountTypeModel.value){
+            case 0:
+            this.controller.get('account-settings').style.display = 'block';
+            this.controller.get('extra-settings').style.display = 'none';
+            this.controller.get('saved-info').style.display = 'none';
+            break;
+        case 1:
+            this.controller.get('account-settings').style.display = 'none';
+            this.controller.get('extra-settings').style.display = 'block';
+            this.controller.get('saved-info').style.display = 'none';
+            this.controller.modelChanged(this.sliderModel);
+            break;
+        case 2:
+            this.controller.get('account-settings').style.display = 'none';
+            this.controller.get('extra-settings').style.display = 'none';
+            this.controller.get('saved-info').style.display = 'block';
+            break;
+        }    
+    },
+
 
     // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function(title, message) {

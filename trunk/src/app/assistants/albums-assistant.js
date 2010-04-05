@@ -28,6 +28,17 @@ AlbumsAssistant = Class.create({
 
     initialize: function(params) {
         Mojo.Log.info("--> constructor");
+        
+        if(params.CanSave)
+        {
+            this.CanSave = true;
+        }
+        else
+        {
+            this.CanSave = false;
+        }
+        
+        
         this.SceneTitle = params.SceneTitle;
         this.DisplayArtistInfo = params.DisplayArtistInfo;
         //this.AlbumsList = params.AlbumsList;
@@ -116,7 +127,8 @@ AlbumsAssistant = Class.create({
                 filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
                 itemTemplate: ((this.type === "random") && AmpacheMobile.Account.ExtraCoverArt) ? 'albums/listitem_w_artist_art': 'albums/listitem_w_artist',
                 dividerTemplate: (this.type !== "random") ? 'albums/divider': null,
-                dividerFunction: (this.type !== "random") ? this.dividerFunc.bind(this) : null
+                dividerFunction: (this.type !== "random") ? this.dividerFunc.bind(this) : null,
+                hasNoWidgets:true
             };
 
             /*
@@ -202,9 +214,10 @@ AlbumsAssistant = Class.create({
             //ItemsList :this.AlbumList,
             //listModel: this.listModel,
             //progressModel: this.albumLoadModel,
+            onLoadingFinished:this.albumsLoadingFinished.bind(this),
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedAlbums,
-            SortFunction: ((this.type !== "random") && (this.sortType !== AlbumSortType.alpha)) ? this.sortList.bind(this) : null,
+            SortFunction: (this.type !== "random") ? this.sortList.bind(this) : null,   //((this.type !== "random") && (this.sortType !== AlbumSortType.alpha)) ? this.sortList.bind(this) : null,
             MatchFunction: this.IsMatch,
             PopulateSort: this.AddSortToItems.bind(this)
 
@@ -297,6 +310,7 @@ AlbumsAssistant = Class.create({
         params.CallBack = callback;
         params.offset = offset;
         params.limit = limit;
+        params.CheckSaved = this.CanSave;
 
         if(this.type ==="recent")
         {
@@ -320,6 +334,15 @@ AlbumsAssistant = Class.create({
 
         Mojo.Log.info("<-- GetMoreAlbums");
     },
+
+    albumsLoadingFinished:function()
+    {
+        if(this.CanSave)
+        {
+            AmpacheMobile.settingsManager.SaveAlbums(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature())
+        }
+    },
+
 
     listTapHandler: function(event) {
         Mojo.Log.info("--> listTapHandler");
@@ -425,6 +448,24 @@ AlbumsAssistant = Class.create({
             this.appMenuModel.items[1].items[1].disabled = true;
             break;
 
+
+        }
+        
+        if (event.type === Mojo.Event.back) {
+            if(AmpacheMobile.settingsManager.albumsSavePending===true)
+            {
+                event.preventDefault();
+                event.stopPropagation();
+                this.controller.showAlertDialog({
+                    title: $L("Save Pending..."),
+                    message: "Please wait until the pending save of albums is complete.",
+                    choices: [{
+                        label: $L('OK'),
+                        value: 'ok',
+                        type: 'primary'
+                    }]
+                });
+            }
         }
 
         if (reSortList) // && this.itemsHelper.LoadingFinished)
@@ -534,8 +575,8 @@ AlbumsAssistant = Class.create({
 
     activate: function(event) {
         this.itemsHelper.Activate();
-        this.appMenuModel.items[1].items[0].disabled= !AmpacheMobile.audioPlayer.PlayListPending;
-        this.appMenuModel.items[1].items[1].disabled= !AmpacheMobile.audioPlayer.PlayListPending;
+        this.appMenuModel.items[1].items[0].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
+        this.appMenuModel.items[1].items[1].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
     },
 
     deactivate: function(event) {

@@ -292,7 +292,7 @@ PreferencesAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
         Mojo.Event.stopListening(this.controller.get('recentSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
         
-        
+        Mojo.Event.stopListening(this.controller.get('theme-selector'), Mojo.Event.propertyChange, this.themeSelectorChanged);
 
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
@@ -444,7 +444,9 @@ PreferencesAssistant = Class.create({
     listDeleteHandler: function(event) {
         // Remove the item from the model's list.
         // Warning: By not checking which model we're modifying here, we implicitly assume that they share the same structure.
+        AmpacheMobile.settingsManager.discardSavedData(event.item);
         event.model.items.splice(event.model.items.indexOf(event.item), 1); //Remove from items list
+        
         //this.settings.Accounts.splice(event.model.items.indexOf(event.item),1); //Remove from 
         
         this.UpdateSelector();

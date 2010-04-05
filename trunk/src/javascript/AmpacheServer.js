@@ -219,6 +219,17 @@ AmpacheServer = Class.create({
         Mojo.Log.info("<-- AmpacheServer.prototype.connect");
     },
 
+    getServerDataTimeSignature:function(){
+        if(this.Connected===true)
+        {
+            return this.update.getTime() + "_" + this.add.getTime()+ "_" + this.clean.getTime();
+        }
+        else
+        {
+            return "";
+        }
+    },
+
     ConnectCancel: function() {
         this.ConnectRequest.abort();
     },
@@ -384,6 +395,13 @@ AmpacheServer = Class.create({
             this.GetArtistsCallback = new Function(func);
         }
 
+        if((params.CheckSaved === true) && (AmpacheMobile.settingsManager.areArtistsCurrent(AmpacheMobile.Account, this) === true))
+        {
+            AmpacheMobile.settingsManager.FetchSavedArtists(AmpacheMobile.Account, this);
+        }
+        else
+        {
+
         var filter = [];
         var i = 0;
         var type = "artists";
@@ -425,6 +443,7 @@ AmpacheServer = Class.create({
             });
         } catch(err) {
             Mojo.Controller.errorDialog("Get " + type + " failed: " + err.message);
+        }
         }
         Mojo.Log.info("<-- AmpacheServer.prototype.GetArtists");
     },
@@ -514,6 +533,13 @@ AmpacheServer = Class.create({
             this.GetAlbumsCallback = new Function(func);
         }
 
+        if((params.CheckSaved === true) && (AmpacheMobile.settingsManager.areAlbumsCurrent(AmpacheMobile.Account, this) === true))
+        {
+            AmpacheMobile.settingsManager.FetchSavedAlbums(AmpacheMobile.Account, this);
+        }
+        else
+        {
+
         var type = "albums";
         var filter = [];
 
@@ -555,6 +581,7 @@ AmpacheServer = Class.create({
             onSuccess: this.GotAlbumsCallback.bind(this),
             onFailure: this.GetAlbumsFailed.bind(this)
         });
+        }
         Mojo.Log.info("<-- AmpacheServer.prototype.GetAlbums");
     },
 

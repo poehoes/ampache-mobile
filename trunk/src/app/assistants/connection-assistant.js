@@ -25,6 +25,7 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("--> setup");
 
         AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
+        AmpacheMobile.webos = new WebOSInterface(AmpacheMobile.audioPlayer, this.controller);
 
         
         //******************************************************************************************************
@@ -187,7 +188,10 @@ ConnectionAssistant = Class.create({
             var apiVersion = parseInt(AmpacheMobile.ampacheServer.api, 10);
             if (apiVersion >= 350001) {
                 Mojo.Log.info("Pushing Main Menu", connectResult);
+
                 this.pushMainMenu();
+                
+                
             } else { //Incorrect API
                 html = true;
                 DisplayMessage = "Error: You are connecting to an incompatible version of Ampache<br><br> You are using API Version: " + AmpacheMobile.ampacheServer.api + "<br><br>Ampache Mobile requires at least version 3.5.x of the server";
@@ -247,6 +251,9 @@ ConnectionAssistant = Class.create({
 
         Mojo.Log.info("<-- ConnectionCallback");
     },
+
+
+
 
     AlertOption: function(value) {
         Mojo.Log.info("--> AlertOption value: " + value);
@@ -338,6 +345,13 @@ ConnectionAssistant = Class.create({
         /* this function should do any cleanup needed before the scene is destroyed as 
          a result of being popped off the scene stack */
         Mojo.Event.stopListening(this.controller.get('selectorList'), Mojo.Event.listTap, this.listTapHandler);
+        
+        AmpacheMobile.audioPlayer.cleanup();
+        AmpacheMobile.audioPlayer = null;
+        AmpacheMobile.webos.cleanup();
+        AmpacheMobile.webos = null;
+        
+        
         Mojo.Log.info("<-- cleanup");
     },
 
