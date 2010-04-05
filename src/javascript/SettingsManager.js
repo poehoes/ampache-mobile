@@ -24,7 +24,7 @@ var SEARCH_ARTISTS = 1;
 var SEARCH_ALBUMS = 2;
 var SEARCH_SONGS = 3;
 var SEARCH_PLAYLISTS = 4;
-var SEARCH_TYPES ={};
+var SEARCH_TYPES = {};
 SEARCH_TYPES[0] = "Global";
 SEARCH_TYPES[1] = "Artists";
 SEARCH_TYPES[2] = "Albums";
@@ -58,6 +58,7 @@ SettingsManager = Class.create({
         };
         //Create a database when the scene is generated
         this.depot = new Mojo.Depot(options, this.dbSuccess, this.dbFailure);
+        this.getSize
     },
 
     dbSuccess: function() {
@@ -67,6 +68,16 @@ SettingsManager = Class.create({
     dbFailure: function(transaction, result) {
         console.log("***** depot failure: ");
         Mojo.Controller.errorDialog("This is not good!.  Settings database failed to load.  Error Message: ");
+    },
+
+    getSize:function()
+    {
+        this.depot.getBucketSize("defaultbucket", this.gotSize.bind(this), null);
+    },
+
+    gotSize:function(size)
+    {
+        this.depotSize = size;
     },
 
     CreateSettings: function() {
@@ -90,6 +101,180 @@ SettingsManager = Class.create({
         }
     },
 
+    //**************************************************************************
+    //Archived Items Management
+    //**************************************************************************
+
+    //Global
+    discardSavedData: function(account) {
+        this.DumpSavedArtists(account);
+        this.DumpSavedAlbums(account);
+    },
+
+    //**************************************************************************
+    //            Artists
+    areArtistsCurrent: function(account, server) {
+        var current = false;
+        var key = "artists_" + account.uniqueID;
+        var currentSignature = server.getServerDataTimeSignature();
+        if ((account.ArchivedArtists) && (account.ArchivedArtists.key === key) && (account.ArchivedArtists.archiveSignature === currentSignature) && (server.artists === account.ArchivedArtists.numItems)) {
+            current = true;
+        } else {
+            this.DumpSavedArtists(account, "Artists are not current, erasing");
+        }
+        return current;
+    },
+
+    DumpSavedArtists: function(account, dumpString) {
+        var key = "artists_" + account.uniqueID;
+        if(!dumpString)
+        {
+            dumpString = "Saved artists have been erased";
+        }
+
+
+        if (account.ArchivedArtists && account.ArchivedArtists.key !== "") {
+            this.depot.discard(account.ArchivedArtists.key, this.bannerMessage.bind(this, dumpString),
+            function() {
+                Mojo.Controller.errorDialog("Error attempting to erase artists")
+            }
+
+            );
+            account.ArchivedArtists = new ArchivedItems();
+            this.SaveSettings();
+
+        }
+
+    },
+
+    artistsSavePending: false,
+
+    SaveArtists: function(account, artists, signature) {
+        var key = "artists_" + account.uniqueID;
+        if (account.ArchivedArtists.archiveSignature !== signature) {
+            this.artistsSavePending = true;
+            this.bannerMessage("Saving Artists...");
+            this.depot.add(key, artists, this.ArtistsSaved.bind(this, account, key, signature),
+            function() {
+                Mojo.Controller.errorDialog("Arists Not Saved!");
+                AmpacheMobile.settingsManager.artistsSavePending = false;
+
+            });
+        }
+    },
+
+    ArtistsSaved: function(account, key, signature) {
+        account.ArchivedArtists = new ArchivedItems();
+        account.ArchivedArtists.archiveSignature = signature;
+        account.ArchivedArtists.key = key;
+        account.ArchivedArtists.numItems = AmpacheMobile.ampacheServer.artists;
+        this.SaveSettings();
+
+        this.bannerMessage(account.ArchivedArtists.numItems + " artists have been saved");
+        this.artistsSavePending = false;
+    },
+
+    FetchSavedArtists: function(account, server) {
+        if (account.ArchivedArtists.key !== "") {
+            //Mojo.Controller.errorDialog("Fetching Archived Artists!");
+            if (this.artistsSavePending === false) {
+                this.depot.get(account.ArchivedArtists.key, server.GetArtistsCallback,
+                function() {
+                    Mojo.Controller.errorDialog("Failed to Retrieve Saved Artists")
+                })
+            }
+
+            else {
+                Mojo.Controller.errorDialog("Artists Lookup Blocked while artists saving");
+            }
+
+        } else {
+            Mojo.Controller.errorDialog("Opps!")
+        }
+    },
+
+    //**************************************************************************
+    //            Albums
+    areAlbumsCurrent: function(account, server) {
+        var current = false;
+        var key = "albums_" + account.uniqueID;
+        var currentSignature = server.getServerDataTimeSignature();
+        if ((account.ArchivedAlbums) && (account.ArchivedAlbums.key === key) && (account.ArchivedAlbums.archiveSignature === currentSignature) && (server.albums === account.ArchivedAlbums.numItems)) {
+            current = true;
+        } else {
+            this.DumpSavedAlbums(account,  "Albums are not current, erasing");
+        }
+        return current;
+    },
+
+    DumpSavedAlbums: function(account, dumpString) {
+        var key = "albums_" + account.uniqueID;
+
+        if(!dumpString)
+        {
+            dumpString = "Saved albums have been erased.";
+        }
+
+        if (account.ArchivedAlbums && account.ArchivedAlbums.key !== "") {
+            this.depot.discard(account.ArchivedAlbums.key, this.bannerMessage.bind(this, dumpString),
+            function() {
+                Mojo.Controller.errorDialog("Error dumping albums")
+            }
+
+            );
+            account.ArchivedAlbums = new ArchivedItems();
+            this.SaveSettings();
+        }
+        //Mojo.Controller.errorDialog("Albums Saved!")
+
+    },
+
+    albumsSavePending: false,
+
+    SaveAlbums: function(account, artists, signature) {
+        var key = "albums_" + account.uniqueID;
+        if (account.ArchivedAlbums.archiveSignature !== signature) {
+            this.albumsSavePending = true;
+            this.bannerMessage("Saving Albums...");
+
+            this.depot.add(key, artists, this.AlbumsSaved.bind(this, account, key, signature),
+            function() {
+                Mojo.Controller.errorDialog("Saving Albums Failed")
+
+            });
+        }
+    },
+
+    AlbumsSaved: function(account, key, signature) {
+        account.ArchivedAlbums = new ArchivedItems();
+        account.ArchivedAlbums.archiveSignature = signature;
+        account.ArchivedAlbums.key = key;
+        account.ArchivedAlbums.numItems = AmpacheMobile.ampacheServer.albums;
+        this.SaveSettings();
+
+        this.bannerMessage(account.ArchivedAlbums.numItems + " albums have been saved");
+        this.albumsSavePending = false;
+    },
+
+    FetchSavedAlbums: function(account, server) {
+        var fetched = false;
+        if (account.ArchivedAlbums.key !== "") {
+            
+            //Mojo.Controller.errorDialog("Fetching Archived Albums!");
+            if(this.albumsSavePending===false)
+            {
+            this.depot.get(account.ArchivedAlbums.key, server.GetAlbumsCallback,
+            function() {
+                Mojo.Controller.errorDialog("Failed to Retrieve Archived Albums")
+            })
+            }
+            fetchched = true;
+        } else {
+            Mojo.Controller.errorDialog("Opps!")
+        }
+        return fetched;
+    },
+
     AppendAccount: function(account) {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = account;
@@ -101,6 +286,7 @@ SettingsManager = Class.create({
         this.settings.Accounts[index].UserName = username;
         this.settings.Accounts[index].Password = password;
         this.settings.Accounts[index].ServerURL = url;
+
         return this.settings.Accounts[index];
     },
 
@@ -146,31 +332,31 @@ SettingsManager = Class.create({
             if (!this.settings.AllowRotation) {
                 this.settings.AllowRotation = DEFAULT_ROTATION;
             }
-            
+
             if (!this.settings.npPlayingListView) {
                 this.settings.npPlayingListView = false;
             }
-            
+
             if (!this.settings.SearchType) {
-                this.settings.SearchType=SEARCH_GLOBAL;
+                this.settings.SearchType = SEARCH_GLOBAL;
             }
-            
+
             if (!this.settings.UseCustomColor) {
-                this.settings.UseCustomColor=false;
+                this.settings.UseCustomColor = false;
             }
-            
+
             if (!this.settings.CustomColor) {
-                this.settings.CustomColor='#FFFFFF';
+                this.settings.CustomColor = '#FFFFFF';
             }
-            
+
             if (!this.settings.CSSTheme) {
-                this.settings.CSSTheme=THEME_DARK;
+                this.settings.CSSTheme = THEME_DARK;
             }
-            
+
             if (!this.settings.Recent) {
-                    this.settings.Recent = 0;
-                }
-            
+                this.settings.Recent = 0;
+            }
+
             //this.settings.Version = Mojo.Controller.appInfo.version;
 
             for (i = 0; i < this.settings.Accounts.length; i++) {
@@ -181,16 +367,54 @@ SettingsManager = Class.create({
                 if (!this.settings.Accounts[i].ExtraCoverArt) {
                     this.settings.Accounts[i].ExtraCoverArt = false;
                 }
-                
+
                 if (!this.settings.Accounts[i].StallRecovery) {
                     this.settings.Accounts[i].StallRecovery = false;
                 }
+
+                if (!this.settings.Accounts[i].ArchivedArtists) {
+                    this.settings.Accounts[i].ArchivedArtists = new ArchivedItems();
+                }
+
+                if (!this.settings.Accounts[i].ArchivedAlbums) {
+                    this.settings.Accounts[i].ArchivedAlbums = new ArchivedItems();
+                }
+
+                if (!this.settings.Accounts[i].uniqueID) {
+                    var date = new Date();
+                    this.settings.Accounts[i].uniqueID = this.settings.Accounts[i].AccountName + "_" + date.getTime();
+                }
+                
+                if (!this.settings.Accounts[i].NumBuffers) {    
+                    this.settings.Accounts[i].NumBuffers = 2;
+                }
+                
+                if (!this.settings.Accounts[i].ApacheTimeout) {    
+                    this.settings.Accounts[i].ApacheTimeout = 120;
+                }
                 
                 
-                
+
             }
             this.SaveSettings(null, null);
         }
+    },
+
+    bannerMessage: function(message) {
+        if(Mojo.Host.current === Mojo.Host.browser)
+        {
+            alert(message);
+        }
+        else
+        {
+        Mojo.Controller.getAppController().showBanner(message, {
+            source: 'notification'
+        });
+        }
+        //else
+        //{
+        //    alert(message);
+        //}
     },
 
     GetSettingsFailureCallback: null,
@@ -221,14 +445,36 @@ SettingsManager = Class.create({
 
 Account = Class.create({
     AccountName: null,
+    uniqueID: null,
     UserName: null,
     Password: null,
     ServerURL: null,
     ExtraCoverArt: false,
-    StallRecovery:false,
-    FetchSize: DEFAULT_FETCH_SIZE
-    
+    StallRecovery: false,
+    FetchSize: DEFAULT_FETCH_SIZE,
+    ArchivedArtists: null,
+    ArchivedAlbums: null,
+    NumBuffers:2,
+    ApacheTimeout:120
+
 });
+
+ArchivedItems = Class.create({
+    archiveSignature: "",
+    key: "",
+    numItems: 0,
+    initialize: function() {
+        this.archiveSignature = "";
+        this.key = "";
+        this.numItems = "";
+    }
+});
+
+//ArchiveDate = Class.create({
+//    add:null,
+//    clean:null,
+//    update:null
+//}),
 
 Settings = Class.create({
     Accounts: null,
@@ -241,11 +487,12 @@ Settings = Class.create({
     BackgroundSolid: DEFAULT_IMAGE,
     BackgroundMode: CUSTOM_COLOR,
     BackgroundOverlay: DEFAULT_OVERLAY,
-    Recent:0,
+    Recent: 0,
     AlbumsSort: 0,
-    npPlayingListView:false,
-    SearchType:0,
-    UseCustomColor:false,
-    CustomColor:'#FFFFFF', /*white*/
+    npPlayingListView: false,
+    SearchType: 0,
+    UseCustomColor: false,
+    CustomColor: '#FFFFFF',
+    /*white*/
     CSSTheme: THEME_DARK
 });
