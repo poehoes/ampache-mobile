@@ -157,6 +157,7 @@ AudioPlayer = Class.create({
         audioObj.src = audioObj.song.url;
         audioObj.load();
         audioObj.song.amtBuffered = 0;
+        audioObj.fullyBuffered = false;
         audioObj.autoplay = true;
 
         this.UIInvalidateSong(audioObj.song);
