@@ -485,6 +485,7 @@ PreferencesAssistant = Class.create({
 
         this.newAccount = new Account();
 
+
         this.controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "account"

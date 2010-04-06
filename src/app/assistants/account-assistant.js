@@ -282,9 +282,10 @@ AccountAssistant = Class.create({
 
     handleCommand: function(event) {
         //test for Mojo.Event.back, not Mojo.Event.command..
-        event.preventDefault();
-        event.stopPropagation();
+        
         if (event.type === Mojo.Event.back) {
+            event.preventDefault();
+            event.stopPropagation();
             if (!this.ValidSettings(this.Account)) {
                 this.controller.showAlertDialog({
                     onChoose: this.accountQuestions,
@@ -307,9 +308,7 @@ AccountAssistant = Class.create({
                 }
                 this.popAccount(this.Account);
             }
-        } else {
-            this.popAccount(this.Account);
-        }
+        } 
     },
 
     callStartTest: function() {

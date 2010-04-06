@@ -151,7 +151,7 @@ SettingsManager = Class.create({
 
     SaveArtists: function(account, artists, signature) {
         var key = "artists_" + account.uniqueID;
-        if (account.ArchivedArtists.archiveSignature !== signature) {
+        if ((account.ArchivedArtists.archiveSignature !== signature)||(account.ArchivedArtists===null)) {
             this.artistsSavePending = true;
             this.bannerMessage("Saving Artists...");
             this.depot.add(key, artists, this.ArtistsSaved.bind(this, account, key, signature),
@@ -233,7 +233,7 @@ SettingsManager = Class.create({
 
     SaveAlbums: function(account, artists, signature) {
         var key = "albums_" + account.uniqueID;
-        if (account.ArchivedAlbums.archiveSignature !== signature) {
+        if ((account.ArchivedAlbums.archiveSignature !== signature) || (account.ArchivedAlbums===null)) {
             this.albumsSavePending = true;
             this.bannerMessage("Saving Albums...");
 
@@ -455,8 +455,12 @@ Account = Class.create({
     ArchivedArtists: null,
     ArchivedAlbums: null,
     NumBuffers:2,
-    ApacheTimeout:120
-
+    ApacheTimeout:120,
+    
+    initialize: function() {
+        this.ArchivedArtists = new ArchivedItems();
+        this.ArchivedAlbums = new ArchivedItems();
+    }
 });
 
 ArchivedItems = Class.create({
