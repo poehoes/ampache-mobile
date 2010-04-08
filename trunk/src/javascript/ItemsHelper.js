@@ -178,7 +178,8 @@ ItemsHelper = Class.create({
             //Add to list   
     
             if (!this.IsFiltered()) {
-                this.filterList.mojo.noticeUpdatedItems(0, this.ItemsList);
+                this.Matches = this.ItemsList;
+                this.filterList.mojo.noticeUpdatedItems(0, this.Matches);    
             } else //list currently has a filter
             {
                 var matches = this.GetAllMatches(this.filterString);

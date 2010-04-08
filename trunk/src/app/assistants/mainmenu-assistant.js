@@ -280,7 +280,7 @@ MainmenuAssistant = Class.create({
             });
             break;
         case "shuffleAll":
-            playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1);
+            playlist = AmpacheMobile.ampacheServer.GetRandomSongs(AmpacheMobile.Account.NumBuffers);
             this.controller.stageController.pushScene({
                     transition: AmpacheMobile.Transition,
                     name: "now-playing"

@@ -387,15 +387,27 @@ PlayList = Class.create({
     peekNextSong: function(song) {
         if(song!==null)
         {
-        searchIndex = song.index;
-        nextSong = null;
+            searchIndex = song.index;
+            nextSong = null;
+    
+    
+            switch (this.repeat) {
+            case RepeatModeType.repeat_song:
+            case RepeatModeType.no_repeat:
+                if (searchIndex != this.songs.length) {
+                    return this.songs[searchIndex];
+                } else {
+                    return null;
+                }
+                
+                break;
+            case RepeatModeType.repeat_forever:
+                return this.songs[searchIndex % this.songs.length];
+                break;
+            }
+        }
 
-        if (searchIndex != this.songs.length) {
-            return this.songs[searchIndex];
-        } else {
-            return null;
-        }
-        }
+        
         return null;
     },
 

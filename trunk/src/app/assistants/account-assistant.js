@@ -84,6 +84,46 @@ AccountAssistant = Class.create({
             }
         );
         
+        //**********************************************************************************************************************
+        //Setup Allow 2G Buffering Toggle
+        // Setup toggle widget and  listen  for when it is changed
+        this.allow2GAttr = {
+            trueLabel: 'On',
+            //if the state is true, what to label the toggleButton; default is 'On'
+            trueValue: true,
+            //if the state is true, what to set the model[property] to; default if not specified is true
+            falseLabel: 'Off',
+            //if the state is false, what to label the toggleButton; default is Off
+            falseValue: false,
+            //if the state is false, , what to set the model[property] to; default if not specific is false],
+            fieldName: 'toggle' //name of the field; optional
+        };
+        this.allow2GModel = {
+            value: this.Account.Allow2GBuffer,
+            // Current value of widget, from choices array.
+            disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
+        };
+
+        this.controller.setupWidget('allow-2G-toggle', this.allow2GAttr, this.allow2GModel);
+        
+        
+       
+        
+        if(this.Account.ArchivedArtists && (this.Account.ArchivedArtists.numItems !== ""))
+        {
+            this.controller.get("delete-artists").innerHTML = "Delete " + this.Account.ArchivedArtists.numItems + " Artists";
+        }
+
+        if(this.Account.ArchivedAlbums && (this.Account.ArchivedAlbums.numItems !== ""))
+        {
+            this.controller.get("delete-albums").innerHTML = "Delete " + this.Account.ArchivedAlbums.numItems + " Artists";
+        }
+
+        //if((this.controller.get("delete-albums").innerHTML.match("No Saved")===false) || (this.controller.get("delete-artists").innerHTML.match("No Saved")===false))
+        //{
+        //    this.controller.get("delete-all").innerHTML = "Delete All";
+        //}
+
 
         this.context = this;
 
@@ -135,6 +175,8 @@ AccountAssistant = Class.create({
         this.controller.listen("passwordField", Mojo.Event.propertyChange, this.changePassword.bindAsEventListener(this));
         this.controller.listen("userNameField", Mojo.Event.propertyChange, this.changeUserName.bindAsEventListener(this));
         this.controller.listen("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout.bindAsEventListener(this));
+        this.controller.listen("allow-2G-toggle", Mojo.Event.propertyChange, this.allow2GChanged.bindAsEventListener(this));
+
     
 
         //*****************************************************************************
@@ -198,8 +240,8 @@ AccountAssistant = Class.create({
         Mojo.Event.listen(this.controller.get('accountScreens'), Mojo.Event.propertyChange, this.screenChangeHandler);
         this.screenChangeHandler();
         
-        this.deleteAllHandler = this.deleteAllHandler.bindAsEventListener(this);
-        this.controller.listen(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
+        //this.deleteAllHandler = this.deleteAllHandler.bindAsEventListener(this);
+        //this.controller.listen(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
         
         this.deleteArtistsHandler = this.deleteArtistsHandler.bindAsEventListener(this);
         this.controller.listen(this.controller.get('deleteArtists'), Mojo.Event.tap, this.deleteArtistsHandler);
@@ -444,6 +486,10 @@ AccountAssistant = Class.create({
         this.Account.ApacheTimeout = Number(event.value);
     },
     
+    allow2GChanged: function(event) {   
+        this.Account.Allow2GBuffer = event.value;
+    },
+    
 
     activate: function(event) {
         /* put in event handlers here that should only be in effect when this scene is active. For
@@ -476,24 +522,40 @@ AccountAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
         Mojo.Event.stopListening(this.controller.get('stall-toggle'), Mojo.Event.propertyChange, this.StallPressedHandler);
         Mojo.Event.stopListening(this.controller.get('accountScreens'), Mojo.Event.propertyChange, this.screenChangeHandler);
-        this.controller.stopListening(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
+        //this.controller.stopListening(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
         this.controller.stopListening(this.controller.get('deleteArtists'), Mojo.Event.tap, this.deleteArtistsHandler);
         this.controller.stopListening(this.controller.get('deleteAlbums'), Mojo.Event.tap, this.deleteAlbumnHandler);
         this.controller.stopListening("num-buffers-selector", Mojo.Event.propertyChange, this.numBuffersChanged);
         this.controller.stopListening("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout);
+        this.controller.stopListening("allow-2G-toggle", Mojo.Event.propertyChange, this.allow2GChanged.bindAsEventListener(this));
+
     },
 
-    deleteAllHandler:function()
-    {
-        AmpacheMobile.settingsManager.discardSavedData(this.Account);
-    },
+    //deleteAllHandler:function()
+    //{
+    //    AmpacheMobile.settingsManager.discardSavedData(this.Account);
+    //    this.controller.get("delete-artists").innerHTML = "No Saved Artists";
+    //    this.controller.get("delete-albums").innerHTML = "No Saved Albums";
+    //    //this.controller.get("delete-all").innerHTML = "No Saved Items";
+    //},
     deleteArtistsHandler:function()
     {
         AmpacheMobile.settingsManager.DumpSavedArtists(this.Account);
+        this.controller.get("delete-artists").innerHTML = "No Saved Artists";
+        //if(this.controller.get("delete-albums").innerHTML.match("No Saved"))
+        //{
+        //    this.controller.get("delete-all").innerHTML = "No Saved Items";
+        //}
     },
     deleteAlbumnHandler:function()
     {
         AmpacheMobile.settingsManager.DumpSavedAlbums(this.Account);
+        this.controller.get("delete-albums").innerHTML = "No Saved Albums";
+        //if(this.controller.get("delete-artists").innerHTML.match("No Saved"))
+        //{
+        //    this.controller.get("delete-all").innerHTML = "No Saved Items";
+        //}
+        
     },
 
     screenChangeHandler:function()

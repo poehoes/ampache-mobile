@@ -336,7 +336,7 @@ RandomAssistant = Class.create({
                 case "3.5.1":
                 case "3.5.2":
                 case "3.5.3":
-                      playlist = AmpacheMobile.ampacheServer.GetRandomSongs(1);
+                      playlist = AmpacheMobile.ampacheServer.GetRandomSongs(AmpacheMobile.Account.NumBuffers);
                     this.controller.stageController.pushScene({
                             transition: AmpacheMobile.Transition,
                             name: "now-playing"
