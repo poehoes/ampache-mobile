@@ -25,6 +25,8 @@ SongsAssistant = Class.create({
         this.Artist_id = params.Artist_id;
         this.Expected_items = params.Expected_items;
 
+        this.SingleAlbum = params.SingleAlbum;
+
         if ((this.Type === "recent") || (this.Type === "random") || (this.Type === "playlist") || (this.Type === "all-songs") || (this.Type === "search") || (this.Type === "search-global") || (this.Type === "genre") || this.Type === "artist-songs") {
             this.DisplayAlbumInfo = true;
         }
@@ -86,6 +88,7 @@ SongsAssistant = Class.create({
             numItemsDisplay:this.controller.get("numSongs"),
             listModel: this.listModel,
             //progressModel: this.songLoadModel,
+            onLoadingFinished:this.songsLoadingFinished.bind(this),
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.Expected_items,
             SortFunction: null,
@@ -255,6 +258,16 @@ SongsAssistant = Class.create({
         }
         return false;
     },
+
+    songsLoadingFinished:function()
+    {
+        if(this.SingleAlbum)
+        {
+            var title = this.controller.get('title');
+            title.innerHTML = this.itemsHelper.ItemsList[0].album;
+        }   
+    },
+
 
     handleShuffleAll: function(event) {
         if (this.heldPending === true) {

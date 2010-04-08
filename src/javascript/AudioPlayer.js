@@ -39,7 +39,7 @@ AudioPlayer = Class.create({
     bufferPool: null,
 
     //buffer:null,
-    streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "timeupdate"],
+    streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "canplaythrough"],
 
     //seeked seeking, "durationchange" "canplaythrough", "abort",  
     //bufferingEvents : ["abort", "error", "ended", "emptied", "load", "loadstart",
@@ -93,7 +93,7 @@ AudioPlayer = Class.create({
         audioObj.mojo.audioClass = "media";
 
         audioObj.isSong = function(song) {
-            return (audioObj.src === song.url) ? true: false;
+            return (audioObj.song === song) ? true: false;
         };
 
         return audioObj;
@@ -138,15 +138,19 @@ AudioPlayer = Class.create({
 
     recoverStalledBuffers: function() {
         this.bufferMutex = true;
+        var recoveredBuffs = false;
         //var tempArray = new Array();
         for (var i = 0; i < this.audioBuffers.length; i++) {
             if ((this.audioBuffers[i].fullyBuffered === false) && (this.audioBuffers[i] !== this.player)) {
                 this.putThisBufferIntoPool(this.popThisBuffer(this.audioBuffers[i]));
                 i = -1;
+                recoveredBuffs = true;
             }
 
         }
+        
         this.bufferMutex = false;
+        return recoveredBuffs;
     },
 
     rebufferSong: function(audioObj) {
@@ -155,25 +159,35 @@ AudioPlayer = Class.create({
         audioObj.autoplay = false;
 
         audioObj.src = audioObj.song.url;
-        audioObj.load();
-        audioObj.song.amtBuffered = 0;
         audioObj.fullyBuffered = false;
+        audioObj.song.amtBuffered = 0;
+        audioObj.load();
         audioObj.autoplay = true;
 
         this.UIInvalidateSong(audioObj.song);
     },
 
-    recoverFromAudioServiceFailure: function() {
-        Mojo.Controller.getAppController().showBanner("webOS Audio Crash, Recovering", {
+    recoverFromAudioServiceFailure: function(message) {
+        //AmpacheMobile.webos.playSystemSound("error_01");
+        
+        this.player.stallTime = this.player.currentTime;
+        
+        this.timePercentage = 0;
+        this.player.fullyBuffered = false;
+        this.recoverBufferMemory();
+        this.rebufferSong(this.player);
+        this.player.autoplay = false;
+        
+        
+        Mojo.Controller.getAppController().playSoundNotification("error_01", "", 1);
+        
+        Mojo.Controller.getAppController().showBanner(message, {
             source: 'notification'
         });
-        //var song = this.player.song;
+        
         this.UIStopPlaybackTimer();
-        this.rebufferSong(this.player);
-        //this.stop();
-        //this.player = this.bufferPool.pop();
-        //this.audioBuffers.push(this.player);
-
+        
+        
     },
 
     recoverBufferMemory: function() {
@@ -214,6 +228,7 @@ AudioPlayer = Class.create({
         if (buffer !== null) {
             buffer.ampacheType = AudioType.pool;
             buffer.src = "media/empty.mp3";
+            buffer.song.plIcon = "images/player/blank.png";
             buffer.load();
             buffer.autoplay = false;
             buffer.fullyBuffered = false;
@@ -224,7 +239,7 @@ AudioPlayer = Class.create({
         }
     },
 
-    loadSongIntoPlayer: function(player, song) {
+    loadSongIntoPlayer: function(player, song, autoplay) {
         player.ampacheType = AudioType.player;
         //player.pause();
         //player.empty();
@@ -240,9 +255,28 @@ AudioPlayer = Class.create({
         player.song.plIcon = "images/player/play.png";
         this.UIInvalidateSong(player.song);
         player.load();
-        player.audioplay = true;
+        player.audioplay = autoplay;
         this.UIShowSpinner(true);
         return player;
+    },
+
+    isWindowFilled:function()
+    {
+        var retVal = true;
+        while (i < this.audioBuffers.length) {
+            if(this.playList.isInCurrentWindow(this.audioBuffers[i].song, this.numBuffers) ===true)
+            {
+                if(this.audioBuffers[i].fullyBuffered ===false)
+                {
+                    retVal = false;
+                }
+            }
+            else
+            {
+                retVal = true;
+            }
+        }
+        return retVal;
     },
 
     removeBuffersOutsideWindow: function() {
@@ -264,6 +298,20 @@ AudioPlayer = Class.create({
         this.bufferMutex = false;
     },
 
+    findOneBufferOutsideWindow: function() {
+        this.bufferMutex = true;
+        
+        for(var i = 0;(i<this.audioBuffers.length);i++) {
+
+            if (this.playList.isInCurrentWindow(this.audioBuffers[i].song, this.numBuffers) === false) {
+                this.bufferMutex = false;
+                return this.popThisBuffer(this.audioBuffers[i]);
+            }
+        }
+        this.bufferMutex = false;
+        return null;
+    },
+
     bufferMutex: false,
     waitForBufferMutex: function() {
         if (this.bufferMutex === true) {
@@ -275,11 +323,44 @@ AudioPlayer = Class.create({
 
     },
 
-    moveToPlayer: function(song) {
+
+    reloadPlaylist:function()
+    {
+        this.stop();
+        this.playList.current = 0;
+        var player = this.bufferPool.pop();
+        player.song = this.playList.songs[0];
+        
+        player.ampacheType = AudioType.player;
+        player.song.amtBuffered = 0;
+        player.src = player.song.url;
+        
+        player.fullyBuffered = false;
+        //player.startedBuffering=false;
+        player.song.amtBuffered = 0;
+        player.load();
+        player.autoplay = false;
+        player.song.plIcon = "images/player/play.png";
+        this.UIInvalidateSong(player.song);
+        
+        this.audioBuffers.push(player);
+        this.player=player;
+    
+    },
+
+
+    moveToPlayer: function(song, autoplay) {
 
         var player = null;
         //var playerIndex =0;
         var reverse = false;
+
+        var autoPlay = true;
+        if(autoplay)
+        {
+            autoPlay = autoplay;
+        }
+        
 
         this.stopBufferRecovery();
 
@@ -317,28 +398,18 @@ AudioPlayer = Class.create({
 
             //Player Requires load
             if (player !== null) {
-                player = this.loadSongIntoPlayer(player, song);
+                player = this.loadSongIntoPlayer(player, song, autoPlay);
             }
         } else {
             //Song already buffered
             var timeSinceTCP = this.getCurrentMsSecs() - player.tcpActivity;
             if ((timeSinceTCP > this.tcpTimeout) && (player.fullyBuffered === false)) { //Socket Timed Out
-                //Mojo.Controller.getAppController().showBanner("Buffer Timeout, Restarting", {
-                //    source: 'notification'
-                //});
                 this.rebufferSong(player);
             } else {
                 player.play();
             }
 
-            //if (player.readyState >= player.HAVE_FUTURE_DATA) {
-            //    player.play();
-            //} else if (player.readyState === player.HAVE_NOTHING) { //Attempt to recover a stalled out buffer
-            //    player.load();
-            //    player.audioplay = true;
-            //} else {
-            //    player.audioplay = true;
-            //}
+
         }
 
         //at this point no active, pooled or buffered
@@ -349,7 +420,7 @@ AudioPlayer = Class.create({
             }
             player = this.audioBuffers.shift();
             this.audioBuffers.push(player);
-            player = this.loadSongIntoPlayer(player, song);
+            player = this.loadSongIntoPlayer(player, song, autoPlay);
         }
 
         this.audioBuffers.sort(this.sortBuffers);
@@ -382,7 +453,11 @@ AudioPlayer = Class.create({
         var song = this.playList.peekNextSong(lastSongLoaded);
         var index = 0;
 
-        if ((song !== null) && (this.player.fullyBuffered === true)) {
+        if ((song !== null) &&
+            (this.player.fullyBuffered === true) &&
+            (AmpacheMobile.webos.networkAvailable()===true))
+        {
+            
             var buffered = false;
             var buffer = null;
             //Is Song Already Buffered
@@ -425,14 +500,17 @@ AudioPlayer = Class.create({
                     buffered = true;
                     this.audioBuffers.sort(this.sortBuffers);
                 } else {
-                    if (this.audioBuffers[0] !== this.player) { //If the top buffer is not the the player take it and use it to buffer up the next song
-                        buffer = this.audioBuffers.shift();
-                    } else {
-                        var bottomSong = this.playList.peekSongAheadOffset(this.player.song, this.audioBuffers.length - 1);
-                        if (song.index <= bottomSong.index) {
-                            buffer = this.audioBuffers.pop();
-                        }
-                    }
+                    //this.audioBuffers.sort(this.sortBuffers);
+                    buffer = this.findOneBufferOutsideWindow();
+                    
+                    //if (this.audioBuffers[0] !== this.player) { //If the top buffer is not the the player take it and use it to buffer up the next song
+                    //    buffer = this.audioBuffers.shift();
+                    //} else {
+                    //    var bottomSong = this.playList.peekSongAheadOffset(this.player.song, this.audioBuffers.length - 1);
+                    //    if (song.index <= bottomSong.index) {
+                    //        buffer = this.audioBuffers.pop();
+                    //    }
+                    //}
 
                     if (buffer !== null) { //if this is set we have decided that we are going to buffer the next song
                         //if (buffer.song) {
@@ -459,7 +537,7 @@ AudioPlayer = Class.create({
                 }
 
             } else {
-                if ((buffer.fullyBuffered === true)) {
+                if ((buffer.fullyBuffered === true) && this.isWindowFilled()===false) {
                     this.bufferMutex = false;
                     this.bufferNextSong(song);
                 }
@@ -609,11 +687,14 @@ AudioPlayer = Class.create({
 
     stop: function() {
         var buffer;
+        this.UIStopPlaybackTimer();
+        this.stopBufferRecovery();
         while (this.audioBuffers.length !== 0) {
             buffer = this.audioBuffers.pop();
             this.putThisBufferIntoPool(buffer);
         }
-        this.stopBufferRecovery();
+        this.player = null;
+        
     },
 
     pause: function() {
@@ -649,10 +730,18 @@ AudioPlayer = Class.create({
                 }
 
             } else { //playlist complete
-                this.stop();
-                this.playList.current = 0;
-                this.UIUpdateSongInfo(this.playList.songs[0]);
-
+                this.playListFinished = true;
+                
+                if(clicked === false)
+                {
+                   //this.reloadPlaylist();
+                    
+                    //this.moveToPlayer(this.playList.getCurrentSong(), false);
+                    this.pause();
+                    this.stopBufferRecovery();
+                    this.seek(0);
+                    this.UIUpdatePlaybackTime();
+                }
             }
 
         }
@@ -755,8 +844,9 @@ AudioPlayer = Class.create({
                     player.autoplay = false;
 
                     player.src = player.song.url;
-                    player.load();
+                    player.fullyBuffered = false;
                     player.song.amtBuffered = 0;
+                    player.load();
                     player.autoplay = false;
 
                     this.UIInvalidateSong(player.song);
@@ -876,24 +966,23 @@ AudioPlayer = Class.create({
             break;
         case "progress":
             event.currentTarget.tcpActivity = this.getCurrentMsSecs();
-            //if (event.currentTarget.fullyBuffered === true) {
-            //    Mojo.Controller.errorDialog("The webOS audio service has crashed.  Attempting recovery.");
-            //    this.recoverFromAudioServiceFailure();
-            //
-            //} else {
+            
            
            
            
-                //Downloading a song above the current in the list so lets pop that off
-                if (event.currentTarget.song.index < this.player.song.index) {
-                    this.putThisBufferIntoPool(this.popThisBuffer(event.currentTarget));
-                }
-
+            //Downloading a song above the current in the list so lets pop that off
+            //if (event.currentTarget.song.index < this.player.song.index) {
+            if(this.playList.isInCurrentWindow(event.currentTarget.song, this.numBuffers) ===false)
+            {
+                this.putThisBufferIntoPool(this.popThisBuffer(event.currentTarget));
+            }
+            else
+            {
                 this.updateBuffering(event.currentTarget);
                 if (event.currentTarget.song.amtBuffered !== 0) {
                     this.UISetBufferWait(event.currentTarget.song, false);
                 }
-            //}
+            }
             break;
 
         case "emptied":
@@ -934,10 +1023,14 @@ AudioPlayer = Class.create({
         case "progress":
             event.currentTarget.tcpActivity = this.getCurrentMsSecs();
 
-            if(event.currentTarget.fullyBuffered===true)
-           {
+            if (event.currentTarget.fullyBuffered === true) {
+                event.currentTarget.fullyBuffered = false;
+                event.currentTarget.song.amtBuffered = 0;
                 this.recoverBufferMemory();
-           }
+                Mojo.Controller.getAppController().showBanner("Buffers Lost, Recovering", {
+                    source: 'notification'
+                });
+            } 
             
 
             this.updateBuffering(event.currentTarget);
@@ -958,6 +1051,16 @@ AudioPlayer = Class.create({
             //case "durationchange":
             //   this.UIUpdatePlaybackTime();
             //   break;
+        case "canplaythrough":
+            if(this.player.stallTime)
+            {
+                this.player.currentTime = this.player.stallTime;
+                this.player.stallTime = null;
+                this.player.play();
+            }
+            break;
+        
+        
         case "timeupdate":
             this.UIUpdatePlaybackTime();
             break;
@@ -1178,19 +1281,19 @@ AudioPlayer = Class.create({
 
     UIUpdatePlaybackTime: function() {
 
-        if (this.ticksUnchanged > 20) {
+        if (this.ticksUnchanged > 30) {
             this.UIStopPlaybackTimer();
-            this.timePercentage = 0;
-            this.recoverFromAudioServiceFailure();
+           
+            this.recoverFromAudioServiceFailure("webOS Audio Stall, Recovering");
 
             this.lastTickValue = 0;
             this.ticksUnchanged = 0;
         } else if (this.player) {
 
-            //if(this.player.paused)
-            //{
-            //    this.UIStopPlaybackTimer();
-            //}
+            if(this.player.paused)
+            {
+                this.UIStopPlaybackTimer();
+            }
             var duration = 0;
             var currentTime = 0;
 
@@ -1198,7 +1301,7 @@ AudioPlayer = Class.create({
                 currentTime = Number(this.player.currentTime);
             }
 
-            if (this.player.readyState >= this.player.HAVE_ENOUGH_DATA) {
+            if (this.player.duration) {
 
                 duration = Number(this.player.duration);
             }
@@ -1254,8 +1357,9 @@ AudioPlayer = Class.create({
         //Mojo.Log.info("--> AudioPlayer.prototype._updateBuffering")
         var start = 0;
         var end = 0;
+        var duration = 0;
 
-        if (audioObj.readyState < audioObj.HAVE_ENOUGH_DATA) {
+        if (!audioObj.duration) {
             duration = Number(audioObj.song.time);
         } else {
             duration = audioObj.duration;

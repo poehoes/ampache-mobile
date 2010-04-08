@@ -59,44 +59,44 @@ WebOSInterface = Class.create({
     },
 
     wifiState:"disconnected",
-    
+    networkState:null,
     networkStatusCallback:function(response)
     {
+        this.networkState = response;    
         var network = Object.toJSON(response);     
         
         var attemptRecovery = false;
         if((response.wan) &&  (response.wan.state === "connected"))
         {
-            switch(response.wan.network)
+            var type = this.getWanNetworkType(response);
+            if(type ==="slow")
             {
-                //2 G
-                case "unknown":
-                case "1x":
-                case "unusable":
-                case "gprs": 
-                    attemptRecovery = false;
-                    break;
-                
-                default:
-                    attemptRecovery = true;
-                    break;
+                attemptRecovery = false;
+            }
+            else
+            {
+                attemptRecovery = true;
             }
         }
         
-        
         //reload if the wifi state has changed from disconnected to connected
-        if((response.wifi) && (response.wifi.state === "connected") && (this.wifiState==="disconnected"))
-        {
-            
+        if((response.wifi.state === "connected") && (this.wifiState==="disconnected"))
+        { 
             attemptRecovery = true;
         }
         
         try{
             if((this.ampachePlayer.hasPlayList=== true) && (attemptRecovery === true))
             {
-                this.ampachePlayer.recoverStalledBuffers();
+                var recovered = this.ampachePlayer.recoverStalledBuffers();
                 this.ampachePlayer.bufferNextSong(this.ampachePlayer.player.song);
                 
+                if(recovered ===true)
+                {
+                    Mojo.Controller.getAppController().showBanner("Network Change, Recovering", {
+                        source: 'notification'
+                    });
+                }
                 
                 
             }
@@ -109,6 +109,48 @@ WebOSInterface = Class.create({
         //Save wifi state
         this.wifiState = response.wifi.state;
     },
+
+    getWanNetworkType:function(network)
+    {
+        var ret_val = "fast";
+        if(network.wifi.state!=="connected")
+        {
+            switch(network.wan.network)
+            {
+                //2 G
+                case "unknown":
+                case "1x":
+                case "unusable":
+                case "gprs": 
+                    ret_val = "slow";
+                    break;
+            }
+        }
+        return ret_val;
+    },
+
+    networkAvailable:function()
+    {
+        var ret_val = true;
+       
+        
+        if(this.networkState!==null)
+        {
+            //2G Limitation set on streaming
+            if((this.getWanNetworkType(this.networkState)==="slow") && (AmpacheMobile.Account.Allow2GBuffer===false))
+            {
+                ret_val = false;
+            }
+            
+            //No networks available... anyone use BT PAN for this?
+            if((this.networkState.wifi.state!=="connected") && (this.networkState.wan.state!=="connected"))
+            {
+                ret_val = false;
+            }
+        }
+        return ret_val;
+    },
+
 
     playSystemSound:function(sound)
     {

@@ -32,6 +32,16 @@ NowPlayingAssistant = Class.create({
         }
         this.type = params.type;
         this.pauseStopItem = this.pauseItem;
+        
+        if(params.repeat)
+        {
+            this.repeat = params.repeat;
+        }
+        else
+        {
+            this.repeat = 0;
+        }
+
 
         for(var j=0;j<StageAssistant.nowPlayingMenu.items.length;j++)
                 {
@@ -51,7 +61,7 @@ NowPlayingAssistant = Class.create({
             
             AmpacheMobile.audioPlayer.stop();
             AmpacheMobile.audioPlayer.newPlayList(this.playList, params.shuffle, this.startIndex);
-            AmpacheMobile.audioPlayer.playList.repeat = 0;
+            AmpacheMobile.audioPlayer.playList.repeat = this.repeat;
             break;
         case "enqueue":
             //this.repeatMode = AmpacheMobile.audioPlayer.playList.repeat;
@@ -437,8 +447,10 @@ NowPlayingAssistant = Class.create({
     
     renderPlaylist:function(listWidget, itemModel, itemNode){
         
-        if(itemNode.index === (AmpacheMobile.audioPlayer.player.song.index-1)){
-            itemNode.getElementsByClassName("timeLoaded")[0].style.width =  AmpacheMobile.audioPlayer.timePercentage +"%";
+        if(AmpacheMobile.audioPlayer.player && AmpacheMobile.audioPlayer.player.song){
+            if(itemNode.index === (AmpacheMobile.audioPlayer.player.song.index-1)){
+                itemNode.getElementsByClassName("timeLoaded")[0].style.width =  AmpacheMobile.audioPlayer.timePercentage +"%";
+            }
         }
     },
     
@@ -477,6 +489,9 @@ NowPlayingAssistant = Class.create({
     
         window.onresize = this.FitToWindow.bind(this);
         this.FitToWindow();
+        
+        AmpacheMobile.audioPlayer.updateBuffering(AmpacheMobile.audioPlayer.player);
+        
     },
     
     showListView:function()
@@ -658,7 +673,7 @@ NowPlayingAssistant = Class.create({
         var percentage = (pos / 100);
         AmpacheMobile.audioPlayer.seekPercentage(percentage);
 
-        AmpacheMobile.audioPlayer.NowPlayingStartPlaybackTimer();
+        AmpacheMobile.audioPlayer.UIStartPlaybackTimer();
        
         Mojo.Log.info("<-- progressBarDragEnd");
     },
@@ -671,7 +686,7 @@ NowPlayingAssistant = Class.create({
         }
         
         this.sliderIsDragging = true;
-        AmpacheMobile.audioPlayer.NowPlayingStopPlaybackTimer();
+        AmpacheMobile.audioPlayer.UIStopPlaybackTimer();
         Mojo.Log.info("<-- progressBarDragStart");
     },
 
@@ -742,7 +757,10 @@ NowPlayingAssistant = Class.create({
         Mojo.Log.info("<-- showSpinner");
     },
     hideSpinner: function() {
+        if(this.cmdMenuModel.items[1].items[1] === this.loadingModel)
+        {
         Mojo.Log.info("--> hideSpinner");
+        
         this.loadingAnimation.stop();
         this.spinnerShown = false;
         if (AmpacheMobile.audioPlayer.player && AmpacheMobile.audioPlayer.player.paused) {
@@ -755,6 +773,7 @@ NowPlayingAssistant = Class.create({
         //this.spinnerModel.spinning = false;
         //this.controller.modelChanged(this.spinnerModel);
         Mojo.Log.info("<-- hideSpinner");
+        }
     },
     
     lastPlayed:null,

@@ -393,6 +393,10 @@ SettingsManager = Class.create({
                     this.settings.Accounts[i].ApacheTimeout = 120;
                 }
                 
+                if (!this.settings.Accounts[i].Allow2GBuffer) {    
+                    this.settings.Accounts[i].Allow2GBuffer = false;
+                }
+                
                 
 
             }
@@ -455,7 +459,8 @@ Account = Class.create({
     ArchivedArtists: null,
     ArchivedAlbums: null,
     NumBuffers:2,
-    ApacheTimeout:120,
+    ApacheTimeout:300,
+    Allow2GBuffer:false,
     
     initialize: function() {
         this.ArchivedArtists = new ArchivedItems();

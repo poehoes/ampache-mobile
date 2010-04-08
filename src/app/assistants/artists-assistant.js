@@ -275,6 +275,25 @@ ArtistsAssistant = Class.create({
     listTapHandler: function(event) {
         Mojo.Log.info("--> listTapHandler", event.item.name);
         this.RequestedArtist = event.item;
+        if(Number(event.item.albums) ===1)
+        {
+            this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "songs"
+            },
+            {
+                SceneTitle: event.item.name,
+                Type: "artist-songs",
+                Artist_id: event.item.id,
+                Expected_items: event.item.songs,
+                SingleAlbum:true
+            //Item: event.item
+            }
+            );
+        }
+        else{
+        
+        
         this.controller.stageController.pushScene({
             transition: AmpacheMobile.Transition,
             name: "albums"
@@ -287,6 +306,7 @@ ArtistsAssistant = Class.create({
             //Artist: this.RequestedArtist,
             ExpectedAlbums: this.RequestedArtist.albums
         });
+        }
         Mojo.Log.info("<-- listTapHandler");
     },
 

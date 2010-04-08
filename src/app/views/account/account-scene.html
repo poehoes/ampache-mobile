@@ -89,6 +89,21 @@
                     </div>
                 </div>
     
+                <div class="palm-row" x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <table class="palm-list-section-label">
+                            <tr>
+                                <td class="label" width="85%"><span class="palm-text-wrapper" x-mojo-loc="">Allow 2G</span></td>
+
+                                <td width="15%">
+                                    <div id="allow-2G-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+    
+    
                 <div class="palm-row last" x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
@@ -115,7 +130,7 @@
                     <div class="palm-row-wrapper">
                         <table class="palm-list-section-label">
                             <tr>
-                                 <td width=85%><span class="palm-text-wrapper" x-mojo-loc="">Artist Albums Art</span></td>
+                                 <td class="label" width=85%><span class="palm-text-wrapper" x-mojo-loc="">Artist Albums Art</span></td>
     
                                  <td width=15%>
                                     <div id="art-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
@@ -129,7 +144,7 @@
                     <div class="palm-row-wrapper">
                         <table class="palm-list-section-label">
                             <tr>
-                                <td width=85%><span class="palm-text-wrapper" x-mojo-loc="">Stall Recovery</span></td>
+                                <td class="label" width=85%><span class="palm-text-wrapper" x-mojo-loc="">Stall Recovery</span></td>
     
                                 <td width=15%>
                                     <div id="stall-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
@@ -141,11 +156,12 @@
     
                 <div class="palm-row last" x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
-                        <span class="palm-text-wrapper" x-mojo-loc="">List Fetch Size</span>
+                        
+                        <span id="fetchSize" class="label" >Items:</span><span class="label" >List Fetch Size</span>
     
-                        <div id="slider" x-mojo-element="Slider"></div><span id="fetchSize" class="palm-text-wrapper" x-mojo-loc="">Items:</span>
-    
-                        <table class="palm-list-section-label"></table>
+                        <div id="slider" x-mojo-element="Slider"></div>
+                        
+                        <!--<table class="palm-list-section-label"></table>-->
                     </div>
                 </div>
             </div>
@@ -164,24 +180,24 @@
             </div>
             
             <div class="wallpaper palm-list" >
-                <div class="palm-row preview-box-row" id='deleteAll' x-mojo-tap-highlight="momentary">
+                <!--<div class="palm-row preview-box-row" id='deleteAll' x-mojo-tap-highlight="momentary">-->
+                <!--    <div class="palm-row-wrapper">-->
+                <!--        <div class="mainMenuLeft">-->
+                <!--            <div id="delete-all" class="mainMenuTitle">-->
+                <!--                No Saved Items-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <!---->
+                <!--        <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/trash.png"></div>-->
+                <!---->
+                <!--    </div>-->
+                <!--</div>-->
+
+                <div class="palm-row first" id='deleteArtists' x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <div class="mainMenuLeft">
-                            <div class="mainMenuTitle">
-                                Delete All
-                            </div>
-                        </div>
-
-                        <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/trash.png"></div>
-
-                    </div>
-                </div>
-
-                <div class="palm-row" id='deleteArtists' x-mojo-tap-highlight="momentary">
-                    <div class="palm-row-wrapper">
-                        <div class="mainMenuLeft">
-                            <div class="mainMenuTitle">
-                                Delete Artists
+                            <div id="delete-artists" class="mainMenuTitle">
+                                No Saved Artists
                             </div>
                         </div>
 
@@ -194,8 +210,8 @@
                 <div class="palm-row last" id='deleteAlbums' x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <div class="mainMenuLeft">
-                            <div class="mainMenuTitle">
-                                Delete Albums
+                            <div id="delete-albums" class="mainMenuTitle">
+                                No Saved Albums
                             </div>
                         </div>
 
