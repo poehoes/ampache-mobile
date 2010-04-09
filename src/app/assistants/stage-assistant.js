@@ -126,6 +126,7 @@ StageAssistant.prototype.onBlurHandler = function() {
         this.foregroundVolumeMarker.cancel();
         this.foregroundVolumeMarker = null;
     }
+    AmpacheMobile.focus = false;
 };
 
 StageAssistant.prototype.onFocusHandler = function() {
@@ -143,6 +144,8 @@ StageAssistant.prototype.onFocusHandler = function() {
             });
         }
     } catch(ex) {}
+    
+    AmpacheMobile.focus = true;
 };
 
 StageAssistant.prototype.lockVolumeKeys = function(event) {
@@ -223,6 +226,8 @@ StageAssistant.prototype.handleCommand = function(event) {
             break;
         case "about-cmd":
 
+
+                
             serverinfo = "<div class='about'><BR><B>Server Info</B><div class='about-details'>";
             if ((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.Connected === true)) {
                 serverinfo += "Version: <font class='about-details-data'>" + AmpacheMobile.ampacheServer.version + "</font>";
@@ -234,6 +239,8 @@ StageAssistant.prototype.handleCommand = function(event) {
             } else {
                 serverinfo += "Not Connected";
             }
+            serverinfo += "<br><br>webOS Build: " + Mojo.Environment.build;
+            
             serverinfo += "</div></div>";
 
             currentScene.showAlertDialog({

@@ -7,13 +7,20 @@ WebOSInterface = Class.create({
         this.controller = controller;
         this.ampachePlayer = audioPlayer;
 
-        //this.controller.serviceRequest('palm://com.palm.display', {
-        //    method: 'status',
-        //    parameters: {
-        //        subscribe: true
-        //    },
-        //    onSuccess: this.screenEvent.bind(this)
-        //});
+
+        //PowerManagerService.identifier = 'palm://com.palm.display/control';
+        
+        this.powerService = new Mojo.Service.Request('palm://com.palm.display', {
+            method: 'status',
+            parameters: {
+                //requestBlock: true,
+                //client: Mojo.appName,
+                subscribe: true
+            },
+            onSuccess: this.handlePowerEvent.bind(this),
+            onFailure: this.webOSFailure.bind(this)
+        });
+        
 
         this.buttonService = this.controller.serviceRequest('palm://com.palm.keys/headset', {
             method: 'status',
@@ -51,39 +58,79 @@ WebOSInterface = Class.create({
         this.connectionService.cancel();
         this.btService.cancel();
         this.buttonService.cancel();
+        this.powerService.cancel();
         
         this.connectionService=null;
         this.btService=null;
         this.buttonService=null;
+        this.powerService=null;
         
     },
 
-    wifiState:"disconnected",
+
+    setConnection:function(network)
+    {
+        
+        if(network.wifi.state == "connected")
+        {
+            network.connection = "wifi_" + network.wifi.ipAddress;    
+        }
+        else if(network.wan.state == "connected")
+        {
+            network.connection = "wan_" +network.wan.network + "_" + network.wan.ipAddress;    
+        }
+        else
+        {
+            network.connection = "";
+        }
+        
+    
+    },
+
+    
+    connection:"hello",
     networkState:null,
     networkStatusCallback:function(response)
     {
+        //var network = Object.toJSON(response);     
+        
+        this.setConnection(response);
         this.networkState = response;    
-        var network = Object.toJSON(response);     
+        
         
         var attemptRecovery = false;
-        if((response.wan) &&  (response.wan.state === "connected"))
+        if(this.connection !== response.connection)
         {
-            var type = this.getWanNetworkType(response);
-            if(type ==="slow")
-            {
-                attemptRecovery = false;
-            }
-            else
-            {
-                attemptRecovery = true;
-            }
+            attemptRecovery = true;
+            this.connection = response.connection;
+            
+            
+            //Mojo.Controller.getAppController().showBanner("Network: " + this.connection, {
+            //        source: 'notification'
+            //    });
+            
         }
         
-        //reload if the wifi state has changed from disconnected to connected
-        if((response.wifi.state === "connected") && (this.wifiState==="disconnected"))
-        { 
-            attemptRecovery = true;
-        }
+        //if((response.wan) &&  (response.wan.state === "connected"))
+        //{
+            //var type = this.getWanNetworkType(response);
+            //if(type ==="slow")
+            //{
+            //    attemptRecovery = false;
+            //}
+            //else
+            //{
+        //        attemptRecovery = true;
+        //}
+        //}
+        
+        ////reload if the wifi state has changed from disconnected to connected
+        //if((response.wifi.state === "connected") && (this.wifiState==="disconnected"))
+        //{ 
+        //    attemptRecovery = true;
+        //}
+        
+        
         
         try{
             if((this.ampachePlayer.hasPlayList=== true) && (attemptRecovery === true))
@@ -91,12 +138,12 @@ WebOSInterface = Class.create({
                 var recovered = this.ampachePlayer.recoverStalledBuffers();
                 this.ampachePlayer.bufferNextSong(this.ampachePlayer.player.song);
                 
-                if(recovered ===true)
-                {
-                    Mojo.Controller.getAppController().showBanner("Network Change, Recovering", {
-                        source: 'notification'
-                    });
-                }
+                //if(recovered ===true)
+                //{
+                //    Mojo.Controller.getAppController().showBanner("Network Change, Recovering", {
+                //        source: 'notification'
+                //    });
+                //}
                 
                 
             }
@@ -104,10 +151,10 @@ WebOSInterface = Class.create({
         }
         catch(ex)
         {
-            this.showDialogBox("Network Event", network+ Object.toJSON(ex));
+            this.showDialogBox("Network Event",  Object.toJSON(ex));
         }
         //Save wifi state
-        this.wifiState = response.wifi.state;
+        //this.wifiState = response.wifi.state;
     },
 
     getWanNetworkType:function(network)
@@ -136,6 +183,8 @@ WebOSInterface = Class.create({
         
         if(this.networkState!==null)
         {
+            
+            
             //2G Limitation set on streaming
             if((this.getWanNetworkType(this.networkState)==="slow") && (AmpacheMobile.Account.Allow2GBuffer===false))
             {
@@ -187,7 +236,8 @@ WebOSInterface = Class.create({
       
 
     webOSFailure: function(event) {
-        //Mojo.Controller.errorDialog("Headset Error");
+        
+        Mojo.Controller.errorDialog(Object.toJSON(event));
     },
 
     handleSingleButton: function(event) {
@@ -208,22 +258,24 @@ WebOSInterface = Class.create({
             this.ampachePlayer.previous(true);
         }
     },
-
-    lastEvent:null,
-    screenEvent:function(event)
-    {
+    
+    displayOff: false,
+    handlePowerEvent: function(event){	
+			
+	if (event.event == "displayOff"){
+            this.displayOff = true;
             
-        
-        if(( event.event ==="displayOn") && (this.lastEvent = event.event))
-        {
-            this.showDialogBox("Screen Event", this.ampachePlayer.recoverFromSleep());
-        
-            //if(this.ampachePlayer.recoverFromSleep()==true)
-            //{
-            //    this.showDialogBox("Screen Event", "Buffers were emptied while the screen was off.");
-            //}
-        }
-        this.lastEvent = event.event;
+            //AmpacheMobile.audioPlayer.screenChanged(this.displayOff);
+            
+	    //this.startDashboardCreateTimer();
+            //this.stopUpdateTimer();
+	} else 	if (event.event == "displayOn"){
+            this.displayOff = false;
+            //AmpacheMobile.audioPlayer.screenChanged(this.displayOff);
+            //this.stopDashboardCreateTimer();
+	    //this._updateTime(true);
+	    //this.startUpdateTimer();
+	}
     },
 
         // This function will popup a dialog, displaying the message passed in.

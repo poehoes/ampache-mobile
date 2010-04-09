@@ -428,6 +428,14 @@ AudioPlayer = Class.create({
         this.setAudioToPlayer(this.player);
         this.UIInvalidateSong(this.player.song);
 
+        if((AmpacheMobile.focus === false) && (AmpacheMobile.webos.displayOff === false))
+        {
+            Mojo.Controller.getAppController().showBanner(this.player.song.title + ": " + this.player.song.artist, {
+                    source: 'notification'
+                });
+        }
+
+
         this.startBufferRecovery();
         //this.removeBuffersOutsideWindow();
         //this.UIInvalidateSong(player.song);
@@ -1281,7 +1289,7 @@ AudioPlayer = Class.create({
 
     UIUpdatePlaybackTime: function() {
 
-        if (this.ticksUnchanged > 30) {
+        if (this.ticksUnchanged > 20) {
             this.UIStopPlaybackTimer();
            
             this.recoverFromAudioServiceFailure("webOS Audio Stall, Recovering");

@@ -312,6 +312,12 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("--> activate");
         this.TurnOffSpinner();
 
+        if(Mojo.Environment.build<330)
+        {
+            Mojo.Controller.errorDialog("Ampache Mobile requires at least webOS 1.4.0")
+        }
+
+
         if (AmpacheMobile.settingsManager.settings) {
             this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts, true);
             this.SetSettingsCustomizations(this.controller);
