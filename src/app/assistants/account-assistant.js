@@ -235,6 +235,20 @@ AccountAssistant = Class.create({
         this.StallPressedHandler = this.StallPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('stall-toggle'), Mojo.Event.propertyChange, this.StallPressedHandler);
         
+        //******************************************************************************************************************
+        //Setup Stall Recovery Toggle
+        this.spaces_Model = {
+            value: this.Account.SpacesWorkAround,
+            // Current value of widget, from choices array.
+            disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
+        };
+
+        this.controller.setupWidget('spaces-toggle', this.tattr, this.spaces_Model);
+        this.SpacesPressedHandler = this.SpacesPressed.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('spaces-toggle'), Mojo.Event.propertyChange, this.SpacesPressedHandler);
+
+        
+        
         
         this.screenChangeHandler = this.screenChangeHandler.bind(this);
         Mojo.Event.listen(this.controller.get('accountScreens'), Mojo.Event.propertyChange, this.screenChangeHandler);
@@ -296,6 +310,11 @@ AccountAssistant = Class.create({
         this.settingsManager.SaveSettings();
     },
     
+    SpacesPressed:function(event){
+        //Display the value of the toggle
+        this.Account.SpacesWorkAround = event.value;
+       
+    },
     
     ExtraArtPressed: function(event) {
         //Display the value of the toggle
@@ -528,6 +547,7 @@ AccountAssistant = Class.create({
         this.controller.stopListening("num-buffers-selector", Mojo.Event.propertyChange, this.numBuffersChanged);
         this.controller.stopListening("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout);
         this.controller.stopListening("allow-2G-toggle", Mojo.Event.propertyChange, this.allow2GChanged.bindAsEventListener(this));
+        Mojo.Event.stopListening(this.controller.get('spaces-toggle'), Mojo.Event.propertyChange, this.SpacesPressedHandler);
 
     },
 
