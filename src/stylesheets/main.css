@@ -955,29 +955,29 @@ body.palm-default {
 }
 
 .toggle-list-view {
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-first.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-album-view {          
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-last.png) 0 25 200 25 repeat repeat;
 }                             
 .toggle-list-view.depressed { 
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-first.png) 100 25 100 25 repeat repeat;
 }                             
 .toggle-album-view.depressed {
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-last.png) 100 25 100 25 repeat repeat;
 }
 
 .toggle-list-view.selected  {
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-first.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-album-view.selected {          
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-last.png) 50 25 150 25 repeat repeat;
 }                             
 .toggle-list-view.depressed.selected { 
-        -webkit-border-image: url(../images/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-first.png) 150 25 50 25 repeat repeat;
 }                             
 .toggle-album-view.depressed.selected {
-        -webkit-border-image: url(../images/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
+        -webkit-border-image: url(../images/menu-inlay-last.png) 150 25 50 25 repeat repeat;
 }
 
 
