@@ -274,7 +274,7 @@ AccountAssistant = Class.create({
 
      }
 
-     return true
+     return true;
 
     },
 

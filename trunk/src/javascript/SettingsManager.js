@@ -58,7 +58,7 @@ SettingsManager = Class.create({
         };
         //Create a database when the scene is generated
         this.depot = new Mojo.Depot(options, this.dbSuccess, this.dbFailure);
-        this.getSize
+        
     },
 
     dbSuccess: function() {
@@ -136,7 +136,7 @@ SettingsManager = Class.create({
         if (account.ArchivedArtists && account.ArchivedArtists.key !== "") {
             this.depot.discard(account.ArchivedArtists.key, this.bannerMessage.bind(this, dumpString),
             function() {
-                Mojo.Controller.errorDialog("Error attempting to erase artists")
+                Mojo.Controller.errorDialog("Error attempting to erase artists");
             }
 
             );
@@ -180,8 +180,8 @@ SettingsManager = Class.create({
             if (this.artistsSavePending === false) {
                 this.depot.get(account.ArchivedArtists.key, server.GetArtistsCallback,
                 function() {
-                    Mojo.Controller.errorDialog("Failed to Retrieve Saved Artists")
-                })
+                    Mojo.Controller.errorDialog("Failed to Retrieve Saved Artists");
+                });
             }
 
             else {
@@ -189,7 +189,7 @@ SettingsManager = Class.create({
             }
 
         } else {
-            Mojo.Controller.errorDialog("Opps!")
+            Mojo.Controller.errorDialog("Opps!");
         }
     },
 
@@ -218,7 +218,7 @@ SettingsManager = Class.create({
         if (account.ArchivedAlbums && account.ArchivedAlbums.key !== "") {
             this.depot.discard(account.ArchivedAlbums.key, this.bannerMessage.bind(this, dumpString),
             function() {
-                Mojo.Controller.errorDialog("Error dumping albums")
+                Mojo.Controller.errorDialog("Error dumping albums");
             }
 
             );
@@ -239,7 +239,7 @@ SettingsManager = Class.create({
 
             this.depot.add(key, artists, this.AlbumsSaved.bind(this, account, key, signature),
             function() {
-                Mojo.Controller.errorDialog("Saving Albums Failed")
+                Mojo.Controller.errorDialog("Saving Albums Failed");
 
             });
         }
@@ -265,12 +265,12 @@ SettingsManager = Class.create({
             {
             this.depot.get(account.ArchivedAlbums.key, server.GetAlbumsCallback,
             function() {
-                Mojo.Controller.errorDialog("Failed to Retrieve Archived Albums")
-            })
+                Mojo.Controller.errorDialog("Failed to Retrieve Archived Albums");
+            });
             }
             fetchched = true;
         } else {
-            Mojo.Controller.errorDialog("Opps!")
+            Mojo.Controller.errorDialog("Opps!");
         }
         return fetched;
     },

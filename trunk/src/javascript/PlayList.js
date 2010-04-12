@@ -175,9 +175,9 @@ PlayList = Class.create({
         this.songs.unshift(currentSong);
         
         //Reindex
-        for(var i =0; i<this.songs.length;i++)
+        for(var j =0; j<this.songs.length;j++)
         {
-            this.songs[i].index = i + 1;
+            this.songs[j].index = j + 1;
         }
        
         
@@ -361,7 +361,7 @@ PlayList = Class.create({
         case RepeatModeType.repeat_forever:
             if(this.current === 0)
             {
-                this.current = this.songs.length-1
+                this.current = this.songs.length-1;
             }
             else
             {
@@ -423,6 +423,6 @@ PlayList = Class.create({
             song = this.peekNextSong(song);
         }
         return song;
-    },
+    }
 
 });
