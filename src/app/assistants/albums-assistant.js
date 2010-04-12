@@ -339,7 +339,7 @@ AlbumsAssistant = Class.create({
     {
         if(this.CanSave)
         {
-            AmpacheMobile.settingsManager.SaveAlbums(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature())
+            AmpacheMobile.settingsManager.SaveAlbums(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature());
         }
     },
 

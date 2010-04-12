@@ -267,7 +267,7 @@ ArtistsAssistant = Class.create({
     {
         if(this.CanSave)
         {
-            AmpacheMobile.settingsManager.SaveArtists(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature())
+            AmpacheMobile.settingsManager.SaveArtists(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature());
         }
     },
 

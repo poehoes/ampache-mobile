@@ -292,6 +292,6 @@ WebOSInterface = Class.create({
             }],
             allowHTMLMessage:true
         });
-    },
+    }
 
 });
