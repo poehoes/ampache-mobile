@@ -1,5 +1,44 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
+===Version 0.9.0  (04/12/2010)===
+Note: I've switched to using the Palm App Catalog to distribute Ampache Mobile, mostly because I want to [http://palmhotapps.com/ win some money].  The application can now be installed by clicking this link from your phone... [http://developer.palm.com/appredirect/?packageid=com.ampachemobile Install]  
+
+*New Features*
+----
+  * Buffer Ahead!
+    * Configurable from 1 to 5 songs
+    * This is true buffer ahead, using system RAM. Other solutions download to flash, which is bad for your device.
+    * Intelligent buffer selection, attempts to provide seamless playback with no downloading break between tracks.
+    * Many workarounds for bugs in webOS, don't think many people have attempted to use webOS in this way.
+    * Auto Detection of changes in network coverage and buffer stalls
+    * Auto Detection of buffers lost due to device sleep
+    * I've done my best to make this stable without transcoding, but it really shines when you enable it with transcoding.
+    * Settings in the Accounts Settings Page
+    * Updated the error reporting to follow the new audio api
+  * Artists and Albums List Caching
+    * Saves a local copy of your entire albums and artists lists, load times are ridiculous!
+    * Auto detects when a change to your server occurs and re-saves the lists. Note: if you have auto scanning enabled on your server this will cause the list to re-download after every scan.
+    * Only applies to full Albums and Artist lists, everything else still goes against the server.
+    * Updated account editor to reflect how many saved items you have
+  * New Icon and Splash Screen
+    * Lets face it, the old icon is kinda ugly. Thankfully forum contributor Globex has stepped up and volunteered his services and designed a new one along with anew splash screen! It still pays homage to the people at the Ampache project, aka it features their squirrel logo but I hope you agree with me, it looks a lot better on the phone. So a big thanks to [http://www.globexdesigns.com/ Globex Designs, Inc.] for the new icon.
+*Improvements*
+----
+  * Figured out how to use the Shift and Sym Keys, updated the controls popup with changes.
+  * Lowered the search character limit to 2.
+  * Redesign of the Accounts Settings Page to Accommodate all the new options.
+  * Added a whole more shuffle to the playlist shuffle.
+  * Changed repeat list once to repeat song.
+  * Banner notifications where they felt right.
+  * Shuffling a list now displays the list in the order playback will occur.
+  * Banner Notifications of new songs when you are looking at another app. Will not wake up screen if its asleep.
+  * Go straight to songs view from artists if there is only one album
+
+*Bug Fixes*
+----
+  * Fixed date selector CSS so its no longer black on black with palm-dark
+  * Added work around for %20 (spaces) in song URL issue. If you have been having trouble streaming enable it in the Account Editor
+
 ===Version 0.8.5 (Beta) (03/24/2010)===
 
 *New Features*
