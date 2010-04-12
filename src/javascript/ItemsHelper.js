@@ -153,12 +153,14 @@ ItemsHelper = Class.create({
                 this.PopulateSort(_ItemsList);
             }
     
-            for (var i = 0; i < _ItemsList.length; i++) {
     
-                var newItem = _ItemsList[i];
-                this.ItemsList.push(newItem);
-    
-            }
+            this.ItemsList = this.ItemsList.concat(_ItemsList);
+            //for (var i = 0; i < _ItemsList.length; i++) {
+            //
+            //    var newItem = _ItemsList[i];
+            //    this.ItemsList.push(newItem);
+            //
+            //}
     
             //Update Progress
             this.percentDone = this.ItemsList.length / this.ExpectedItems;
@@ -170,7 +172,7 @@ ItemsHelper = Class.create({
     
             //Sorting Here
     
-            if (this.SortFunction) {
+            if ((this.SortFunction) && (_ItemsList.length<2000)) {
     
                 this.ItemsList.sort(this.SortFunction);
             }

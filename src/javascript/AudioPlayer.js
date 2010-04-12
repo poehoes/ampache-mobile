@@ -179,7 +179,7 @@ AudioPlayer = Class.create({
         this.player.autoplay = false;
         
         
-        Mojo.Controller.getAppController().playSoundNotification("error_01", "", 1);
+        //Mojo.Controller.getAppController().playSoundNotification("error_01", "", 1);
         
         Mojo.Controller.getAppController().showBanner(message, {
             source: 'notification'
@@ -406,7 +406,14 @@ AudioPlayer = Class.create({
             if ((timeSinceTCP > this.tcpTimeout) && (player.fullyBuffered === false)) { //Socket Timed Out
                 this.rebufferSong(player);
             } else {
-                player.play();
+                if(player.song.amtBuffered === 0)
+                {
+                    player.autoplay = true;
+                }
+                else
+                {
+                    player.play();
+                }
             }
 
 
@@ -1289,7 +1296,12 @@ AudioPlayer = Class.create({
 
     UIUpdatePlaybackTime: function() {
 
-        if (this.ticksUnchanged > 20) {
+        // if the song has started buffering give it 20 seconds to make progress playing back
+        // if it hasn't then give it 60 seconds
+        if ( ((this.ticksUnchanged > 20) && (this.player.song.amtBuffered !==0)) ||
+            (this.ticksUnchanged > 60)
+        ) 
+        {
             this.UIStopPlaybackTimer();
            
             this.recoverFromAudioServiceFailure("webOS Audio Stall, Recovering");

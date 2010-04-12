@@ -27,7 +27,6 @@ ConnectionAssistant = Class.create({
         AmpacheMobile.audioPlayer = new AudioPlayer(this.controller);
         AmpacheMobile.webos = new WebOSInterface(AmpacheMobile.audioPlayer, this.controller);
 
-        
         //******************************************************************************************************
         // Make scrim
         this.scrim = $("connect-scrim");
@@ -122,27 +121,38 @@ ConnectionAssistant = Class.create({
     GotSettings: function(settings) {
         Mojo.Log.info("--> GotSettings");
         this.TurnOffSpinner();
+
         if (!settings) {
             Mojo.Log.info("No Settings Case");
             AmpacheMobile.settingsManager.CreateSettings();
             this.pushPreferences(AmpacheMobile.settingsManager);
         } else {
-            AmpacheMobile.Account = AmpacheMobile.settingsManager.GetCurrentAccount(this.controller.stageController);
-            if (!AmpacheMobile.Account) {
-                Mojo.Log.info("Updating Accounts List");
-                if (AmpacheMobile.settingsManager.settings.Accounts.length === 0) {
-                    this.pushPreferences(AmpacheMobile.settingsManager);
+            if (AmpacheMobile.settingsManager.settings.Version !== Mojo.Controller.appInfo.version) {
+
+                AmpacheMobile.settingsManager.settings.Version = Mojo.Controller.appInfo.version;
+                AmpacheMobile.settingsManager.SaveSettings();
+                WhatsNew("Whats new in " + Mojo.Controller.appInfo.version);
+
+            } else {
+
+                AmpacheMobile.Account = AmpacheMobile.settingsManager.GetCurrentAccount(this.controller.stageController);
+                if (!AmpacheMobile.Account) {
+                    Mojo.Log.info("Updating Accounts List");
+                    if (AmpacheMobile.settingsManager.settings.Accounts.length === 0) {
+                        this.pushPreferences(AmpacheMobile.settingsManager);
+                    } else {
+                        this.PopulateAccountsList(settings.Accounts);
+                    }
                 } else {
                     this.PopulateAccountsList(settings.Accounts);
+                    this.TurnOnSpinner();
+                    this.LoadMainMenu(AmpacheMobile.Account);
                 }
-            } else {
-                this.PopulateAccountsList(settings.Accounts);
-                this.TurnOnSpinner();
-                this.LoadMainMenu(AmpacheMobile.Account);
             }
+
+            AmpacheMobile.audioPlayer.listIsShowing = AmpacheMobile.settingsManager.settings.npPlayingListView;
+            this.SetSettingsCustomizations(this.controller);
         }
-        AmpacheMobile.audioPlayer.listIsShowing = AmpacheMobile.settingsManager.settings.npPlayingListView;
-        this.SetSettingsCustomizations(this.controller);
         Mojo.Log.info("<-- StageAssistant.prototype.GotSettings");
     },
 
@@ -182,7 +192,7 @@ ConnectionAssistant = Class.create({
         this.TurnOffSpinner();
         var html;
         var DisplayMessage;
-        
+
         if (connectResult === "connected") {
             //Check ampache Version 
             var apiVersion = parseInt(AmpacheMobile.ampacheServer.api, 10);
@@ -190,8 +200,7 @@ ConnectionAssistant = Class.create({
                 Mojo.Log.info("Pushing Main Menu", connectResult);
 
                 this.pushMainMenu();
-                
-                
+
             } else { //Incorrect API
                 html = true;
                 DisplayMessage = "Error: You are connecting to an incompatible version of Ampache<br><br> You are using API Version: " + AmpacheMobile.ampacheServer.api + "<br><br>Ampache Mobile requires at least version 3.5.x of the server";
@@ -252,9 +261,6 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("<-- ConnectionCallback");
     },
 
-
-
-
     AlertOption: function(value) {
         Mojo.Log.info("--> AlertOption value: " + value);
         switch (value) {
@@ -280,15 +286,7 @@ ConnectionAssistant = Class.create({
          example, key handlers that are observing the document */
         if (account) {
 
-            if(AmpacheMobile.settingsManager.settings.Version !== Mojo.Controller.appInfo.version){
-            //if(true){
-            //{
-                AmpacheMobile.settingsManager.settings.Version = Mojo.Controller.appInfo.version;
-                AmpacheMobile.settingsManager.SaveSettings();
-                WhatsNew("Whats new in " + Mojo.Controller.appInfo.version);
-                
-            }
-            else if ((account.ServerURL === "") || (account.Password === "") || (account.UserName === "")) {
+            if ((account.ServerURL === "") || (account.Password === "") || (account.UserName === "")) {
                 Mojo.Log.info("Try to load preferences");
                 this.controller.stageController.pushScene({
                     transition: AmpacheMobile.Transition,
@@ -303,7 +301,7 @@ ConnectionAssistant = Class.create({
                 AmpacheMobile.ampacheServer.connect(this.ConnectionCallback.bind(this), this);
                 AmpacheMobile.FetchSize = account.FetchSize;
                 AmpacheMobile.audioPlayer.StallRecovery = account.StallRecovery;
-                
+
             }
         }
     },
@@ -312,11 +310,9 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("--> activate");
         this.TurnOffSpinner();
 
-        if(Mojo.Environment.build<330)
-        {
+        if (Mojo.Environment.build < 330) {
             Mojo.Controller.errorDialog("Ampache Mobile requires at least webOS 1.4.0")
         }
-
 
         if (AmpacheMobile.settingsManager.settings) {
             this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts, true);
@@ -329,14 +325,11 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("<-- activate");
     },
 
-    SetSettingsCustomizations:function(controller)
-    {
+    SetSettingsCustomizations: function(controller) {
         SetCSSTheme(controller, AmpacheMobile.settingsManager.settings.CSSTheme);
         SetBackground(controller, AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
         SetText(AmpacheMobile.settingsManager.settings.UseCustomColor, AmpacheMobile.settingsManager.settings.CustomColor, AmpacheMobile.settingsManager.settings.CSSTheme);
     },
-
-    
 
     deactivate: function(event) {
         Mojo.Log.info("--> deactivate");
@@ -351,13 +344,12 @@ ConnectionAssistant = Class.create({
         /* this function should do any cleanup needed before the scene is destroyed as 
          a result of being popped off the scene stack */
         Mojo.Event.stopListening(this.controller.get('selectorList'), Mojo.Event.listTap, this.listTapHandler);
-        
+
         AmpacheMobile.audioPlayer.cleanup();
         AmpacheMobile.audioPlayer = null;
         AmpacheMobile.webos.cleanup();
         AmpacheMobile.webos = null;
-        
-        
+
         Mojo.Log.info("<-- cleanup");
     },
 
