@@ -46,7 +46,15 @@ SongModel = Class.create({
         this.album = _album;
         this.track = _track;
         this.time = parseInt(_time,10);
-        this.url = _url;
+        
+        if(AmpacheMobile.Account.SpacesWorkAround===true)
+        {
+            this.url = _url.replace(/&name=.*/g, "");
+        }
+        else
+        {
+            this.url = _url;
+        }
         this.size = _size;
         this.art = _art;
         this.mime = _mime;

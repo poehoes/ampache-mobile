@@ -390,13 +390,16 @@ SettingsManager = Class.create({
                 }
                 
                 if (!this.settings.Accounts[i].ApacheTimeout) {    
-                    this.settings.Accounts[i].ApacheTimeout = 120;
+                    this.settings.Accounts[i].ApacheTimeout = 300;
                 }
                 
                 if (!this.settings.Accounts[i].Allow2GBuffer) {    
                     this.settings.Accounts[i].Allow2GBuffer = false;
                 }
                 
+                 if (!this.settings.Accounts[i].SpacesWorkAround) {    
+                    this.settings.Accounts[i].SpacesWorkAround = false;
+                }
                 
 
             }
@@ -461,6 +464,9 @@ Account = Class.create({
     NumBuffers:2,
     ApacheTimeout:300,
     Allow2GBuffer:false,
+    
+    //WorkArounds
+    SpacesWorkAround:false,
     
     initialize: function() {
         this.ArchivedArtists = new ArchivedItems();
