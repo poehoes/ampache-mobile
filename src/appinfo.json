@@ -1,7 +1,7 @@
 {
-  "id": "com.app.alpha.ampachemobile",
-  "version": "0.8.9",
-  "title": "Ampache Mobile Alpha",
+  "id": "com.app.ampachemobile",
+  "version": "0.9.1",
+  "title": "Ampache Mobile",
   "vendor": "Ampache Mobile Project",
   "vendorurl": "http://code.google.com/p/ampache-mobile",
   "main": "index.html",
