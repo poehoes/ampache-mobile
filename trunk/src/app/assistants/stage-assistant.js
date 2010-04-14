@@ -240,6 +240,7 @@ StageAssistant.prototype.handleCommand = function(event) {
                 serverinfo += "Not Connected";
             }
             serverinfo += "<br><br>webOS Build: " + Mojo.Environment.build;
+            serverinfo += "<br><br><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZKZ3GCDQUWY8&lc=US&item_name=Ampache%20Mobile&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'><img src='images/donate.gif' /></a>";
             
             serverinfo += "</div></div>";
 

@@ -179,6 +179,7 @@ AudioPlayer = Class.create({
         this.player.autoplay = false;
         
         
+        
         //Mojo.Controller.getAppController().playSoundNotification("error_01", "", 1);
         
         Mojo.Controller.getAppController().showBanner(message, {
@@ -361,18 +362,18 @@ AudioPlayer = Class.create({
             autoPlay = autoplay;
         }
         
+        this.ticksUnchanged = 0;
+        
+        
 
         this.stopBufferRecovery();
 
         //this.waitForBufferMutex();
         this.bufferMutex = true;
 
-        //Capture Old buffers
-        //var oldTracks = []
-        //for(var i=0; i<this.audioBuffers.length; i++) 
-        //{
-        //    oldTracks[i] = this.audioBuffers[i].song;
-        //}
+        
+        
+        
         //Cleanup old player
         if (this.player) {
             var direction = song.index - this.player.song.index;
@@ -380,6 +381,9 @@ AudioPlayer = Class.create({
                 reverse = true;
             }
             this.setAudioToBuffer(this.player);
+            if(this.player.stallTime){
+                this.player.stallTime = null;
+            }
         }
 
         //first check if we've already buffered the song
@@ -1042,6 +1046,7 @@ AudioPlayer = Class.create({
                 event.currentTarget.fullyBuffered = false;
                 event.currentTarget.song.amtBuffered = 0;
                 this.recoverBufferMemory();
+                this.ticksUnchanged = 0;
                 Mojo.Controller.getAppController().showBanner("Buffers Lost, Recovering", {
                     source: 'notification'
                 });
@@ -1333,15 +1338,7 @@ AudioPlayer = Class.create({
 
             if (this.timePercentage === this.lastTickValue) {
                 this.ticksUnchanged++;
-                //if(this.ticksUnchanged>4)
-                //{
-                //    if((this.ticksUnchanged%5)==0)
-                //    {
-                //        Mojo.Controller.getAppController().showBanner("Time Unchanged for "+ this.ticksUnchanged + " ticks", {
-                //        source: 'notification'
-                //        });
-                //    }
-                //}
+                
             } else {
                 this.lastTickValue = this.timePercentage;
                 this.ticksUnchanged = 0;
@@ -1350,29 +1347,17 @@ AudioPlayer = Class.create({
             if (this.UIHandler) {
                 this.UIHandler.updateTime(currentTime, duration, this.timePercentage, this.player.song.index - 1);
             }
-            //var event = {"type":"Current Time ("+this.timeIndex+"): "+ currentTime};
-            //this.UIPrintDebug(event, false);
-            //this.timeIndex++;
         }
     },
 
     UIPrintBuffered: function(start, end, index, primary) {
-        //this.downloadPercentage = Math.floor( end*100);
-        //Mojo.Log.info("--> AudioPlayer.prototype.UpdateNowPlayingBuffering loaded: " + loaded + " total: " + total);
         if (this.UIHandler) {
 
             this.UIHandler.updateBuffering(start, end, index, primary);
         }
-        //Mojo.Log.info("<-- AudioPlayer.prototype.UpdateNowPlayingBuffering");
     },
 
-    //UIUpdateAllBuffering:function()
-    //{
-    //    for(var i=0; i<this.audioBuffers.length; i++) 
-    //    {
-    //        this.updateBuffering(this.audioBuffers[i]);
-    //    }
-    //},
+   
     updateBuffering: function(audioObj) {
         //Mojo.Log.info("--> AudioPlayer.prototype._updateBuffering")
         var start = 0;
