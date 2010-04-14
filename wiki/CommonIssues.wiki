@@ -1,4 +1,5 @@
 #summary Some pointers for common issues encountered while setting up ampache
+#labels Featured
 =Common Issues=
 
 === Ampache-mobile doesn't work ===
