@@ -39,7 +39,7 @@ AudioPlayer = Class.create({
     bufferPool: null,
 
     //buffer:null,
-    streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "canplaythrough"],
+    streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "canplaythrough", "timeupdate"],
 
     //seeked seeking, "durationchange" "canplaythrough", "abort",  
     //bufferingEvents : ["abort", "error", "ended", "emptied", "load", "loadstart",
@@ -1082,7 +1082,9 @@ AudioPlayer = Class.create({
         
         
         case "timeupdate":
-            this.UIUpdatePlaybackTime();
+            this.ticksUnchanged = 0;
+            this.UIStartPlaybackTimer();
+            //this.UIUpdatePlaybackTime();
             break;
         case "play":
             if (event.currentTarget.song.amtBuffered !== 0) {
