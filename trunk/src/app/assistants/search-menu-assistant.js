@@ -144,17 +144,24 @@ SearchMenuAssistant = Class.create({
 
     leaveSceneHandler:function(event)
     {
-        
-        if(this.SearchField.mojo.getValue() === "")
+        if(event.originalEvent.keyCode === Mojo.Char.backspace)
         {
-            this.notifyUserBack.style.display = "inline";
-            if(this.exitOnDelete===true)
+            if(this.SearchField.mojo.getValue() === "")
             {
-                this.controller.stageController.popScene(); 
+                this.notifyUserBack.style.display = "inline";
+                if(this.exitOnDelete===true)
+                {
+                    this.controller.stageController.popScene(); 
+                }
+                this.exitOnDelete = true;
             }
-            this.exitOnDelete = true;
+            else
+            {
+                this.notifyUserBack.style.display = "none";
+                this.exitOnDelete = false;
+            }
         }
-        else
+         else
         {
             this.notifyUserBack.style.display = "none";
             this.exitOnDelete = false;

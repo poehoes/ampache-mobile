@@ -548,7 +548,7 @@ AmpacheServer = Class.create({
             type = "artist_albums";
         } else if (params.TagID) {
             filter[i++] = "filter";
-            filter[i++] = _TagID;
+            filter[i++] = params.TagID;
             type = "tag_albums";
         }
 
