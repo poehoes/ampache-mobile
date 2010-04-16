@@ -1,60 +1,10 @@
-#summary This is a quick guide for installing Ampache on windows.
+#summary Links for Windows Server Installation
 
-*This documentation is incomplete work is underway to improve it*
-The best documentation available so far goes to fain creator AmpachPre
+== Official Instructions ==
+[http://ampache.org/wiki/install:windows Offical Ampache Instructions for Windows]
+
+== Windows Vista Guide ==
+There is also step-by-step guide created by Fain, the creator of [http://www.precentral.net/homebrew-apps/ampachpre AmpachPre].
+
 The guide was written for Windows Vista XP should be very similar:
 [http://nucleardecay.net/pre/Ampache-how-to-vista32bit.pdf Fains Windows Guide]
-
-
-= Introduction =
-
-If you've never installed a web server before doing so can be a bit tricky, especially on Windows.  This guide is intended to make doing so a bit easier.  
-
-Note: This is a living document and will be updated in areas where its been found to be lacking.
-
-= Required Downloads (All Free)=
-  # A Webserver: [http://www.apachefriends.org/en/xampp-windows.html#646 XAMPP Lite] (Full version will work too)
-  # Latest Ampache: [http://ampache.org/download.php Ampache 3.5.4] (At the time of this guide this is the most recent version of Ampache)
-  # Something to unzip Ampache: 7-zip [http://www.7-zip.org/]
-
-= Details =
-
-  # Download and install xampp.
-  * xampp has a fairly decent installer to guide you through the process of installing a web server.
-  * The installer will default to installing xmapplite to the *C:\* drive.  The resulting location of all the installed files would be *C:\xampplite\*.  You can change it to C:\Program Files if you like.   
-   * NOTE: For the purposes of this tutorial we will use the default setting of C:\
-  * Once the installer copies all the files it needs to your system it will bring up a command prompt to ask you a few questions.
-   # Shortcuts
-{{{
-Should I add shortcuts to the startmenu/desktop? (y/n):
-}}}
-     This one is up to you.
-   # If you installed to a directory other than C:
-{{{
-Current directory does not match configured directory.
-I must relocate the XAMPP paths correctly.
-Should I proceed? (y/x=exit setup): y
-}}} 
-     Enter: y
-   # Portable XAMPP
-{{{
-Should I make a portable XAMPP without drive letters
-NOTE: - You should use drive letters, if you want use services.
-- With USB sticks you must not use drive letters.
-Your choice? (y/n): n
-}}}
-     Enter: n
-   # At this point it will go and do some work.  Hit enter until you see this
-{{{
- 1. start XAMPP Control Panel
- 2. relocate XAMPP
-    (current path: C:\Program Files\xampplite)
- 3. disable HTTPS (SSL)
- 4. disable Server Side Includes (SSI)
- 5. enable IPv4 only (current: IPv4/6 (auto))
-
- x  Exit
-
- Please choose (1-5/x):
-}}}
-     Enter: 1 to bring up the control panel.  Also you can close the command window at this point.
