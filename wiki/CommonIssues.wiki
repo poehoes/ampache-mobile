@@ -2,6 +2,10 @@
 #labels Featured
 =Common Issues=
 
+=== What do I put for a server URL? ===
+Ampache Mobile is just an app that plays music from a server, an [http://ampache.org Ampache server].  You are responsible for setting up your own server.
+ * [AmpacheServerSetup Server Setup]
+
 === Ampache-mobile doesn't work ===
    * If Ampache-mobile starts up and seems to run's OK on your Pre, but you are unable to connect to your music server, use the test below to help you figure out why Ampache-mobile isn't working.
         # Are you running the correct version of Ampache?  Ampache Mobile requires at least version 3.5.1 of Ampache to operate correctly.  [http://ampache.org/download.php Download]
