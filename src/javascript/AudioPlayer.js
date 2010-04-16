@@ -376,9 +376,12 @@ AudioPlayer = Class.create({
         
         //Cleanup old player
         if (this.player) {
-            var direction = song.index - this.player.song.index;
-            if (direction < 0) {
-                reverse = true;
+            if(this.player.song)
+            {
+                var direction = song.index - this.player.song.index;
+                if (direction < 0) {
+                    reverse = true;
+                }
             }
             this.setAudioToBuffer(this.player);
             if(this.player.stallTime){
