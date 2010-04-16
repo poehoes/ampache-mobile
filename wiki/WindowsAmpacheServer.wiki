@@ -6,5 +6,5 @@
 == Windows Vista Guide ==
 There is also step-by-step guide created by Fain, the creator of [http://www.precentral.net/homebrew-apps/ampachpre AmpachPre].
 
-The guide was written for Windows Vista XP should be very similar:
+The guide was written for Windows Vista, XP and Windows 7 should be very similar:
 [http://nucleardecay.net/pre/Ampache-how-to-vista32bit.pdf Fains Windows Guide]
