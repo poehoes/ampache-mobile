@@ -14,7 +14,7 @@ Note: This is a living document and will be updated in areas where its been foun
 
 = Required Downloads (All Free)=
   # A Webserver: [http://www.apachefriends.org/en/xampp-windows.html#646 XAMPP Lite] (Full version will work too)
-  # Latest Ampache: [http://ampache.org/download.php Ampache 3.5.1] (At the time of this guide this is the most recent version of Ampache)
+  # Latest Ampache: [http://ampache.org/download.php Ampache 3.5.4] (At the time of this guide this is the most recent version of Ampache)
   # Something to unzip Ampache: 7-zip [http://www.7-zip.org/]
 
 = Details =
