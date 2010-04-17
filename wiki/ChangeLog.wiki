@@ -1,6 +1,6 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
-===Version 0.9.1 (04/16/2010)===
+===Version 0.9.1 (04/17/2010)===
 
 Improvements
 ----
