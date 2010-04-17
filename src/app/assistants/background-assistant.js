@@ -339,7 +339,7 @@ BackgroundAssistant = Class.create({
     photoSelected: function(results) {
 
         this.CurrentMode = 1;
-        this.CurrentSolid = results.fullPath.replace(/\s/g, "%20");
+        this.CurrentSolid = encodeURI(results.fullPath);
         this.UpdateScreen();
 
     },

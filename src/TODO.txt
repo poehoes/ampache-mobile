@@ -1,1 +1,0 @@
-1. The image name "wavy (1).png" does not work.  Need to escape it?
