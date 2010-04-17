@@ -226,7 +226,7 @@ AccountAssistant = Class.create({
         //******************************************************************************************************************
         //Setup Stall Recovery Toggle
         this.stall_Model = {
-            value: this.Account.StallRecovery,
+            value: this.Account.StallDetection,
             // Current value of widget, from choices array.
             disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
         };
@@ -306,7 +306,7 @@ AccountAssistant = Class.create({
     
     StallPressed: function(event) {
         //Display the value of the toggle
-        this.Account.StallRecovery = event.value;
+        this.Account.StallDetection = event.value;
         this.settingsManager.SaveSettings();
     },
     

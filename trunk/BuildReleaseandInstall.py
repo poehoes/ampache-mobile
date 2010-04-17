@@ -39,11 +39,11 @@ dest =  directory + "\\temp"
 subprocess.call ([SVN_CMD, "export", source, dest, "--force"])
 os.system(PYTHON_PATH + " \"" + directory + "\webOS_optimize.py\" temp")
 
-os.system("palm-launch -c com.ampachemobile")
+os.system("palm-launch -c com.app.ampachemobile")
 os.system("palm-package -o auto_build temp")
 os.system("palm-package temp")
 os.system("palm-install auto_build/*.ipk")
-os.system("palm-launch com.ampachemobile")
+os.system("palm-launch com.app.ampachemobile")
 
 
 try:

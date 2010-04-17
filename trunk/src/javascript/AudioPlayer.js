@@ -1341,7 +1341,7 @@ AudioPlayer = Class.create({
 
             this.timePercentage = (currentTime / duration) * 100;
 
-            if(this.StallRecovery===true)
+            if(this.StallDetection===true)
             {
                 if (this.timePercentage === this.lastTickValue) {
                     this.ticksUnchanged++;
