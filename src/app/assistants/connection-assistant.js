@@ -300,7 +300,7 @@ ConnectionAssistant = Class.create({
                 AmpacheMobile.ampacheServer = new AmpacheServer(account.ServerURL, account.UserName, account.Password);
                 AmpacheMobile.ampacheServer.connect(this.ConnectionCallback.bind(this), this);
                 AmpacheMobile.FetchSize = account.FetchSize;
-                AmpacheMobile.audioPlayer.StallRecovery = account.StallRecovery;
+                AmpacheMobile.audioPlayer.StallDetection = account.StallDetection;
 
             }
         }

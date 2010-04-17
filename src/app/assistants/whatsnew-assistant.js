@@ -20,7 +20,14 @@
 
 WhatsnewAssistant = Class.create({
     initialize: function(params) {
-    this.label = params.label;
+    if(params && params.label)
+    {
+	this.label = params.label;
+    }
+    else
+    {
+	this.label= "Release Notes";
+    }
     },
 
     setup: function() {
