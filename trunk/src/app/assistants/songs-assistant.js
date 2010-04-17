@@ -233,7 +233,7 @@ SongsAssistant = Class.create({
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
             params.search = this.Search;
             AmpacheMobile.ampacheServer.GetSongs(params);
-        } else if (this.Type === "artist-songs") {
+        } else if ((this.Type === "artist-songs")||(this.Type === "artist-songs-single-album")) {
 
             this.itemsHelper.ExpectedItems = this.Expected_items;
             params.ArtistId = this.Artist_id;

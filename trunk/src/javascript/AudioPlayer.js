@@ -1341,12 +1341,15 @@ AudioPlayer = Class.create({
 
             this.timePercentage = (currentTime / duration) * 100;
 
-            if (this.timePercentage === this.lastTickValue) {
-                this.ticksUnchanged++;
+            if(this.StallRecovery===true)
+            {
+                if (this.timePercentage === this.lastTickValue) {
+                    this.ticksUnchanged++;
                 
-            } else {
+                } else {
                 this.lastTickValue = this.timePercentage;
-                this.ticksUnchanged = 0;
+                    this.ticksUnchanged = 0;
+                }
             }
 
             if (this.UIHandler) {

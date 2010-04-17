@@ -472,7 +472,7 @@ NowPlayingAssistant = Class.create({
             AmpacheMobile.settingsManager.settings.npPlayingListView = AmpacheMobile.audioPlayer.listIsShowing;
             AmpacheMobile.settingsManager.SaveSettings();
             AmpacheMobile.audioPlayer.UIUpdateSongInfo(AmpacheMobile.audioPlayer.player.song);
-            //AmpacheMobile.audioPlayer.UIUpdatePlaybackTime();
+            AmpacheMobile.audioPlayer.UIUpdatePlaybackTime();
             //AmpacheMobile.audioPlayer.UIUpdateAllBuffering();
         }
     }, 

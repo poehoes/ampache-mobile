@@ -369,7 +369,7 @@ SettingsManager = Class.create({
                 }
 
                 if (!this.settings.Accounts[i].StallRecovery) {
-                    this.settings.Accounts[i].StallRecovery = false;
+                    this.settings.Accounts[i].StallRecovery = true;
                 }
 
                 if (!this.settings.Accounts[i].ArchivedArtists) {
@@ -457,7 +457,7 @@ Account = Class.create({
     Password: null,
     ServerURL: null,
     ExtraCoverArt: false,
-    StallRecovery: false,
+    StallRecovery: true,
     FetchSize: DEFAULT_FETCH_SIZE,
     ArchivedArtists: null,
     ArchivedAlbums: null,

@@ -1,23 +1,25 @@
-<div id="main" class="palm-hasheader">
+<div id="prefs-main" class="palm-hasheader">
     <div id="header" class="palm-header left truncating-text">
         <div class="palm-header-wrapper">
             <div class='header-body'>
-                <div class='icon'><img class="icon-img" src='images/icons/accounts.png'/></div>
-                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>Account Editor</div>
+                <div class='icon'><img class="icon-img" src='images/icons/accounts.png'></div>
+
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''>
+                    Account Editor
+                </div>
             </div>
         </div>
     </div>
-
+    
+    <div id="spacerDiv" class="music-header-spacer"></div>
     <div x-mojo-element="RadioButton" id="accountScreens" class="radiobuttonClass"></div>
 
     <div id="account-settings">
-        
-
         <div class="palm-group">
             <div class="palm-group-title" x-mojo-loc=''>
                 Ampache Server Settings
             </div>
-    
+
             <div class="palm-list">
                 <div class="palm-row first">
                     <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
@@ -25,48 +27,48 @@
                             <div class="label" x-mojo-loc=''>
                                 Account Name
                             </div>
-    
+
                             <div class="AccountNameField" id="AccountNameField" x-mojo-element="TextField"></div>
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="palm-row">
                     <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
                         <div class="title">
                             <div class="label" x-mojo-loc=''>
                                 URL
                             </div>
-    
+
                             <div class="ServerURLField" id="ServerURLField" x-mojo-element="TextField"></div>
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="palm-row">
                     <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
                         <div class="title">
                             <div class="label" x-mojo-loc=''>
                                 Username
                             </div>
-    
+
                             <div id="userNameField" x-mojo-element="TextField"></div>
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="palm-row">
                     <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
                         <div class="title">
                             <div class="label" x-mojo-loc=''>
                                 Password
                             </div>
-    
+
                             <div id="passwordField" x-mojo-element="PasswordField"></div>
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="palm-row last">
                     <div class="palm-row-wrapper" x-mojo-focus-highlight="true">
                         <div x-mojo-element="Button" id="btnTestConnection"></div>
@@ -74,26 +76,26 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
+
     <div id="extra-settings">
-    
-                <div class="palm-group">
+        <div class="palm-group">
             <div class="palm-group-title" x-mojo-loc=''>
                 Buffer Ahead Settings
             </div>
-    
+
             <div class="palm-list">
                 <div class="palm-row first" x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <div id="num-buffers-selector" x-mojo-element="ListSelector"></div>
                     </div>
                 </div>
-    
+
                 <div class="palm-row last" x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <table class="palm-list-section-label">
                             <tr>
-                                <td class="label" width="85%"><span class="palm-text-wrapper" x-mojo-loc="">Allow 2G</span></td>
+                                <td class="label" width="85%">Allow 2G</td>
 
                                 <td width="15%">
                                     <div id="allow-2G-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
@@ -102,37 +104,74 @@
                         </table>
                     </div>
                 </div>
-    
-    
-                
             </div>
         </div>
-    
+
         <div class="palm-group">
             <div class="palm-group-title" x-mojo-loc=''>
                 Account Specific Settings
             </div>
-    
+
             <div class="palm-list">
                 <div class="palm-row first" x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <table class="palm-list-section-label">
                             <tr>
-                                 <td class="label" width=85%><span class="palm-text-wrapper" x-mojo-loc="">Artist Albums Art</span></td>
-    
-                                 <td width=15%>
+                                <td class="label" width="85%">Artist Albums Art</td>
+
+                                <td width="15%">
                                     <div id="art-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
-    
-                <div class="palm-row" x-mojo-tap-highlight="momentary">
+
+                <div class="palm-row last" x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        
+
+                        <div id="slider" x-mojo-element="Slider"></div><!--<table class="palm-list-section-label"></table>-->
+                        <table>
+                            <tr>
+                                <td class="label" width=65%>List Fetch Size</td>
+                                <td class="label" id="fetchSize" width=35%>Items:</td>
+                               
+                            </tr>
+                        </table>
+                    
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palm-group">
+            <div class="palm-group-title" x-mojo-loc=''>
+                Work Arounds
+            </div>
+
+            <div class="palm-list">
+                <div class="palm-row first" x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <table class="palm-list-section-label">
                             <tr>
-                                <td class="label" width=85%><span class="palm-text-wrapper" x-mojo-loc="">Stall Recovery</span></td>
+                                <td class="label" width="85%">GSTREAMER %20</td>
+
+                                <td width="15%">
+                                    <div id="spaces-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                
+                <div class="palm-row" x-mojo-tap-highlight="momentary">
+                    <div class="palm-row-wrapper">
+                        <table>
+                            <tr>
+                                <td class="label" width=85%>Audio Stall Detection</td>
     
                                 <td width=15%>
                                     <div id="stall-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
@@ -141,70 +180,32 @@
                         </table>
                     </div>
                 </div>
-    
+            
+
                 <div class="palm-row last" x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
-                        
-                        <span id="fetchSize" class="label" >Items:</span><span class="label" >List Fetch Size</span>
-    
-                        <div id="slider" x-mojo-element="Slider"></div>
-                        
-                        <!--<table class="palm-list-section-label"></table>-->
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        
-        <div class="palm-group">
-             <div class="palm-group-title" x-mojo-loc=''>
-                Work Arounds
-            </div>
-    
-            <div class="palm-list">
-                <div class="palm-row first" x-mojo-tap-highlight="momentary">
-                    <div class="palm-row-wrapper">
-                        <table class="palm-list-section-label">
-                            <tr>
-                                 <td  class="label" width=85%><span style="text-align:left;" class="palm-text-wrapper"  x-mojo-loc="">GSTREAMER %20</span></td>
-    
-                                 <td width=15%>
-                                    <div id="spaces-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="palm-row last" x-mojo-tap-highlight="momentary">
-                    <div class="palm-row-wrapper">
                         <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
-                        <div class="title">
-                            <div class="label" x-mojo-loc=''>
-                                Apache Timeout
+                            <div class="title">
+                                <div class="label" x-mojo-loc=''>
+                                    Apache Timeout
+                                </div>
+
+                                <div id="apache-timeout" x-mojo-element="TextField"></div>
                             </div>
-    
-                            <div id="apache-timeout" x-mojo-element="TextField"></div>
                         </div>
                     </div>
-                    </div>
                 </div>
+            </div>
         </div>
-        
-        
     </div>
-    
-    
-    
-    
+
     <div id="saved-info">
-         <div class="palm-group">
+        <div class="palm-group">
             <div class="palm-group-title">
                 Delete Saved Items
             </div>
-            
-            <div class="wallpaper palm-list" >
+
+            <div class="wallpaper palm-list">
                 <!--<div class="palm-row preview-box-row" id='deleteAll' x-mojo-tap-highlight="momentary">-->
                 <!--    <div class="palm-row-wrapper">-->
                 <!--        <div class="mainMenuLeft">-->
@@ -221,21 +222,19 @@
                 <div class="palm-row first" id='deleteArtists' x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <div class="mainMenuLeft">
-                            <div id="delete-artists" class="mainMenuTitle">
+                            <div id="delete-artists" class="label left mainMenuTitle">
                                 No Saved Artists
                             </div>
                         </div>
 
                         <div class="pref-icon"><img class="mainMenuIcon" src="images/icons/trash.png"></div>
-
                     </div>
                 </div>
-
 
                 <div class="palm-row last" id='deleteAlbums' x-mojo-tap-highlight="momentary">
                     <div class="palm-row-wrapper">
                         <div class="mainMenuLeft">
-                            <div id="delete-albums" class="mainMenuTitle">
+                            <div id="delete-albums" class="label left mainMenuTitle">
                                 No Saved Albums
                             </div>
                         </div>
@@ -245,10 +244,5 @@
                 </div>
             </div>
         </div>
-        
-        
     </div>
-    
-    
-    
 </div>

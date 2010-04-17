@@ -283,7 +283,7 @@ ArtistsAssistant = Class.create({
             },
             {
                 SceneTitle: event.item.name,
-                Type: "artist-songs",
+                Type: "artist-songs-single-album",
                 Artist_id: event.item.id,
                 Expected_items: event.item.songs,
                 SingleAlbum:true
