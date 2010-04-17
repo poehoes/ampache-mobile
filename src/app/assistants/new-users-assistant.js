@@ -18,7 +18,7 @@ NewUsersAssistant.prototype.setup = function() {
 NewUsersAssistant.prototype.activate = function(event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
-        SetCSSTheme(this.controller, THEME_NONE);
+        //SetCSSTheme(this.controller, THEME_NONE);
 	SetText(false, null, AmpacheMobile.settingsManager.settings.CSSTheme);
         SetBackground(this.controller, null, "");
 };
@@ -26,7 +26,7 @@ NewUsersAssistant.prototype.activate = function(event) {
 NewUsersAssistant.prototype.deactivate = function(event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
-        SetCSSTheme(this.controller, AmpacheMobile.settingsManager.settings.CSSTheme);
+        //SetCSSTheme(this.controller, AmpacheMobile.settingsManager.settings.CSSTheme);
 	SetBackground(this.controller, AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
         SetText(AmpacheMobile.settingsManager.settings.UseCustomColor, AmpacheMobile.settingsManager.settings.CustomColor, AmpacheMobile.settingsManager.settings.CSSTheme);
 
