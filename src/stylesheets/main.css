@@ -1309,4 +1309,22 @@ margin-left:10px;
 
 .collapsor {
 	overflow: hidden; 
-}   
+}
+
+
+/**********************************************/
+/* Account Editor Scene
+/**********************************************/
+#prefs-main td{
+    /*border:solid;*/
+    /*margin:0px 5px 0px 0px;*/
+    padding-left:10px;
+    vertical-align:middle;
+    float:none;
+}
+
+#prefs-main table{
+    /*border-spacing:4px;*/
+    /*border:solid;*/
+    vertical-align:middle;
+}
