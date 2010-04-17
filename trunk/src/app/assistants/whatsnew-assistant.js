@@ -161,14 +161,14 @@ WhatsnewAssistant = Class.create({
     },
 
     activate: function(event) {
-        SetCSSTheme(this.controller, THEME_NONE);
+        //SetCSSTheme(this.controller, THEME_NONE);
 	SetText(false, null, AmpacheMobile.settingsManager.settings.CSSTheme);
         SetBackground(this.controller, null, "");
     },
 
     deactivate: function(event) {
 
-        SetCSSTheme(this.controller, AmpacheMobile.settingsManager.settings.CSSTheme);
+        //SetCSSTheme(this.controller, AmpacheMobile.settingsManager.settings.CSSTheme);
 	SetBackground(this.controller, AmpacheMobile.settingsManager.settings.BackgroundImage, AmpacheMobile.settingsManager.settings.BackgroundColor);
         SetText(AmpacheMobile.settingsManager.settings.UseCustomColor, AmpacheMobile.settingsManager.settings.CustomColor, AmpacheMobile.settingsManager.settings.CSSTheme);
  
