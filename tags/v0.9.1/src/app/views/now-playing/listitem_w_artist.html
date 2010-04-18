@@ -1,0 +1,31 @@
+<div class="palm-row multi-line" id='#{id}_song' x-Mojo-tap-highlight="momentary">
+    <div class="palm-row-wrapper">
+       
+       
+       <div>
+         <img class="npListIcon" height=25px width=25px src="#{plIcon}"/>
+        <div class="npIndex truncating-text">#{-index}</div>
+        <div class="npMenuLeft">
+            
+            <div class="truncating-text" id="title" x-mojo-loc=''>
+                <div class="songTitle truncating-text">#{-title}</div>
+            </div>
+            <div class="truncating-text songDesc">
+                #{-artist}&nbsp;-&nbsp;#{-album}
+            </div>
+        </div>
+        </div>
+        <div class="mainMenuClear"></div>
+        
+        <div class="nplist-time nplist-progess">
+                
+        </div>
+        <div class="nplist-time nplist-remaining">
+            #{-timeStr}
+        </div>
+        
+        <div class="mainMenuClear"></div>
+        <div id="downloadDiv" class="progressDone truncating-text" style="width:#{amtBuffered}%">&nbsp;</div>
+        <div id="timeDiv" class="timeLoaded truncating-text" style="width:0%">&nbsp;</div>
+    </div>
+</div>
