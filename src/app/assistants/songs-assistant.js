@@ -13,6 +13,15 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var SongSortType = {
+    "alpha": 0,
+    "artist": 1,
+    "album": 2,
+    "album": 3,
+    "track": 4
+};
+
 SongsAssistant = Class.create({
 
     initialize: function(params) {
@@ -47,6 +56,11 @@ SongsAssistant = Class.create({
         this.itemsHelper = new ItemsHelper();
 
         AmpacheMobile.clickedLink = false;
+        
+        
+        this.sortType = SongSortType.track;
+        this.sortOrder = SortOrder.descending;
+        
     },
 
     setup: function() {
@@ -110,12 +124,17 @@ SongsAssistant = Class.create({
 
         this.holdHandler = this.listHeld.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
+        
+        this.header = this.controller.get('header');
+        this.sortSelector = this.sortSelect.bindAsEventListener(this);
+        Mojo.Event.listen(this.header, Mojo.Event.hold, this.sortSelector);
     },
 
     cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('shuffleAll'), Mojo.Event.tap, this.shuffleHandler);
         Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
+        Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
@@ -553,6 +572,160 @@ SongsAssistant = Class.create({
         var retvalue = 0;
         return retvalue;
     },
+
+
+     //**************************************************************************
+    // Sorting Functions
+    //**************************************************************************
+    imgEmpty: "images/player/empty.png",
+    imgUp: "images/up.png",
+    imgDown: "images/down.png",
+
+    sortSelect:function(event)
+    {
+        var commands = [];
+        
+        commands[0] = {
+            label: "Alphabet",
+            command: "doSort-alpha",
+            secondaryIconPath: (this.sortType === SongSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[1] = {
+            label: "Albums",
+            command: "doSort-album",
+            secondaryIconPath: (this.sortType === SongSortType.album) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[2] = {
+            label: "Artist",
+            command: "doSort-artist",
+            secondaryIconPath: (this.sortType === SongSortType.artist) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+         commands[3] = {
+            label: "Track #",
+            command: "doSort-track",
+            secondaryIconPath: (this.sortType === SongSortType.track) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        this.controller.popupSubmenu({
+            onChoose: this.doSort.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+        
+        event.stop();
+        event.stopPropagation();
+    },
+    
+    doSort:function(sort)
+    {
+        var reSortList = false;
+        
+        if(this.itemsHelper.SortFunction === null)
+        {
+            this.itemsHelper.SortFunction = this.sortList.bind(this);
+        }
+        
+        switch(sort)
+        {
+        case "doSort-track":
+            if (this.sortType !== SongSortType.track) {
+                this.sortType = SongSortType.track;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-alpha":
+            if (this.sortType !== SongSortType.alpha) {
+                this.sortType = SongSortType.alpha;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-album":
+            if (this.sortType !== SongSortType.album) {
+                this.sortType = SongSortType.album;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-artist":
+            if (this.sortType !== SongSortType.artist) {
+                this.sortType = SongSortType.artist;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        }
+        
+        
+        if (reSortList)
+        {
+            this.itemsHelper.ReSortList();
+        }
+    },
+
+    formatTrack:function(track)
+    {
+        var fmtTrack = "000000";
+        _track = track.toString();
+        fmtTrack = fmtTrack.substring(0, fmtTrack.length - _track.length)
+        return fmtTrack+_track;
+    },
+
+    sortList: function(a, b) {
+        switch (this.sortType) {
+        case SongSortType.track:
+            return (this.sortAlpha(parseInt(a.track,10), parseInt(b.track,10)) * this.sortOrder);
+            //break;
+        case SongSortType.album:
+            
+            return (this.sortAlpha(a.album.toLowerCase()+this.formatTrack(a.track), b.album.toLowerCase()+this.formatTrack(b.track)) * this.sortOrder);
+            //break;
+        case SongSortType.artist:
+            return (this.sortAlpha(a.artist.toLowerCase()+a.album.toLowerCase()+this.formatTrack(a.track), b.artist.toLowerCase()+ b.album.toLowerCase()+this.formatTrack(b.track)) * this.sortOrder);
+            //break;
+        case SongSortType.alpha:
+            return (this.sortAlpha(a.title.toLowerCase(), b.title.toLowerCase()) * this.sortOrder);
+            //break;
+        }
+        return 0;
+    },
+
+    sortAlpha: function(a, b) {
+        if (a === b) {
+            return 0;
+        }
+
+        if (a < b) {
+            return - 1;
+        } else {
+            return 1;
+        }
+    },
+
 
     activate: function(event) {
         this.itemsHelper.Activate();

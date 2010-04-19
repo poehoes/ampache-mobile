@@ -1112,6 +1112,10 @@ AudioPlayer = Class.create({
         case "error":
             var errorString = this.streamErrorCodeLookup(event);
             this.UIDisplayError(errorString, event.currentTarget.song);
+            
+            this.putThisBufferIntoPool(this.popThisBuffer(this.player));
+            this.player = null;
+            
             break;
         }
         this.UIPrintDebug(event, true);

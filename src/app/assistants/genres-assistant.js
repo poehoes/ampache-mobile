@@ -13,6 +13,14 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var GenreSortType = {
+    "alpha": 0,
+    "albums": 1,
+    "songs": 2,
+    "artists": 3
+};
+
 GenresAssistant = Class.create({
 
     initialize: function(params) {
@@ -22,6 +30,9 @@ GenresAssistant = Class.create({
         if (params.Search) {
             this.Search = params.Search;
         }
+        
+        this.sortType = GenreSortType.songs;
+        this.sortOrder = SortOrder.ascending;
     },
 
     setup: function() {
@@ -64,12 +75,18 @@ GenresAssistant = Class.create({
         // Events
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('genreFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        
+        this.header = this.controller.get('header');
+        this.sortSelector = this.sortSelect.bindAsEventListener(this);
+        Mojo.Event.listen(this.header, Mojo.Event.hold, this.sortSelector);
+    
     },
 
     cleanup: function(event) {
 
         Mojo.Log.info("--> cleanup");
         Mojo.Event.stopListening(this.controller.get('genreFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
         Mojo.Log.info("<-- cleanup");
@@ -108,7 +125,151 @@ GenresAssistant = Class.create({
         }
 
     },
+    
+    //**************************************************************************
+    // Sorting Functions
+    //**************************************************************************
+    imgEmpty: "images/player/empty.png",
+    imgUp: "images/up.png",
+    imgDown: "images/down.png",
 
+    sortSelect:function(event)
+    {
+        var commands = [];
+        
+        commands[0] = {
+            label: "Alphabet",
+            command: "doSort-alpha",
+            secondaryIconPath: (this.sortType === GenreSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[1] = {
+            label: "Albums",
+            command: "doSort-albums",
+            secondaryIconPath: (this.sortType === GenreSortType.albums) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[2] = {
+            label: "Songs",
+            command: "doSort-songs",
+            secondaryIconPath: (this.sortType === GenreSortType.songs) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+         commands[3] = {
+            label: "Artists",
+            command: "doSort-artists",
+            secondaryIconPath: (this.sortType === GenreSortType.artists) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        this.controller.popupSubmenu({
+            onChoose: this.doSort.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+        
+        event.stop();
+        event.stopPropagation();
+    },
+    
+    doSort:function(sort)
+    {
+        var reSortList = false;
+        
+        if(this.itemsHelper.SortFunction === null)
+        {
+            this.itemsHelper.SortFunction = this.sortList.bind(this);
+        }
+        
+        switch(sort)
+        {
+        case "doSort-songs":
+            if (this.sortType !== GenreSortType.songs) {
+                this.sortType = GenreSortType.songs;
+                this.sortOrder = SortOrder.ascending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-alpha":
+            if (this.sortType !== GenreSortType.alpha) {
+                this.sortType = GenreSortType.alpha;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-albums":
+            if (this.sortType !== GenreSortType.albums) {
+                this.sortType = GenreSortType.albums;
+                this.sortOrder = SortOrder.ascending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-artists":
+            if (this.sortType !== GenreSortType.artists) {
+                this.sortType = GenreSortType.artists;
+                this.sortOrder = SortOrder.ascending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        }
+        
+        
+        if (reSortList)
+        {
+            this.itemsHelper.ReSortList();
+        }
+    },
+
+    sortList: function(a, b) {
+        switch (this.sortType) {
+        case GenreSortType.songs:
+            return (this.sortAlpha(parseInt(a.songs,10), parseInt(b.songs,10)) * this.sortOrder);
+            //break;
+        case GenreSortType.albums:
+            return (this.sortAlpha(parseInt(a.albums,10), parseInt(b.albums,10)) * this.sortOrder);
+            //break;
+        case GenreSortType.albums:
+            return (this.sortAlpha(parseInt(a.artists,10), parseInt(b.artists,10)) * this.sortOrder);
+            //break;
+        case GenreSortType.alpha:
+            return (this.sortAlpha(a.name.toLowerCase(), b.name.toLowerCase()) * this.sortOrder);
+            //break;
+        }
+        return 0;
+    },
+
+    sortAlpha: function(a, b) {
+        if (a === b) {
+            return 0;
+        }
+
+        if (a < b) {
+            return - 1;
+        } else {
+            return 1;
+        }
+    },
+    
+    
 
     listTapHandler: function(event) {
 
