@@ -13,6 +13,13 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var PlayListSortType = {
+    "alpha": 0,
+    "owner": 1,
+    "songs": 2
+};
+
 PlaylistsAssistant = Class.create({
 
     initialize: function(params) {
@@ -26,6 +33,9 @@ PlaylistsAssistant = Class.create({
         }
 
         this.itemsHelper = new ItemsHelper();
+        
+        this.sortType = PlayListSortType.alpha;
+        this.sortOrder = SortOrder.descending;
     },
 
     setup: function() {
@@ -69,6 +79,10 @@ PlaylistsAssistant = Class.create({
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('playlistFilterList'), Mojo.Event.listTap, this.listTapHandler);
 
+        this.header = this.controller.get('header');
+        this.sortSelector = this.sortSelect.bindAsEventListener(this);
+        Mojo.Event.listen(this.header, Mojo.Event.hold, this.sortSelector);
+
     },
 
     cleanup: function(event) {
@@ -76,6 +90,7 @@ PlaylistsAssistant = Class.create({
         Mojo.Log.info("--> cleanup");
 
         Mojo.Event.stopListening(this.controller.get('playlistFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
         Mojo.Log.info("<-- cleanup");
@@ -113,6 +128,132 @@ PlaylistsAssistant = Class.create({
         });
 
     },
+
+
+     //**************************************************************************
+    // Sorting Functions
+    //**************************************************************************
+    imgEmpty: "images/player/empty.png",
+    imgUp: "images/up.png",
+    imgDown: "images/down.png",
+
+    sortSelect:function(event)
+    {
+        var commands = [];
+        
+        commands[0] = {
+            label: "Alphabet",
+            command: "doSort-alpha",
+            secondaryIconPath: (this.sortType === PlayListSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[1] = {
+            label: "Owner",
+            command: "doSort-owner",
+            secondaryIconPath: (this.sortType === PlayListSortType.owner) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[2] = {
+            label: "Songs",
+            command: "doSort-songs",
+            secondaryIconPath: (this.sortType === PlayListSortType.songs) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        
+        this.controller.popupSubmenu({
+            onChoose: this.doSort.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+        
+        event.stop();
+        event.stopPropagation();
+    },
+    
+    doSort:function(sort)
+    {
+        var reSortList = false;
+        
+        
+        this.itemsHelper.SortFunction = this.sortList.bind(this);
+        
+        
+        switch(sort)
+        {
+        case "doSort-songs":
+            if (this.sortType !== PlayListSortType.songs) {
+                this.sortType = PlayListSortType.songs;
+                this.sortOrder = SortOrder.ascending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-alpha":
+            if (this.sortType !== PlayListSortType.alpha) {
+                this.sortType = PlayListSortType.alpha;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-owner":
+            if (this.sortType !== PlayListSortType.owner) {
+                this.sortType = PlayListSortType.owner;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        }
+        
+        
+        if (reSortList)
+        {
+            this.itemsHelper.ReSortList();
+        }
+    },
+
+    sortList: function(a, b) {
+        switch (this.sortType) {
+        case PlayListSortType.songs:
+            return (this.sortAlpha(parseInt(a.items,10), parseInt(b.items,10)) * this.sortOrder);
+            //break;
+        case PlayListSortType.owner:
+            return (this.sortAlpha(a.owner.toLowerCase(), b.owner.toLowerCase()) * this.sortOrder);
+            //break;
+        case PlayListSortType.alpha:
+            return (this.sortAlpha(a.name.toLowerCase(), b.name.toLowerCase()) * this.sortOrder);
+            //break;
+        }
+        return 0;
+    },
+
+    sortAlpha: function(a, b) {
+        if (a === b) {
+            return 0;
+        }
+
+        if (a < b) {
+            return - 1;
+        } else {
+            return 1;
+        }
+    },
+    
+
+
 
     dividerFunc: function(itemModel) {
         return itemModel.year;

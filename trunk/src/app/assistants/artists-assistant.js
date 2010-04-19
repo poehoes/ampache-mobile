@@ -13,6 +13,14 @@
  You should have received a copy of the GNU General Public License
  along with Ampache Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+var ArtistSortType = {
+    "alpha": 0,
+    "albums": 1,
+    "songs": 2
+};
+
+
 ArtistsAssistant = Class.create({
 
     initialize: function(params) {
@@ -42,6 +50,10 @@ ArtistsAssistant = Class.create({
         {
             this.FromDate = params.FromDate;
         }
+        
+        this.sortType = ArtistSortType.alpha;
+        this.sortOrder = SortOrder.descending;
+        
     },
 
     
@@ -59,6 +71,11 @@ ArtistsAssistant = Class.create({
         this.header = this.controller.get('header');
         this.divSelector = this.dividerSelect.bindAsEventListener(this);
         Mojo.Event.listen(this.header, Mojo.Event.tap, this.divSelector);
+
+        this.sortSelector = this.sortSelect.bindAsEventListener(this);
+        Mojo.Event.listen(this.header, Mojo.Event.hold, this.sortSelector);
+
+        
 
 
         //*********************************************************************************************************
@@ -78,7 +95,7 @@ ArtistsAssistant = Class.create({
 
         //*********************************************************************************************************
         // Items Helper
-        var sorting = this.Genre_id ? this.sortAlpha.bind(this) : null;
+        var sorting = this.Genre_id ? this.sortGenreAlpha.bind(this) : null;
 
         var params = {
             type: "artists",
@@ -108,10 +125,133 @@ ArtistsAssistant = Class.create({
         Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.hold, this.listHeldHandler);
     },
 
+    imgEmpty: "images/player/empty.png",
+    imgUp: "images/up.png",
+    imgDown: "images/down.png",
+
+    sortSelect:function(event)
+    {
+        var commands = [];
+        
+        commands[0] = {
+            label: "Alphabet",
+            command: "doSort-alpha",
+            secondaryIconPath: (this.sortType === ArtistSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[1] = {
+            label: "Albums",
+            command: "doSort-albums",
+            secondaryIconPath: (this.sortType === ArtistSortType.albums) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[2] = {
+            label: "Songs",
+            command: "doSort-songs",
+            secondaryIconPath: (this.sortType === ArtistSortType.songs) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        this.controller.popupSubmenu({
+            onChoose: this.doSort.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+        
+        event.stop();
+        event.stopPropagation();
+    },
+
+    doSort:function(sort)
+    {
+        var reSortList = false;
+        
+        if(this.itemsHelper.SortFunction === null)
+        {
+            this.itemsHelper.SortFunction = this.sortList.bind(this);
+        }
+        
+        switch(sort)
+        {
+        case "doSort-songs":
+            if (this.sortType !== ArtistSortType.songs) {
+                this.sortType = ArtistSortType.songs;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-alpha":
+            if (this.sortType !== ArtistSortType.alpha) {
+                this.sortType = ArtistSortType.alpha;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        case "doSort-albums":
+            if (this.sortType !== ArtistSortType.albums) {
+                this.sortType = ArtistSortType.albums;
+                this.sortOrder = SortOrder.descending;
+                reSortList = true;
+            }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        }
+        
+        
+        if (reSortList) // && this.itemsHelper.LoadingFinished)
+        {
+            //AmpacheMobile.settingsManager.settings.AlbumsSort = this.sortType;
+            //AmpacheMobile.settingsManager.SaveSettings();
+            this.itemsHelper.ReSortList();
+        }
+    },
+
+    sortList: function(a, b) {
+        switch (this.sortType) {
+        case ArtistSortType.songs:
+            return (this.sortAlpha(parseInt(a.songs,10), parseInt(b.songs,10)) * this.sortOrder);
+            //break;
+        case ArtistSortType.albums:
+            return (this.sortAlpha(parseInt(a.albums,10), parseInt(b.albums,10)) * this.sortOrder);
+            //break;
+        case ArtistSortType.alpha:
+            return (this.sortAlpha(this.dividerFunc(a), this.dividerFunc(b)) * this.sortOrder);
+            //break;
+        }
+        return 0;
+    },
+
+    sortAlpha: function(a, b) {
+        if (a === b) {
+            return 0;
+        }
+
+        if (a < b) {
+            return - 1;
+        } else {
+            return 1;
+        }
+    },
+
+
     cleanup: function(event) {
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.hold, this.listHeldHandler);
         Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.divSelector);
+        Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
@@ -213,12 +353,12 @@ ArtistsAssistant = Class.create({
         event.stop();
     },
 
-    sortAlpha: function(a, b) {
-
+    sortGenreAlpha: function(a, b) {
+    
         var regExp = /(the|a)\s+/g;
         var a_fixed = a.name.toLowerCase().replace(regExp, '');
         var b_fixed = b.name.toLowerCase().replace(regExp, '');
-
+    
         if (a_fixed === b_fixed) {
             return 0;
         }
@@ -227,7 +367,7 @@ ArtistsAssistant = Class.create({
         } else {
             return 1;
         }
-
+    
     },
 
     GetArtists: function(callback, offset, limit) {
@@ -350,16 +490,27 @@ ArtistsAssistant = Class.create({
     },
 */
     dividerFunc: function(itemModel) {
-        var regExp = /(the|a)\s+/g;
-        var dividerText = itemModel.name.toLowerCase().replace(regExp, '');
-        if (dividerText[0].match(/[0-9]/)) {
-            return "#";
-        }
-        else if(!dividerText[0].match(/[0-9a-zA-Z]/))
+        if(this.sortType === ArtistSortType.alpha)
         {
-            return "@";
+            var regExp = /(the|a)\s+/g;
+            var dividerText = itemModel.name.toLowerCase().replace(regExp, '');
+            if (dividerText[0].match(/[0-9]/)) {
+                return "#";
+            }
+            else if(!dividerText[0].match(/[0-9a-zA-Z]/))
+            {
+                return "@";
+            }
+            return dividerText[0].toUpperCase();
         }
-        return dividerText[0].toUpperCase();
+        else if(this.sortType === ArtistSortType.albums){
+            return itemModel.albums;
+        }
+        //else if(this.sortType === ArtistSortType.songs){
+        //    return itemModel.songs;
+        //}
+        
+       return "";
     },
 
     activate: function(event) {

@@ -19,10 +19,7 @@ var AlbumSortType = {
     "year": 1,
     "artist": 2
 };
-var SortOrder = {
-    "descending": 1,
-    "ascending": -1
-};
+
 
 AlbumsAssistant = Class.create({
 
@@ -95,13 +92,19 @@ AlbumsAssistant = Class.create({
         title.innerHTML = this.SceneTitle;
         
         
+        this.header = this.controller.get('header');
         if (this.DisplayArtistInfo === true) {
             //*********************************************************************
             // Setup Header Tap
-            this.header = this.controller.get('header');
+            
             this.divSelector = this.dividerSelect.bindAsEventListener(this);
             Mojo.Event.listen(this.header, Mojo.Event.tap, this.divSelector);
         }
+        
+        this.sortSelector = this.sortSelect.bindAsEventListener(this);
+        Mojo.Event.listen(this.header, Mojo.Event.hold, this.sortSelector);
+        
+        
         
         //******************************************************************************************************
         // Setup numSongs pill
@@ -242,6 +245,8 @@ AlbumsAssistant = Class.create({
         if (this.DisplayArtistInfo === true) {
             Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.divSelector);
         }
+        Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
+        
         Mojo.Event.stopListening(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('allSongs'), Mojo.Event.tap, this.allSongsHandler);
         this.itemsHelper.cleanup();
@@ -249,6 +254,46 @@ AlbumsAssistant = Class.create({
         Mojo.Log.info("<-- cleanup");
 
     },
+
+    imgEmpty: "images/player/empty.png",
+    imgUp: "images/up.png",
+    imgDown: "images/down.png",
+
+
+    sortSelect:function(event)
+    {
+        var commands = [];
+        
+        commands[0] = {
+            label: "Alphabet",
+            command: "doSort-alpha",
+            secondaryIconPath: (this.sortType === AlbumSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[1] = {
+            label: "Year",
+            command: "doSort-year",
+            secondaryIconPath: (this.sortType === AlbumSortType.year) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        commands[2] = {
+            label: "Artist",
+            command: "doSort-artist",
+            secondaryIconPath: (this.sortType === AlbumSortType.artist) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
+        };
+        
+        this.controller.popupSubmenu({
+            onChoose: this.doSort.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+        
+        event.stop();
+        event.stopPropagation();
+    },
+
+    
+
 
     dividerSelect:function(event)
     {
@@ -411,36 +456,77 @@ AlbumsAssistant = Class.create({
 
     },
 
-    handleCommand: function(event) {
-
-        this.itemsHelper.handleCommand(event);
-
+    doSort:function(sort)
+    {
         var reSortList = false;
-        this.prevSortType = this.sortType;
-
-        switch (event.command) {
+        
+        
+        
+        switch(sort)
+        {
         case "doSort-year":
             if (this.sortType !== AlbumSortType.year) {
                 this.itemsHelper.SortFunction = this.sortList.bind(this);
                 this.sortType = AlbumSortType.year;
+                this.sortOrder = SortOrder.descending;
                 reSortList = true;
             }
-            event.stopPropagation();
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
             break;
         case "doSort-alpha":
             if (this.sortType !== AlbumSortType.alpha) {
                 this.itemsHelper.SortFunction = this.sortList.bind(this);
                 this.sortType = AlbumSortType.alpha;
+                this.sortOrder = SortOrder.descending;
                 reSortList = true;
             }
-            event.stopPropagation();
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
             break;
         case "doSort-artist":
             if (this.sortType !== AlbumSortType.artist) {
                 this.itemsHelper.SortFunction = this.sortList.bind(this);
                 this.sortType = AlbumSortType.artist;
+                this.sortOrder = SortOrder.descending;
                 reSortList = true;
             }
+            else
+            {
+                this.sortOrder = this.sortOrder * -1;
+                reSortList = true;
+            }
+            break;
+        }
+        
+        
+        if (reSortList) // && this.itemsHelper.LoadingFinished)
+        {
+            AmpacheMobile.settingsManager.settings.AlbumsSort = this.sortType;
+            AmpacheMobile.settingsManager.SaveSettings();
+            this.itemsHelper.ReSortList();
+        }
+    },
+
+
+    handleCommand: function(event) {
+
+        this.itemsHelper.handleCommand(event);
+
+        
+        this.prevSortType = this.sortType;
+
+        switch (event.command) {
+        case "doSort-year":
+        case "doSort-alpha":
+        case "doSort-artist":
+            this.doSort(event.command);
             event.stopPropagation();
             break;
         case "delete-np-cmd":
@@ -468,12 +554,7 @@ AlbumsAssistant = Class.create({
             }
         }
 
-        if (reSortList) // && this.itemsHelper.LoadingFinished)
-        {
-            AmpacheMobile.settingsManager.settings.AlbumsSort = this.sortType;
-            AmpacheMobile.settingsManager.SaveSettings();
-            this.itemsHelper.ReSortList();
-        }
+        
         /*else if(reSortList)
          {
          this.showDialogBox("WARNING", "Cannot sort while list is loading.")
