@@ -1,6 +1,6 @@
 {
   "id": "com.app.ampachemobile",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "title": "Ampache Mobile",
   "vendor": "Ampache Mobile",
   "vendorurl": "http://code.google.com/p/ampache-mobile",
@@ -19,7 +19,7 @@
     "resources": [
     {
       "type": "scene",
-      "label": "The Basics",
+      "label": "Introduction",
       "sceneName":"the-basics"
     },
     {
