@@ -20,6 +20,11 @@ PreferencesAssistant = Class.create({
 
     initialize: function(params) {
         this.settingsManager = params.settingsManager;
+        
+        if(params && params.firstTime)
+        {
+            this.firstTime = true;
+        }
 
     },
 

@@ -165,17 +165,16 @@ ArtistsAssistant = Class.create({
     {
         var reSortList = false;
         
-        if(this.itemsHelper.SortFunction === null)
-        {
-            this.itemsHelper.SortFunction = this.sortList.bind(this);
-        }
+       
+        this.itemsHelper.SortFunction = this.sortList.bind(this);
+        
         
         switch(sort)
         {
         case "doSort-songs":
             if (this.sortType !== ArtistSortType.songs) {
                 this.sortType = ArtistSortType.songs;
-                this.sortOrder = SortOrder.descending;
+                this.sortOrder = SortOrder.ascending;
                 reSortList = true;
             }
             else
@@ -199,7 +198,7 @@ ArtistsAssistant = Class.create({
         case "doSort-albums":
             if (this.sortType !== ArtistSortType.albums) {
                 this.sortType = ArtistSortType.albums;
-                this.sortOrder = SortOrder.descending;
+                this.sortOrder = SortOrder.ascending;
                 reSortList = true;
             }
             else

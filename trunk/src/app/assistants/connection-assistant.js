@@ -125,7 +125,10 @@ ConnectionAssistant = Class.create({
         if (!settings) {
             Mojo.Log.info("No Settings Case");
             AmpacheMobile.settingsManager.CreateSettings();
-            this.pushPreferences(AmpacheMobile.settingsManager);
+            //this.pushPreferences(AmpacheMobile.settingsManager);
+            
+            this.firstUsePopup();
+            
         } else {
             if (AmpacheMobile.settingsManager.settings.Version !== Mojo.Controller.appInfo.version) {
 
@@ -139,7 +142,8 @@ ConnectionAssistant = Class.create({
                 if (!AmpacheMobile.Account) {
                     Mojo.Log.info("Updating Accounts List");
                     if (AmpacheMobile.settingsManager.settings.Accounts.length === 0) {
-                        this.pushPreferences(AmpacheMobile.settingsManager);
+                        //this.pushPreferences(AmpacheMobile.settingsManager);
+                        this.firstUsePopup();
                     } else {
                         this.PopulateAccountsList(settings.Accounts);
                     }
@@ -287,12 +291,18 @@ ConnectionAssistant = Class.create({
         if (account) {
 
             if ((account.ServerURL === "") || (account.Password === "") || (account.UserName === "")) {
-                Mojo.Log.info("Try to load preferences");
-                this.controller.stageController.pushScene({
-                    transition: AmpacheMobile.Transition,
-                    name: "preferences"
-                },
-                "connection");
+                  
+                
+                this.firstUsePopup();
+                
+                //Mojo.Log.info("Try to load preferences");
+                //this.controller.stageController.pushScene({
+                //    transition: AmpacheMobile.Transition,
+                //    name: "preferences"
+                //},
+                //{
+                //}
+                //);
             } else {
                 Mojo.Log.info("Creating AmpacheServer Object");
                 AmpacheMobile.Account = account;
@@ -306,6 +316,43 @@ ConnectionAssistant = Class.create({
         }
     },
 
+    firstUsePopup:function()
+    {
+        this.controller.showAlertDialog({
+                    title: $L("Welcome to Ampache Mobile"),
+                    allowHTMLMessage: true,
+                    onChoose: this.firstPopupChoose.bind(this),
+                    message:  "If you are new to Ampache start with the introduction.<br><br>If you need assistance getting Ampache up and running visit the forums at ampache.org and precentral.net, as well as the Ampache Mobile site.",
+                    choices:[
+                        {
+                            label:"Introduction",
+                            value: "intro"
+                        },  
+                        {
+                            label:"Preferences",
+                            value:"preferences"
+                        },   
+                    ]
+                });
+    },
+
+    firstPopupChoose:function(value)
+    {
+        switch(value)
+        {
+            case "intro":
+                this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "the-basics"
+            });
+                break;
+            case "preferences":
+                this.pushPreferences(AmpacheMobile.settingsManager);
+                break;
+        }
+    },
+
+
     activate: function(event) {
         Mojo.Log.info("--> activate");
         this.TurnOffSpinner();
@@ -317,6 +364,12 @@ ConnectionAssistant = Class.create({
         if (AmpacheMobile.settingsManager.settings) {
             this.PopulateAccountsList(AmpacheMobile.settingsManager.settings.Accounts, true);
             this.SetSettingsCustomizations(this.controller);
+            
+            if (AmpacheMobile.settingsManager.settings.Accounts.length === 0) {
+                        //this.pushPreferences(AmpacheMobile.settingsManager);
+                        this.firstUsePopup();
+            }
+            
         }
 
         if ((AmpacheMobile.ampacheServer) && (AmpacheMobile.ampacheServer.pingTimer)) {

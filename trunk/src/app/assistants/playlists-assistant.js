@@ -82,6 +82,9 @@ PlaylistsAssistant = Class.create({
         this.header = this.controller.get('header');
         this.sortSelector = this.sortSelect.bindAsEventListener(this);
         Mojo.Event.listen(this.header, Mojo.Event.hold, this.sortSelector);
+        
+        this.jumpSelector = this.jumpSelect.bindAsEventListener(this);
+        Mojo.Event.listen(this.header, Mojo.Event.tap, this.jumpSelector);
 
     },
 
@@ -91,6 +94,7 @@ PlaylistsAssistant = Class.create({
 
         Mojo.Event.stopListening(this.controller.get('playlistFilterList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
+        Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.jumpSelector);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
         Mojo.Log.info("<-- cleanup");
@@ -129,8 +133,50 @@ PlaylistsAssistant = Class.create({
 
     },
 
+    //**************************************************************************
+    // List Jump Functions
+    //**************************************************************************
+    jumpSelect:function(event)
+    {
+        var commands = [];
+       
+        commands[0] = {
+            label: "Top",
+            command: "jumpTo-top"
+        };
+        
+        commands[1] = {
+            label: "Bottom",
+            command: "jumpTo-bottom"
+        };
+        
+        this.controller.popupSubmenu({
+            onChoose: this.jumpHandler.bindAsEventListener(this),
+            placeNear: this.header,
+            items: commands
+        });
+    },
 
-     //**************************************************************************
+    jumpHandler:function(event)
+    {
+        if(Object.isString(event) && event.match("jumpTo"))
+        {
+            filterList = this.controller.get('playlistFilterList');
+            var list = filterList.mojo.getList();
+            
+            if(event === "jumpTo-top")
+            {
+                list.mojo.revealItem(0, false);
+            }
+            else if(event === "jumpTo-bottom")
+            {
+                list.mojo.revealItem(list.mojo.getLength()-1, false);
+            }  
+        }
+    },
+
+
+    //**************************************************************************
     // Sorting Functions
     //**************************************************************************
     imgEmpty: "images/player/empty.png",

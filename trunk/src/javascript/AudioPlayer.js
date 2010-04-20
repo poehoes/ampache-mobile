@@ -720,7 +720,7 @@ AudioPlayer = Class.create({
     },
 
     pause: function() {
-        if (this.bufferMutex === false) {
+        if ((this.bufferMutex === false) && this.player) {
             this.player.pause();
             this.UIStopPlaybackTimer();
         }
@@ -732,7 +732,7 @@ AudioPlayer = Class.create({
             this.ampachePaused = this.player.paused;
 
             //this.UISetPointer(this.playList.getCurrentSong(), false);
-            if (this.playList.moveCurrentToNext() === true) {
+            if (this.player && this.playList.moveCurrentToNext() === true) {
 
                 //this.UISetPointer(this.playList.getCurrentSong(), true);
                 if(!this.play_change_interval){
@@ -774,7 +774,7 @@ AudioPlayer = Class.create({
             this.stopBufferRecovery();
             this.ampachePaused = this.player.paused;
 
-            if (this.playList.moveCurrentToPrevious() === true) {
+            if (this.player && this.playList.moveCurrentToPrevious() === true) {
                 
                 if(!this.play_change_interval){
                     this.pause();
@@ -804,7 +804,7 @@ AudioPlayer = Class.create({
             
             if (this.playList.moveToSong(index) === true) {
                 
-                if(!this.play_change_interval){
+                if(this.player && !this.play_change_interval){
                     this.pause();
                     this._seek(0);
                     this.player.ampacheType = AudioType.buffer;
@@ -892,7 +892,7 @@ AudioPlayer = Class.create({
     },
 
     seek: function(seekTime) {
-        if (seekTime < this.player.duration) {
+        if (this.player && (seekTime < this.player.duration)) {
             if (seekTime >= 0) {
                 this._seek(seekTime);
             } else {
@@ -924,7 +924,7 @@ AudioPlayer = Class.create({
     *
     ***************************************************************************/
     _seek: function(seekTime) {
-        if (this.player.readyState > this.player.HAVE_NOTHING) {
+        if (this.player && (this.player.readyState > this.player.HAVE_NOTHING)) {
             var timeDiff = seekTime - this.player.currentTime;
             if (timeDiff < 0) { //Make difference positive
                 timeDiff = timeDiff * -1;
