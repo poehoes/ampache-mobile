@@ -331,7 +331,7 @@ ConnectionAssistant = Class.create({
                         {
                             label:"Preferences",
                             value:"preferences"
-                        },   
+                        }   
                     ]
                 });
     },

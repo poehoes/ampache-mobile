@@ -88,5 +88,9 @@
     {
         "scenes": "new-users",
         "source": "app/assistants/new-users-assistant.js"
+    },
+    {
+        "scenes": "check-updates",
+        "source": "app/assistants/check-updates-assistant.js"
     }
 ]

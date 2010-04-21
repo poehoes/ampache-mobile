@@ -263,8 +263,15 @@ AudioPlayer = Class.create({
 
     isWindowFilled:function()
     {
+        var i = 0;
         var retVal = true;
-        while (i < this.audioBuffers.length) {
+        var window = this.playList.getCurrentWindow(this.numBuffers);
+        if(this.audioBuffers.length!==window.length)
+        {
+            return false;
+        }
+        
+        while ((i < this.audioBuffers.length)&& (retVal === true)) {
             if(this.playList.isInCurrentWindow(this.audioBuffers[i].song, this.numBuffers) ===true)
             {
                 if(this.audioBuffers[i].fullyBuffered ===false)
@@ -274,8 +281,9 @@ AudioPlayer = Class.create({
             }
             else
             {
-                retVal = true;
+                retVal = false;
             }
+            i++;
         }
         return retVal;
     },
@@ -451,6 +459,7 @@ AudioPlayer = Class.create({
 
 
         this.startBufferRecovery();
+        this.bufferNextSong(this.player.song);
         //this.removeBuffersOutsideWindow();
         //this.UIInvalidateSong(player.song);
         //redraw UI to reflect changes
@@ -1290,6 +1299,59 @@ AudioPlayer = Class.create({
         }
 
     },
+    
+    
+    
+    getBufferInfo:function()
+    {
+        var info = "";
+        
+        //info += "Active Buffers: " + this.audioBuffers.length + "<br>";
+        
+        var totalSize=0;
+        var totalSecs=0;
+        for(var i = 0; i<this.audioBuffers.length;i++)
+        {
+            if(i!==0)
+            {
+                info += "<br>";    
+            }
+            
+            
+            
+            
+            info += "<b>"+this.audioBuffers[i].song.title + "</b><hr>";
+            
+            var pctg =  parseInt(this.audioBuffers[i].song.amtBuffered,10)/100;
+            
+            var secs = 0;
+            if (!this.audioBuffers[i].duration) {
+                secs =  parseInt(this.audioBuffers[i].song.time,10)*pctg;
+            } else {
+                secs = this.audioBuffers[i].buffered.end(0);
+            }
+            
+            var size =  parseInt(this.audioBuffers[i].song.size,10)*pctg;   
+            
+            var bitrate = Math.floor(((size/1024)/secs)*8);
+            
+            info += Math.floor((size/1051648)*100)/100 + "MB @ (" + bitrate + "kbps)<br>";
+            
+            
+            
+            totalSize += size;
+            totalSecs += secs;
+        }
+        
+        info += "<br><b>Totals</b><hr>";
+        info += "Memory Used: " + Math.floor((totalSize/1051648)*100)/100 + "MB<br>";
+        
+        var bitrate = Math.floor(((totalSize/1024)/totalSecs)*8);
+        info += "Average Bitrate: " + bitrate + "kbps<br>";
+        
+        return info;
+    },
+    
 
     UIStartPlaybackTimer: function() {
         if (this.UIHandler && !this.timeInterval) {

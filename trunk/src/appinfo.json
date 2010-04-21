@@ -33,15 +33,16 @@
       "sceneName":"whatsnew"
     },
     {
+      "type": "scene",
+      "label": "Check for Updates",
+      "sceneName":"check-updates"
+    },
+    {
       "type": "web",
       "label": "Donate",
       "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZKZ3GCDQUWY8&lc=US&item_name=Ampache%20Mobile&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     },
-    {
-      "type": "web",
-      "label": "Check for Updates",
-      "url": "http://developer.palm.com/appredirect/?packageid=com.app.ampachemobile"
-    },
+    
     {
       "type": "web",
       "label": "Common Issues",
