@@ -1151,6 +1151,23 @@ NowPlayingAssistant = Class.create({
                     }]
                 });
                 break;
+            case "bufferInfo-cmd":
+                this.controller.showAlertDialog({
+                    // onChoose: this.onErrorDialogDismiss.bind(this),
+                    title: "Buffer Info",
+                    allowHTMLMessage:true,
+                    message: AmpacheMobile.audioPlayer.getBufferInfo(),
+                    choices: [{
+                        label: $L('Cancel'),
+                        value: "cancel",
+                        type: 'dismiss'
+                    }]
+                });
+                break;
+                
+                
+            
+            
             case "delete-np-cmd":
                 this.controller.stageController.popScene();
             }
@@ -1313,6 +1330,12 @@ NowPlayingAssistant = Class.create({
             command: "delete-np-cmd",
             shortcut:'d'
         },
+        
+        //{
+        //    label: "Buffer Info",
+        //    command: "bufferInfo-cmd"
+        //    
+        //},
         
         {
             label: "Controls",

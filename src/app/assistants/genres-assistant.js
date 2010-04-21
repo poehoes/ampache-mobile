@@ -113,7 +113,7 @@ GenresAssistant = Class.create({
         this.itemsHelper.handleCommand(event);
     },
 
-    sortAlpha: function(a, b) {
+    sortAlphaGenre: function(a, b) {
 
         var regExp = /(the|a)\s+/g;
         var a_fixed = a.name.toLowerCase().replace(regExp, '');

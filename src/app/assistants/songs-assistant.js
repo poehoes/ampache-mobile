@@ -18,8 +18,7 @@ var SongSortType = {
     "alpha": 0,
     "artist": 1,
     "album": 2,
-    "album": 3,
-    "track": 4
+    "track": 3
 };
 
 SongsAssistant = Class.create({
@@ -738,7 +737,7 @@ SongsAssistant = Class.create({
     {
         var fmtTrack = "000000";
         _track = track.toString();
-        fmtTrack = fmtTrack.substring(0, fmtTrack.length - _track.length)
+        fmtTrack = fmtTrack.substring(0, fmtTrack.length - _track.length);
         return fmtTrack+_track;
     },
 
