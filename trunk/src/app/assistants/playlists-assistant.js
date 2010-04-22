@@ -188,7 +188,7 @@ PlaylistsAssistant = Class.create({
         var commands = [];
         
         commands[0] = {
-            label: "Alphabet",
+            label: "Alpha",
             command: "doSort-alpha",
             secondaryIconPath: (this.sortType === PlayListSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
@@ -200,7 +200,7 @@ PlaylistsAssistant = Class.create({
         };
         
         commands[2] = {
-            label: "Songs",
+            label: "# Songs",
             command: "doSort-songs",
             secondaryIconPath: (this.sortType === PlayListSortType.songs) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };

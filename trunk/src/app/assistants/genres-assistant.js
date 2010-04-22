@@ -186,25 +186,25 @@ GenresAssistant = Class.create({
         var commands = [];
         
         commands[0] = {
-            label: "Alphabet",
+            label: "Alpha",
             command: "doSort-alpha",
             secondaryIconPath: (this.sortType === GenreSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
         
         commands[1] = {
-            label: "Albums",
+            label: "# Albums",
             command: "doSort-albums",
             secondaryIconPath: (this.sortType === GenreSortType.albums) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
         
         commands[2] = {
-            label: "Songs",
+            label: "# Songs",
             command: "doSort-songs",
             secondaryIconPath: (this.sortType === GenreSortType.songs) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
         
          commands[3] = {
-            label: "Artists",
+            label: "# Artists",
             command: "doSort-artists",
             secondaryIconPath: (this.sortType === GenreSortType.artists) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
@@ -295,7 +295,7 @@ GenresAssistant = Class.create({
         case GenreSortType.albums:
             return (this.sortAlpha(parseInt(a.albums,10), parseInt(b.albums,10)) * this.sortOrder);
             //break;
-        case GenreSortType.albums:
+        case GenreSortType.artists:
             return (this.sortAlpha(parseInt(a.artists,10), parseInt(b.artists,10)) * this.sortOrder);
             //break;
         case GenreSortType.alpha:

@@ -632,13 +632,13 @@ SongsAssistant = Class.create({
         var commands = [];
         
         commands[0] = {
-            label: "Alphabet",
+            label: "Alpha",
             command: "doSort-alpha",
             secondaryIconPath: (this.sortType === SongSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
         
         commands[1] = {
-            label: "Albums",
+            label: "Album",
             command: "doSort-album",
             secondaryIconPath: (this.sortType === SongSortType.album) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
