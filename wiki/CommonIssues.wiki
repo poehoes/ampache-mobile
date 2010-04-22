@@ -72,7 +72,8 @@ Ampache Mobile is just an app that plays music from a server, an [http://ampache
 ===Getting a lot of Audio Stalls===
 There are a couple of things you can do for webOS audio stalls.
   # Properly configure your Apache timeout work around in the account editor.
-    * There is an issue when downloading stalls with webOS. If it stalls to long the server will close the connection and webOS fails to realize this, when it attempts to finish its download the audio service crashes. The timeout workaround in the account manager is for detecting this potential error and circumventing it, so you may also want to confirm your timeout setting. 
+    * Basically webOS can only download a finite amount of music, lets say its 12MB.  Once it hits this limit it puts downloading the track on hold until it needs more data to play it.
+    * There is an issue when downloading is put on hold within webOS. If it waits to long the server will close the connection and webOS fails to realize this, when it attempts to finish its download the audio service crashes. The timeout workaround in the account manager is for detecting this potential error and circumventing it, so you may also want to confirm your timeout setting. 
     * The Apache setting for this is can be found in httpd.conf.  Setting [http://httpd.apache.org/docs/2.0/mod/core.html#timeout Description]
     * You can also extend the timeout for less crashes/
     * The value in httpd.conf and Ampache Mobile should match, if there is no value in httpd.conf then leave Ampache Mobile at 300.
