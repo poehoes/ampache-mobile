@@ -78,3 +78,4 @@ There are a couple of things you can do for webOS audio stalls.
     * You can also extend the timeout for less crashes.
     * The value in httpd.conf and Ampache Mobile should match, if there is no value in httpd.conf then leave Ampache Mobile at 300.
   # Enabling transcoding/downsampling causes the Audio service to wait for downloading tracks far less often, thus avoiding the bug described above.  So it's a good thing to enable.
+    * Most people use 96kpbs or 128kpbs depending on preference.
