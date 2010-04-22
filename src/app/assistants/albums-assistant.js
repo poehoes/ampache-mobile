@@ -265,7 +265,7 @@ AlbumsAssistant = Class.create({
         var commands = [];
         
         commands[0] = {
-            label: "Alphabet",
+            label: "Alpha",
             command: "doSort-alpha",
             secondaryIconPath: (this.sortType === AlbumSortType.alpha) ? ((this.sortOrder === SortOrder.ascending) ? this.imgUp:this.imgDown) : this.imgEmpty 
         };
