@@ -991,6 +991,114 @@ AmpacheServer = Class.create({
         this.GetTagsCallback(TagsList);
         this.TagsRequest = null;
     },
+    
+    
+    
+    
+    //********************************************************************************************
+    // Videos
+    GetVideosCallback: null,
+    GetVideos: function(_GetVideosCallback, _offset, _limit, _search) {
+        Mojo.Log.info("--> AmpacheServer.prototype.GetVideos");
+        var path;
+        this.GetVideosCallback = _GetVideosCallback;
+        if (typeof this.GetVideosCallback !== "function") {
+            this.GetVideosCallback = new Function(func);
+        }
+
+        var offset = [];
+        var i = 0;
+        if (_search) {
+            offset[i++] = "filter";
+            offset[i++] = _search;
+        }
+        offset[i++] = "offset";
+        offset[i++] = _offset;
+        offset[i++] = "limit";
+        offset[i++] = _limit;
+        path = this.BuildActionString("videos", offset);
+
+        this.VideosRequest = new Ajax.Request(path, {
+            method: 'get',
+            evalJSON: false,
+            //to enforce parsing JSON if there is JSON response
+            //onCreate: this.onCreate,
+            //onLoading: this.onLoading,
+            //onLoaded: this.onLoaded,
+            //onComplete: this.onComplete,
+            onSuccess: this.GotVideosCallback.bind(this),
+            onFailure: this.GetVideosFailed.bind(this)
+        });
+        Mojo.Log.info("<-- AmpacheServer.prototype.GetVideos");
+    },
+
+    GetVideosFailed: function(transport) {
+        this.ShowErrorAlert("Get Videos Failed");
+    },
+
+    GetVideosCancel: function() {
+        if (this.VideosRequest) {
+            this.VideosRequest.abort();
+        }
+    },
+
+    GotVideosCallback: function(transport) {
+        Mojo.Log.info(transport.responseText);
+        var VideosList = "error";
+        /*
+        <video id="1234">
+         <title>Futurama Bender's Big Score</title>
+         <mime>video/avi</mime>
+         <resolution>720x288</resolution>
+         <size>Video Filesize in Bytes</size>
+         <tag id="12131" count="3">Futurama</tag>
+         <tag id="32411" count="1">Movie</tag>
+         <url>http://localhost/play/index.php?oid=123908...</url>
+         *
+         */
+
+        if (!transport.responseXML) {
+            Mojo.Log.info("Cleaning up XML");
+            transport = this.CleanupIllegalXML(transport);
+        }
+
+        if (transport.responseXML) {
+            VideosList = [];
+            var VideosListXML = transport.responseXML.getElementsByTagName("video");
+            var i = 0;
+            while (i < VideosListXML.length) {
+                Mojo.Log.info("Processing " + i);
+                
+                var _id = VideosListXML[i].getAttribute("id");
+                
+                var _title = "";
+                titleXML = VideosListXML[i].getElementsByTagName("title");
+                if (titleXML[0].firstChild) {
+                    _title = titleXML[0].firstChild.data;
+                } else {
+                    _title = "---";
+                }
+                
+                Mojo.Log.info("Processed title" + i);
+                
+                //var _title = VideosListXML[i].getElementsByTagName("title")[0].firstChild.data;
+                var _mime = VideosListXML[i].getElementsByTagName("mime")[0].firstChild.data;
+                var _resolution = VideosListXML[i].getElementsByTagName("resolution")[0].firstChild.data;
+                var _size = VideosListXML[i].getElementsByTagName("size")[0].firstChild.data;
+                var _url = VideosListXML[i].getElementsByTagName("url")[0].firstChild.data;
+                VideosList[i] = new VideoModel(_id, _title,_mime, _resolution, _size, _url);
+                
+                i++;
+            }
+        } else {
+            this.ProblemFinder(transport.responseText, "video");
+            //Mojo.Controller.errorDialog("Get Tags failed: " + this.XMLFormattingIssue);
+        }
+        this.GetVideosCallback(VideosList);
+        this.VideosRequest = null;
+    },
+    
+    
 
     /********************************************************************************************/
     // Test Processing

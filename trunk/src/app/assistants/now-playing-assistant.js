@@ -141,7 +141,7 @@ NowPlayingAssistant = Class.create({
         
         var attributes = {
             itemTemplate: 'now-playing/listitem_w_artist',
-            autoconfirmDelete:true,
+            autoconfirmDelete:false,
             swipeToDelete:true,
             reorderable:true,
             onItemRendered:this.renderPlaylist
