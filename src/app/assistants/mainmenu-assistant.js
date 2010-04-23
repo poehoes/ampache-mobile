@@ -72,13 +72,25 @@ MainmenuAssistant = Class.create({
         },
         {
             category: $L("bottom"),
+            directory: $L("videos"),
+            name: $L("Videos"),
+            scene: "videos",
+            description: $L(AmpacheMobile.ampacheServer.videos.toString()),
+            icon: "images/icons/videos.png",
+            displayCount: "",
+            index:3
+        },
+        
+        
+        {
+            category: $L("bottom"),
             directory: $L("genres"),
             name: $L("Genres"),
             scene: "genres",
             description: AmpacheMobile.ampacheServer.tags===null? 0: AmpacheMobile.ampacheServer.tags.toString(),
             icon: "images/icons/genres.png",
             displayCount: AmpacheMobile.ampacheServer.tags===null? "none":"" ,
-            index:3
+            index:4
         },
         {
             category: $L("bottom"),
@@ -88,7 +100,7 @@ MainmenuAssistant = Class.create({
             description: 0,
             icon: "images/icons/random.png",
             displayCount: "none",
-            index:4
+            index:5
         },
         {
             category: $L("bottom"),
@@ -98,7 +110,7 @@ MainmenuAssistant = Class.create({
             description: 0,
             icon: "images/icons/recent.png",
             displayCount: "none",
-            index:5
+            index:6
         }
         ];
 
@@ -237,6 +249,24 @@ MainmenuAssistant = Class.create({
             this.getPending = false;
             //this.TurnOffSpinner("Getting Albums");
             break;
+        
+        case "videos":
+            var numVideos = parseInt(AmpacheMobile.ampacheServer.videos, 10);
+            if (numVideos !== 0) {
+                Mojo.Log.info("Pushing Videos");
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "videos"
+                },
+                {
+                    SceneTitle: "Videos",
+                    ExpectedPlaylists: numVideos
+                });
+            }
+            this.getPending = false;
+            //this.TurnOffSpinner("Getting Albums");
+            break;
+        
         case "songs":
             this.controller.stageController.pushScene({
                 transition:
