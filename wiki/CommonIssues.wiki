@@ -87,6 +87,5 @@ There are a couple of things you can do for webOS audio stalls.
     * A simple solution is to use an id3 tag editor to fill those fields in and rescan your music catalog.
       * For Artists: Amapache Mobile uses Name only from the tag
       * For Albums: Its Artist, Album, Year and Genre (optional) 
-
   # Corrupt data inside tags
     * Sometimes music tags can get corrupt.  An easy way to spot this corruption is to browse your collection with Ampache.  If you notice any strange characters investigate the tag with a tag editor, I'd even just go ahead and rewrite them to the file.  Once complete rescan your catalog.
