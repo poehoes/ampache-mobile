@@ -79,3 +79,14 @@ There are a couple of things you can do for webOS audio stalls.
     * The value in httpd.conf and Ampache Mobile should match, if there is no value in httpd.conf then leave Ampache Mobile at 300.
   # Enabling transcoding/downsampling causes the Audio service to wait for downloading tracks far less often, thus avoiding the bug described above.  So it's a good thing to enable.
     * Most people use 96kpbs or 128kpbs depending on preference.
+
+===Getting XML Errors Loading Lists===
+
+  # Empty fields in your music tags.
+    * webOS has a few issues with processing xml which are exposed when you have empty fields in your tags.  [https://developer.palm.com/distribution/viewtopic.php?f=80&t=6719 See webOS bug report]
+    * A simple solution is to use an id3 tag editor to fill those fields in and rescan your music catalog.
+      * For Artists: Amapache Mobile uses Name only from the tag
+      * For Albums: Its Artist, Album, Year and Genre (optional) 
+
+  # Corrupt data inside tags
+    * Sometimes music tags can get corrupt.  An easy way to spot this corruption is to browse your collection with Ampache.  If you notice any strange characters investigate the tag with a tag editor, I'd even just go ahead and rewrite them to the file.  Once complete rescan your catalog.
