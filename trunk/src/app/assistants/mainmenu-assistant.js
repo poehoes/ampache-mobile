@@ -115,7 +115,8 @@ MainmenuAssistant = Class.create({
         ];
 
         this.controller.setupWidget('mainMenuList', {
-            itemTemplate: 'mainmenu/listitem'
+            itemTemplate: 'mainmenu/listitem',
+            initialAverageRowHeight:40
         },
         {
             items: this.mainmenu

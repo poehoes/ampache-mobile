@@ -17,6 +17,7 @@
   "support": {
     
     "resources": [
+    
     {
       "type": "scene",
       "label": "Introduction",
@@ -36,6 +37,11 @@
       "type": "scene",
       "label": "Check for Updates",
       "sceneName":"check-updates"
+    },
+     {
+      "type": "web",
+      "label": "Demo Video",
+      "url": "http://www.youtube.com/watch?v=V2DzNXyeMU0"
     },
     {
       "type": "web",

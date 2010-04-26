@@ -1079,10 +1079,17 @@ AmpacheServer = Class.create({
                     _title = "---";
                 }
                 
+                mimeXML = VideosListXML[i].getElementsByTagName("mime");
+                if (mimeXML[0].firstChild) {
+                    _mime = mimeXML[0].firstChild.data;
+                } else {
+                    _mime = "unknown";
+                }
+                
                 Mojo.Log.info("Processed title" + i);
                 
                 //var _title = VideosListXML[i].getElementsByTagName("title")[0].firstChild.data;
-                var _mime = VideosListXML[i].getElementsByTagName("mime")[0].firstChild.data;
+                //var _mime = VideosListXML[i].getElementsByTagName("mime")[0].firstChild.data;
                 var _resolution = VideosListXML[i].getElementsByTagName("resolution")[0].firstChild.data;
                 var _size = VideosListXML[i].getElementsByTagName("size")[0].firstChild.data;
                 var _url = VideosListXML[i].getElementsByTagName("url")[0].firstChild.data;
