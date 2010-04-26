@@ -1,0 +1,65 @@
+{
+  "id": "com.app.ampachemobile",
+  "version": "0.9.3",
+  "title": "Ampache Mobile",
+  "vendor": "Ampache Mobile",
+  "vendorurl": "http://code.google.com/p/ampache-mobile",
+  "main": "index.html",
+  "icon": "icon.png",
+  "smallicon": "miniicon.png",
+  "type": "web",
+  "theme": "dark",
+  "noWindow": false,
+  "noDeprecatedStyles": true,
+  "splashicon": "icon-256x256.png",
+  "splashBackground": "images/splash-ampache-mobile.png",
+  "copyright": "Copyright 2009-2010 Bryce Geiser",
+  "support": {
+    
+    "resources": [
+    
+    {
+      "type": "scene",
+      "label": "Introduction",
+      "sceneName":"the-basics"
+    },
+    {
+      "type": "scene",
+      "label": "User Guide",
+      "sceneName":"new-users"
+    },
+    {
+      "type": "scene",
+      "label": "Release Notes",
+      "sceneName":"whatsnew"
+    },
+    {
+      "type": "scene",
+      "label": "Check for Updates",
+      "sceneName":"check-updates"
+    },
+     {
+      "type": "web",
+      "label": "Demo Video",
+      "url": "http://www.youtube.com/watch?v=V2DzNXyeMU0"
+    },
+    {
+      "type": "web",
+      "label": "Donate",
+      "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZKZ3GCDQUWY8&lc=US&item_name=Ampache%20Mobile&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
+    },
+    
+    {
+      "type": "web",
+      "label": "Common Issues",
+      "url": "http://code.google.com/p/ampache-mobile/wiki/CommonIssues"
+    },
+    {
+      "type": "web",
+      "label": "Support Forum",
+      "url": "http://forums.precentral.net/homebrew-apps/200423-ampache-mobile.html"
+    }
+    ]
+  },
+  "keywords": ["Audio", "Music", "Songs"]
+}
