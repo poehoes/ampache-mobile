@@ -391,7 +391,7 @@ VideosAssistant = Class.create({
             break;
         case "doSort-mime":
             if (this.sortType !== VideosSortType.mime) {
-                this.sortType = VideosSortType.mime
+                this.sortType = VideosSortType.mime;
                 this.sortOrder = SortOrder.descending;
                 reSortList = true;
             } else {
