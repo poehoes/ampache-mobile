@@ -204,6 +204,8 @@ VideosAssistant = Class.create({
             }
         }
 
+        this.item = event.item;
+
         if (supported === true) {
             this.controller.serviceRequest("palm://com.palm.applicationManager", {
                 method: "launch",
@@ -216,7 +218,35 @@ VideosAssistant = Class.create({
 
             });
         } else {
-            Mojo.Controller.errorDialog("webOS does not support this video type: " + event.item.mime);
+
+            var message = "webOS does not support playback of this video format (" + event.item.mime + ").";
+            message += "<br><br>To enable playback of this video it will need to be converted.";
+
+            var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+            controller.showAlertDialog({
+
+                allowHTMLMessage: true,
+                title: $L("Unsupported Video"),
+                onChoose: this.Unsupported.bind(this),
+
+                message: message,
+                choices: [{
+                    label: "User Guide (Videos)",
+                    value: 'user-guide-video',
+                    type: 'secondary'
+                },
+                {
+                    label: "Try Anyway",
+                    value: 'try-anyway',
+                    type: 'negative'
+                },
+                {
+                    label: $L('OK'),
+                    value: 'ok',
+                    type: 'affirmative'
+                }]
+            });
+
         }
         //this.RequestedPlaylist = event.item;
         //this.controller.stageController.pushScene({
@@ -229,6 +259,34 @@ VideosAssistant = Class.create({
         //    Playlist_id: event.item.id,
         //    Item: event.item
         //});
+    },
+
+    Unsupported: function(event) {
+        switch(event){
+            case 'user-guide-video':
+            this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "new-users"
+            },
+            {
+                type: "videos"
+
+            });
+            break;
+            case "try-anyway":
+            this.controller.serviceRequest("palm://com.palm.applicationManager", {
+                method: "launch",
+                parameters: {
+                    id: "com.palm.app.videoplayer",
+                    params: {
+                        target: this.item.url
+                    }
+                }
+
+            });
+            break;
+        }
+        
     },
 
     //**************************************************************************
@@ -313,7 +371,7 @@ VideosAssistant = Class.create({
         switch (sort) {
         case "doSort-size":
             if (this.sortType !== VideosSortType.size) {
-                this.sortType = VideosSortType.songs;
+                this.sortType = VideosSortType.size;
                 this.sortOrder = SortOrder.ascending;
                 reSortList = true;
             } else {
@@ -333,7 +391,7 @@ VideosAssistant = Class.create({
             break;
         case "doSort-mime":
             if (this.sortType !== VideosSortType.mime) {
-                this.sortType = VideosSortType.owner;
+                this.sortType = VideosSortType.mime
                 this.sortOrder = SortOrder.descending;
                 reSortList = true;
             } else {

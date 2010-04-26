@@ -877,6 +877,10 @@ body.palm-default {
   width: 100%;
 }
 
+.mainmenu-header-spacer {
+  height: 45px;
+  width: 100%;
+}
 
 .artist-header-spacer {
   height: 55px;
@@ -1158,6 +1162,26 @@ margin-left:10px;
     width:100%;
 }
 
+/***********************************************/
+/*   Main Menu
+/**********************************************/
+.search-mainmenu
+{
+    margin-top:-5px;
+    margin-bottom:-5px;
+}
+
+.mainmenu-row
+{
+    min-height: 49px;
+}
+
+.mainmenu-icon
+{
+    margin:5px 20px 5px 0px;
+    height:40px;
+    width:40px;
+}
 /***********************************************/
 /*   Search Menu
 /**********************************************/
