@@ -28,6 +28,14 @@ RecentAssistant = Class.create({
             displayCount: "none"
 
         },
+        //{
+        //    type: $L("videos"),
+        //    name: $L("Videos"),
+        //    icon: "images/icons/videos.png",
+        //    items: ["Last Update", "1 Week", "1 Month", "3 Months", "Date"],
+        //    displayCount: "none"
+        //
+        //},
         {
             type: $L("artists"),
             name: $L("Artists"),
@@ -68,11 +76,11 @@ RecentAssistant = Class.create({
 
         this.pickerModel = {
             date: new Date()
-            
+
         };
         this.controller.setupWidget('timepicker', {
-            maxYear:Number(this.pickerModel.date.getFullYear()),
-            minYear:Number(this.pickerModel.date.getFullYear())-2
+            maxYear: Number(this.pickerModel.date.getFullYear()),
+            minYear: Number(this.pickerModel.date.getFullYear()) - 2
         },
         this.pickerModel);
 
@@ -89,11 +97,11 @@ RecentAssistant = Class.create({
             fromDate = new Date();
             fromDate = AmpacheMobile.ampacheServer.add.clone();
             fromDate.addHours( - 2);
-            
+
             fromDateStr = "Since " + Mojo.Format.formatDate(fromDate, {
                 date: "short"
             });
-            
+
             this.controller.stageController.pushScene({
                 transition: AmpacheMobile.Transition,
                 name: "songs"
@@ -104,27 +112,25 @@ RecentAssistant = Class.create({
                 DisplayArtistInfo: true,
                 FromDate: fromDate
             });
-        }
-        else
-        {
-        var item = event.item;
-        //item._this = this;
-        var items = [];
+        } else {
+            var item = event.item;
+            //item._this = this;
+            var items = [];
 
-        for (i = 0; i < event.item.items.length; i++) {
-            items[i] = {
-                label: event.item.items[i],
-                command: event.item.type + ";" + event.item.items[i]
-            };
-        }
+            for (i = 0; i < event.item.items.length; i++) {
+                items[i] = {
+                    label: event.item.items[i],
+                    command: event.item.type + ";" + event.item.items[i]
+                };
+            }
 
-        this.tapTypeItem = event.item;
+            this.tapTypeItem = event.item;
 
-        this.controller.popupSubmenu({
-            onChoose: this.popupHandler.bind(this),
-            placeNear: event.originalEvent.target,
-            items: items
-        });
+            this.controller.popupSubmenu({
+                onChoose: this.popupHandler.bind(this),
+                placeNear: event.originalEvent.target,
+                items: items
+            });
         }
     },
 
@@ -155,11 +161,11 @@ RecentAssistant = Class.create({
                 break;
 
             }
-            
+
             var fromDateStr = "Since " + Mojo.Format.formatDate(fromDate, {
-            date: "short"
+                date: "short"
             });
-            
+
             if (command[1] !== "Date") {
                 if (command[0] === "artists") {
 
@@ -168,7 +174,7 @@ RecentAssistant = Class.create({
                         name: "artists"
                     },
                     {
-                        SceneTitle: "Recent Artists: " +fromDateStr,
+                        SceneTitle: "Recent Artists: " + fromDateStr,
                         ExpectedArtists: 0,
                         type: "recent",
                         FromDate: fromDate
@@ -200,6 +206,17 @@ RecentAssistant = Class.create({
                         DisplayArtistInfo: true,
                         FromDate: fromDate
                     });
+                } else if (command[0] === "videos") {
+                    controller.stageController.pushScene({
+                        transition: AmpacheMobile.Transition,
+                        name: "videos"
+                    },
+                    {
+                        SceneTitle: "Recent Videos: " + fromDateStr,
+                        Type: "recent",
+                        FromDate: fromDate
+                    });
+
                 }
             }
         }
@@ -289,8 +306,7 @@ var DateDialogAssistant = Class.create({
         this.controller.get('search-button').addEventListener(Mojo.Event.tap, this.handleSearch.bindAsEventListener(this));
         this.controller.get('cancel_button').addEventListener(Mojo.Event.tap, this.handleClose.bindAsEventListener(this));
         this.controller.get('lastupdate-button').addEventListener(Mojo.Event.tap, this.lastUpdate.bindAsEventListener(this));
-        
-        
+
     },
 
     handleClose: function() {
@@ -298,8 +314,7 @@ var DateDialogAssistant = Class.create({
 
     },
 
-    lastUpdate:function()
-    {
+    lastUpdate: function() {
         this.controller.assistant.pickerModel.date = AmpacheMobile.ampacheServer.add.clone();
         this.controller.modelChanged(this.controller.assistant.pickerModel);
     },
@@ -352,13 +367,26 @@ var DateDialogAssistant = Class.create({
                     FromDate: fromDate
                 });
             }
+
+            else if (this.dialogType === "videos") {
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "videos"
+                },
+                {
+                    SceneTitle: "Recent Videos: " + fromDateStr,
+                    Type: "recent",
+                    FromDate: fromDate
+                });
+
+            }
+
             this.widget.mojo.close();
-        }
-        else {
+        } else {
             //this.widget.mojo.close();
             this.controller.assistant.showDialogBox("Date Invalid", "Please select a date in the past.");
         }
-        
+
     }
 
 });

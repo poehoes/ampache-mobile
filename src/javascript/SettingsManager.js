@@ -24,12 +24,14 @@ var SEARCH_ARTISTS = 1;
 var SEARCH_ALBUMS = 2;
 var SEARCH_SONGS = 3;
 var SEARCH_PLAYLISTS = 4;
+var SEARCH_VIDEOS = 5;
 var SEARCH_TYPES = {};
 SEARCH_TYPES[0] = "Global";
 SEARCH_TYPES[1] = "Artists";
 SEARCH_TYPES[2] = "Albums";
 SEARCH_TYPES[3] = "Songs";
 SEARCH_TYPES[4] = "Playlists";
+SEARCH_TYPES[5] = "Videos";
 
 RECENT_TYPES = ["Last Update", "1 Week", "1 Month", "3 Months"];
 
