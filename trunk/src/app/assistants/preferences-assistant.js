@@ -154,7 +154,8 @@ PreferencesAssistant = Class.create({
                     {label: "Artists", value: SEARCH_ARTISTS},
                     {label: "Albums", value: SEARCH_ALBUMS},
                     {label: "Songs", value: SEARCH_SONGS},
-                    {label: "Playlists", value: SEARCH_PLAYLISTS}
+                    {label: "Playlists", value: SEARCH_PLAYLISTS},
+                    {label: "Videos", value: SEARCH_VIDEOS}
                 ]
             },this.searchTypeModel
            

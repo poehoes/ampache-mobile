@@ -32,6 +32,16 @@ VideosAssistant = Class.create({
             this.Search = params.Search;
         }
 
+        if(params.SceneTitle)
+        {
+            this.title = params.SceneTitle;
+        }
+        
+        if(params.FromDate)
+        {
+            this.FromDate = params.FromDate;
+        }
+
         this.itemsHelper = new ItemsHelper();
 
         this.sortType = VideosSortType.alpha;
@@ -39,6 +49,11 @@ VideosAssistant = Class.create({
     },
 
     setup: function() {
+
+        if(this.title)
+        {
+           this.controller.get("title").innerHTML =this.title;
+        }
 
         //*********************************************************************************************************
         //  Setup Filter List
@@ -102,11 +117,18 @@ VideosAssistant = Class.create({
     },
 
     GetVideos: function(GotItems, offset, limit) {
-        AmpacheMobile.ampacheServer.GetVideos(GotItems, offset, limit, this.Search);
+        params = {};
+        params.offset = offset;
+        params.limit = limit;
+        params.callback = GotItems;
+        params.search = this.Search;
+        params.FromDate = this.FromDate;
+        
+        AmpacheMobile.ampacheServer.GetVideos(params);
     },
 
     IsMatch: function(item, filterString) {
-        var matchString = item.name;
+        var matchString = item.title;
         if (matchString.toLowerCase().include(filterString.toLowerCase())) {
             return true;
         }

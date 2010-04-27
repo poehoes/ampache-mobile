@@ -65,6 +65,9 @@ SearchMenuAssistant = Class.create({
 
         this.plSearchHandler = this.searchForPlaylists.bindAsEventListener(this);
         this.controller.listen(this.controller.get('searchPlaylists'), Mojo.Event.tap, this.plSearchHandler);
+        
+        this.videoSearchHandler = this.searchForVideos.bindAsEventListener(this);
+        this.controller.listen(this.controller.get('searchVideos'), Mojo.Event.tap, this.videoSearchHandler);
 
         //this.genresSearchHandler = this.searchForGenres.bindAsEventListener(this);
         //this.controller.listen(this.controller.get('searchGenres'), Mojo.Event.tap, this.genresSearchHandler);
@@ -94,6 +97,7 @@ SearchMenuAssistant = Class.create({
         this.controller.stopListening(this.controller.get('searchPlaylists'), Mojo.Event.tap, this.plSearchHandler);
         //this.controller.stopListening(this.controller.get('searchGenres'), Mojo.Event.tap, this.genresSearchHandler);
         this.controller.stopListening(this.controller.get('searchGlobal'), Mojo.Event.tap, this.globalSearchHandler);
+        this.controller.stopListening(this.controller.get('searchVideos'), Mojo.Event.tap, this.videoSearchHandler);
     },
 
     searchText: null,
@@ -115,6 +119,9 @@ SearchMenuAssistant = Class.create({
                         break;
                     case SEARCH_PLAYLISTS:
                         this.searchForPlaylists();
+                        break;
+                    case SEARCH_VIDEOS:
+                        this.searchForVideos();
                         break;
                     default:
                         this.searchForGlobal();
@@ -261,6 +268,24 @@ SearchMenuAssistant = Class.create({
             }
         }
     },
+
+    searchForVideos: function() {
+        if (this.searchCriteria(2)) {
+            var numVideos = parseInt(AmpacheMobile.ampacheServer.videos, 10);
+            if (numVideos !== 0) {
+                this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "videos"
+                },
+                {
+                    SceneTitle: "Video Search: " + this.searchText,
+                    ExpectedVideos: numVideos,
+                    Search: this.searchText === "" ? null: this.searchText
+                });
+            }
+        }
+    },
+
 
     SetFocus: function() {
         this.SearchField.mojo.focus();

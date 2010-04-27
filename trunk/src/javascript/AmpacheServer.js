@@ -998,24 +998,31 @@ AmpacheServer = Class.create({
     //********************************************************************************************
     // Videos
     GetVideosCallback: null,
-    GetVideos: function(_GetVideosCallback, _offset, _limit, _search) {
+    GetVideos: function(params) {
         Mojo.Log.info("--> AmpacheServer.prototype.GetVideos");
         var path;
-        this.GetVideosCallback = _GetVideosCallback;
+        this.GetVideosCallback = params.callback;
         if (typeof this.GetVideosCallback !== "function") {
             this.GetVideosCallback = new Function(func);
         }
 
         var offset = [];
         var i = 0;
-        if (_search) {
+        if (params.search) {
             offset[i++] = "filter";
-            offset[i++] = _search;
+            offset[i++] = params.search;
         }
+        
+        if(params.FromDate)
+        {
+            offset[i++] = "add";
+            offset[i++] = params.FromDate.toISO8601String();
+        }
+        
         offset[i++] = "offset";
-        offset[i++] = _offset;
+        offset[i++] = params.offset;
         offset[i++] = "limit";
-        offset[i++] = _limit;
+        offset[i++] = params.limit;
         path = this.BuildActionString("videos", offset);
 
         this.VideosRequest = new Ajax.Request(path, {

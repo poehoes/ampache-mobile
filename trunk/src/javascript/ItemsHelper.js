@@ -202,6 +202,10 @@ ItemsHelper = Class.create({
                 {
                     this.onLoadingFinished();
                 }
+                if(this.ItemsList.length===0)
+                {
+                    this.ShowErrorAlert("No Items", "No Items have been processed, please retry your request.")
+                }
             }
     
             else {
@@ -396,6 +400,36 @@ ItemsHelper = Class.create({
         Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
 
         //this.GetItems();
+    },
+
+
+    ShowErrorAlert: function(title, string) {
+        var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+        controller.showAlertDialog({
+            onChoose: this.alertButton.bind(this),
+            allowHTMLMessage: true,
+            title: $L(title),
+            message: $L(string),
+            choices: [{
+                label: $L('Go Back'),
+                value: 'go-back',
+                type: 'secondary'
+            },{
+                label: $L('OK'),
+                value: 'ok',
+                type: 'primary'
+            }]
+        });
+
+    },
+
+    alertButton:function(event)
+    {
+        if(event==="go-back")
+        {
+            this.CancelRequest();
+            Mojo.Controller.stageController.popScene();
+        }
     },
 
     showNowPlaying: function() {
