@@ -80,6 +80,15 @@ There are a couple of things you can do for webOS audio stalls.
   # Enabling transcoding/downsampling causes the Audio service to wait for downloading tracks far less often, thus avoiding the bug described above.  So it's a good thing to enable.
     * Most people use 96kpbs or 128kpbs depending on preference.
 
+*Possible Fix*
+
+    # Edit your httpd.conf file, if using Apache. Add the following line to the main body.  Making the TCP timeout 10 minutes.
+      {{{
+Timeout 600
+      }}}
+    # Restart Apache, setting won't take effect until a restart.
+    # Set Apache Timeout Workaround in Ampache Mobile to 600
+
 ===Getting XML Errors Loading Lists===
 
   # Empty fields in your music tags.
