@@ -1,6 +1,17 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
 
+===Version 0.9.3 (04/26/2010)===
+New Feature
+----
+  * Video Playback
+    * Playback of Videos indexed by Amapache which webOS supports. m4v seem to work the best.
+    * Using Palm Video Player for streaming playback. Launches in seperate window.
+    * Ampache has no video transcoding yet, so videos must be preconverted. I've found handbreak to work best.
+Bug Fixes
+----
+  * Delete confirmation turned off in now playing list, on now.
+
 ===Version 0.9.2 (04/21/2010)===
 Improvements
 ----
