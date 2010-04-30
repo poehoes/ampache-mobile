@@ -515,7 +515,9 @@ SavedSearch = Class.create({
     fromDate:null,
     toDate:null,
     
-    type:0
+    initialize: function() {
+        this.type = "0";
+    }
 });
 
 //ArchiveDate = Class.create({

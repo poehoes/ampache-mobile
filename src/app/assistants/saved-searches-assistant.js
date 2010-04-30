@@ -28,20 +28,18 @@ SavedSearchesAssistant = Class.create({
        
     },
 
-    indexSearches:function(){
-        for(var i =0;i<AmpacheMobile.Account.SavedSearches.length;i++)
-        {
-            AmpacheMobile.Account.SavedSearches[i].index = i;
-        }
-    },
+   
 
 
     setup: function() {
 
+         //*****************************************************************************************************
+        // Setup Menu
+        this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 
         
 
-        this.indexSearches();
+        //this.indexSearches();
 
          //**********************************************************************
         // Setup Accounts
@@ -56,16 +54,16 @@ SavedSearchesAssistant = Class.create({
             swipeToDelete: true,
             autoconfirmDelete: false,
             deletedProperty: 'swiped',
-            onItemRendered:this.renderSearchItem
-            //reorderable:true//,
+            onItemRendered:this.renderSearchItem,
+            reorderable:true
 //            filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper)
 
         };
         this.controller.setupWidget('saved-searches-list', this.innerListAttrs, this.searchesModel);
 
         
-        this.listHeldFunction = this.listHeldHandler.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('saved-searches-list'), Mojo.Event.hold, this.listHeldFunction);
+        //this.listHeldFunction = this.listHeldHandler.bindAsEventListener(this);
+        //Mojo.Event.listen(this.controller.get('saved-searches-list'), Mojo.Event.hold, this.listHeldFunction);
 
         this.listAddFunction = this.listAddHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('saved-searches-list'), Mojo.Event.listAdd, this.listAddFunction);
@@ -76,6 +74,8 @@ SavedSearchesAssistant = Class.create({
         this.listDeleteFunction = this.listDeleteHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('saved-searches-list'), Mojo.Event.listDelete, this.listDeleteFunction);
 
+        this.listReorderFunction = this.listReorderFunction.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('saved-searches-list'), Mojo.Event.listReorder, this.listReorderFunction);
 
         //
         ////*********************************************************************************************************
@@ -129,10 +129,11 @@ SavedSearchesAssistant = Class.create({
     cleanup: function(event) {
 
         Mojo.Event.stopListening(this.controller.get('saved-searches-list'), Mojo.Event.listAdd, this.listAddFunction);
-        Mojo.Event.stopListening(this.controller.get('saved-searches-list'), Mojo.Event.hold, this.listHeldFunction);
+        //Mojo.Event.stopListening(this.controller.get('saved-searches-list'), Mojo.Event.hold, this.listHeldFunction);
         Mojo.Event.stopListening(this.controller.get('saved-searches-list'), Mojo.Event.listTap, this.listTapFunction);
         Mojo.Event.stopListening(this.controller.get('saved-searches-list'), Mojo.Event.listDelete, this.listDeleteFunction);
-        
+        Mojo.Event.stopListening(this.controller.get('saved-searches-list'), Mojo.Event.listReorder, this.listReorderFunction);
+
 
     },
 
@@ -282,27 +283,27 @@ SavedSearchesAssistant = Class.create({
         return id;
     },
 
-    listHeldHandler: function(event) {
-        this.heldPending = true;
-        var id = this.findSearchId(event);
-        if (id === -1) {
-            return;
-        }
-        
-        this.editSearch = AmpacheMobile.Account.SavedSearches[id];
-        
-        this.controller.stageController.pushScene({
-            transition: AmpacheMobile.Transition,
-            name: "search-builder"
-        },
-        {
-            Type: "Edit",
-            SettingsManager: AmpacheMobile.settingsManager,
-            Search: this.editSearch
-
-        });
-        event.stop();
-    },
+    //listHeldHandler: function(event) {
+    //    this.heldPending = true;
+    //    var id = this.findSearchId(event);
+    //    if (id === -1) {
+    //        return;
+    //    }
+    //    
+    //    this.editSearch = AmpacheMobile.Account.SavedSearches[id];
+    //    
+    //    this.controller.stageController.pushScene({
+    //        transition: AmpacheMobile.Transition,
+    //        name: "search-builder"
+    //    },
+    //    {
+    //        Type: "Edit",
+    //        SettingsManager: AmpacheMobile.settingsManager,
+    //        Search: this.editSearch
+    //
+    //    });
+    //    event.stop();
+    //},
 
     
 
@@ -312,6 +313,26 @@ SavedSearchesAssistant = Class.create({
         params ={}
         params.searchText = event.item.searchString;
         params.title = event.item.name;
+        
+        
+        var click_id = event.originalEvent.target.id;
+        var item;
+        if (click_id === "editItem") {
+            this.editSearch = event.item;
+            
+            this.controller.stageController.pushScene({
+                transition: AmpacheMobile.Transition,
+                name: "search-builder"
+            },
+            {
+                Type: "Edit",
+                SettingsManager: AmpacheMobile.settingsManager,
+                Search: this.editSearch
+    
+            });
+        }
+        else
+        {
         
         
         if(event.item.useDate === true)
@@ -349,6 +370,7 @@ SavedSearchesAssistant = Class.create({
                         this.searchForGlobal(params);
                         break;
         }
+        }
         
     },
   
@@ -374,6 +396,15 @@ SavedSearchesAssistant = Class.create({
         event.model.items.splice(event.model.items.indexOf(event.item), 1); //Remove from items list
         AmpacheMobile.settingsManager.SaveSettings();
     },
+    
+    listReorderFunction:function(event)
+    {
+        
+       event.model.items.splice(event.fromIndex,1);
+       event.model.items.splice(event.toIndex,0,event.item);
+        
+       AmpacheMobile.settingsManager.SaveSettings();
+    },
 
 
     activate: function(event) {
@@ -385,14 +416,21 @@ SavedSearchesAssistant = Class.create({
         }
         
         
-//        this.itemsHelper.Activate();
-        
         var button = this.controller.get('now-playing-button');
         button.style.display = AmpacheMobile.audioPlayer.hasPlayList ? 'block': 'none';
+        this.npTapHandler = this.showNowPlaying.bindAsEventListener(this);
+        Mojo.Event.listen(button, Mojo.Event.tap, this.npTapHandler);
     },
 
     deactivate: function(event) {
         //this.itemsHelper.Deactivate();
+        Mojo.Event.stopListening(this.controller.get('now-playing-button'), Mojo.Event.tap, this.npTapHandler);
+    },
+    
+    showNowPlaying: function() {
+        Mojo.Controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "now-playing"}, {
+            type: "display"
+        });
     }
 
 });

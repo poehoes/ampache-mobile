@@ -21,14 +21,11 @@ SearchBuilderAssistant = Class.create({
         this.Search = params.Search;
         this.Type = params.Type;
         this.SettingsManager = params.SettingsManager;
-        //this.Callback = params.Callback;
+
     },
 
     setup: function() {
-        /* this function is for setup tasks that have to happen when the scene is first created */
-        /* use Mojo.View.render to render view templates and add them to the scene, if needed. */
-        /* setup widgets here */
-        /* add event handlers to listen to events from widgets */
+       
         
         
          this.searchScreenModel = {
@@ -105,9 +102,9 @@ SearchBuilderAssistant = Class.create({
         });
 
         //**********************************************************************************************************************
-        //Setup Stream Debug Toggle
+        //Setup Use Date Toggle
         // Setup toggle widget and  listen  for when it is changed
-        this.debugAttr = {
+        this.dateToggleAttr = {
             trueLabel: 'On',
             //if the state is true, what to label the toggleButton; default is 'On'
             trueValue: true,
@@ -118,12 +115,12 @@ SearchBuilderAssistant = Class.create({
             //if the state is false, , what to set the model[property] to; default if not specific is false],
             fieldName: 'toggle' //name of the field; optional
         };
-        this.debugModel = {
+        this.dateToggleModel = {
             value: this.Search.useDate,
             // Current value of widget, from choices array.
             disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
         };
-
+        this.controller.setupWidget('allow-date-toggle', this.dateToggleAttr, this.dateToggleModel);
 
          this.pickerModel = {
             date: new Date()
@@ -135,7 +132,7 @@ SearchBuilderAssistant = Class.create({
         },
         this.pickerModel);
 
-        this.controller.setupWidget('allow-date-toggle', this.debugAttr, this.debugModel);
+        
 
 
 

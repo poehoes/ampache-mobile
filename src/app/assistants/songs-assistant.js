@@ -110,9 +110,9 @@ SongsAssistant = Class.create({
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.Expected_items,
             SortFunction: null,
-            MatchFunction: this.IsMatch,
+            MatchFunction: this.IsMatch/*,
             IndexBusted: (this.Type === "search-global") ? true: false
-
+*/
         };
         this.itemsHelper.setup(params);
 
