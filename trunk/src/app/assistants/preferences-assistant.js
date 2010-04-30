@@ -254,7 +254,7 @@ PreferencesAssistant = Class.create({
         this.listDeleteFunction = this.listDeleteHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
         
-                this.listReorderFunction = this.listReorderFunction.bindAsEventListener(this);
+        this.listReorderFunction = this.listReorderFunction.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
 
         this.accountSelectorChanged = this.accountSelectorChanged.bindAsEventListener(this);
@@ -294,6 +294,7 @@ PreferencesAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listTap, this.listTapFunction);
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listAdd, this.listAddFunction);
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listDelete, this.listDeleteFunction);
+        Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
         Mojo.Event.stopListening(this.controller.get('accountSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);
         Mojo.Event.stopListening(this.controller.get('innerList'), Mojo.Event.listReorder, this.listReorderFunction);
         Mojo.Event.stopListening(this.controller.get('recentSelector'), Mojo.Event.propertyChange, this.accountSelectorChanged);

@@ -1374,9 +1374,9 @@ AudioPlayer = Class.create({
 
     UIUpdatePlaybackTime: function() {
 
-        // if the song has started buffering give it 20 seconds to make progress playing back
+        // if the song has started buffering give it 30 seconds to make progress playing back
         // if it hasn't then give it 60 seconds
-        if ( ((this.ticksUnchanged > 20) && (this.player.song.amtBuffered !==0)) ||
+        if ( ((this.ticksUnchanged > 30) && (this.player.song.amtBuffered !==0)) ||
             (this.ticksUnchanged > 60)
         ) 
         {

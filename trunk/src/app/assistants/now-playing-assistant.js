@@ -285,6 +285,10 @@ NowPlayingAssistant = Class.create({
             } else if (this.type === "enqueue") {
                 this.setMenuControls();
             }
+            else if(this.type==="display")
+            {
+                AmpacheMobile.audioPlayer.UIUpdatePlaybackTime();
+            }
             
         }
         
