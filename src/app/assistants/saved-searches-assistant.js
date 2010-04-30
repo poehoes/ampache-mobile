@@ -140,7 +140,7 @@ SavedSearchesAssistant = Class.create({
     renderSearchItem:function(listWidget, itemModel, itemNode){
         
         
-        itemNode.getElementsByClassName("mainMenuIcon")[0].src =  SEARCH_ICONS[itemModel.type]
+        itemNode.getElementsByClassName("mainMenuIcon")[0].src =  SEARCH_ICONS[itemModel.type];
         
     },
     
@@ -175,7 +175,7 @@ SavedSearchesAssistant = Class.create({
                     Search: this.searchText === "" ? null: params.searchText,
                     FromDate: params.FromDate,
                     ToDate: params.ToDate
-                }
+                };
                 
                 
                 this.controller.stageController.pushScene({transition: AmpacheMobile.Transition, name: "albums"}, _params);
@@ -310,7 +310,7 @@ SavedSearchesAssistant = Class.create({
     listTapHandler:function(event)
     {
         
-        params ={}
+        params = {};
         params.searchText = event.item.searchString;
         params.title = event.item.name;
         
