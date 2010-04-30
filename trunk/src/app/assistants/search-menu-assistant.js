@@ -27,6 +27,33 @@ SearchMenuAssistant = Class.create({
         // Setup Menu
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 
+
+        //this.savedSearchModel = {
+        //    label: $L('Saved Searches'),
+        //    //icon: 'forward',
+        //    iconPath: "images/icons/SavedSearch-small.png",
+        //    command: 'saved-searches'
+        //};
+        //this.cmdMenuModel = {
+        //    visible: true,
+        //    items: [{},
+        //    this.savedSearchModel]
+        //};
+        this.cmdMenuProps = {
+            visible: true,
+            items: [{},
+            //Left group 
+            {
+                label: 'Saved Searches',
+                command: 'saved-searches'
+            },
+            //Center 
+            {} //Right
+            ]
+        };
+        this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuProps);
+
+        //this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuModel);
         
 
          this.searchModel = {};
@@ -329,6 +356,25 @@ SearchMenuAssistant = Class.create({
         this.controller.get("search-"+SEARCH_TYPES[AmpacheMobile.settingsManager.settings.SearchType]).src = "images/enter.png";
         
     },
+
+     handleCommand: function(event) {
+        //test for Mojo.Event.back, not Mojo.Event.command..
+        
+          if (event.type === Mojo.Event.command) {
+            switch (event.command) {
+                case "saved-searches":
+                     this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "saved-searches"
+                },
+                {
+        
+                });
+                break;
+            }
+          }
+    },
+
 
     deactivate: function(event) {
 

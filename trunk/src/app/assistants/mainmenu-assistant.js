@@ -147,6 +147,10 @@ MainmenuAssistant = Class.create({
         this.searchTapHandler = this.pushSearch.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
         
+        // Saved Search Event
+        this.searchHoldHandler = this.searchHoldHandler.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('search'), Mojo.Event.hold, this.searchHoldHandler);
+        
         //Key Handler
         this.pushSearch = this.pushSearch.bindAsEventListener(this);
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keydown, this.pushSearch);
@@ -165,6 +169,7 @@ MainmenuAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('search'), Mojo.Event.tap, this.searchTapHandler);
         Mojo.Event.stopListening(this.controller.get('mainMenuList'), Mojo.Event.hold, this.listHeldHandler);
+        Mojo.Event.stopListening(this.controller.get('search'), Mojo.Event.hold, this.searchHoldHandler);
 
         if (AmpacheMobile.audioPlayer.hasPlayList === true) {
                 AmpacheMobile.audioPlayer.stop();
@@ -176,6 +181,20 @@ MainmenuAssistant = Class.create({
         AmpacheMobile.Account = null;
         Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
     },    
+
+
+    searchHoldHandler :function(event)
+    {
+        this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "saved-searches"
+                },
+                {
+        
+                });
+        event.stop();
+    },
+
 
     pushSearch: function(event) {
         var params ={};

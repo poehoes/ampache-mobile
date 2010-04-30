@@ -410,8 +410,8 @@ AmpacheServer = Class.create({
         filter[i++] = params.limit;
 
         if ((params.search !== null) && (params.search !== undefined)) {
-            filter[4] = "filter";
-            filter[5] = params.search;
+            filter[i++] = "filter";
+            filter[i++] = params.search;
         }
 
         if (params.TagID) {
@@ -420,10 +420,10 @@ AmpacheServer = Class.create({
             type = "tag_artists";
         }
         
-        if(params.FromDate)
+        if(params.FromDate || params.ToDate)
         {
             filter[i++] = "add";
-            filter[i++] = params.FromDate.toISO8601String();
+            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate)
         }
 
         path = this.BuildActionString(type, filter);
@@ -560,10 +560,11 @@ AmpacheServer = Class.create({
             filter[i++] = "filter";
             filter[i++] = params.search;
         }
-        if(params.FromDate)
+        
+        if(params.FromDate || params.ToDate)
         {
             filter[i++] = "add";
-            filter[i++] = params.FromDate.toISO8601String();
+            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate)
         }
 
         var path = this.BuildActionString(type, filter);
@@ -682,10 +683,11 @@ AmpacheServer = Class.create({
             type = "songs";
         }
 
-        if(params.FromDate)
+
+        if(params.FromDate || params.ToDate)
         {
             filter[i++] = "add";
-            filter[i++] = params.FromDate.toISO8601String();
+            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate)
         }
 
         filter[i++] = "offset";
@@ -1194,6 +1196,26 @@ AmpacheServer = Class.create({
         var m = t.evaluate(transport);
         Mojo.Log.info("Failed:", m);
         this.ConnectCallBack(m);
+    },
+    
+    BuildDateString:function(FromDate, ToDate)
+    {
+        var dateStr;
+        if(FromDate && ToDate)
+        {
+           
+            dateStr = FromDate.toISO8601String()+"/"+ToDate.toISO8601String();
+        }
+        else if(FromDate)
+        {
+            dateStr = FromDate.toISO8601String();
+        }
+        else if(ToDate)
+        {
+            var fromDate = new Date(0);
+            dateStr = fromDate.toISO8601String()+"/"+ToDate.toISO8601String();
+        }
+        return dateStr;
     }
 });
 

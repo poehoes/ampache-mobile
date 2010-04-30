@@ -1,0 +1,105 @@
+<div id="prefs-main" class="palm-hasheader">
+	<div id="header" class="palm-header left truncating-text">
+		<div class="palm-header-wrapper">
+			<div class='header-body'>
+				<div class='icon'><img class="icon-img" src='images/icons/SavedSearch.png'></div>
+
+				<div class="scene-title truncating-text" id="title" x-mojo-loc=''>
+					Search Builder
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="spacerDiv" class="music-header-spacer"></div>
+
+	<div x-mojo-element="RadioButton" id="searchBuilderScreens" class="radiobuttonClass"></div>
+
+	<div id="search-settings">
+		<div class="palm-group">
+			<div class="palm-group-title" x-mojo-loc=''>
+				Search Settings
+			</div>
+
+			<div class="palm-list">
+				<div class="palm-row first">
+					<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="false">
+						<div class="title">
+							<div class="label" x-mojo-loc=''>
+								Search Name
+							</div>
+
+							<div id="SearchName" x-mojo-element="TextField"></div>
+						</div>
+					</div>
+				</div>
+                <div class="palm-row">
+					<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="false">
+						<div class="title">
+							<div class="label" x-mojo-loc=''>
+								Search Text
+							</div>
+
+							<div id="SearchField" x-mojo-element="TextField"></div>
+						</div>
+					</div>
+				</div>
+                <div class="palm-row last">
+					<div class="palm-row-wrapper" x-mojo-focus-highlight="true">
+						
+
+							<div id="searchSelector" x-mojo-element="ListSelector"></div>
+						
+					</div>
+				</div>
+
+				
+			</div>
+		</div>
+	</div>
+
+	<div id="date-settings">
+		<div class="palm-group">
+			<div class="palm-group-title" x-mojo-loc=''>
+				Date Settings
+			</div>
+
+			<div class="palm-list">
+				<div class="palm-row first" x-mojo-tap-highlight="">
+					<div class="palm-row-wrapper">
+						<table class="palm-list-section-label">
+							<tr>
+								<td class="label" width="85%">Use Date</td>
+
+								<td width="15%">
+									<div id="allow-date-toggle" x-mojo-element="ToggleButton" class="toggle-text pref-toggle"></div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div class="palm-row last" x-mojo-tap-highlight="momentary" id="FromRow">
+					<div class="title">
+							<div class="label" x-mojo-loc=''>
+								Date
+							</div>
+
+							<div id="FromDate"></div>
+					</div>
+				</div>
+                
+<!--                <div class="palm-row last" x-mojo-tap-highlight="momentary" id="ToRow">-->
+<!--					<div class="title">-->
+<!--							<div class="label" x-mojo-loc=''>-->
+<!--								To-->
+<!--							</div>-->
+<!---->
+<!--							<div id="ToDate"></div>-->
+<!--					</div>-->
+<!--				</div>-->
+                
+			</div>
+		</div>
+	</div>
+</div>

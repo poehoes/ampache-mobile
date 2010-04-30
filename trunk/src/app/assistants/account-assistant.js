@@ -246,8 +246,6 @@ AccountAssistant = Class.create({
         this.controller.setupWidget('spaces-toggle', this.tattr, this.spaces_Model);
         this.SpacesPressedHandler = this.SpacesPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('spaces-toggle'), Mojo.Event.propertyChange, this.SpacesPressedHandler);
-
-        
         
         
         this.screenChangeHandler = this.screenChangeHandler.bind(this);

@@ -336,18 +336,22 @@ RandomAssistant = Class.create({
                 case "3.5.1":
                 case "3.5.2":
                 case "3.5.3":
-                      playlist = AmpacheMobile.ampacheServer.GetRandomSongs(AmpacheMobile.Account.NumBuffers);
+                    
+                    playlist = AmpacheMobile.ampacheServer.GetRandomSongs(AmpacheMobile.Account.NumBuffers*2);
+                    
                     this.controller.stageController.pushScene({
-                            transition: AmpacheMobile.Transition,
-                            name: "now-playing"
-                        },
-                        {
-                            type: "play",
-                            playList: playlist,
-                            startIndex: 0,
-                            shuffle: false,
-                            repeat:RepeatModeType.repeat_forever
-                        });
+                        transition: AmpacheMobile.Transition,
+                        name: "now-playing"
+                    },
+                    {
+                        type: "play",
+                        playList: playlist,
+                        startIndex: 0,
+                        shuffle: false,
+                        repeat:RepeatModeType.repeat_forever,
+                        shuffleAllSongs:true
+                    });
+                    
                     break;
                     
                    

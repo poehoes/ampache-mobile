@@ -1191,6 +1191,12 @@ margin-left:10px;
     width:100%;
 }
 
+.search-searchmenu
+{
+    margin-top:-2px;
+    margin-bottom:-5px;
+}
+
 .search-enter{
     position:absolute;
     margin-top:15px;
@@ -1351,4 +1357,14 @@ margin-left:10px;
     /*border-spacing:4px;*/
     /*border:solid;*/
     vertical-align:middle;
+}
+
+/**********************************************/
+/* Saved Search Scene
+/**********************************************/
+.saved-search-tips
+{
+    width:100%;
+    text-align:center;
+    font-size:9px;
 }

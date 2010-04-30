@@ -38,6 +38,8 @@ AudioPlayer = Class.create({
     audioBuffers: null,
     bufferPool: null,
 
+    displayBanners: false,
+
     //buffer:null,
     streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "canplaythrough", "timeupdate"],
 
@@ -450,7 +452,7 @@ AudioPlayer = Class.create({
         this.setAudioToPlayer(this.player);
         this.UIInvalidateSong(this.player.song);
 
-        if((AmpacheMobile.focus === false) && (AmpacheMobile.webos.displayOff === false))
+        if(((AmpacheMobile.focus === false) || this.UIHandler===null) && (AmpacheMobile.webos.displayOff === false) && (this.displayBanners===true))
         {
             Mojo.Controller.getAppController().showBanner(this.player.song.title + ": " + this.player.song.artist, {
                     source: 'notification'
@@ -1541,6 +1543,8 @@ AudioPlayer = Class.create({
         if (this.player.paused === false) {
             this.UIStartPlaybackTimer();
         }
+        
+        this.displayBanners = true;
 
     },
 

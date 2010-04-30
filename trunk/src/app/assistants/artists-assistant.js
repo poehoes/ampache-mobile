@@ -51,6 +51,11 @@ ArtistsAssistant = Class.create({
             this.FromDate = params.FromDate;
         }
         
+        if(params.ToDate)
+        {
+            this.ToDate = params.ToDate;
+        }
+        
         this.sortType = ArtistSortType.alpha;
         this.sortOrder = SortOrder.descending;
         
@@ -376,8 +381,9 @@ ArtistsAssistant = Class.create({
         params.offset = offset;
         params.limit = limit;
         params.FromDate = this.FromDate;
+        params.ToDate = this.ToDate;
         params.CheckSaved = this.CanSave;
-        
+        params.search = this.Search;
         
         
         if (this.type === "random") {

@@ -97,5 +97,13 @@
     {
         "scenes": "videos",
         "source": "app/assistants/videos-assistant.js"
+    },
+    {
+        "scenes": "saved-searches",
+        "source": "app/assistants/saved-searches-assistant.js"
+    },
+    {
+        "scenes": "search-builder",
+        "source": "app/assistants/search-builder-assistant.js"
     }
 ]

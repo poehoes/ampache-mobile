@@ -74,6 +74,11 @@ AlbumsAssistant = Class.create({
         {
             this.FromDate = params.FromDate;
         }
+        
+        if(params.ToDate)
+        {
+            this.ToDate = params.ToDate;
+        }
 
         this.itemsHelper = new ItemsHelper();
 
@@ -356,10 +361,12 @@ AlbumsAssistant = Class.create({
         params.offset = offset;
         params.limit = limit;
         params.CheckSaved = this.CanSave;
+        params.FromDate = this.FromDate;
+        params.ToDate = this.ToDate;
 
         if(this.type ==="recent")
         {
-            params.FromDate = this.FromDate;    
+               
         }
         if (this.type === "random") {
             this.itemsHelper.fetchLimit = 1;

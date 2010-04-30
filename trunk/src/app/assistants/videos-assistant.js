@@ -229,16 +229,24 @@ VideosAssistant = Class.create({
         this.item = event.item;
 
         if (supported === true) {
-            this.controller.serviceRequest("palm://com.palm.applicationManager", {
-                method: "launch",
-                parameters: {
-                    id: "com.palm.app.videoplayer",
-                    params: {
-                        target: event.item.url
+            
+            if(Mojo.Host.current === Mojo.Host.browser)
+            {
+                window.open(event.item.url, event.item.title);
+            }
+            else
+            {
+                this.controller.serviceRequest("palm://com.palm.applicationManager", {
+                    method: "launch",
+                    parameters: {
+                        id: "com.palm.app.videoplayer",
+                        params: {
+                            target: event.item.url
+                        }
                     }
-                }
-
-            });
+    
+                });
+            }
         } else {
 
             var message = "webOS does not support playback of this video format (" + event.item.mime + ").";
