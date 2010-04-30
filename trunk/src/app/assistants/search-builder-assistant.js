@@ -41,7 +41,7 @@ SearchBuilderAssistant = Class.create({
             {
                 label: "Date",
                 value: 1
-            },
+            }
             ]
         },
         this.searchScreenModel);
@@ -251,12 +251,12 @@ SearchBuilderAssistant = Class.create({
         }
         if(search.useDate)
         {
-            switch(parseInt(search.type))
+            switch(parseInt(search.type, 10))
             {
                 case SEARCH_GLOBAL:
                 case SEARCH_VIDEOS:
                 case SEARCH_PLAYLISTS:
-                    this.FailureReason = "Search type " + SEARCH_TYPES[search.type] + " does not support date, turn off to continue."
+                    this.FailureReason = "Search type " + SEARCH_TYPES[search.type] + " does not support date, turn off to continue.";
                     retVal = false;
                 break;
             }
@@ -340,7 +340,7 @@ SearchBuilderAssistant = Class.create({
     activate: function(event) {
         /* put in event handlers here that should only be in effect when this scene is active. For
          example, key handlers that are observing the document */
-        	SetText(false, null, AmpacheMobile.settingsManager.settings.CSSTheme);
+        SetText(false, null, AmpacheMobile.settingsManager.settings.CSSTheme);
         SetBackground(this.controller, null, "");
         
         

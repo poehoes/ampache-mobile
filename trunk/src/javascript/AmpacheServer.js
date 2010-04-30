@@ -423,7 +423,7 @@ AmpacheServer = Class.create({
         if(params.FromDate || params.ToDate)
         {
             filter[i++] = "add";
-            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate)
+            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate);
         }
 
         path = this.BuildActionString(type, filter);
@@ -564,7 +564,7 @@ AmpacheServer = Class.create({
         if(params.FromDate || params.ToDate)
         {
             filter[i++] = "add";
-            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate)
+            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate);
         }
 
         var path = this.BuildActionString(type, filter);
@@ -687,7 +687,7 @@ AmpacheServer = Class.create({
         if(params.FromDate || params.ToDate)
         {
             filter[i++] = "add";
-            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate)
+            filter[i++] = this.BuildDateString(params.FromDate, params.ToDate);
         }
 
         filter[i++] = "offset";
