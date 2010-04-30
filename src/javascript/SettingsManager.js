@@ -33,6 +33,15 @@ SEARCH_TYPES[3] = "Songs";
 SEARCH_TYPES[4] = "Playlists";
 SEARCH_TYPES[5] = "Videos";
 
+var SEARCH_ICONS = {};
+SEARCH_ICONS[0] = "images/icons/global.png";
+SEARCH_ICONS[1] = "images/icons/artists.png";
+SEARCH_ICONS[2] = "images/icons/albums.png";
+SEARCH_ICONS[3] = "images/icons/songs.png";
+SEARCH_ICONS[4] = "images/icons/playlists.png";
+SEARCH_ICONS[5] = "images/icons/videos.png";
+
+
 RECENT_TYPES = ["Last Update", "1 Week", "1 Month", "3 Months"];
 
 var THEME_NONE = 0;
@@ -282,6 +291,11 @@ SettingsManager = Class.create({
         this.settings.Accounts[index] = account;
     },
 
+    AppendSearch: function(account, search) {
+        var index = account.SavedSearches.length;
+        account.SavedSearches[index] = search;
+    },
+
     AddAccount: function(AccountName, username, password, url) {
         var index = this.settings.Accounts.length;
         this.settings.Accounts[index] = new Account();
@@ -399,10 +413,14 @@ SettingsManager = Class.create({
                     this.settings.Accounts[i].Allow2GBuffer = false;
                 }
                 
-                 if (!this.settings.Accounts[i].SpacesWorkAround) {    
+                if (!this.settings.Accounts[i].SpacesWorkAround) {    
                     this.settings.Accounts[i].SpacesWorkAround = false;
                 }
                 
+                //this.settings.Accounts[i].SavedSearches = [];
+                if (!this.settings.Accounts[i].SavedSearches) {    
+                    this.settings.Accounts[i].SavedSearches = [];
+                }
 
             }
             this.SaveSettings(null, null);
@@ -467,12 +485,15 @@ Account = Class.create({
     ApacheTimeout:300,
     Allow2GBuffer:false,
     
+    SavedSearches:null,
+    
     //WorkArounds
     SpacesWorkAround:false,
     
     initialize: function() {
         this.ArchivedArtists = new ArchivedItems();
         this.ArchivedAlbums = new ArchivedItems();
+        this.SavedSearches = [];
     }
 });
 
@@ -485,6 +506,16 @@ ArchivedItems = Class.create({
         this.key = "";
         this.numItems = "";
     }
+});
+
+SavedSearch = Class.create({
+    name:"",
+    searchString:"",
+    useDate:false,
+    fromDate:null,
+    toDate:null,
+    
+    type:0
 });
 
 //ArchiveDate = Class.create({

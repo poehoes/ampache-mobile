@@ -43,6 +43,11 @@ SongsAssistant = Class.create({
         {
             this.FromDate = params.FromDate;
         }
+        
+         if(params.ToDate)
+        {
+            this.ToDate = params.ToDate;
+        }
 
         if (params.Genre_id) {
             this.Genre_id = params.Genre_id;
@@ -230,10 +235,12 @@ SongsAssistant = Class.create({
         params.CallBack = callback;
         params.offset = offset;
         params.limit = limit;
+        params.FromDate = this.FromDate;
+        params.ToDate = this.ToDate;
         
         if (this.Type === "recent") {
             this.itemsHelper.ExpectedItems = AmpacheMobile.ampacheServer.songs;
-            params.FromDate = this.FromDate;
+            
             AmpacheMobile.ampacheServer.GetSongs(params);
         }
         else if (this.Type === "random") {
