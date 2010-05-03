@@ -742,6 +742,7 @@ AudioPlayer = Class.create({
         if (this.bufferMutex === false) {
             this.stopBufferRecovery();
             this.ampachePaused = this.player.paused;
+            this.ticksUnchanged = 0;
 
             //this.UISetPointer(this.playList.getCurrentSong(), false);
             if (this.player && this.playList.moveCurrentToNext() === true) {
@@ -785,6 +786,7 @@ AudioPlayer = Class.create({
         if (this.bufferMutex === false) {
             this.stopBufferRecovery();
             this.ampachePaused = this.player.paused;
+            this.ticksUnchanged = 0;
 
             if (this.player && this.playList.moveCurrentToPrevious() === true) {
                 
@@ -821,6 +823,7 @@ AudioPlayer = Class.create({
                     this._seek(0);
                     this.player.ampacheType = AudioType.buffer;
                     this.timePercentage = 0;
+                    this.ticksUnchanged = 0;
                     this.UIUpdatePlaybackTime();
                 }
                 
