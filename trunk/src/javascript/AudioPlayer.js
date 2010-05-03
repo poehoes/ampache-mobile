@@ -41,7 +41,7 @@ AudioPlayer = Class.create({
     displayBanners: false,
 
     //buffer:null,
-    streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "canplaythrough", "timeupdate"],
+    streamingEvents: ["play", "pause", "error", "ended", "canplay", "emptied", "load", "loadstart", "waiting", "progress", "canplaythrough"],
 
     //seeked seeking, "durationchange" "canplaythrough", "abort",  
     //bufferingEvents : ["abort", "error", "ended", "emptied", "load", "loadstart",
@@ -645,6 +645,7 @@ AudioPlayer = Class.create({
     ***************************************************************************/
     newPlayList: function(newPlayList, _shuffleOn, _startIndex) {
 
+        this.displayBanners = false;
         this.stop();
         this.player = null;
         this.playList = new PlayList(newPlayList, _shuffleOn, 0, _startIndex);
@@ -1097,7 +1098,7 @@ AudioPlayer = Class.create({
         
         case "timeupdate":
             this.ticksUnchanged = 0;
-            this.UIStartPlaybackTimer();
+            //this.UIStartPlaybackTimer();
             //this.UIUpdatePlaybackTime();
             break;
         case "play":

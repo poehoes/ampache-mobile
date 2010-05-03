@@ -336,7 +336,7 @@ SettingsManager = Class.create({
                 this.settings.BackgroundImage = DEFAULT_IMAGE;
                 this.settings.BackgroundColor = DEFAULT_COLOR;
             }
-            if (!this.settings.StreamDebug) {
+            if (this.settings.StreamDebug === null) {
                 this.settings.StreamDebug = false;
             }
             if (!this.settings.BackgroundMode) {
@@ -345,7 +345,7 @@ SettingsManager = Class.create({
             if (!this.settings.AlbumsSort) {
                 this.settings.AlbumsSort = 0;
             }
-            if (!this.settings.AllowRotation) {
+            if (this.settings.AllowRotation === null) {
                 this.settings.AllowRotation = DEFAULT_ROTATION;
             }
 
@@ -380,11 +380,11 @@ SettingsManager = Class.create({
                     this.settings.Accounts[i].FetchSize = DEFAULT_FETCH_SIZE;
                 }
 
-                if (!this.settings.Accounts[i].ExtraCoverArt) {
+                if (this.settings.Accounts[i].ExtraCoverArt===null) {
                     this.settings.Accounts[i].ExtraCoverArt = false;
                 }
 
-                if (!this.settings.Accounts[i].StallDetection) {
+                if (!this.settings.Accounts[i].StallDetection===null) {
                     this.settings.Accounts[i].StallDetection = true;
                 }
 
@@ -409,11 +409,11 @@ SettingsManager = Class.create({
                     this.settings.Accounts[i].ApacheTimeout = 300;
                 }
                 
-                if (!this.settings.Accounts[i].Allow2GBuffer) {    
+                if (this.settings.Accounts[i].Allow2GBuffer === null) {    
                     this.settings.Accounts[i].Allow2GBuffer = false;
                 }
                 
-                if (!this.settings.Accounts[i].SpacesWorkAround) {    
+                if (this.settings.Accounts[i].SpacesWorkAround === null) {    
                     this.settings.Accounts[i].SpacesWorkAround = false;
                 }
                 
@@ -517,6 +517,7 @@ SavedSearch = Class.create({
     
     initialize: function() {
         this.type = "0";
+        this.useDate = false;
     }
 });
 
