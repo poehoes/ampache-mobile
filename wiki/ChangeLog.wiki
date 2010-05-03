@@ -1,5 +1,25 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
+===Version 0.9.4 (05/03/2010)===
+*New Features*
+----
+  * Stored Searches
+    * Save your favorite searches for quick access to your music.
+    * Tap and Hold Search from the main menu for quick access.
+    * Searches are stored per account.
+    * Some searches can be date limited. Including Artists, Albums and Songs
+    * Tap Icon to Edit, Swipe to Delete, Hold to Reorder
+*Improvements*
+----
+  * Video Search, added video search to search options.
+  * Added no items found message for empty search results.
+*Bug Fixes*
+----
+  * Type to search in video scene broken.
+  * Banner notifications didn't show up when in app but away from now playing screen.
+  * Extended stall detection timer to 30 secs, was 20
+  * On/Off preferences weren't being saved correctly
+  * Paused now playing didn't show current time
 
 ===Version 0.9.3 (04/26/2010)===
 New Feature
