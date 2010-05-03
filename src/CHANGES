@@ -1,3 +1,55 @@
+Version 0.9.4 (05/03/2010)
+
+New Features
+
+  * Stored Searches
+    o Save your favorite searches for quick access to your music.
+    o Tap and Hold Search from the main menu for quick access.
+    o Searches are stored per account.
+    o Some searches can be date limited. Including Artists, Albums and Songs
+    o Tap Icon to Edit, Swipe to Delete, Hold to Reorder
+
+Improvements
+
+  * Video Search, added video search to search options.
+  * Added no items found message for empty search results.
+
+Bug Fixes
+
+  * Type to search in video scene broken.
+  * Banner notifications didn't show up when in app but away from now playing screen.
+  * Extended stall detection timer to 30 secs, was 20
+  * On/Off preferences weren't being saved correctly
+  * Paused now playing didn't show current time
+
+Version 0.9.3 (04/26/2010)
+
+New Feature
+
+  * Video Playback
+    o Playback of Videos indexed by Amapache which webOS supports. m4v seem to work the best.
+    o Using Palm Video Player for streaming playback. Launches in seperate window.
+    o Ampache has no video transcoding yet, so videos must be preconverted. I've found handbreak to work best.
+
+Bug Fixes
+
+  * Delete confirmation turned off in now playing list, on now.
+
+Version 0.9.2 (04/21/2010)
+
+Improvements
+
+  * Sorting: Tap and Hold the Header on any list to bring up a sort menu. Only the Albums Sort saves its state.
+  * Jump: Added Jump to Top/Bottom on Songs, Genre and Playlist screens
+  * Added first time use popup
+
+Bug Fixes
+
+  * Infinite loop in now playing screen caused the app to lock up, possibly resulting in false audio stall detection.
+  * Playback errors sometime broke the now playing list.
+  * Fixed Check for Updates so it doesn't have to launch the browser.
+
+
 Version 0.9.1 (04/17/2010)
 
 Improvements
