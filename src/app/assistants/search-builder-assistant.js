@@ -67,6 +67,13 @@ SearchBuilderAssistant = Class.create({
            
         ); 
 
+        if(this.Search.useDate === false)
+        {
+            this.controller.get("FromRow").addClassName("disabled");
+            //this.controller.get("ToRow").addClassName("disabled")
+        }
+
+
         if(this.Search.fromDate)
         {
             var fromDate = new Date(this.Search.fromDate);
@@ -88,14 +95,14 @@ SearchBuilderAssistant = Class.create({
 
 
         this.controller.setupWidget("SearchField", this.attributes = {
-            //hintText: $L('Sea')
+            hintText: $L('Leave empty for all')
         },
         this.model = {
             value: this.Search.searchString
         });
 
         this.controller.setupWidget("SearchName", this.attributes = {
-            //hintText: $L('Sea')
+            //hintText: $L('Name for display')
         },
         this.model = {
             value: this.Search.name
@@ -176,6 +183,18 @@ SearchBuilderAssistant = Class.create({
     UseDate: function(event) {
         //Display the value of the toggle
         this.Search.useDate = event.value;
+        
+        if(this.Search.useDate === false)
+        {
+            this.controller.get("FromRow").addClassName("disabled");
+            //this.controller.get("ToRow").addClassName("disabled");
+        }
+        else
+        {
+            this.controller.get("FromRow").removeClassName("disabled");
+            //this.controller.get("ToRow").removeClassName("disabled");
+        }
+        
     },
 
 
@@ -218,11 +237,17 @@ SearchBuilderAssistant = Class.create({
     
 
     doDatePickerDialog: function(type, callback, date) {
-        this.controller.showDialog({
-            template: 'search-builder/datepicker-dialog',
-            assistant: new DateSearchDialogAssistant(this, callback,type, date)
-        });
-
+        if(this.Search.useDate)
+        {
+            this.controller.showDialog({
+                template: 'search-builder/datepicker-dialog',
+                assistant: new DateSearchDialogAssistant(this, callback,type, date)
+            });
+        }
+        else
+        {
+            this.showDialogBox("Use Date Off", "Turn on Use Date to pick a date.");
+        }
     },
 
 
@@ -267,28 +292,9 @@ SearchBuilderAssistant = Class.create({
         return retVal;
     },
     
-    StallPressed: function(event) {
-        //Display the value of the toggle
-        this.Account.StallDetection = event.value;
-        this.settingsManager.SaveSettings();
-    },
     
-    SpacesPressed:function(event){
-        //Display the value of the toggle
-        this.Account.SpacesWorkAround = event.value;
-       
-    },
     
-    ExtraArtPressed: function(event) {
-        //Display the value of the toggle
-        if (event.value === true) {
-            this.Account.ExtraCoverArt = true;
-            this.showDialogBox("WARNING", "This feature is disabled by default because it greatly diminishes performance, but it sure looks good");
-        } else {
-            this.Account.ExtraCoverArt = false;
-        }
-        this.settingsManager.SaveSettings();
-    },
+  
 
     searchQuestions: function(value) {
         if (value === "delete") {
@@ -438,7 +444,7 @@ var DateSearchDialogAssistant = Class.create({
 
     clearDate:function()
     {
-        this.callback(null, "");
+        this.callback(null, "Tap to Pick Date");
         this.widget.mojo.close();
     },
 

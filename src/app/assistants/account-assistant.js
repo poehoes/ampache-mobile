@@ -305,7 +305,6 @@ AccountAssistant = Class.create({
     StallPressed: function(event) {
         //Display the value of the toggle
         this.Account.StallDetection = event.value;
-        this.settingsManager.SaveSettings();
     },
     
     SpacesPressed:function(event){
