@@ -140,10 +140,11 @@ Remember to save your changes!
     * Transcoding - Default
   # Make sure you check "Apply to All"
 
-= Potential Issues =
+= Known Issues =
 ----
   # Bitrates higher then 48 are not supported by aacPlusenc, but this encoder with the AAC+ format provides easily the same quality product as a 96 kbps MP3.
   # It will fail on mono files.
+  # The flash player included with Ampache cannot play AAC+
 
 = References =
 ----
