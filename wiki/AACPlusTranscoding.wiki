@@ -17,6 +17,7 @@ In order to use it you need to do some setup on your server.
    * http://mp3splt.sourceforge.net/mp3splt_page/downloads.php
  * lame
    * Windows: http://www.free-codecs.com/Lame_Encoder_download.htm
+ * Others: www.google.com
 
 = Details =
 
@@ -129,6 +130,10 @@ transcode_cmd_m4a       = "faad -f 2 -w %FILE% | aacplusenc - - %SAMPLE%"
 transcode_cmd_mp3       = "mp3splt -qnf -o - %FILE% %OFFSET% %EOF% | lame --mp3input -S --decode - - | aacplusenc - - %SAMPLE%"
 transcode_cmd_ogg       = "oggsplt -qn  -o - %FILE% %OFFSET% %EOF% | oggdec -Q -o - - | aacplusenc - - %SAMPLE%""
 }}}
+
+  NOTE: These are all command line executable files you will need to download them and place them in a path which they can be run from.
+
+  Windows Example: Put them all in c:\ampache_tools add this path to your windows [http://www.computerhope.com/issues/ch000549.htm PATH] 
 
 Remember to save your changes!
 
