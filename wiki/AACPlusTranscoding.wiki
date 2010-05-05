@@ -129,6 +129,8 @@ Remember to save your changes!
 
 == Step 3: Change your Ampache Settings ==
 
+ WARNING: Incorrect configuration of these settings will cause the streaming to fail.
+
   # Next load your Ampache Web interface as the Administrator
   # Select the "Admin" menu and chose "Streaming" under the "Server Config" section
   # Modify it to:
