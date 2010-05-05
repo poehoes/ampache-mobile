@@ -11,8 +11,12 @@ In order to use it you need to do some setup on your server.
 = Required Tools =
  * Text Editor
  * aacplusenc
+   * Windows: http://markspark.net/slasha/aacplusenc-0.17.1.rar
+   * Others: http://teknoraver.net/software/mp4tools/
  * mp3splt
+   * http://mp3splt.sourceforge.net/mp3splt_page/downloads.php
  * lame
+   * Windows: http://www.free-codecs.com/Lame_Encoder_download.htm
 
 = Details =
 
