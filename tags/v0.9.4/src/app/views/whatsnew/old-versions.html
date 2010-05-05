@@ -1,0 +1,648 @@
+<hr>
+
+<div class="new-version-header">
+    Version 0.9.3 (04/26/2010)
+</div>
+<hr>
+
+<div class="new-version-header">
+    <b>New Feature</b>
+
+    <ul class="new-version-list">
+	<li>Video Playback
+
+	    <ul class="new-version-list">
+		<li>Playback of Videos indexed by Amapache which webOS supports. m4v seem to work the best.</li>
+
+		<li>Using Palm Video Player for streaming playback. Launches in seperate window.</li>
+
+		<li>Ampache has no video transcoding yet, so videos must be preconverted. I've found handbreak to work best.</li>
+	    </ul>
+	</li>
+    </ul>
+</div>
+
+<div class="new-version-header">
+    <b>Bug Fixes</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Delete confirmation turned off in now playing list, on now.</li>
+</ul>
+
+
+<hr><div class="new-version-header">
+    Version 0.9.2 (04/21/2010)
+</div><hr>
+
+
+
+<div class="new-version-header">
+    <b>Improvements</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Sorting: Tap and Hold the Header on any list to bring up a sort menu. Only the Albums Sort saves its state.</li>
+    <li>Jump: Added Jump to Top/Bottom on Songs, Genre and Playlist screens</li>
+    <li>Added first time use popup</li>
+</ul>
+
+<div class="new-version-header">
+    <b>Bug Fixes</b>
+</div>
+
+<ul class="new-version-list">
+	<li>Infinite loop in now playing screen caused the app to lock up, possibly resulting in false audio stall detection.</li>    
+    <li>Playback errors sometime broke the now playing list.</li>
+	<li>Fixed Check for Updates so it doesn't have to launch the browser.</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.9.1 (04/17/2010)
+</div>
+<hr>
+
+<div class="new-version-header">
+    <b>Improvements</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Updates to Help Scene, including Check for Update, User Guide and App Introduction</li>
+
+    <li>Made stall/crash recovery optional, configurable in account editor. Default:On</li>
+
+    <li>Added Donate Button to About Screen</li>
+
+    <li>Tweaked stall detection for less false positives</li>
+
+    <li>Fixed formatting on account editor</li>
+</ul>
+
+<div class="new-version-header">
+    <b>Bug Fixes</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Reset Stall detection when buffer loss is detected</li>
+
+    <li>Fixed orange key on search causing scene to exit</li>
+
+    <li>Fixed load albums from the genre page</li>
+
+    <li>Fixed a bug which caused the playlist and buffer ahead to die</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.9.0 (04/12/2010)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>Buffer Ahead! (thanks for waiting)
+
+        <ul class="new-version-list">
+            <li>Configurable from 1 to 5 songs</li>
+
+            <li>This is true buffer ahead, using system RAM. Other solutions download to flash, which is bad for your device.</li>
+
+            <li>Intelligent buffer selection, attempts to provide seamless playback with no downloading break between tracks.</li>
+
+            <li>Many work arounds for bugs in webOS, don't think many people have attempted to use webOS in this way.</li>
+
+            <li>Auto Detection of changes in network coverage and buffer stalls</li>
+
+            <li>Auto Detection of buffers lost due to device sleep</li>
+
+            <li>I've done my best to make this stable without transcoding, but it really shines when you enable it with transcoding.</li>
+
+            <li>Settings in the Accounts Settings Page</li>
+
+            <li>Updated the error reporting to follow the new audio api</li>
+        </ul>
+    </li>
+
+    <li>Artists and Albums List Caching
+
+        <ul class="new-version-list">
+            <li>Saves a local copy of your entire albums and artists lists, load times are ridiculous!</li>
+
+            <li>Auto detects when a change to your server occurs and resaves the lists. Note: if you have auto scanning enabled on your server this will cause the list to redownload after every scan.</li>
+
+            <li>Only applies to full Albums and Artist lists, everything else still goes against the server.</li>
+
+            <li>Updated account editior to reflect how many saved items you have</li>
+        </ul>
+    </li>
+
+    <li>New Icon and Splash Screen
+
+        <ul class="new-version-list">
+            <li>Lets face it, the old icon is kinda ugly. Thankfully forum contributor Globex has stepped up and volunteered his services and designed a new one along with anew splash screen!<br>
+            <br>
+            It still pays homage to the people at the Ampache project, aka it features their squirrel logo but I hope you agree with me, it looks a lot better on the phone.<br>
+            <br>
+            So a big thanks to <a href="http://www.globexdesigns.com/">Globex Designs, Inc.</a> for the new icon.</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="new-version-header">
+    <b>Improvements</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Figured out how to use the Shift and Sym Keys, updated the controls popup with changes.</li>
+
+    <li>Lowered the search character limit to 2.</li>
+
+    <li>Redesign of the Accounts Settings Page to Accommodate all the new options.</li>
+
+    <li>Added a whole more shuffle to the playlist shuffle.</li>
+
+    <li>Changed repeat list once to repeat song.</li>
+
+    <li>Banner notifications where they felt right.</li>
+
+    <li>Shuffling a list now displays the list in the order playback will occur.</li>
+
+    <li>Banner Notifications of new songs when you are looking at another app. Will not wake up screen if its asleep.</li>
+
+    <li>Go straight to songs view from artists if there is only one album</li>
+</ul>
+
+<div class="new-version-header">
+    <b>Bug Fixes</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Fixed date selector CSS so its no longer black on black with palm-dark</li>
+
+    <li>Added work around for %20 (spaces) in song URL issue. If you have been having trouble streaming enable it in the Account Editor</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.8.5 (Beta) (03/21/2010)
+</div>
+<hr>
+
+<div class="new-version-header">
+    New Features
+</div>
+
+<ul class="new-version-list">
+    <li><b>Search Recent Additions</b></li>
+
+    <li style="list-style: none; display: inline">
+        <ul class="new-version-list">
+            <li>Find Arists, Albums and Songs recently added to your server</li>
+
+            <li>Choices include: Last Update, 1 Week, 1 Month, Custom Date</li>
+
+            <li>Tap and hold from main menu for quick access, timespan configurable in preferences</li>
+        </ul>
+    </li>
+
+    <li><b>Theme and Text Configuration</b></li>
+
+    <li style="list-style: none; display: inline">
+        <ul class="new-version-list">
+            <li>Customizations preview in preferences</li>
+
+            <li>Selection of text color</li>
+
+            <li>Selection of theme, current options: none and palm-dark</li>
+        </ul>
+    </li>
+
+    <li><b>Keyboard Commands</b></li>
+
+    <li style="list-style: none; display: inline">
+        <ul class="new-version-list">
+            <li><b>Type to Search</b></li>
+
+            <li style="list-style: none; display: inline">
+                <ul class="new-version-list">
+                    <li>Just start typing while on the main screen and a search will start.</li>
+
+                    <li>Default search type is denoted with an enter image, configurable in preferences</li>
+
+                    <li>Tap Delete twice to exit.</li>
+                </ul>
+            </li>
+
+            <li><b>Now Playing Screen</b></li>
+
+            <li style="list-style: none; display: inline">
+                <ul class="new-version-list">
+                    <li>Previous Track: <b>@</b> (Left of space bar)</li>
+
+                    <li>Next Track: <b>Period</b> (Right of space bar)</li>
+
+                    <li>Skip 10 second ahead: <b>P</b> (Upper Right Key)</li>
+
+                    <li>Skip 10 second back: <b>Q</b> (Upper Left Key)</li>
+
+                    <li>Toggle Play/Pause: <b>Space Bar</b></li>
+
+                    <li>Toggle Shuffle Mode: <b>S</b></li>
+
+                    <li>Toggle Repeat Mode: <b>R</b></li>
+
+                    <li>Toggle View: <b>V</b></li>
+                </ul>
+            </li>
+
+            <li><b>Global Commands</b></li>
+
+            <li style="list-style: none; display: inline">
+                <ul class="new-version-list">
+                    <li>Note: Hold finger in gesture area for Meta</li>
+
+                    <li>Meta + P: Preferences</li>
+
+                    <li>Meta + D: Delete Now Playing</li>
+
+                    <li>Meta + N: Goto Now Playing</li>
+
+                    <li>Meta + [Space]: Play/Pause</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+
+    <li><b>Improving user experience</b></li>
+
+    <li style="list-style: none; display: inline">
+        <ul class="new-version-list">
+            <li>Release Notes</li>
+
+            <li>Help Page</li>
+
+            <li>Keyboard Commands Popup</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="new-version-header">
+    <b>Improvements</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Tap and hold an Artist to skip the albums screen and go straight to all songs.</li>
+
+    <li>Many optimizations to Now Playing screen, should improve performance</li>
+
+    <li>Numerous formating fixes</li>
+
+    <li>Release Notes Link in About</li>
+
+    <li>Added time countdown to now playing playlist.</li>
+
+    <li>Added new icons to various scenes: Connection, Preferences, Accounts</li>
+</ul>
+
+<div class="new-version-header">
+    <b>Bug Fixes</b>
+</div>
+
+<ul class="new-version-list">
+    <li>Fixed a bug which caused buttons to not work correctly while a song was loading on the now playing screen.</li>
+
+    <li>Update to Now Playing button so it clearly shows its been pressed (turns blue).</li>
+
+    <li>Alpha Divider rendering incorrectly</li>
+
+    <li>Hold single song to play/enqueue, broke with jslint changes.</li>
+
+    <li>Enqueueing the same song more than once broke the playlist.</li>
+
+    <li>Date in "About.." was incorrect.</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.8.0 (Beta) (03/14/2010)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>New Feature: Playlist view added to now playing screen.</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Application saves last view state between sessions</li>
+
+            <li>Swipe to delete</li>
+
+            <li>Drag to reorder</li>
+
+            <li>Buffer and playback indicators</li>
+
+            <li>Tap Header to toggle view</li>
+
+            <li>Coming with Ampache 3.6, ability to save a now playing list to the server</li>
+        </ul>
+    </li>
+
+    <li>New Feature: Added configuration for auto stall recovery, per account. Default:Off</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Turn this off if you are having issues with songs restarting</li>
+        </ul>
+    </li>
+
+    <li>New Feature: List Jump: tap the header on a page with dividers to bring up a Selector to jump down in the list. No more scrolling forever.</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Currently on Artists and Albums Lists</li>
+
+            <li>Long lists can take awhile to populate the drop down, be patient</li>
+        </ul>
+    </li>
+
+    <li>New Feature: New splash screen when app starts</li>
+
+    <li>New Feature: Volume Keys: instructs webOS that the application wants music volume, allows changing of music volume prior to starting playback of music</li>
+
+    <li>Improvement: Added drag to reorder accounts in preferences screen.</li>
+
+    <li>Improvement: Requests which result in no information from the server now display a useful message allow the user to retry the request. Formerly these messages were mistaken as Unicode errors.</li>
+
+    <li>Improvement: Request confirmation for preferences screen when playing music</li>
+
+    <li>Improvement: About... now shows server information</li>
+
+    <li>Bug Fix: Downloading indicators broke with webOS 1.4</li>
+
+    <li>Bug Fix: Simplified AudioPlayer class due to improvements made in webOS media handling</li>
+
+    <li>Bug Fix: Fixed alpha divider in artists view.</li>
+
+    <li>Known Bug: Ampache 3.5.4 broke stream all songs. Requested fix, slated for Ampache 3.6. Added error message.</li>
+
+    <li style="list-style: none; display: inline">
+        <pre class="prettyprint">
+ [Note] New application name space, no longer using com.palm.ampachemobile, the API is mature enough to move to com.ampachemobile.  This means 0.7.0 and 0.8.0 can coexist.  Transfer account settings and delete old app. 
+</pre>
+    </li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.7.0 (Beta) (10/29/2009)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>New Feature: Now Playing, now playing screen will now continue playing after navigating away from the now playing page</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Any list of songs can be enqueued onto the end of the current playlist</li>
+
+            <li>Tap and Hold a song to add just that song</li>
+
+            <li>Delete the now playing list from any scene</li>
+
+            <li>TODO: Build a playlist editor to remove items from a list</li>
+        </ul>
+    </li>
+
+    <li>New Feature: Random Music</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Shuffle all Songs NOTE: This is using an documented method from the Ampache Server and does not allow for retrieval of song information.</li>
+
+            <li>Random Album Selector cover-flow like to allow random browsing</li>
+
+            <li>Artist, Albums, Songs of the moment lists</li>
+        </ul>
+    </li>
+
+    <li>New Feature: Redesign of progress indicator for loading content, works the same as the web browser and you can cancel while loading at any point.</li>
+
+    <li>New Feature: Added the ability to e-mail the xml from problem tracks with corrupted tags to enable easier debug</li>
+
+    <li>Improvement: Auto restart stalled stream after 20 seconds of stalled state.</li>
+
+    <li>Improvement: Optimized all images included in the ipk making for a much smaller download.</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>NOTE: If you are using the included backgrounds you will need to reset you settings.</li>
+        </ul>
+    </li>
+
+    <li>Improvement: Modified all icons to have the same look and feel.</li>
+
+    <li>Improvement: Spinner on now playing scene is now in the command menu and not covering up the cover art.</li>
+
+    <li>Improvement: Made restarting a partially downloaded list optional, button click continues download</li>
+
+    <li>Improvement: Removed all scene transitions makes the app much faster</li>
+
+    <li>Improvement: Fixed the buffering indicator</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Can now move the slider outside the buffered part of a song and it will start the download from the point you dropped</li>
+
+            <li>If the start of the buffer has been deleted by the audio service it will now be displayed</li>
+
+            <li>Fixed the issue where it would resize itself and make the now playing screen jump around</li>
+        </ul>
+    </li>
+
+    <li>Bug Fix: Added code to remove bad characters resulting in "unicode error" on the application side</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.6.0 (Beta) (10/15/2009)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>New Feature: Genre Browser</li>
+
+    <li>Performance Improvement: Entire app has been optimized using dburmans new optimizer, should make it snappier</li>
+
+    <li>Performance Improvement: Speed improvements to list loading</li>
+
+    <li>Performance Improvement: Pending Ampache Server Requests canceled when navigated away from</li>
+
+    <li>Improvement: Using real published APIs for bluetooth and headset controls</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Headset Controls are as follows: Double Click: Next Track, Click: Play/pause, Click and Hold: Prev Track</li>
+
+            <li>Bluetooth has been updated to the new API, untested so check it out.</li>
+        </ul>
+    </li>
+
+    <li>Improvement: Connection Cancel Button</li>
+
+    <li>Improvement: Artist Albums Scene allows grabbing all songs from 1 artist.</li>
+
+    <li>Improvement: Filtered songs lists now have have intelligent options. Giving you the option to play filtered songs or all songs.</li>
+
+    <li>Bug Fix: Filtered Songs list pushed to now playing fixed</li>
+
+    <li>Bug Fix: Found bug in ampache global search, added work around</li>
+
+    <li>Bug Fix: Fixed problem if you pressed next at the last item your song would fail to load</li>
+
+    <li>Bug Fix: Infinity NaN:NaN in now playing should be gone now, pesky bug</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.5.0 (Beta) (09/27/2009)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>New Feature: (Global Search) should vastly improve performance if you know what you are looking for.</li>
+
+    <li>New Feature: (Dynamic Resizing) Dynamic resizing of now playing screen. Meaning support for the Palm Pixi. Resizing during notifications. ect.</li>
+
+    <li>New Feature: (Rotation) Landscape Mode (Rotation) Default:Off</li>
+
+    <li>New Feature: (Performance Tuning) Per/Account Settings for fine tuning of performance (Recommended Usage: Make 2 accounts, one for a fast connection and one for a slow)</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Fetch Size: Change how many items are downloaded at once from the server. Default: 300 items. Recommended higher number for fast connection, lower number for slow connection.</li>
+
+            <li>Artist Albums Art: Moved this setting from system wide to account specific.</li>
+        </ul>
+    </li>
+
+    <li>New Feature: (Quick Links) Clickable Links in Songs list for Search, Playlists, for loading Album or</li>
+
+    <li>New Feature: (Albums Sorting) Albums List is now Sortable thru App Menu current sorting choices are Alphabetical, Year, Artist. Choice is saved.</li>
+
+    <li>Improvement: Partially loaded lists will start loading where they left off, upon navigating back to them.</li>
+
+    <li>Improvement: Made Audio player wait 500 ms before starting stream when user requests next/prev song this way if you a user is tapping next repeatedly it will not attempt to start every song as it did before.</li>
+
+    <li>Improvement: Complete rewrite of underlying code that drives list loading, should be faster &amp;&amp; less buggy.</li>
+
+    <li>Improvement: Icons in list headers</li>
+
+    <li>Improvement: Added scrims to cover up clickable items when app is busy</li>
+
+    <li>Bug Fix: Play/Pause with Palm Headphones restarted track. Works as expected now.</li>
+
+    <li>Bug Fix: Fixed filtering while loading on Albums and Artists. If you attempted to filter the list while it was loading the filter would not apply to newly downloaded items. This is now resolved.</li>
+
+    <li>Bug Fix: Fixed ping so that it pings in sync with the session timeout (~30minutes). Previously pinged every 1 minute. Should save on battery.</li>
+
+    <li>Bug Fix: Auto size background to fit available screen, choosing a part of a bigger image as the background isn't going to happen with current API.</li>
+
+    <li>Bug Fix: Fixed spaces in background path.</li>
+
+    <li style="list-style: none; display: inline">
+        <pre class="prettyprint">
+ NOTE: Changed versioning to allow for lower number to be used for small bug fixes.
+</pre>
+    </li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.0.4 (Beta)(09/13/2009)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>Feature Add: Background Selector</li>
+
+    <li>New Feature: Pause on Headphone Removal.</li>
+
+    <li>New Feature: Stream Debug Mode</li>
+
+    <li>New Feature: Now Playing Gestures</li>
+
+    <li>New Feature: Remote Control via Bluetooth</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Left-to-Right: Previous Track (Quick Flick)</li>
+
+            <li>Right-to-Left: Next Track (Quick Flick)</li>
+
+            <li>Double Tap: Play/Pause</li>
+        </ul>
+    </li>
+
+    <li>Improvement: Icons in Main Menu</li>
+
+    <li>Improvement: New Icon</li>
+
+    <li>Improvement: Now Playing Scrolling Turned off.</li>
+
+    <li>Improvement: Preferences Menu clean up.</li>
+
+    <li>Bug Fix: Stopped run away timer in the AudioPlayer (should improve battery life)</li>
+
+    <li>Bug Fix: Accidentally released with log level cranked to max (not sure what the Pre does with this). Turned it down, likely will improve performance.</li>
+
+    <li>Bug fix: Fixed issue with "The " in artist list. Caused extra dividers to be displayed.</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.0.3 (Alpha)(08/30/2009)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>Bug Fix: Albums with no Art were breaking XML parsing</li>
+
+    <li>Improvement: Spinnner stays in the middle after a scroll</li>
+
+    <li>Improvement: Displays Error message if you are running the wrong version of Ampache</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.0.2 (Alpha)(08/29/2009)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>Feature Add: Playlist Browser (Play lists need to generated via the Ampache web interface)</li>
+
+    <li>Feature Add: Cover art in AristAlbums List (Off by default)</li>
+
+    <li>Feature Add: Better Help when things go wrong</li>
+
+    <li>Bug Fix: Shuffle All for an Individual album crashed app.</li>
+
+    <li>Improvement: UI Improvements to numerous to list.</li>
+</ul>
+
+<hr><div class="new-version-header">
+    Version 0.0.1 (Alpha) (08/27/2009)
+</div>
+<hr>
+
+<ul class="new-version-list">
+    <li>Initial Release</li>
+
+    <li>Album Browser (w/Search)</li>
+
+    <li>Artist Browser (w/Search)</li>
+
+    <li>In Application Now Playing Screen</li>
+
+    <li style="list-style: none; display: inline">
+        <ul>
+            <li>Playlist</li>
+
+            <li>Shuffle</li>
+
+            <li>Song Buffering</li>
+        </ul>
+    </li>
+
+    <li>Multiple Server/Accounts Support</li>
+</ul>
