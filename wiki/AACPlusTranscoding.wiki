@@ -82,17 +82,6 @@ Update your *config/ampache.config.php* as follows.  I'd recommend making a back
     
   Also remember to remove ; as this indicates which lines are commented out. To comment it in the ; must be removed and Ampache will run the command. 
 
-=== Enable Downsampling ===
-
-{{{
-; Downsample Remote
-; If this is set to true and access control is on any users who are not
-; coming from a defined 'network' ACL will be automatically downsampled
-; regardless of their preferences. Requires access_control to be enabled
-; DEFAULT: false
-downsample_remote = "true" 
-}}}
-
 === Setup Command Lines ===
 {{{
 ;######################################################
