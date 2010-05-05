@@ -145,10 +145,16 @@ Remember to save your changes!
     * Type of Playback - "Stream"
     * Rate Limit - any, but default 8192 should be fine
     * Transcode Bitrate - 48
-    * Transcoding - Always
+    * Transcoding - Default
   # Make sure you check "Apply to All"
 
 == Things to know ==
 
   # Bitrates higher then 48 are not supported by aacPlusenc, but this encoder with the AAC+ format provides easily the same quality product as a 96 kbps MP3.
   # It will fail on mono files.
+
+== References ==
+----
+[http://forums.precentral.net/showthread.php?p=2423515&posted=1#post2423018 ihooten's Precentral Post]<br>
+[http://ampache.org/forums/viewtopic.php?f=2&t=3067 Ampache.org AAC+ Discussion]<br>
+[http://tech.poojanblog.com/blog/unix-linux/setting-up-aacplusenc-with-ampache/ Poojan's Tech Blog - Setting up aacplusenc with Ampache]
