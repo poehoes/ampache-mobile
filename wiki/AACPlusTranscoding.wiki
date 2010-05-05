@@ -2,7 +2,142 @@
 
 = Introduction =
 
+AAC+ also known as [http://en.wikipedia.org/wiki/High-Efficiency_Advanced_Audio_Coding HE-AAC] provides the best overall streaming experience for Ampache Mobile.  It will give you good quality music with very fast buffering times.  
 
+In order to use it you need to do some setup on your server.
 
+= Required Tools =
+ * Text Editor
+ * aacplusenc
+ * mp3splt
+ * lame
 
 = Details =
+
+NOTE: This guide is written against Ampache 3.5.4
+
+== Step 1: Setting up MIME types ==
+
+The MIME type tells the player what type of file its streaming.  We need to teach ampache about AAC+
+
+Edit the file *lib/class/song.class.php* in your Ampache directory and make the changes highlighted below.
+{{{
+switch ($this->type) {
+    case 'spx':
+    case 'ogg':
+        $this->mime = "application/ogg";
+        break;
+    case 'wma':
+    case 'asf':
+        $this->mime = "audio/x-ms-wma";
+        break;
+    case 'mp3':
+    case 'mpeg3':
+        $this->mime = "audio/mpeg";
+        break;
+    case 'rm':
+    case 'ra':
+        $this->mime = "audio/x-realaudio";
+        break;
+    case 'flac';
+        $this->mime = "audio/x-flac";
+        break;
+    case 'wv':
+        $this->mime = 'audio/x-wavpack';
+        break;
+    case 'aac':
+    case 'mp4':
+    case 'm4a':
+        $this->mime = "audio/mp4";
+        break;
+    /**********************************************/
+    /* begin  addition to support AAC+ */
+    case 'aacp':
+        $this->mime = "audio/aacp";
+        break;
+    /* end addition to support AAC+ */
+    /**********************************************/
+    case 'mpc':
+       $this->mime = "audio/x-musepack";
+       break;
+    default:
+        $this->mime = "audio/mpeg";
+        break;
+}
+}}}
+
+== Step 2: Enable Transcoding ==
+
+Update your *config/ampache.config.php* as follows.  I'd recommend making a backup copy of your config file. 
+  
+  Note: this configuration will transcode all codecs to AAC+ if you only have mp3s in your collection you only need to change the lines pertaining to mp3.  
+    
+  Also remember to remove ; as this indicates which lines are commented out. To comment it in the ; must be removed and Ampache will run the command. 
+
+=== Enable Downsampling ===
+
+{{{
+; Downsample Remote
+; If this is set to true and access control is on any users who are not
+; coming from a defined 'network' ACL will be automatically downsampled
+; regardless of their preferences. Requires access_control to be enabled
+; DEFAULT: false
+downsample_remote = "true" 
+}}}
+
+=== Setup Command Lines ===
+{{{
+;######################################################
+
+; These are commands used to transcode non-streaming
+; formats to the target file type for streaming.
+; This can be useful in re-encoding file types that don't stream
+; very well, or if your player doesn't support some file types.
+; This is also the string used when 'downsampling' is selected
+; as some people have complained its not bloody obvious, any programs
+; referenced in the downsample commands must be installed manually and in
+; the web server path, and executable by the web server
+
+; REQUIRED variables
+; transcode_TYPE        = true/false ## True to force transcode regardless of prefs
+; transcode_TYPE_target = TARGET_FILE_TYPE
+; transcode_cmd_TYPE    = TRANSCODE_COMMAND
+; %FILE%        = filename
+; %OFFSET%      = offset
+; %SAMPLE%      = sample rate
+; %EOF%         = end of file in min.sec
+; List of filetypes to transcode
+
+transcode_m4a           = true
+transcode_m4a_target    = aacp
+transcode_flac          = true
+transcode_flac_target   = aacp
+transcode_mp3           = true
+transcode_mp3_target    = aacp
+transcode_ogg           = true
+transcode_ogg_target    = aacp
+
+; These are the commands that will be run to transcode the file
+transcode_cmd_flac      = "flac -dc --skip=%OFFSET% --until=%EOF% %FILE% | aacplusenc - - %SAMPLE%"
+transcode_cmd_m4a       = "faad -f 2 -w %FILE% | aacplusenc - - %SAMPLE%"
+transcode_cmd_mp3       = "mp3splt -qnf -o - %FILE% %OFFSET% %EOF% | lame --mp3input -S --decode - - | aacplusenc - - %SAMPLE%"
+transcode_cmd_ogg       = "oggsplt -qn  -o - %FILE% %OFFSET% %EOF% | oggdec -Q -o - - | aacplusenc - - %SAMPLE%""
+}}}
+
+Remember to save your changes!
+
+== Step 3: Change your Ampache Settings ==
+
+  # Next load your Ampache Web interface as the Administrator
+  # Select the "Admin" menu and chose "Streaming" under the "Server Config" section
+  # Modify it to:
+    * Type of Playback - "Stream"
+    * Rate Limit - any, but default 8192 should be fine
+    * Transcode Bitrate - 48
+    * Transcoding - Always
+  # Make sure you check "Apply to All"
+
+== Things to know ==
+
+  # Bitrates higher then 48 are not supported by aacPlusenc, but this encoder with the AAC+ format provides easily the same quality product as a 96 kbps MP3.
+  # It will fail on mono files.
