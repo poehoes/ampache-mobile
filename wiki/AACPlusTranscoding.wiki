@@ -146,6 +146,7 @@ Remember to save your changes!
   # It will fail on mono files.
   # The flash player included with Ampache cannot play AAC+
   # webOS cannot seek within a track when using AAC+
+  # aacplusenc supports only 32000, 44100 and 48000 Hz files 
 
 = References =
 ----
