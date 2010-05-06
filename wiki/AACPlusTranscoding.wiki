@@ -34,7 +34,7 @@ If you would like to maintain the flash player functionality in Ampache, perhaps
   # From there on out do all the modifications described below to */ampache_aac* leaving the other directory untouched.  
     * NOTE: In my setup I have both of these instances pointed to the same database and it seems to be working fine.
   # Next change your *web_path* to the new path in *ampache.config.php*
-  # Next create a new user which you can turn on the low bit rate (48) transcoding.  
+  # Then create a new user which you can turn on the low bit rate (48) transcoding.  
   # Every time you want to stream AAC log into this copied server and enter your new user.
  
 
