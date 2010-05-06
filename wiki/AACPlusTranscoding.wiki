@@ -24,6 +24,17 @@ In order to use it you need to do some setup on your server.
 ----
 NOTE: This guide is written against Ampache 3.5.4
 
+== Dual Server Config (Optional) ==
+
+If you would like to maintain the flash player functionality in Ampache, perhaps for listening to from work or school.  Here is my solution.
+
+  # Copy your whole */ampache* directory to another directory in htdocs mine is called */ampache_aac*.
+  # From there on out do all the modifications described below to */ampache_aac* leaving the other directory untouched.  
+    * NOTE: In my setup I have both of these instances pointed to the same database and it seems to be working fine.
+  # Next create a new user which you can turn on the low bit rate (48) transcoding.  
+  # Every time you want to stream AAC log into this copied server and enter your new user.
+ 
+
 == Step 1: Setting up MIME types ==
 
 The MIME type tells the player what type of file its streaming.  We need to teach ampache about AAC+
@@ -76,7 +87,7 @@ switch ($this->type) {
 
 == Step 2: Enable Transcoding ==
 
-Update your *config/ampache.config.php* as follows.  I'd recommend making a backup copy of your config file. 
+* Update your *config/ampache.config.php* as follows.  I'd recommend making a backup copy of your config file. 
   
   Note: this configuration will transcode all codecs to AAC+ if you only have mp3s in your collection you only need to change the lines pertaining to mp3.  
     
