@@ -26,9 +26,11 @@ NOTE: This guide is written against Ampache 3.5.4
 
 == Dual Server Config (Optional) ==
 
+The biggest issue with transcoding to AAC+ is that it can break the flash player.
+
 If you would like to maintain the flash player functionality in Ampache, perhaps for listening to from work or school.  Here is my solution.
 
-  # Copy your whole */ampache* directory to another directory in htdocs mine is called */ampache_aac*.
+  # Copy your whole */ampache* directory to another directory in htdocs, mine is called */ampache_aac*.
   # From there on out do all the modifications described below to */ampache_aac* leaving the other directory untouched.  
     * NOTE: In my setup I have both of these instances pointed to the same database and it seems to be working fine.
   # Next create a new user which you can turn on the low bit rate (48) transcoding.  
