@@ -89,7 +89,7 @@ switch ($this->type) {
 
 == Step 2: Enable Transcoding ==
 
-* Update your *config/ampache.config.php* as follows.  I'd recommend making a backup copy of your config file. 
+Update your *config/ampache.config.php* as follows.  I'd recommend making a backup copy of your config file. 
   
   Note: this configuration will transcode all codecs to AAC+ if you only have mp3s in your collection you only need to change the lines pertaining to mp3.  
     
