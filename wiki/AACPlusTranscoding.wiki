@@ -156,6 +156,8 @@ Remember to save your changes!
 == Step 4: (Optional) Fix Song Clipping ==
 Because aacplusenc doesn't create a file with a constant bitrate it can break the math Ampache uses to determine the end of a stream.  If you're experiencing songs having the last few seconds cut off here is a potential solution.
 
+I'd wait a few days and see if you notice an issue before doing this.
+
 Edit  */lib/class/stream.class.php* and look for this line (656 in Ampache 3.5.4):
 
 {{{
