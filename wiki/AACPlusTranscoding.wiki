@@ -1,10 +1,10 @@
-#summary Guide to transcoding to AAC+
+#summary Guide to transcoding to HE-AAC+
 
 WARNING: This is a work in progress and is not complete yet.
 
 = Introduction =
 ----
-AAC+ also known as [http://en.wikipedia.org/wiki/High-Efficiency_Advanced_Audio_Coding HE-AAC] provides the best overall streaming experience for Ampache Mobile.  It will give you good quality music with very fast buffering times.  
+AAC+ v2 also known as [http://en.wikipedia.org/wiki/High-Efficiency_Advanced_Audio_Coding HE-AAC+] provides the best overall streaming experience for Ampache Mobile.  It will give you good quality music with very fast buffering times.  
 
 In order to use it you need to do some setup on your server.
 
