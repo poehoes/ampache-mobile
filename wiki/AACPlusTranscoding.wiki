@@ -153,6 +153,29 @@ Remember to save your changes!
     * Transcoding - Default
   # Make sure you check "Apply to All"
 
+== Step 4: (Optional) Fix Song Clipping ==
+Because aacplusenc doesn't create a file with a constant bitrate it can break the math Ampache uses to determine the end of a stream.  If you're experiencing songs having the last few seconds cut off here is a potential solution.
+
+Edit  */lib/class/stream.class.php* and look for this line (656 in Ampache 3.5.4):
+
+{{{
+$sample_ratio = $sample_rate/($song->bitrate/1000);
+}}}
+
+Change it to this:
+{{{
+if ($song->type == 'aacp')
+{
+    $sample_ratio = ($sample_rate+3)/($song->bitrate/1000);
+}
+else
+{
+    $sample_ratio = $sample_rate/($song->bitrate/1000);
+}
+}}}
+
+
+
 = Known Issues =
 ----
   # Bitrates higher then 48 are not supported by aacplusenc, but this encoder with the AAC+ format provides easily the same quality product as a 96 kbps MP3.
