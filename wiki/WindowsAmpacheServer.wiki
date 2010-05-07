@@ -9,5 +9,5 @@ The guide was written for Windows Vista, XP and Windows 7 should be very similar
   Credit: Fain, the creator of [http://www.precentral.net/homebrew-apps/ampachpre AmpachPre].
 
 
-== Official Instructions ==
+== Official Instructions (Not the easiest to follow)==
 [http://ampache.org/wiki/install:windows Offical Ampache Instructions for Windows]
