@@ -1,15 +1,13 @@
 #summary Links for Windows Server Installation
 
-== Official Instructions ==
-[http://ampache.org/wiki/install:windows Offical Ampache Instructions for Windows]
-
-
-
-== Videos ==
+== Tutorial Videos ==
 [http://www.youtube.com/watch?v=-S5JUC0iEVw Simple XAMPP with DynDns Tutorial]
 
-== Windows Vista Guide ==
-There is also step-by-step guide created by Fain, the creator of [http://www.precentral.net/homebrew-apps/ampachpre AmpachPre].
-
+== Windows Guide ==
 The guide was written for Windows Vista, XP and Windows 7 should be very similar:
 [http://nucleardecay.net/pre/Ampache-how-to-vista32bit.pdf Fains Windows Guide]
+  Credit: Fain, the creator of [http://www.precentral.net/homebrew-apps/ampachpre AmpachPre].
+
+
+== Official Instructions ==
+[http://ampache.org/wiki/install:windows Offical Ampache Instructions for Windows]
