@@ -1,5 +1,8 @@
-#summary Some pointers for common issues encountered while setting up ampache
+#summary Some pointers for common issues encountered while setting up Ampache
 #labels Featured
+=Table of Contents=
+<wiki:toc max_depth="3" />
+
 =Common Issues=
 
 === What do I put for a server URL? ===
