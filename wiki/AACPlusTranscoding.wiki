@@ -1,6 +1,6 @@
 #summary Guide to transcoding to HE-AAC+
 
-WARNING: This is a work in progress and is not complete yet.
+WARNING: This is a work in progress and is not yet 100% complete.
 
 = Introduction =
 ----
@@ -177,7 +177,15 @@ else
 }
 }}}
 
+=Troubleshooting=
+----
+==Enable Logging==
+[http://ampache.org/wiki/support#enabling_logging Enable Ampache Logging]
+==Run Command Outside of Ampache==
+Try streaming a file and look for the command Ampache generates in the log.
 
+Copy that command and change the last command in the pipe to output to a file.
+ Example:  mp3splt -qnf 'C:\Music\test.mp3' 00.00 03.56 -o - | lame --mp3input -S --decode - - | aacplusenc - test.aacp 48
 
 = Known Issues =
 ----
