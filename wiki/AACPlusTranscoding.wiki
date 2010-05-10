@@ -137,9 +137,11 @@ transcode_cmd_ogg       = "oggsplt -qn  -o - %FILE% %OFFSET% %EOF% | oggdec -Q -
 
   NOTE: These are all command line executable files you will need to download them and place them in a path which they can be run from.
 ===Setting up Windows===
-Command lines for Windows require the full system path to the executable for each item in the command chain.
+Command lines for Windows require the full system path to the executable for each item in the command chain.<br>
 *Example:* 
-{{{transcode_cmd_mp3 = "c:\ampache_tools\mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | c:\ampache_tools\lame --mp3input -S --decode - - | c:\ampache_tools\aacplusenc - - %SAMPLE%"}}} 
+{{{
+transcode_cmd_mp3 = "c:\ampache_tools\mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | c:\ampache_tools\lame --mp3input -S --decode - - | c:\ampache_tools\aacplusenc - - %SAMPLE%"
+}}} 
  
 Remember to save your changes!
 
