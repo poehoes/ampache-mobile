@@ -137,8 +137,9 @@ transcode_cmd_ogg       = "oggsplt -qn  -o - %FILE% %OFFSET% %EOF% | oggdec -Q -
 
   NOTE: These are all command line executable files you will need to download them and place them in a path which they can be run from.
 
-  Windows Example: Put them all in c:\ampache_tools add this path to your windows [http://www.computerhope.com/issues/ch000549.htm PATH] 
-
+  Note: Command lines for windows require the full system path to the executable for each item in the command chain.
+  Example: {{{transcode_cmd_mp3 = "c:\ampache_tools\mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | c:\ampache_tools\lame --mp3input -S --decode - - | c:\ampache_tools\aacplusenc - - %SAMPLE%"}}} 
+ 
 Remember to save your changes!
 
 == Step 3: Change your Ampache Settings ==
