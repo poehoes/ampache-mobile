@@ -23,6 +23,13 @@ MainmenuAssistant = Class.create({
         
         AmpacheMobile.audioPlayer.setNumBuffers(AmpacheMobile.Account.NumBuffers);
         
+       
+        
+        for(var j=0;j<StageAssistant.navMenu.items.length;j++)
+        {
+            StageAssistant.navMenu.items[j].disabled = false;
+        }
+        
     },
 
     setup: function() {
@@ -179,6 +186,13 @@ MainmenuAssistant = Class.create({
         
         AmpacheMobile.ampacheServer.disconnect();
         AmpacheMobile.Account = null;
+        
+                for(var j=0;j<StageAssistant.navMenu.items.length;j++)
+        {
+            StageAssistant.navMenu.items[j].disabled = true;
+        }
+
+        
         Mojo.Log.info("<-- ArtistsAssistant.prototype.cleanup");
     },    
 
@@ -200,13 +214,20 @@ MainmenuAssistant = Class.create({
         var params ={};
         var searchScene = {transition: AmpacheMobile.Transition, name: "search-menu"};
         
+        
         if(event.type !=="mojo-tap")
-        {    
-            params.key  = String.fromCharCode(event.originalEvent.keyCode);
-            var myRegxp = /([a-zA-Z0-9]+)$/;
-            if(myRegxp.test(params.key) === true)
-            { 
-                this.controller.stageController.pushScene(searchScene, params);
+        {
+            if(event.originalEvent.metaKey === false &&
+               event.originalEvent.altKey === false &&
+               event.originalEvent.ctrlKey === false)
+            {
+            
+                params.key  = String.fromCharCode(event.originalEvent.keyCode);
+                var myRegxp = /([a-zA-Z0-9]+)$/;
+                if(myRegxp.test(params.key) === true)
+                { 
+                    this.controller.stageController.pushScene(searchScene, params);
+                }
             }
         }
         else

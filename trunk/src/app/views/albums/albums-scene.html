@@ -41,7 +41,18 @@
         <div id="thick-border" class="thick-bottom-border" style="display:block;"></div>
     </div>
     
-    <div id="albumsFilterList" x-mojo-element="FilterList">
+
+    
+    <div id="listContainer" style=" width:100%;top: 110px; bottom: 0px; position:fixed;" >
+	
+	<div style="height:100%;" x-mojo-element="Scroller">
+		<div x-mojo-element="FilterList" id="albumsFilterList"">
+		</div>
+	</div>
+	
+    </div>
+
+    <div id="albumsFilterListNoHeader" x-mojo-element="FilterList">
     </div>
     
     

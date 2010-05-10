@@ -32,7 +32,11 @@ NewUsersAssistant.prototype.activate = function(event) {
 		if(this.type === "videos")
 		{
 			scroller.scrollTop = document.getElementById('videos').offsetTop-50;
-		}	
+		}
+		else if(this.type === "account")
+		{
+			scroller.scrollTop = document.getElementById('account').offsetTop-50;
+		}
 	}
 };
 

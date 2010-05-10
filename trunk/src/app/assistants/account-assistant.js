@@ -32,7 +32,7 @@ AccountAssistant = Class.create({
         /* add event handlers to listen to events from widgets */
         Mojo.Log.info("Account assistant activating");
 
-         this.accountTypeModel = {
+        this.accountTypeModel = {
             value: 0,
             disabled: false
         };
@@ -54,36 +54,48 @@ AccountAssistant = Class.create({
         this.accountTypeModel);
 
         this.numBuffTypeModel = {
-                value:  this.Account.NumBuffers,
-                disabled: false                
-        };        
+            value: this.Account.NumBuffers,
+            disabled: false
+        };
 
-        this.controller.setupWidget("num-buffers-selector",
-            this.attributes = {
-                labelPlacement: Mojo.Widget.labelPlacementLeft,
-                label: "# of Buffers",
-                choices: [
-                    {label: "1", value:1},
-                     {label: "2", value:2},
-                      {label: "3", value:3},
-                       {label: "4", value:4},
-                        {label: "5", value:5}
-                    
-                ]
-            },this.numBuffTypeModel
-           
-        ); 
-
-        this.controller.setupWidget("apache-timeout",
-            this.attributes = {
-                //hintText: $L('Type Password')
-                charsAllow:this.IsNumeric
+        this.controller.setupWidget("num-buffers-selector", this.attributes = {
+            labelPlacement: Mojo.Widget.labelPlacementLeft,
+            label: "# of Buffers",
+            choices: [{
+                label: "1",
+                value: 1
             },
-            this.model = {
-                value: this.Account.ApacheTimeout
+            {
+                label: "2",
+                value: 2
+            },
+            {
+                label: "3",
+                value: 3
+            },
+            {
+                label: "4",
+                value: 4
+            },
+            {
+                label: "5",
+                value: 5
             }
+
+            ]
+        },
+        this.numBuffTypeModel
+
         );
-        
+
+        this.controller.setupWidget("apache-timeout", this.attributes = {
+            //hintText: $L('Type Password')
+            charsAllow: this.IsNumeric
+        },
+        this.model = {
+            value: this.Account.ApacheTimeout
+        });
+
         //**********************************************************************************************************************
         //Setup Allow 2G Buffering Toggle
         // Setup toggle widget and  listen  for when it is changed
@@ -105,17 +117,12 @@ AccountAssistant = Class.create({
         };
 
         this.controller.setupWidget('allow-2G-toggle', this.allow2GAttr, this.allow2GModel);
-        
-        
-       
-        
-        if(this.Account.ArchivedArtists && (this.Account.ArchivedArtists.numItems !== ""))
-        {
+
+        if (this.Account.ArchivedArtists && (this.Account.ArchivedArtists.numItems !== "")) {
             this.controller.get("delete-artists").innerHTML = "Delete " + this.Account.ArchivedArtists.numItems + " Artists";
         }
 
-        if(this.Account.ArchivedAlbums && (this.Account.ArchivedAlbums.numItems !== ""))
-        {
+        if (this.Account.ArchivedAlbums && (this.Account.ArchivedAlbums.numItems !== "")) {
             this.controller.get("delete-albums").innerHTML = "Delete " + this.Account.ArchivedAlbums.numItems + " Artists";
         }
 
@@ -123,7 +130,6 @@ AccountAssistant = Class.create({
         //{
         //    this.controller.get("delete-all").innerHTML = "Delete All";
         //}
-
 
         this.context = this;
 
@@ -168,6 +174,17 @@ AccountAssistant = Class.create({
 
         Mojo.Event.listen(this.controller.get('btnTestConnection'), Mojo.Event.tap, this.callStartTest.bind(this));
 
+        this.controller.setupWidget('btnAccountHelp', this.atts = {
+            //type: Mojo.Widget.button
+        },
+        this.helpModel = {
+            buttonLabel: 'Account Help',
+            buttonClass: 'primary',
+            disabled: false
+        });
+
+        this.controller.listen('btnAccountHelp', Mojo.Event.tap, this.gotoAccountHelp.bind(this));
+
         this.controller.listen("num-buffers-selector", Mojo.Event.propertyChange, this.numBuffersChanged.bindAsEventListener(this));
 
         this.controller.listen("AccountNameField", Mojo.Event.propertyChange, this.changeAccountName.bindAsEventListener(this));
@@ -176,8 +193,6 @@ AccountAssistant = Class.create({
         this.controller.listen("userNameField", Mojo.Event.propertyChange, this.changeUserName.bindAsEventListener(this));
         this.controller.listen("apache-timeout", Mojo.Event.propertyChange, this.changeApacheTimeout.bindAsEventListener(this));
         this.controller.listen("allow-2G-toggle", Mojo.Event.propertyChange, this.allow2GChanged.bindAsEventListener(this));
-
-    
 
         //*****************************************************************************
         // Fetch Size Setup
@@ -222,7 +237,7 @@ AccountAssistant = Class.create({
         this.controller.setupWidget('art-toggle', this.tattr, this.tModel);
         this.ExtraArtPressedHandler = this.ExtraArtPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('art-toggle'), Mojo.Event.propertyChange, this.ExtraArtPressedHandler);
-        
+
         //******************************************************************************************************************
         //Setup Stall Recovery Toggle
         this.stall_Model = {
@@ -234,7 +249,7 @@ AccountAssistant = Class.create({
         this.controller.setupWidget('stall-toggle', this.tattr, this.stall_Model);
         this.StallPressedHandler = this.StallPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('stall-toggle'), Mojo.Event.propertyChange, this.StallPressedHandler);
-        
+
         //******************************************************************************************************************
         //Setup Stall Recovery Toggle
         this.spaces_Model = {
@@ -246,36 +261,32 @@ AccountAssistant = Class.create({
         this.controller.setupWidget('spaces-toggle', this.tattr, this.spaces_Model);
         this.SpacesPressedHandler = this.SpacesPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('spaces-toggle'), Mojo.Event.propertyChange, this.SpacesPressedHandler);
-        
-        
+
         this.screenChangeHandler = this.screenChangeHandler.bind(this);
         Mojo.Event.listen(this.controller.get('accountScreens'), Mojo.Event.propertyChange, this.screenChangeHandler);
         this.screenChangeHandler();
-        
+
         //this.deleteAllHandler = this.deleteAllHandler.bindAsEventListener(this);
         //this.controller.listen(this.controller.get('deleteAll'), Mojo.Event.tap, this.deleteAllHandler);
-        
         this.deleteArtistsHandler = this.deleteArtistsHandler.bindAsEventListener(this);
         this.controller.listen(this.controller.get('deleteArtists'), Mojo.Event.tap, this.deleteArtistsHandler);
-        
+
         this.deleteAlbumnHandler = this.deleteAlbumnHandler.bindAsEventListener(this);
         this.controller.listen(this.controller.get('deleteAlbums'), Mojo.Event.tap, this.deleteAlbumnHandler);
-        
 
     },
 
-     IsNumeric:function(val) {
+    IsNumeric: function(val) {
 
-    if ((val < 48) || (val> 57)) {
+        if ((val < 48) || (val > 57)) {
 
-          return false;
+            return false;
 
-     }
+        }
 
-     return true;
+        return true;
 
     },
-
 
     ValidSettings: function(account) {
         var retVal = true;
@@ -301,18 +312,18 @@ AccountAssistant = Class.create({
         }
         return retVal;
     },
-    
+
     StallPressed: function(event) {
         //Display the value of the toggle
         this.Account.StallDetection = event.value;
     },
-    
-    SpacesPressed:function(event){
+
+    SpacesPressed: function(event) {
         //Display the value of the toggle
         this.Account.SpacesWorkAround = event.value;
-       
+
     },
-    
+
     ExtraArtPressed: function(event) {
         //Display the value of the toggle
         if (event.value === true) {
@@ -340,7 +351,6 @@ AccountAssistant = Class.create({
 
     handleCommand: function(event) {
         //test for Mojo.Event.back, not Mojo.Event.command..
-        
         if (event.type === Mojo.Event.back) {
             event.preventDefault();
             event.stopPropagation();
@@ -366,7 +376,7 @@ AccountAssistant = Class.create({
                 }
                 this.popAccount(this.Account);
             }
-        } 
+        }
     },
 
     callStartTest: function() {
@@ -449,8 +459,7 @@ AccountAssistant = Class.create({
          */
     },
 
-    numBuffersChanged:function()
-    {
+    numBuffersChanged: function() {
         this.Account.NumBuffers = event.value;
     },
 
@@ -467,45 +476,42 @@ AccountAssistant = Class.create({
 
     changeAccountName: function(event) {
         Mojo.Log.info("Account Name Changed; value = ", event.value);
-        
+
         AmpacheMobile.settingsManager.discardSavedData(this.Account);
-        
+
         this.Account.AccountName = event.value;
         var date = new Date();
-        this.Account.uniqueID = this.Account.AccountName + "_" +date.getTime();
-             
+        this.Account.uniqueID = this.Account.AccountName + "_" + date.getTime();
+
     },
 
     changeURL: function(event) {
         Mojo.Log.info("Server URL Changed; value = ", event.value);
         AmpacheMobile.settingsManager.discardSavedData(this.Account);
-        
+
         this.Account.ServerURL = event.value;
     },
 
     changePassword: function(event) {
         Mojo.Log.info("Server Password Changed; value = ", event.value);
         //AmpacheMobile.settingsManager.discardSavedData(this.Account);
-        
         this.Account.Password = event.value;
     },
 
     changeUserName: function(event) {
         Mojo.Log.info("Server UserName Changed; value = ", event.value);
         AmpacheMobile.settingsManager.discardSavedData(this.Account);
-        
+
         this.Account.UserName = event.value;
     },
 
-    changeApacheTimeout:function(event)
-    {
+    changeApacheTimeout: function(event) {
         this.Account.ApacheTimeout = Number(event.value);
     },
-    
-    allow2GChanged: function(event) {   
+
+    allow2GChanged: function(event) {
         this.Account.Allow2GBuffer = event.value;
     },
-    
 
     activate: function(event) {
         /* put in event handlers here that should only be in effect when this scene is active. For
@@ -546,6 +552,8 @@ AccountAssistant = Class.create({
         this.controller.stopListening("allow-2G-toggle", Mojo.Event.propertyChange, this.allow2GChanged.bindAsEventListener(this));
         Mojo.Event.stopListening(this.controller.get('spaces-toggle'), Mojo.Event.propertyChange, this.SpacesPressedHandler);
 
+        this.controller.stopListening('btnAccountHelp', Mojo.Event.tap, this.gotoAccountHelp);
+
     },
 
     //deleteAllHandler:function()
@@ -555,8 +563,7 @@ AccountAssistant = Class.create({
     //    this.controller.get("delete-albums").innerHTML = "No Saved Albums";
     //    //this.controller.get("delete-all").innerHTML = "No Saved Items";
     //},
-    deleteArtistsHandler:function()
-    {
+    deleteArtistsHandler: function() {
         AmpacheMobile.settingsManager.DumpSavedArtists(this.Account);
         this.controller.get("delete-artists").innerHTML = "No Saved Artists";
         //if(this.controller.get("delete-albums").innerHTML.match("No Saved"))
@@ -564,21 +571,30 @@ AccountAssistant = Class.create({
         //    this.controller.get("delete-all").innerHTML = "No Saved Items";
         //}
     },
-    deleteAlbumnHandler:function()
-    {
+    deleteAlbumnHandler: function() {
         AmpacheMobile.settingsManager.DumpSavedAlbums(this.Account);
         this.controller.get("delete-albums").innerHTML = "No Saved Albums";
         //if(this.controller.get("delete-artists").innerHTML.match("No Saved"))
         //{
         //    this.controller.get("delete-all").innerHTML = "No Saved Items";
         //}
-        
     },
 
-    screenChangeHandler:function()
-    {
-        switch(this.accountTypeModel.value){
-            case 0:
+    gotoAccountHelp: function() {
+        this.controller.stageController.pushScene({
+            transition: AmpacheMobile.Transition,
+            name: "new-users"
+        },
+        {
+            type: "account"
+
+        });
+
+    },
+
+    screenChangeHandler: function() {
+        switch (this.accountTypeModel.value) {
+        case 0:
             this.controller.get('account-settings').style.display = 'block';
             this.controller.get('extra-settings').style.display = 'none';
             this.controller.get('saved-info').style.display = 'none';
@@ -594,9 +610,8 @@ AccountAssistant = Class.create({
             this.controller.get('extra-settings').style.display = 'none';
             this.controller.get('saved-info').style.display = 'block';
             break;
-        }    
+        }
     },
-
 
     // This function will popup a dialog, displaying the message passed in.
     showDialogBox: function(title, message) {

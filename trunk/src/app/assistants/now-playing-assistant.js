@@ -1321,10 +1321,8 @@ NowPlayingAssistant = Class.create({
     appMenuModel: {
         visible: true,
         items: [
-        { label: "Preferences...",
-          command:"doPref-cmd",
-          shortcut:'p'
-            },        
+       StageAssistant.preferencesMenu,
+              
         /*{
             label: "Stream Info",
             command: "doStreamingInfo-cmd"
@@ -1334,6 +1332,8 @@ NowPlayingAssistant = Class.create({
             command: "delete-np-cmd",
             shortcut:'d'
         },
+        
+        StageAssistant.navMenu,
         
         //{
         //    label: "Buffer Info",

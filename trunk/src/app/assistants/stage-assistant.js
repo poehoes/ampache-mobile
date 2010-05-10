@@ -111,6 +111,22 @@ StageAssistant.preferencesMenu = {
         shortcut: "p"
     };
 
+StageAssistant.navMenu = {
+    label: "Navigation",
+    disabled: true,
+    items: [{
+        label: "Goto Home Screen",
+        command: "doGoHome-cmd",
+        shortcut: "h",
+        disabled: true
+    },
+    {
+        label: "Goto Search Screen",
+        command: "doGoSearch-cmd",
+        shortcut: "s",
+        disabled: true
+    }]}
+    ;
 
 
 
@@ -121,6 +137,7 @@ StageAssistant.appMenuModel = {
     //{label: "Test Connection", command: "doTest-cmd"},
     StageAssistant.preferencesMenu,
     StageAssistant.nowPlayingMenu,
+    StageAssistant.navMenu,
     StageAssistant.helpMenu,
     StageAssistant.aboutApp
     ]
@@ -149,6 +166,8 @@ StageAssistant.prototype.onFocusHandler = function() {
             });
         }
     } catch(ex) {}
+    
+    AmpacheMobile.audioPlayer.FocusRegained();
     
     AmpacheMobile.focus = true;
 };
@@ -290,6 +309,29 @@ StageAssistant.prototype.handleCommand = function(event) {
             }
             break;
         
+        case "doGoHome-cmd":
+            var controller = Mojo.Controller.getAppController().getFocusedStageController();
+            var scenes = controller.getScenes();
+
+            for (var i = (scenes.length - 2); i !== 0; i--) {
+                controller.popScene(scenes[i]);
+            }
+            
+            break;
+        
+        case "doGoSearch-cmd":
+            var controller = Mojo.Controller.getAppController().getFocusedStageController();
+            var scenes = controller.getScenes();
+
+            for (var i = (scenes.length - 2); i !== 0; i--) {
+                controller.popScene(scenes[i]);
+            }
+            var params ={};
+            var searchScene = {transition: AmpacheMobile.Transition, name: "search-menu"};
+            controller.pushScene(searchScene, params);
+            
+            break;
+            
         
         case "delete-np-cmd":
             if (AmpacheMobile.audioPlayer.hasPlayList === true) {

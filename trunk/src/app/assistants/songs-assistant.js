@@ -86,15 +86,24 @@ SongsAssistant = Class.create({
             filterFunction: this.itemsHelper.FilterList.bind(this.itemsHelper),
             itemTemplate: template,
             hasNoWidgets:true
+            
             //dividerTemplate: 'artist-albums/divider',
             //dividerFunction: this.dividerFunc.bind(this),
         };
+
+        if(this.Type==="random")
+        {
+            this.grabSize = this.Expected_items;
+            attributes.addItemLabel = "Grab More " + this.grabSize + " Songs";
+        }
 
         this.listModel = {
             disabled: false,
             items: this.itemsHelper.ItemsList
         };
         this.controller.setupWidget('songsList', attributes, this.listModel);
+        
+
 
         //*********************************************************************************************************
         // Items Helper
@@ -136,6 +145,14 @@ SongsAssistant = Class.create({
         this.jumpSelector = this.jumpSelect.bindAsEventListener(this);
         Mojo.Event.listen(this.header, Mojo.Event.tap, this.jumpSelector);
         
+        
+        if(this.Type==="random")
+        {
+            this.listAddHandler = this.listAddHandler.bindAsEventListener(this);
+            Mojo.Event.listen(this.controller.get('songsList'), Mojo.Event.listAdd, this.listAddHandler);
+        }
+        
+        
     },
 
     cleanup: function(event) {
@@ -144,6 +161,12 @@ SongsAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.hold, this.holdHandler);
         Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.jumpSelector);
         Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
+        
+        if(this.listAddHandler)
+        {
+            Mojo.Event.stopListening(this.controller.get('songsList'), Mojo.Event.listAdd, this.listAddHandler);    
+        }
+        
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
@@ -295,9 +318,20 @@ SongsAssistant = Class.create({
         {
             var title = this.controller.get('title');
             title.innerHTML = this.itemsHelper.ItemsList[0].album;
-        }   
+        }
+        
+        if(this.Type === "random")
+        {
+            var songsList =  this.controller.get("songsList");
+            this.controller.get("songsList").mojo.showAddItem(true);
+        }
     },
-
+    
+    listAddHandler:function()
+    {
+        this.itemsHelper.filterList.mojo.showAddItem(false);
+        this.itemsHelper.GetMoreItems(this.grabSize);
+    },
 
     handleShuffleAll: function(event) {
         if (this.heldPending === true) {
@@ -778,10 +812,14 @@ SongsAssistant = Class.create({
             return 1;
         }
     },
-
+    
+    ready: function(event) {
+        this.controller.get("songsList").mojo.showAddItem(false);
+    },
 
     activate: function(event) {
         this.itemsHelper.Activate();
+        
     },
 
     deactivate: function(event) {

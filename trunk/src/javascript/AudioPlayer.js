@@ -816,23 +816,32 @@ AudioPlayer = Class.create({
     playTrack: function(index) {
         if (this.bufferMutex === false) {
             
+            var current = this.playList.current;
             if (this.playList.moveToSong(index) === true) {
                 
-                if(this.player && !this.play_change_interval){
-                    this.pause();
-                    this._seek(0);
-                    this.player.ampacheType = AudioType.buffer;
-                    this.timePercentage = 0;
-                    this.ticksUnchanged = 0;
-                    this.UIUpdatePlaybackTime();
+                if((current === this.playList.current) && (this.timePercentage !== 0) && (this.player.paused===true))
+                {
+                    this.play();
                 }
+                else
+                {
                 
-                
-                this.UIUpdateSongInfo(this.playList.getCurrentSong());
-                
-                
-                this.kill_play_change_interval();
-                this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
+                    if(this.player && !this.play_change_interval){
+                        this.pause();
+                        this._seek(0);
+                        this.player.ampacheType = AudioType.buffer;
+                        this.timePercentage = 0;
+                        this.ticksUnchanged = 0;
+                        this.UIUpdatePlaybackTime();
+                    }
+                    
+                    
+                    this.UIUpdateSongInfo(this.playList.getCurrentSong());
+                    
+                    
+                    this.kill_play_change_interval();
+                    this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
+                }
             }
         }
     },
@@ -1537,6 +1546,43 @@ AudioPlayer = Class.create({
             this.UIHandler.printDebug(event, isPlayer);
         }
     },
+
+
+    FocusRegained:function()
+    {
+        if(this.timePercentage !== 0 && this.player.paused===true)
+        {
+            var controller = Mojo.Controller.getAppController().getFocusedStageController().topScene();
+
+                controller.showAlertDialog({
+                    onChoose: this.FocusRegainedAnswer.bind(this),
+                    title: $L("Resume Playback?"),
+                    message: "Playback was paused, would you like to resume?",
+                    choices: [{
+                        label: $L('Resume'),
+                        value: 'resume',
+                        type: 'affirmative'
+                    },
+                    {
+                        label: $L('Cancel'),
+                        value: '',
+                        type: 'primary'
+                    }]
+                });
+        }
+    
+    },
+
+    FocusRegainedAnswer:function(answer)
+    {
+        if(answer === "resume")
+        {
+            this.play();
+        }
+        
+        
+    },
+
 
     setNowPlaying: function(UIHandler) {
         this.UIHandler = UIHandler;
