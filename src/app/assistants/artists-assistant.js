@@ -71,6 +71,8 @@ ArtistsAssistant = Class.create({
         var title = this.controller.get('title');
         title.innerHTML = this.SceneTitle;
 
+        this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
+
         //*********************************************************************
         // Setup Header Tap
         this.header = this.controller.get('header');
@@ -96,6 +98,13 @@ ArtistsAssistant = Class.create({
             disabled: false,
             items: this.itemsHelper.ItemsList
         };
+        
+        if(this.type==="random")
+        {
+            this.grabSize = this.ExpectedArtists;
+            attributesFilter.addItemLabel = "Grab More " + this.grabSize + " artists";
+        }
+        
         this.controller.setupWidget('artistFilterList', attributesFilter, this.listModel);
 
         //*********************************************************************************************************
@@ -118,7 +127,7 @@ ArtistsAssistant = Class.create({
         };
         this.itemsHelper.setup(params);
 
-        this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
+        
 
         //***************************************************************************************
         //Events
@@ -128,6 +137,14 @@ ArtistsAssistant = Class.create({
         //Hold Handler
         this.listHeldHandler = this.listHeldHandler.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.hold, this.listHeldHandler);
+        
+        if(this.type==="random")
+        {
+            this.listAddHandler = this.listAddHandler.bindAsEventListener(this);
+            Mojo.Event.listen(this.controller.get('artistFilterList'), Mojo.Event.listAdd, this.listAddHandler);
+        }
+
+        
     },
 
     imgEmpty: "images/player/empty.png",
@@ -256,6 +273,12 @@ ArtistsAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.hold, this.listHeldHandler);
         Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.divSelector);
         Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
+        
+        if(this.listAddHandler)
+        {
+            Mojo.Event.stopListening(this.controller.get('artistFilterList'), Mojo.Event.listAdd, this.listAddHandler);    
+        }
+        
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
     },
@@ -414,8 +437,18 @@ ArtistsAssistant = Class.create({
         {
             AmpacheMobile.settingsManager.SaveArtists(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature());
         }
+        
+        if(this.type === "random")
+        {
+            this.itemsHelper.filterList.mojo.showAddItem(true);
+        }
     },
 
+    listAddHandler:function()
+    {
+        this.itemsHelper.filterList.mojo.showAddItem(false);
+        this.itemsHelper.GetMoreItems(this.grabSize);
+    },
 
     listTapHandler: function(event) {
         Mojo.Log.info("--> listTapHandler", event.item.name);
@@ -516,6 +549,10 @@ ArtistsAssistant = Class.create({
         //}
         
        return "";
+    },
+    
+    ready: function(event) {
+        this.itemsHelper.filterList.mojo.showAddItem(false);
     },
 
     activate: function(event) {

@@ -431,6 +431,12 @@ a:link {
     padding: 0 15px 10px 15px;
 }
 
+#albumsFilterListNoHeader .artistAlbumTitle
+{
+    /*color: white;*/
+    padding: 0 15px 10px 15px;
+}
+
 .artistAlbumDescRight
 {
     float: right;
@@ -457,7 +463,12 @@ a:link {
     font-size:small;
 }
 
-
+#albumsFilterListNoHeader .artistAlbumDesc {
+     /*color: white;*/
+    margin-top: -10px;
+    padding: 0 15px 10px 15px;
+    font-size:small;
+}
 
 .palm-menu.view-menu.palm-default,
 .palm-menu.command-menu.palm-default,

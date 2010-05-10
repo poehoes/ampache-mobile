@@ -224,6 +224,20 @@ ItemsHelper = Class.create({
         }
     },
 
+
+    GetMoreItems:function(howmany)
+    {
+        this.ExpectedItems += howmany;
+        this.percentDone = this.ItemsList.length / this.ExpectedItems;
+        this.loadProgress(this.percentDone * 100);
+        
+        this.controller.setMenuVisible(Mojo.Menu.commandMenu, true);
+        this.LoadingFinished = false;
+        this.RestartRequest();
+   
+    },
+
+
     IsFiltered: function() {
         if ((this.filterString === "") || (!this.filterString)) {
             return false;
@@ -517,9 +531,9 @@ ItemsHelper = Class.create({
             }
 
             // Ignore this update if the percentage is lower than where we're showing
-            if (image < this.currLoadProgressImage) {
-                return;
-            }
+            //if (image < this.currLoadProgressImage) {
+            //    return;
+            //}
 
             // Has the progress changed?
             if (this.currLoadProgressImage != image) {

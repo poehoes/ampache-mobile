@@ -121,11 +121,21 @@ AlbumsAssistant = Class.create({
 
         if (!this.isArtistView) {
             this.controller.get('shuffleForArtist').hide();
+            this.controller.get('listContainer').hide();
+            
+            this.albumsFilterList = "albumsFilterListNoHeader";
+            
+        }
+        else
+        {
+            this.albumsFilterList = "albumsFilterList";
         }
         
         if(this.FromDate)
         {
             this.controller.get('shuffleForArtist').show();
+
+            
             
         }
 
@@ -160,64 +170,72 @@ AlbumsAssistant = Class.create({
             }
         }
 
+        if(this.type==="random")
+        {
+            this.grabSize = this.ExpectedAlbums;
+            listAttributes.addItemLabel = "Grab More " + this.grabSize + " Albums";
+        }
+
+
         this.listModel = {
             disabled: false,
             items: this.itemsHelper.ItemsList
         };
 
-        this.controller.setupWidget('albumsFilterList', listAttributes, this.listModel);
+        this.controller.setupWidget(this.albumsFilterList, listAttributes, this.listModel);
 
         //var toggleAlpaha = (AlbumSortType.alpha == this.sortType);
         //var toggleYear =(AlbumSortType.year == this.sortType);
         //var toggleArtist = (AlbumSortType.artist == this.sortType)
         //Setup App Menu
-        var appMenuAttr = {
-            omitDefaultItems: true
-        };
+        //var appMenuAttr = {
+        //    omitDefaultItems: true
+        //};
+        //
+        //this.sortItems = [{
+        //    label: "Alphabetical",
+        //    command: "doSort-alpha",
+        //    shortcut:'a'
+        //    /*, toggleCmd: toggleAlpaha*/
+        //},
+        //{
+        //    label: "Year",
+        //    command: "doSort-year",
+        //    shortcut:'y'
+        //    /*,  toggleCmd: toggleYear*/
+        //},
+        //{
+        //    label: "Artist",
+        //    command: "doSort-artist",
+        //    shortcut:'s'
+        //    /*, toggleCmd: toggleArtist*/
+        //}];
+        //
+        //this.appMenuModel = {
+        //    visible: true,
+        //    items: [{
+        //        label: "Preferences...",
+        //        command: "doPref-cmd",
+        //        shortcut:"p"
+        //    },
+        //    StageAssistant.nowPlayingMenu,
+        //    {
+        //        label: "Sort",
+        //        items: this.sortItems
+        //    },
+        //    StageAssistant.goHomeMenu,
+        //    StageAssistant.helpMenu,
+        //    StageAssistant.aboutApp
+        //    ]
+        //};
 
-        this.sortItems = [{
-            label: "Alphabetical",
-            command: "doSort-alpha",
-            shortcut:'a'
-            /*, toggleCmd: toggleAlpaha*/
-        },
-        {
-            label: "Year",
-            command: "doSort-year",
-            shortcut:'y'
-            /*,  toggleCmd: toggleYear*/
-        },
-        {
-            label: "Artist",
-            command: "doSort-artist",
-            shortcut:'s'
-            /*, toggleCmd: toggleArtist*/
-        }];
-
-        this.appMenuModel = {
-            visible: true,
-            items: [{
-                label: "Preferences...",
-                command: "doPref-cmd",
-                shortcut:"p"
-            },
-            StageAssistant.nowPlayingMenu,
-            {
-                label: "Sort",
-                items: this.sortItems
-            },
-            StageAssistant.helpMenu,
-            StageAssistant.aboutApp
-            ]
-        };
-
-        this.controller.setupWidget(Mojo.Menu.appMenu, appMenuAttr, this.appMenuModel);
+        this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
 
         //this.TurnOnSpinner("Retrieving<br>Albums");
         var params = {
             controller: this.controller,
             //TurnOffSpinner: this.TurnOffSpinner.bind(this),
-            filterList: this.controller.get('albumsFilterList'),
+            filterList: this.controller.get(this.albumsFilterList),
             getItemsCallback: this.GetAlbums.bind(this),
             //ItemsList :this.AlbumList,
             //listModel: this.listModel,
@@ -234,10 +252,17 @@ AlbumsAssistant = Class.create({
         this.itemsHelper.setup(params);
 
         this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
-        Mojo.Event.listen(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.listen(this.controller.get(this.albumsFilterList), Mojo.Event.listTap, this.listTapHandler);
 
         this.allSongsHandler = this.handleShuffleAll.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('allSongs'), Mojo.Event.tap, this.allSongsHandler);
+
+         if(this.type==="random")
+        {
+            this.listAddHandler = this.listAddHandler.bindAsEventListener(this);
+            Mojo.Event.listen(this.controller.get(this.albumsFilterList), Mojo.Event.listAdd, this.listAddHandler);
+        }
+
 
         Mojo.Log.info("<-- setup");
 
@@ -250,15 +275,25 @@ AlbumsAssistant = Class.create({
         if (this.DisplayArtistInfo === true) {
             Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.divSelector);
         }
+        
+         if(this.listAddHandler)
+        {
+            Mojo.Event.stopListening(this.controller.get(this.albumsFilterList), Mojo.Event.listAdd, this.listAddHandler);    
+        }
+        
+        
         Mojo.Event.stopListening(this.header, Mojo.Event.hold, this.sortSelector);
         
-        Mojo.Event.stopListening(this.controller.get('albumsFilterList'), Mojo.Event.listTap, this.listTapHandler);
+        Mojo.Event.stopListening(this.controller.get(this.albumsFilterList), Mojo.Event.listTap, this.listTapHandler);
         Mojo.Event.stopListening(this.controller.get('allSongs'), Mojo.Event.tap, this.allSongsHandler);
         this.itemsHelper.cleanup();
         this.itemsHelper = null;
         Mojo.Log.info("<-- cleanup");
 
     },
+
+    
+
 
     imgEmpty: "images/player/empty.png",
     imgUp: "images/up.png",
@@ -393,8 +428,18 @@ AlbumsAssistant = Class.create({
         {
             AmpacheMobile.settingsManager.SaveAlbums(AmpacheMobile.Account, this.itemsHelper.ItemsList, AmpacheMobile.ampacheServer.getServerDataTimeSignature());
         }
+        
+        if(this.type === "random")
+        {
+            this.itemsHelper.filterList.mojo.showAddItem(true);
+        }
     },
 
+    listAddHandler:function()
+    {
+        this.itemsHelper.filterList.mojo.showAddItem(false);
+        this.itemsHelper.GetMoreItems(this.grabSize);
+    },
 
     listTapHandler: function(event) {
         Mojo.Log.info("--> listTapHandler");
@@ -660,11 +705,15 @@ AlbumsAssistant = Class.create({
         //Mojo.Log.info("A.year:", a.year, "b.year:", b.year, "revalue", retvalue);
         return retvalue;
     },
+    
+    ready: function(event) {
+        this.itemsHelper.filterList.mojo.showAddItem(false);
+    },
 
     activate: function(event) {
         this.itemsHelper.Activate();
-        this.appMenuModel.items[1].items[0].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
-        this.appMenuModel.items[1].items[1].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
+        //this.appMenuModel.items[1].items[0].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
+        //this.appMenuModel.items[1].items[1].disabled= !AmpacheMobile.audioPlayer.hasPlayList;
     },
 
     deactivate: function(event) {
