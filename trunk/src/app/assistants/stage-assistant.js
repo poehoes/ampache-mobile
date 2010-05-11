@@ -185,6 +185,8 @@ StageAssistant.prototype.setup = function() {
 
     window.document.addEventListener(Mojo.Event.deactivate, this.onBlurHandler.bind(this));
     window.document.addEventListener(Mojo.Event.activate, this.onFocusHandler.bind(this));
+    
+    AmpacheMobile.focus = true;
 };
 
 GotoPreferences = function() {
@@ -263,8 +265,13 @@ StageAssistant.prototype.handleCommand = function(event) {
             } else {
                 serverinfo += "Not Connected";
             }
-            serverinfo += "<br><br>webOS Build: " + Mojo.Environment.build;
-            serverinfo += "<br><br><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZKZ3GCDQUWY8&lc=US&item_name=Ampache%20Mobile&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'><img src='images/donate.gif' /></a>";
+            serverinfo += "</div></div>";
+            
+            serverinfo += "<div class='about'><BR><B>Device Info: </B><div class='about-details'>";
+            serverinfo += Mojo.Environment.DeviceInfo.modelName + " (" +Mojo.Environment.DeviceInfo.carrierName+")";
+            serverinfo += "<br>webOS:  <font class='about-details-data'>" + Mojo.Environment.DeviceInfo.platformVersion+" ("+ Mojo.Environment.build+")</font>";
+            
+            //serverinfo += "<br><br><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZKZ3GCDQUWY8&lc=US&item_name=Ampache%20Mobile&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'><img src='images/donate.gif' /></a>";
             
             serverinfo += "</div></div>";
 

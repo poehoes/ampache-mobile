@@ -173,7 +173,7 @@ AlbumsAssistant = Class.create({
         if(this.type==="random")
         {
             this.grabSize = this.ExpectedAlbums;
-            listAttributes.addItemLabel = "Grab More " + this.grabSize + " Albums";
+            listAttributes.addItemLabel = "Grab " + this.grabSize + " More Albums";
         }
 
 
