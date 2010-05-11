@@ -1069,7 +1069,7 @@ body.palm-default {
 
 .about
 {
-     font-size:smaller;   
+     font-size:smaller;
 }
 
 .about-details
@@ -1378,4 +1378,16 @@ margin-left:10px;
     width:100%;
     text-align:center;
     font-size:9px;
+}
+
+
+/**********************************************/
+/* Saved Search Scene
+/**********************************************/
+.listContainer
+{
+    width:100%;
+    top: 110px;
+    bottom: 0px;
+    position:fixed;
 }

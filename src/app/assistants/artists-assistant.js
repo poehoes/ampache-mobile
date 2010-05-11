@@ -102,7 +102,7 @@ ArtistsAssistant = Class.create({
         if(this.type==="random")
         {
             this.grabSize = this.ExpectedArtists;
-            attributesFilter.addItemLabel = "Grab More " + this.grabSize + " artists";
+            attributesFilter.addItemLabel = "Grab " + this.grabSize + " More Artists";
         }
         
         this.controller.setupWidget('artistFilterList', attributesFilter, this.listModel);

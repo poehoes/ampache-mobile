@@ -94,7 +94,7 @@ SongsAssistant = Class.create({
         if(this.Type==="random")
         {
             this.grabSize = this.Expected_items;
-            attributes.addItemLabel = "Grab More " + this.grabSize + " Songs";
+            attributes.addItemLabel = "Grab " + this.grabSize + " More Songs";
         }
 
         this.listModel = {

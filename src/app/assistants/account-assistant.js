@@ -461,6 +461,15 @@ AccountAssistant = Class.create({
 
     numBuffersChanged: function() {
         this.Account.NumBuffers = event.value;
+        
+        if(Mojo.Environment.DeviceInfo.modelNameAscii==="Pixi")
+        {
+            if(this.Account.NumBuffers>1)
+            {
+                this.showDialogBox("Warning", "Buffer Ahead my not work correctly on a Pixi, if you have issues set your buffers 1.");    
+            }
+        }
+        
     },
 
     //Logarithmic scale for the FetchSize

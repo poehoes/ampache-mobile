@@ -1557,6 +1557,7 @@ AudioPlayer = Class.create({
                 controller.showAlertDialog({
                     onChoose: this.FocusRegainedAnswer.bind(this),
                     title: $L("Resume Playback?"),
+                    allowHTMLMessage: true,
                     message: "Playback was paused, would you like to resume?",
                     choices: [{
                         label: $L('Resume'),
