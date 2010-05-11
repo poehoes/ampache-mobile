@@ -384,7 +384,7 @@ SettingsManager = Class.create({
                     this.settings.Accounts[i].ExtraCoverArt = false;
                 }
 
-                if (!this.settings.Accounts[i].StallDetection===null) {
+                if (this.settings.Accounts[i].StallDetection===null) {
                     this.settings.Accounts[i].StallDetection = true;
                 }
 

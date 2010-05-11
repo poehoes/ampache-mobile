@@ -204,7 +204,7 @@ ItemsHelper = Class.create({
                 }
                 if(this.ItemsList.length===0)
                 {
-                    this.ShowErrorAlert("No Items", "No Items have been processed, please retry your request.")
+                    this.ShowErrorAlert("No Items", "No Items have been processed, please retry your request.");
                 }
             }
     
