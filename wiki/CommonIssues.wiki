@@ -16,7 +16,7 @@ When have completed all setup you should be able to access your Ampache Server f
 
 = Ampache Mobile doesn't work =
 ----
-If Ampache Mobile starts up and seems to run's OK on your Pre, but you are unable to connect to your music server, use the test below to help you figure out why Ampache Mobile isn't working.
+If Ampache Mobile starts up and seems to run OK on your Pre, but you are unable to connect to your server, use the test below to help you figure out why Ampache Mobile isn't working.
 
 Please go through the steps before posting a "Ampache Mobile isn't working" post. 
 If you still have issues after doing this test then post which of the steps worked for you and which didn't.
