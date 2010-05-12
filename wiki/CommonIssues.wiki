@@ -2,6 +2,7 @@
 #labels Featured
 <wiki:toc max_depth="3" />
 = What do I put for a server URL? =
+----
 ==Have you setup a server?====
 ===No===
 Ampache Mobile is just an app that plays music from a server, an [http://ampache.org Ampache server].  You are responsible for setting up your own server.
@@ -10,6 +11,7 @@ Ampache Mobile is just an app that plays music from a server, an [http://ampache
 See Below
 
 = Ampache-mobile doesn't work =
+----
    * If Ampache-mobile starts up and seems to run's OK on your Pre, but you are unable to connect to your music server, use the test below to help you figure out why Ampache-mobile isn't working.
         # Are you running the correct version of Ampache?  Ampache Mobile requires at least version 3.5.1 of Ampache to operate correctly.  [http://ampache.org/download.php Download]
         # Can you access Ampache using a web browser from the machine it is running on (i.e http://localhost )?  If no, then it looks like your Ampache music server is not working yet.
@@ -22,6 +24,7 @@ See Below
    
 
 = Works on Wi-Fi but not EVDO =
+----
   * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most Wi-Fi routers have an internal IP pool and one External IP.  
     * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
     * To find your external address try this link [http://www.whatismyip.com/]
@@ -58,6 +61,7 @@ See Below
 
 
 = Transcoding not working  =
+----
   * Transcoding tools are not installed as part of Apache/XAMMP. You must download and install them separately. Here are some links to get you started :
      * LAME : http://en.wikipedia.org/wiki/LAME
      * FLAC : http://en.wikipedia.org/wiki/Flac
@@ -72,6 +76,7 @@ See Below
   * The Ampache page on Transcoding: http://ampache.org/wiki/config:transcode
 
 =Getting a lot of Audio Stalls=
+----
 There are a couple of things you can do for webOS audio stalls.
   # Properly configure your Apache timeout work around in the account editor.
     * Basically webOS can only download a finite amount of music, lets say its 12MB.  Once it hits this limit it puts downloading the track on hold until it needs more data to play it.
@@ -92,6 +97,7 @@ Timeout 600
     # Set Apache Timeout Workaround in Ampache Mobile to 600
 
 =Getting XML Errors Loading Lists=
+----
 ==Empty fields in your music tags==
     * webOS has a few issues with processing xml which are exposed when you have empty fields in your tags.  [https://developer.palm.com/distribution/viewtopic.php?f=80&t=6719 See webOS bug report]
     * A simple solution is to use an id3 tag editor to fill those fields in and rescan your music catalog.
