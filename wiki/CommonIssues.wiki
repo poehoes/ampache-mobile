@@ -33,6 +33,9 @@ Can you access Ampache using a web browser from another machine on your network 
 If no, it could be a firewall issue on the machine running the Amapche music server or maybe an Ampache Server ACL rule. 
     * See this [http://www.ehow.com/how_2317017_turn-off-firewalls-computer.html page] on "how to turn off your firewall".
     * Check out this [http://ampache.org/wiki/config:acl page] on Ampache ACL rules  
+
+ NOTE: If you don't have a second machine you can do this test on the machine running the server.  Just by changing the URL in your browser.
+
 ===Step 4: Pre Test===
 Can you access Ampache using a *web browser* via Wifi from your Pre (i.e. `http://192.168.x.x/ampache`)? 
 
