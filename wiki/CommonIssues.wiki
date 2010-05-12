@@ -28,22 +28,19 @@ Are you running the correct version of Ampache?  Ampache Mobile requires at leas
 ===Step 2: Server Running?===
 Can you access Ampache using a web browser from the machine it is running on (i.e `http://localhost/ampache` )?  If no, then it looks like your Ampache music server is not working yet.
 ===Step 3: Local Network Test===
+ NOTE: If you don't have a second machine you can do this test on the machine running the server.  Just by changing the URL in your browser.
+
 Can you access Ampache using a web browser from another machine on your network (i.e. `http://192.168.x.x/ampache`  or `10.x.x.x` or `172.16.x.x` )?  NOTE: This should be the IP Address of your server.
 
 If no, it could be a firewall issue on the machine running the Amapche music server or maybe an Ampache Server ACL rule. 
     * See this [http://www.ehow.com/how_2317017_turn-off-firewalls-computer.html page] on "how to turn off your firewall".
     * Check out this [http://ampache.org/wiki/config:acl page] on Ampache ACL rules  
-
- NOTE: If you don't have a second machine you can do this test on the machine running the server.  Just by changing the URL in your browser.
-
 ===Step 4: Pre Test===
 Can you access Ampache using a *web browser* via Wifi from your Pre (i.e. `http://192.168.x.x/ampache`)? 
 
 If no, it could be a firewall issue on the machine running the Amapche music server or maybe an ACL rule. See links above.
 ===Step 5: Ampache Mobile Test==
 Can you access Ampache using Ampache Mobile via Wifi (Using the same URL from Step 4) from your Pre?
-   
-
 = Works on Wifi but not EVDO =
 ----
   * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most Wi-Fi routers have an internal IP pool and one External IP.  
