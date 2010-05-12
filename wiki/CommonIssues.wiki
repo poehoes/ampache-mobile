@@ -8,7 +8,11 @@
 Ampache Mobile is just an app that plays music from a server, an [http://ampache.org Ampache server].  You are responsible for setting up your own server.
  * [AmpacheServerSetup Server Setup]
 ===Yes===
-See Below
+When have completed all setup you should be able to access your Ampache Server from anywhere in the world using your own personal web address (URL).
+
+ EXAMPLE: http://myhome.dyndns.org/ampache
+
+See Below for more information on how this works.
 
 = Ampache-mobile doesn't work =
 ----
