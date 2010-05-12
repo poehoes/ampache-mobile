@@ -3,16 +3,18 @@
 =Table of Contents=
 <wiki:toc max_depth="3" />
 
-=Common Issues=
 
-=== What do I put for a server URL? ===
+= What do I put for a server URL? =
+==Have you setup a server?====
+===No===
 Ampache Mobile is just an app that plays music from a server, an [http://ampache.org Ampache server].  You are responsible for setting up your own server.
  * [AmpacheServerSetup Server Setup]
+===Yes===
 
-=== Ampache-mobile doesn't work ===
+
+= Ampache-mobile doesn't work =
    * If Ampache-mobile starts up and seems to run's OK on your Pre, but you are unable to connect to your music server, use the test below to help you figure out why Ampache-mobile isn't working.
         # Are you running the correct version of Ampache?  Ampache Mobile requires at least version 3.5.1 of Ampache to operate correctly.  [http://ampache.org/download.php Download]
-        # Are you running the "current" version of WebOS?  Ampache Mobile version 0.7.0 will not work on webOS 1.1.3 (European version). The good news is that 0.6.0 will work and its available from [http://code.google.com/p/ampache-mobile/downloads/list here]
         # Can you access Ampache using a web browser from the machine it is running on (i.e http://localhost )?  If no, then it looks like your Ampache music server is not working yet.
         # Can you access Ampache using a web browser from another machine on your network (i.e. http://192.168.x.x  or 10.x.x.x or 172.16.x.x )? If no, it could be a firewall issue on the machine running the Amapche music server or maybe an Ampache Server ACL rule. 
            * See this [http://www.ehow.com/how_2317017_turn-off-firewalls-computer.html page] on "how to turn off your firewall".
@@ -22,7 +24,7 @@ Ampache Mobile is just an app that plays music from a server, an [http://ampache
    * You may want to go through the steps above before posting a "Ampache-mobile isn't working" post and then posting which of the above steps worked for you and which didn't.
    
 
-=== Works on Wi-Fi but not EVDO ===
+= Works on Wi-Fi but not EVDO =
   * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most Wi-Fi routers have an internal IP pool and one External IP.  
     * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
     * To find your external address try this link [http://www.whatismyip.com/]
@@ -58,7 +60,7 @@ Ampache Mobile is just an app that plays music from a server, an [http://ampache
      * click on "Create ACL"
 
 
-=== Transcoding not working  ===
+= Transcoding not working  =
   * Transcoding tools are not installed as part of Apache/XAMMP. You must download and install them separately. Here are some links to get you started :
      * LAME : http://en.wikipedia.org/wiki/LAME
      * FLAC : http://en.wikipedia.org/wiki/Flac
@@ -72,7 +74,7 @@ Ampache Mobile is just an app that plays music from a server, an [http://ampache
   * Use the Amapche log file...it can REALLY help you to figure out why things are not working.
   * The Ampache page on Transcoding: http://ampache.org/wiki/config:transcode
 
-===Getting a lot of Audio Stalls===
+=Getting a lot of Audio Stalls=
 There are a couple of things you can do for webOS audio stalls.
   # Properly configure your Apache timeout work around in the account editor.
     * Basically webOS can only download a finite amount of music, lets say its 12MB.  Once it hits this limit it puts downloading the track on hold until it needs more data to play it.
@@ -92,8 +94,7 @@ Timeout 600
     # Restart Apache, setting won't take effect until a restart.
     # Set Apache Timeout Workaround in Ampache Mobile to 600
 
-===Getting XML Errors Loading Lists===
-
+=Getting XML Errors Loading Lists=
   # Empty fields in your music tags.
     * webOS has a few issues with processing xml which are exposed when you have empty fields in your tags.  [https://developer.palm.com/distribution/viewtopic.php?f=80&t=6719 See webOS bug report]
     * A simple solution is to use an id3 tag editor to fill those fields in and rescan your music catalog.
