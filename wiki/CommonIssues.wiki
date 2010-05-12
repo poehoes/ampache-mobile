@@ -12,7 +12,7 @@ When have completed all setup you should be able to access your Ampache Server f
 
  EXAMPLE: http://myhome.dyndns.org/ampache
 
-See Below for more information on how this works.
+[CommonIssues#Ampache_Mobile_doesn't_work See Below] for more information on how this works.
 
 = Ampache Mobile doesn't work =
 ----
