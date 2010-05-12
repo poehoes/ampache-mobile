@@ -22,12 +22,12 @@ See Below for more information on how this works.
         # Can you access Ampache using a web browser from another machine on your network (i.e. http://192.168.x.x  or 10.x.x.x or 172.16.x.x )? If no, it could be a firewall issue on the machine running the Amapche music server or maybe an Ampache Server ACL rule. 
            * See this [http://www.ehow.com/how_2317017_turn-off-firewalls-computer.html page] on "how to turn off your firewall".
            * Check out this [http://ampache.org/wiki/config:acl page] on Ampache ACL rules  
-        # Can you access Ampache using a web browser via Wi-Fi from your Pre(i.e. http://192.168.x.x)? If no, it could be a firewall issue on the machine running the Amapche music server or maybe an ACL rule. See links above.
+        # Can you access Ampache using a web browser via Wifi from your Pre(i.e. http://192.168.x.x)? If no, it could be a firewall issue on the machine running the Amapche music server or maybe an ACL rule. See links above.
         # Can you access Ampache using Ampache-mobile via Wifi from your Pre?
    * You may want to go through the steps above before posting a "Ampache-mobile isn't working" post and then posting which of the above steps worked for you and which didn't.
    
 
-= Works on Wi-Fi but not EVDO =
+= Works on Wifi but not EVDO =
 ----
   * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most Wi-Fi routers have an internal IP pool and one External IP.  
     * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
@@ -50,7 +50,7 @@ See Below for more information on how this works.
             * To use the new door, add a ":port_number" to your URL. Example: http://music_server.dyndns.com:8080
             * Note: If you are using a secure server (i.e. https), you many need to also forward port 443 request.
     
-    * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most webservers default to running on port 80.  But you can choose any port you like as long as your configure your web server as such. 
+    * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most web servers default to running on port 80.  But you can choose any port you like as long as your configure your web server as such. 
   * Could be an ACL issue. Ampache uses Access Control Lists to restrict access to the music server (see http://ampache.org/wiki/config:acl). You will need to create a an ACL rule for EVDO access
      * Go to the Ampache Admin page
      * click on "Add ACL"
@@ -63,6 +63,12 @@ See Below for more information on how this works.
         * End =  255.255.255.255
      * click on "Create ACL"
 
+==Dynamic DNS==
+Once you have confirmed you can access your server over the internet using your IP address next stop is setting up dynamic DNS.
+
+Dynamic DNS monitors your homes IP address and updates a server when it changes.  Allowing you to not have to keep tabs on a constantly changing IP address.
+
+Here are some free sites that provide this service.  [http://www.google.com/search?q=free+dynamic+dns Dynamic DNS]
 
 = Transcoding not working  =
 ----
@@ -75,7 +81,7 @@ See Below for more information on how this works.
      * ALAC : http://en.wikipedia.org/wiki/Alac
   * If things are not working, look at the Ampache log file on the music server for the command Ampache is running. Copy it and try to run it on the command line. [http://ampache.org/wiki/support#enabling_logging Enable Logging]
   * You set the default sample rate on the Ampache Admin page-> streaming. It is called "Transcode Bitrate".
-  * The ";" is a comment character in the Aampache configuration file. Everything on the line after it is a comment and will not be executed. By default most transcoding commands are commented out -- they will not run.
+  * The ";" is a comment character in the Ampache configuration file. Everything on the line after it is a comment and will not be executed. By default most transcoding commands are commented out -- they will not run.
   * Use the Amapche log file...it can REALLY help you to figure out why things are not working.
   * The Ampache page on Transcoding: http://ampache.org/wiki/config:transcode
 
@@ -105,7 +111,7 @@ Timeout 600
 ==Empty fields in your music tags==
     * webOS has a few issues with processing xml which are exposed when you have empty fields in your tags.  [https://developer.palm.com/distribution/viewtopic.php?f=80&t=6719 See webOS bug report]
     * A simple solution is to use an id3 tag editor to fill those fields in and rescan your music catalog.
-      * For Artists: Amapache Mobile uses Name only from the tag
+      * For Artists: Ampache Mobile uses Name only from the tag
       * For Albums: Its Artist, Album, Year and Genre (optional) 
 ==Corrupt data inside tags==
     * Sometimes music tags can get corrupt.  An easy way to spot this corruption is to browse your collection with Ampache.  If you notice any strange characters investigate the tag with a tag editor, I'd even just go ahead and rewrite them to the file.  Once complete rescan your catalog.
