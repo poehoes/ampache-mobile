@@ -1,5 +1,17 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
+===Version 0.9.5 (05/11/2010)===
+*Improvements*
+----
+ * Navigation in App Menu, Jump to the Home and Search Screens from any Screen
+ * 'Shuffle All' stays at the top of lists, no more scrolling back up for it.
+ * Will prompt to restart music if you navigate away while paused, happens all the time when I get calls
+ * Added Grab more items from Random lists
+*Bug Fixes*
+----
+ * Banner Notifications showing up while App in focus
+ * Stall detection always off
+
 ===Version 0.9.4 (05/03/2010)===
 *New Features*
 ----
