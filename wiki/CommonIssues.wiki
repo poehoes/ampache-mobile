@@ -70,6 +70,8 @@ Dynamic DNS monitors your homes IP address and updates a server when it changes.
 
 Here are some free sites that provide this service.  [http://www.google.com/search?q=free+dynamic+dns Dynamic DNS]
 
+Most people prefer DynDns.org
+
 = Transcoding not working  =
 ----
   * Transcoding tools are not installed as part of Apache/XAMMP. You must download and install them separately. Here are some links to get you started :
