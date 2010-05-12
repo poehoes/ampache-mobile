@@ -30,7 +30,9 @@ If no, it could be a firewall issue on the machine running the Amapche music ser
     * See this [http://www.ehow.com/how_2317017_turn-off-firewalls-computer.html page] on "how to turn off your firewall".
     * Check out this [http://ampache.org/wiki/config:acl page] on Ampache ACL rules  
 ===Step 4===
-Can you access Ampache using a web browser via Wifi from your Pre(i.e. `http://192.168.x.x/ampache`)? If no, it could be a firewall issue on the machine running the Amapche music server or maybe an ACL rule. See links above.
+Can you access Ampache using a web browser via Wifi from your Pre (i.e. `http://192.168.x.x/ampache`)? 
+
+If no, it could be a firewall issue on the machine running the Amapche music server or maybe an ACL rule. See links above.
 ===Step 5==
 Can you access Ampache using Ampache Mobile via Wifi (Using the same URL from Step 4) from your Pre?
 
