@@ -70,7 +70,7 @@ Dynamic DNS monitors your homes IP address and updates a server when it changes.
 
 Here are some free sites that provide this service.  [http://www.google.com/search?q=free+dynamic+dns Dynamic DNS]
 
-Most people prefer DynDns.org
+Most people prefer dyndns.org
 
 = Transcoding not working  =
 ----
