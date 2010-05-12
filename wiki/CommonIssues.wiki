@@ -15,10 +15,10 @@ When have completed all setup you should be able to access your Ampache Server f
 See Below for more information on how this works.
 
 = Ampache-mobile doesn't work =
- NOTE:URLs are examples yours may be different.
 ----
 If Ampache-mobile starts up and seems to run's OK on your Pre, but you are unable to connect to your music server, use the test below to help you figure out why Ampache-mobile isn't working.
 ==Server Test==
+ NOTE:URLs are examples yours may be different.
   # Are you running the correct version of Ampache?  Ampache Mobile requires at least version 3.5.1 of Ampache to operate correctly.  [http://ampache.org/download.php Download]
   # Can you access Ampache using a web browser from the machine it is running on (i.e `http://localhost/ampache` )?  If no, then it looks like your Ampache music server is not working yet.
   # Can you access Ampache using a web browser from another machine on your network (i.e. `http://192.168.x.x/ampache`  or `10.x.x.x` or `172.16.x.x` )? If no, it could be a firewall issue on the machine running the Amapche music server or maybe an Ampache Server ACL rule. 
