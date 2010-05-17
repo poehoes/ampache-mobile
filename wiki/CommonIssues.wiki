@@ -40,12 +40,15 @@ Can you access Ampache using a *web browser* via Wifi from your Pre (i.e. `http:
 If no, it could be a firewall issue on the machine running the Amapche music server or maybe an ACL rule. See links above.
 ===Step 5: Ampache Mobile Test==
 Can you access Ampache using Ampache Mobile via Wifi (Using the same URL from Step 4) from your Pre?
-= Works on Wifi but not EVDO =
+= Works on Wifi but not EVDO/3G =
 ----
-  * Are you connecting to a private network address IP Address like 192.168.x.x  or 10.x.x.x or 172.16.x.x?  Most Wi-Fi routers have an internal IP pool and one External IP.  
-    * A 192.168.x.x/10.x.x.x/172.16.x.x address is Internal and not accessible via EVDO
-    * To find your external address try this link [http://www.whatismyip.com/]
-  * Once you determine your internal address and external IP address you need to setup port forwarding on your router (or a "virtual port" on some routers).
+== IP Address ==
+Are you connecting to a private network address IP Address like `192.168.x.x`  or `10.x.x.x` or `172.16.x.x` ?  
+Most Wi-Fi routers have an internal IP pool and one External IP.  
+  * A `192.168.x.x/10.x.x.x/172.16.x.x` address is Internal and not accessible via EVDO
+  * To find your external address try this link [http://www.whatismyip.com/]
+== Port Forwarding==
+Once you determine your internal address and external IP address you need to setup port forwarding on your router (or a "virtual port" on some routers).
     * Your goal is to forward your External IP address to your Internal Ampache Server address. Imagine that your router is a large building. 
         * The building has a unique public address that can be seen by everyone on the outside world (i.e. external IP address).
         * The building has 100's of outside doors (i.e. Ports).
@@ -64,7 +67,8 @@ Can you access Ampache using Ampache Mobile via Wifi (Using the same URL from St
             * Note: If you are using a secure server (i.e. https), you many need to also forward port 443 request.
     
     * [http://www.portforward.com/routers.htm This site] has a ton of port forwarding guides, most web servers default to running on port 80.  But you can choose any port you like as long as your configure your web server as such. 
-  * Could be an ACL issue. Ampache uses Access Control Lists to restrict access to the music server (see http://ampache.org/wiki/config:acl). You will need to create a an ACL rule for EVDO access
+==Access Control Rules==
+Could be an ACL issue. Ampache uses Access Control Lists to restrict access to the music server (see http://ampache.org/wiki/config:acl). You will need to create a an ACL rule for EVDO access
      * Go to the Ampache Admin page
      * click on "Add ACL"
         * Name it (ex: EVDO Streaming) 
