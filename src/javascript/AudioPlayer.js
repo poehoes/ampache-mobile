@@ -1588,6 +1588,8 @@ AudioPlayer = Class.create({
 
     setNowPlaying: function(UIHandler) {
         this.UIHandler = UIHandler;
+        
+        this.ticksUnchanged = 0;
 
         if (this.player && this.player.song) {
             this.UIUpdateSongInfo(this.player.song);

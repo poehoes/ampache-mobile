@@ -233,6 +233,8 @@ NowPlayingAssistant = Class.create({
         this.controller.listen(this.controller.sceneElement, Mojo.Event.keypress, this.keypressHandler);
         
         
+        
+        
         Mojo.Log.info("<-- setup");
     },
     
@@ -271,6 +273,7 @@ NowPlayingAssistant = Class.create({
         
         AmpacheMobile.nowPlaying = null;
         
+        //AmpacheMobile.dashboard.showDashboard();
         
         
     },

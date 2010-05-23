@@ -186,7 +186,7 @@ StageAssistant.prototype.onFocusHandler = function() {
         if(AmpacheMobile.nowPlaying!== null)
         {
             AmpacheMobile.nowPlaying.reclaimNowPlaying();
-            AmpacheMobile.audioPlayer.UIUpdatePlaybackTime();
+            AmpacheMobile.audioPlayer.UIStartPlaybackTimer();
         }
     }
     
