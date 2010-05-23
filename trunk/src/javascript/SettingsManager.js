@@ -373,7 +373,7 @@ SettingsManager = Class.create({
                 this.settings.Recent = 0;
             }
 
-            if (this.settings.UseDashBoard===null) {
+            if (!this.settings.UseDashBoard && this.settings.UseDashBoard!==false && this.settings.UseDashBoard!==true) {
                 this.settings.UseDashBoard = true;
             }
 

@@ -43,6 +43,13 @@ NowPlayingDashboardAssistant = Class.create({
         Mojo.Event.listen(this.controller.get('viewTitle'), Mojo.Event.tap, this.tapGotoMainApp);
         Mojo.Event.listen(this.controller.get('albumArt'), Mojo.Event.tap, this.tapGotoMainApp);
 
+        this.onActivate = this.onActivate.bind(this);
+        this.controller.listen(this.controller.document, Mojo.Event.stageActivate, this.onActivate);
+        
+        this.onDeactivate = this.onDeactivate.bind(this);
+        this.controller.listen(this.controller.document, Mojo.Event.stageDeactivate , this.onDeactivate);
+
+
         this.showPausePlay();
 
     },
@@ -54,25 +61,39 @@ NowPlayingDashboardAssistant = Class.create({
         Mojo.Event.stopListening(this.controller.get('viewTitle'), Mojo.Event.tap, this.tapGotoMainApp);
         Mojo.Event.stopListening(this.controller.get('albumArt'), Mojo.Event.tap, this.tapGotoMainApp);
 
+        this.controller.stopListening(this.controller.document, Mojo.Event.stageActivate, this.onActivate);
+        this.controller.stopListening(this.controller.document, Mojo.Event.stageDeactivate , this.onDeactivate);
+
         if (AmpacheMobile.audioPlayer.UIHandler === this) {
             AmpacheMobile.audioPlayer.clearNowPlaying();
         }
     },
 
+    onActivate:function()
+    {
+        AmpacheMobile.dashBoardDisplayed = true;
+    },
+    
+    onDeactivate:function()
+    {
+        AmpacheMobile.dashBoardDisplayed = false;
+    },
+
     activate: function(event) {
 
         AmpacheMobile.audioPlayer.UIUpdateSongInfo(AmpacheMobile.audioPlayer.player.song);
-        AmpacheMobile.audioPlayer.UIUpdatePlaybackTime();
+        AmpacheMobile.audioPlayer.UIStartPlaybackTimer();
         AmpacheMobile.audioPlayer.updateBuffering(AmpacheMobile.audioPlayer.player);
 
-        AmpacheMobile.dashBoardDisplayed = true;
+        
 
         if (AmpacheMobile.audioPlayer.player.song.amtBuffered === 0) {
             this.showSpinner();
         } else {
             this.showPausePlay();
         }
-
+        
+        
     },
 
     deactivate: function(event) {
@@ -81,7 +102,7 @@ NowPlayingDashboardAssistant = Class.create({
     },
 
     showMainApp: function() {
-        this.closeDashboard();
+        //this.closeDashboard();
         var parameters = {
             id: Mojo.Controller.appInfo.id
         };
