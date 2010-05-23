@@ -373,6 +373,12 @@ SettingsManager = Class.create({
                 this.settings.Recent = 0;
             }
 
+            if (this.settings.UseDashBoard===null) {
+                this.settings.UseDashBoard = true;
+            }
+
+            
+
             //this.settings.Version = Mojo.Controller.appInfo.version;
 
             for (i = 0; i < this.settings.Accounts.length; i++) {
@@ -545,5 +551,6 @@ Settings = Class.create({
     UseCustomColor: false,
     CustomColor: '#FFFFFF',
     /*white*/
-    CSSTheme: THEME_DARK
+    CSSTheme: THEME_DARK,
+    UseDashBoard:true
 });

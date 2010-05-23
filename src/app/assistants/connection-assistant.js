@@ -18,6 +18,9 @@ ConnectionAssistant = Class.create({
         Mojo.Log.info("--> ConnectionAssistant Constructor");
         this.ConnctionPending = false;
         AmpacheMobile.Transition = Mojo.Transition.none;
+        
+        this.connecting = false;
+        
         Mojo.Log.info("<-- ConnectionAssistant Constructor");
     },
 
@@ -79,6 +82,7 @@ ConnectionAssistant = Class.create({
 
         /* add event handlers to listen to events from widgets */
         this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.appMenuAttr, StageAssistant.appMenuModel);
+
         this.settingsManager.GetSettings(this.GotSettings.bind(this));
         Mojo.Log.info("<-- setup");
     },
@@ -308,6 +312,7 @@ ConnectionAssistant = Class.create({
                 AmpacheMobile.Account = account;
                 AmpacheMobile.ampacheServer = null;
                 AmpacheMobile.ampacheServer = new AmpacheServer(account.ServerURL, account.UserName, account.Password);
+                this.connecting = true;
                 AmpacheMobile.ampacheServer.connect(this.ConnectionCallback.bind(this), this);
                 AmpacheMobile.FetchSize = account.FetchSize;
                 AmpacheMobile.audioPlayer.StallDetection = account.StallDetection;
@@ -407,10 +412,17 @@ ConnectionAssistant = Class.create({
     },
 
     handleCommand: function(event) {
-        if (event.command === "cmdCancel") {
+        
+        switch (event.command) {
+        case "doPref-cmd":
+        case "cmdCancel":
+        case 'help-cmd':
+            
             AmpacheMobile.ampacheServer.ConnectCancel();
             this.TurnOffSpinner();
+            break;
         }
+    
 
         /*switch (event.command){
             case "cmdCancel":

@@ -452,7 +452,7 @@ AudioPlayer = Class.create({
         this.setAudioToPlayer(this.player);
         this.UIInvalidateSong(this.player.song);
 
-        if(((AmpacheMobile.focus === false) || this.UIHandler===null) && (AmpacheMobile.webos.displayOff === false) && (this.displayBanners===true))
+        if(((AmpacheMobile.focus === false) || this.UIHandler===null) && (AmpacheMobile.webos.displayOff === false) && (this.displayBanners===true) && (AmpacheMobile.dashBoardDisplayed===false))
         {
             Mojo.Controller.getAppController().showBanner(this.player.song.title + ": " + this.player.song.artist, {
                     source: 'notification'
@@ -1518,20 +1518,21 @@ AudioPlayer = Class.create({
     //},
     UISetBufferWait: function(song, state) {
         node = this.UIGetSongNode(song);
-
-        if (state === true) {
-            song.plIcon = "images/icons/loading.png";
-        } else {
-            if ((song.index - 1) !== this.playList.current) {
-                song.plIcon = "images/player/blank.png";
+        if(node)
+        {
+            if (state === true) {
+                song.plIcon = "images/icons/loading.png";
             } else {
-                song.plIcon = "images/player/play.png";
+                if ((song.index - 1) !== this.playList.current) {
+                    song.plIcon = "images/player/blank.png";
+                } else {
+                    song.plIcon = "images/player/play.png";
+                }
+            }
+            if (node) {
+                node.getElementsByClassName("npListIcon")[0].src = song.plIcon;
             }
         }
-        if (node) {
-            node.getElementsByClassName("npListIcon")[0].src = song.plIcon;
-        }
-
     },
 
     UIGetSongNode: function(song) {

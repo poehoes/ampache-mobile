@@ -105,5 +105,9 @@
     {
         "scenes": "search-builder",
         "source": "app/assistants/search-builder-assistant.js"
+    },
+    {
+        "scenes": "NowPlayingDashboard",
+        "source": "app/assistants/NowPlayingDashboard-assistant.js"
     }
 ]
