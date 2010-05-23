@@ -206,6 +206,32 @@ PreferencesAssistant = Class.create({
 
         this.controller.setupWidget('stream-debug-toggle', this.debugAttr, this.debugModel);
 
+
+        //**********************************************************************************************************************
+        //Setup Dashboard Toggle
+        // Setup toggle widget and  listen  for when it is changed
+        this.dashboardAttr = {
+            trueLabel: 'On',
+            //if the state is true, what to label the toggleButton; default is 'On'
+            trueValue: true,
+            //if the state is true, what to set the model[property] to; default if not specified is true
+            falseLabel: 'Off',
+            //if the state is false, what to label the toggleButton; default is Off
+            falseValue: false,
+            //if the state is false, , what to set the model[property] to; default if not specific is false],
+            fieldName: 'toggle' //name of the field; optional
+        };
+        this.dashboardModel = {
+            value: this.settingsManager.settings.UseDashBoard,
+            // Current value of widget, from choices array.
+            disabled: false //whether or not the checkbox value can be changed; if true, this cannot be changed; default is false
+        };
+
+        this.controller.setupWidget('dashboard-toggle', this.dashboardAttr, this.dashboardModel);
+
+        
+
+
         //**********************************************************************************************************************
         // Setup Toggle Rotation 
         this.rotationModel = {
@@ -263,6 +289,10 @@ PreferencesAssistant = Class.create({
         this.debug_pressed = this.debugPressed.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
 
+        this.dashboard_pressed = this.dashboardPressed.bindAsEventListener(this);
+        Mojo.Event.listen(this.controller.get('dashboard-toggle'), Mojo.Event.propertyChange, this.dashboard_pressed);
+
+
         this.pushBackGroundHandler = this.PushBackground.bindAsEventListener(this);
         Mojo.Event.listen(this.controller.get('background-row'), Mojo.Event.tap, this.pushBackGroundHandler);
 
@@ -301,6 +331,7 @@ PreferencesAssistant = Class.create({
         
         Mojo.Event.stopListening(this.controller.get('theme-selector'), Mojo.Event.propertyChange, this.themeSelectorChanged);
 
+        Mojo.Event.stopListening(this.controller.get('dashboard-toggle'), Mojo.Event.propertyChange, this.dashboard_pressed);
         Mojo.Event.stopListening(this.controller.get('stream-debug-toggle'), Mojo.Event.propertyChange, this.debug_pressed);
         Mojo.Event.stopListening(this.controller.get('rotation-toggle'), Mojo.Event.propertyChange, this.rotation_pressed);
 
@@ -370,6 +401,19 @@ PreferencesAssistant = Class.create({
         }
         this.settingsManager.SaveSettings();
     },
+
+     dashboardPressed: function(event) {
+        //Display the value of the toggle
+        if (event.value === true) {
+            this.settingsManager.settings.UseDashBoard = true;
+        } else {
+            this.settingsManager.settings.UseDashBoard = false;
+        }
+        this.settingsManager.SaveSettings();
+    },
+
+    
+
 
     rotationPressed: function(event) {
         if (event.value === true) {

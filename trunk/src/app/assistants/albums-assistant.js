@@ -124,11 +124,12 @@ AlbumsAssistant = Class.create({
             this.controller.get('listContainer').hide();
             
             this.albumsFilterList = "albumsFilterListNoHeader";
-            
+            this.hasGetAll = false;
         }
         else
         {
             this.albumsFilterList = "albumsFilterList";
+            this.hasGetAll = true;
         }
         
         if(this.FromDate)
@@ -240,6 +241,7 @@ AlbumsAssistant = Class.create({
             //ItemsList :this.AlbumList,
             //listModel: this.listModel,
             //progressModel: this.albumLoadModel,
+            onFilter: (this.hasGetAll===true) ? this.onFilter.bind(this):null,
             onLoadingFinished:this.albumsLoadingFinished.bind(this),
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.ExpectedAlbums,
@@ -566,6 +568,17 @@ AlbumsAssistant = Class.create({
         }
     },
 
+    onFilter:function(filtered)
+    {
+        if(filtered)
+        {
+            this.controller.get('listContainer').style.top = "160px";
+        }
+        else
+        {
+            this.controller.get('listContainer').style.top = "110px";
+        }
+    },
 
     handleCommand: function(event) {
 

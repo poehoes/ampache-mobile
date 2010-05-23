@@ -1391,3 +1391,151 @@ margin-left:10px;
     bottom: 0px;
     position:fixed;
 }
+
+
+
+
+/**********************************************/
+/* Dashboard Scene
+/**********************************************/
+#ampache-dashboard
+{
+   margin-top:5px;
+   margin-bottom:5px;
+   
+}
+
+
+#ampache-dashboard #viewArt
+{
+  top:0px;
+  position:absolute;
+}
+
+
+
+
+#ampache-dashboard .controls
+{
+    position:absolute;
+    right:10px;
+    top:2px;
+}
+
+#ampache-dashboard #spinnerId
+{
+    position:absolute;
+    right: 35px;
+    top:0px;
+    /*display:none;*/
+}
+
+#ampache-dashboard .songInfo
+{
+    position:absolute;
+    
+    top: 0px;
+    left:62px;
+}
+
+#ampache-dashboard #albumArt
+{
+     position:absolute;
+    
+    top: 0px;
+    left:10px;
+}
+
+
+#ampache-dashboard .text-info
+{
+    width: 138px;
+    overflow: hidden;
+    /*border:solid;*/
+}
+
+#ampache-dashboard .text-info #artist
+{
+   font-size:11px;
+}
+
+#ampache-dashboard .text-info #album
+{
+    font-size:14px;
+    margin-top:-1px;
+}
+#ampache-dashboard .text-info #song
+{
+    font-size:11px;
+    margin-top:-1px;
+
+}
+
+
+.time-dashboard
+{
+    font-size: 15px;
+    left:66px;
+    width:100px;
+}
+
+#ampache-dashboard #currentTime
+{
+    position:absolute;
+    top:5px;
+    
+}
+
+#ampache-dashboard #timeRemaining
+{
+    left:62px;
+    position:absolute;
+    top:26px;
+}
+
+.dbProgressBorder
+{
+    width:98%;
+    
+    border-style:solid;
+    border-color:#9f9f9f;
+    border-width:1px;
+    border-spacing:0px 0px;
+    height: 4px;
+    margin-top:-2px;
+}
+
+
+.dashboard-status-box
+{
+    
+    left:0px;
+    top:0px;
+    height: 100%;
+    width: 0%;
+}
+
+
+
+.dbProgressDone {
+        
+        background-color: #9f9f9f;
+        z-index: -2;
+        opacity:0.6;
+        
+}
+
+
+
+.dbTimeLoaded {
+        margin-top:-4px;
+        background-color: #67f807;
+        z-index: -1;
+}
+
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+<div id="ampache-dashboard" class="palm-dashboard-text-container " style="width: 100%;">
+	
+	<img id="albumArt" style="width: 48px; height: 48px;" src="images/blankalbum.png"/>
+	
+	<div class="songInfo  text-info" id="viewTitle">
+		<div id="artist" class="truncating-text" >Artist</div>
+		<div id="album"  class="truncating-text">Song</div>
+		<div id="song"  class="truncating-text">Song</div>
+		
+	</div>
+	
+	<div class="controls">
+		<img id="Prev" src="images/player/backward.png" class=""/>
+		<img id="PlayPause" src="images/player/pause.png" class=""/>
+		<img id="Next" src="images/player/forward.png" class=""/>
+		
+		
+		<div class="dbProgressBorder">
+			<div id="downloadDiv" class="dashboard-status-box dbProgressDone truncating-text" style="width:#{amtBuffered}%">&nbsp;</div>
+			<div id="timeDiv" class="dashboard-status-box dbTimeLoaded truncating-text" style="width:0%">&nbsp;</div>
+		</div>
+		
+		<div x-mojo-element="Spinner" id="spinnerId" class="spinnerClass" name="spinnerName"></div>
+		
+		
+	</div>	
+</div>
+
+
