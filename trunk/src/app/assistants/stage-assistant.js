@@ -493,7 +493,7 @@ var DashboardController = Class.create(
 			if(dashboardStage)
 			{
 				dashboardStage.delegateToSceneAssistant("updateDashboard");
-				dashboardStage.pushScene('NowPlayingDashboard')
+				dashboardStage.pushScene('NowPlayingDashboard');
 			}
 			else
 			{
@@ -529,7 +529,7 @@ var DashboardController = Class.create(
 			dashboardStage.delegateToSceneAssistant("closeDashboard");
 		}
                 
-	},
+	}
 	
 	
 });
