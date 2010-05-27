@@ -329,14 +329,14 @@ ItemsHelper = Class.create({
     },
 
     handleFilterChange: function(event) {
-        if (event.filterString.blank()) {
+        if (event.filterString=== "") {
             this.spacerDiv.show();
         } else {
             this.spacerDiv.hide();
         }
         if(this.onFilter)
         {
-            this.onFilter(!(event.filterString.blank()));
+            this.onFilter(event.filterString!== "");
         }
         
 

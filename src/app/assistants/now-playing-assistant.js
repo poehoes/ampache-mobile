@@ -273,13 +273,20 @@ NowPlayingAssistant = Class.create({
         
         AmpacheMobile.nowPlaying = null;
         
-        //AmpacheMobile.dashboard.showDashboard();
-        
+        if(AmpacheMobile.webos.isWebOS ===false)
+        {
+            AmpacheMobile.dashboard.showDashboard();
+        }
         
     },
     
     activate:function()
     {
+        if(AmpacheMobile.webos.isWebOS ===false)
+        {
+            AmpacheMobile.dashboard.hideDashboard();
+        }
+        
         if(this.firstActivate===true)
         {
             this.firstActivate = false;
@@ -321,6 +328,8 @@ NowPlayingAssistant = Class.create({
             this.showAlbumView();
         }
         this.setMenuControls();
+        AmpacheMobile.audioPlayer.ticksUnchanged = 0;
+        AmpacheMobile.audioPlayer.UIUpdatePlaybackTime();
     },
     
     

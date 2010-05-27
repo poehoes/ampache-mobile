@@ -39,19 +39,19 @@ SearchMenuAssistant = Class.create({
         //    items: [{},
         //    this.savedSearchModel]
         //};
-        this.cmdMenuProps = {
-            visible: true,
-            items: [{},
-            //Left group 
-            {
-                label: 'Saved Searches',
-                command: 'saved-searches'
-            },
-            //Center 
-            {} //Right
-            ]
-        };
-        this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuProps);
+        //this.cmdMenuProps = {
+        //    visible: true,
+        //    items: [{},
+        //    //Left group 
+        //    {
+        //        label: 'Saved Searches',
+        //        command: 'saved-searches'
+        //    },
+        //    //Center 
+        //    {} //Right
+        //    ]
+        //};
+        //this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuProps);
 
         //this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, this.cmdMenuModel);
         
@@ -80,6 +80,10 @@ SearchMenuAssistant = Class.create({
         // Search Event
         this.searchTextChanged = this.searchTextChanged.bindAsEventListener(this);
         this.controller.listen("search-field", Mojo.Event.propertyChange, this.searchTextChanged);
+
+        this.savedSearchesTapped = this.savedSearchesTapped.bindAsEventListener(this);
+        this.controller.listen(this.controller.get("saved-searches"), Mojo.Event.tap, this.savedSearchesTapped);
+       
 
         this.artistSearchHandler = this.searchForArtists.bindAsEventListener(this);
         this.controller.listen(this.controller.get('searchArtists'), Mojo.Event.tap, this.artistSearchHandler);
@@ -125,6 +129,7 @@ SearchMenuAssistant = Class.create({
         //this.controller.stopListening(this.controller.get('searchGenres'), Mojo.Event.tap, this.genresSearchHandler);
         this.controller.stopListening(this.controller.get('searchGlobal'), Mojo.Event.tap, this.globalSearchHandler);
         this.controller.stopListening(this.controller.get('searchVideos'), Mojo.Event.tap, this.videoSearchHandler);
+        this.controller.stopListening(this.controller.get("saved-searches"), Mojo.Event.tap, this.savedSearchesTapped);
     },
 
     searchText: null,
@@ -373,6 +378,17 @@ SearchMenuAssistant = Class.create({
                 break;
             }
           }
+    },
+
+    savedSearchesTapped:function()
+    {
+    this.controller.stageController.pushScene({
+                    transition: AmpacheMobile.Transition,
+                    name: "saved-searches"
+                },
+                {
+        
+                });
     },
 
 
