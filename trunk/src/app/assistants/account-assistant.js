@@ -385,7 +385,7 @@ AccountAssistant = Class.create({
             Mojo.Log.info("Staring Connection Test");
             this.ampacheServer = new AmpacheServer();
             this.ampacheServer.TestConnection(this.Account.ServerURL, this.Account.UserName, this.Account.Password, this.TestCallback.bind(this));
-            this.timeoutInterval = window.setInterval(this.ConnectionTestTimeout.bind(this), 30000);
+            this.timeoutInterval = setInterval(this.ConnectionTestTimeout.bind(this), 30000);
             Mojo.Log.info("this.timeoutInterval", this.timeoutInterval);
             this.spinning = true;
         } else {

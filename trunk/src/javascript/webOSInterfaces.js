@@ -24,6 +24,17 @@ WebOSInterface = Class.create({
 
     initialize: function(audioPlayer, controller) {
 
+	
+	if(Mojo.Host.current === Mojo.Host.browser)
+        {
+	    this.isWebOS = false;
+	}
+	else
+	{
+	    this.isWebOS = true;
+	}
+	
+	
 	this.controller = controller;
 	this.ampachePlayer = audioPlayer;
 
@@ -257,17 +268,8 @@ WebOSInterface = Class.create({
 
 	if (event.event == "displayOff") {
 	    this.displayOff = true;
-
-	    //AmpacheMobile.audioPlayer.screenChanged(this.displayOff);
-
-	    //this.startDashboardCreateTimer();
-	    //this.stopUpdateTimer();
 	} else if (event.event == "displayOn") {
 	    this.displayOff = false;
-	    //AmpacheMobile.audioPlayer.screenChanged(this.displayOff);
-	    //this.stopDashboardCreateTimer();
-	    //this._updateTime(true);
-	    //this.startUpdateTimer();
 	}
     },
 

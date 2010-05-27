@@ -72,17 +72,9 @@ NowPlayingDashboardAssistant = Class.create({
     onActivate:function()
     {
         AmpacheMobile.dashBoardDisplayed = true;
-    },
-    
-    onDeactivate:function()
-    {
-        AmpacheMobile.dashBoardDisplayed = false;
-    },
-
-    activate: function(event) {
-
         AmpacheMobile.audioPlayer.UIUpdateSongInfo(AmpacheMobile.audioPlayer.player.song);
-        AmpacheMobile.audioPlayer.UIStartPlaybackTimer();
+        AmpacheMobile.audioPlayer.ticksUnchanged = 0;
+        AmpacheMobile.audioPlayer.UIUpdatePlaybackTime();
         AmpacheMobile.audioPlayer.updateBuffering(AmpacheMobile.audioPlayer.player);
 
         
@@ -92,6 +84,16 @@ NowPlayingDashboardAssistant = Class.create({
         } else {
             this.showPausePlay();
         }
+    },
+    
+    onDeactivate:function()
+    {
+        AmpacheMobile.dashBoardDisplayed = false;
+    },
+
+    activate: function(event) {
+
+      
         
         
     },

@@ -186,7 +186,6 @@ StageAssistant.prototype.onFocusHandler = function() {
         if(AmpacheMobile.nowPlaying!== null)
         {
             AmpacheMobile.nowPlaying.reclaimNowPlaying();
-            AmpacheMobile.audioPlayer.UIStartPlaybackTimer();
         }
     }
     
@@ -378,6 +377,12 @@ StageAssistant.prototype.handleCommand = function(event) {
                     StageAssistant.nowPlayingMenu.items[j].disabled = true;
                 }
             }
+            
+            if(AmpacheMobile.webos.isWebOS ===false)
+            {
+                AmpacheMobile.dashboard.hideDashboard();
+            }
+            
             break;
         case "mojo-up":
         case "push-np-cmd":
