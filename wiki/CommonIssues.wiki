@@ -134,3 +134,13 @@ Timeout 600
       * For Albums: Its Artist, Album, Year and Genre (optional) 
 ==Corrupt data inside tags==
     * Sometimes music tags can get corrupt.  An easy way to spot this corruption is to browse your collection with Ampache.  If you notice any strange characters investigate the tag with a tag editor, I'd even just go ahead and rewrite them to the file.  Once complete rescan your catalog.
+=Videos Not Working==
+==Incorrect Video Format==
+The supported audio/video types for webOS are MP4, M4A, M4V, MOV, 3GP, and 3G2.
+	
+It is recommended that you import videos into Ampache in a format that webOS has support for.  You should convert unsupported videos on a PC or Mac and reimport them into Ampache.
+
+To convert existing videos to a format suitable for webOS use the free h.264 encoder <a href="http://handbrake.fr/">Handbrake</a> on your PC or Mac.  The iPod Touch/iPhone profile creates files perfect for playback on webOS.
+
+==Transcoding Setting==
+Ampache itself does not yet support video transcoding.  There is a bug in Ampache if you have transcoding set to Always it will try to transcode videos, make sure your transcoding setting is 'Default'.
