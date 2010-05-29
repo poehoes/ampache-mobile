@@ -221,7 +221,7 @@ VideosAssistant = Class.create({
 
         var supported = false;
         for (var i = 0; i < supportedTypes.length; i++) {
-            if (supportedTypes[i].mime == event.item.mime) {
+            if (supportedTypes[i].mime === event.item.mime) {
                 supported = true;
             }
         }
