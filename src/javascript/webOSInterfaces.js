@@ -106,9 +106,9 @@ WebOSInterface = Class.create({
 
     setConnection: function(network) {
 
-	if (network.wifi.state == "connected") {
+	if (network.wifi.state === "connected") {
 	    network.connection = "wifi_" + network.wifi.ipAddress;
-	} else if (network.wan.state == "connected") {
+	} else if (network.wan.state === "connected") {
 	    network.connection = "wan_" + network.wan.network + "_" + network.wan.ipAddress;
 	} else {
 	    network.connection = "";
@@ -266,9 +266,9 @@ WebOSInterface = Class.create({
     displayOff: false,
     handlePowerEvent: function(event) {
 
-	if (event.event == "displayOff") {
+	if (event.event === "displayOff") {
 	    this.displayOff = true;
-	} else if (event.event == "displayOn") {
+	} else if (event.event === "displayOn") {
 	    this.displayOff = false;
 	}
     },
