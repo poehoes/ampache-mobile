@@ -1,5 +1,22 @@
 #summary Change log for Ampache Mobile
 ==Version Information==
+===Version 0.9.6 (05/29/2010)===
+*New Features*
+----
+  * Dashboard
+   * Displays current track, art and buffering info
+   * Previous, Play, Pause and Next
+   * Tap art or song info to return to app
+   * Controls available from locked screen
+   * Configurable in settings
+*Improvements*
+----
+  * Button to close release notes
+  * Saved search now a button on the header in the search screen
+*Bug Fixes*
+----
+  * Filtering songs and albums lists caused text overlap
+  * Stall detection tweaked further, less false positives
 ===Version 0.9.5 (05/11/2010)===
 *Improvements*
 ----
