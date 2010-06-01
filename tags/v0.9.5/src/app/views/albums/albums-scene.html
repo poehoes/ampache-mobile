@@ -1,0 +1,57 @@
+<div id="ampache-main" >
+    
+    <div id="header" class="palm-header left truncating-text">
+        <div class="palm-header-wrapper">
+            <div id='now-playing-button' class="now-playing-button" x-mojo-tap-highlight="immediate">
+                <div class="now-playing-wrapper">
+                    <span x-mojo-loc=''>Now Playing</span>
+                </div>
+            </div>
+            <div class='header-body'>
+                <div class='icon'><img class="icon-img" src='images/icons/albums.png'/></div>
+                <div class="scene-title truncating-text" id="title" x-mojo-loc=''></div>
+            </div>
+        </div>
+    </div>  
+    
+    <div id="spacerDiv" class="music-header-spacer"></div>
+    <div id="scrim" class="palm-scrim"></div>
+    
+    <div id="shuffleForArtist">
+        <div id="allSongs" class="palm-row multi-line" id='#{name}_example' x-Mojo-tap-highlight="momentary">
+            <div class="palm-row-wrapper">
+                <div class="mainMenuLeft">
+                    <div class="mainMenuTitle">
+                        All Songs
+                    </div>
+                </div>
+                <div class="mainMenuRight">
+                    <img class="mainMenuIcon" src="images/icons/songs.png"/>
+                </div>
+                <div class="mainMenuClear">
+                </div>
+                <div id="songsPill" class="count-pill-container single-art">
+                    <div id="numSongs" class="count-pill-wrapper">
+                        0
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="thick-border" class="thick-bottom-border" style="display:block;"></div>
+    </div>
+    
+
+    
+    <div id="listContainer" class="listContainer" >
+	<div style="height:100%;" x-mojo-element="Scroller">
+		<div x-mojo-element="FilterList" id="albumsFilterList"">
+		</div>
+	</div>
+    </div>
+
+    <div id="albumsFilterListNoHeader" x-mojo-element="FilterList">
+    </div>
+    
+    
+</div>

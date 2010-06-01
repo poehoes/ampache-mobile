@@ -1,0 +1,157 @@
+<div id="mainmenu-main" class="palm-hasheader">
+	<div id="header" class="palm-header left truncating-text">
+		<div class="palm-header-wrapper">
+			<div class="header-body">
+				<div class="icon"><img class="icon-img" src="images/icons/ampache.png"></div>
+
+				<div id="title" class="scene-title truncating-text mainmenu-title" x-mojo-loc="x-mojo-loc">
+					User Guide
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="spacerDiv" class="music-header-spacer"></div>
+
+	<div class="palm-group">
+		<div class="palm-group-title" x-mojo-loc="x-mojo-loc">
+			Server
+		</div>
+
+		<div style="margin: 0px" class="palm-body-text condensed" x-mojo-loc="x-mojo-loc">
+			
+			
+			
+			<strong>Transcoding</strong>
+			<hr>
+			The first thing you should do with your server, once you have it working, is enable transcoding/downsampling.
+			Transcoding allows you to play audio formats not support by webOS,
+			downsampling will allow songs to load much faster and buffer ahead will also function much better.<br>
+			<br>
+				
+		</div>
+	</div>
+
+
+	<div class="palm-group">
+		<div class="palm-group-title" x-mojo-loc="x-mojo-loc">
+			Navigation
+		</div>
+
+		<div style="margin: 0px" class="palm-body-text condensed" x-mojo-loc="x-mojo-loc">
+			
+			
+			<strong>Searching</strong>
+			<hr>
+			There are multiple ways to search in Ampache Mobile. You can just start typing on any list being displayed and it will filter the results.<br>
+			<br>
+			Also there is the search scene, which will send search requests up to your server and back. This is usually the fastest way to your music if you know what you are looking for.<br>
+			<br>
+			<strong>TIP:</strong> Just start typing on the main menu and it will automatically navigate to the search scene.<br>
+			<br>
+			<strong>Sorting</strong>
+			<hr>
+			On any list simply tap and hold the black header on the top of the screen and a list will appear allowing you to resort.<br>
+			<br>
+			<strong>Lists</strong>
+			<hr>
+			Often times lists are very long and it takes forever to scroll to the point you are interested in.<br>
+			<br>
+			On any list that contains dividers simply tap the black header on the top of the screen and a list will appear allowing you to jump to a specific point in a list.<br>
+			<br>
+			<strong>Short Cuts</strong>
+			<hr>
+			Tap and Hold any Artist to view all their songs.<br>
+			<br>
+			Tap and Hold any Song to Play or Enqueue only that song.<br>
+			<br>
+			Tap and Hold Recent in the main menu to quickly find recently added songs. Note: This is configurable in the preferences menu.<br>
+			<br>
+			Tap and Hold Search in the main menu to bring up Saved Searches.<br>
+			<br>
+			<strong>Playlists</strong>
+			<hr>
+			Playlists need to be created on your server to be used by Ampache Mobile.<br>
+			<br>
+		</div>
+	</div>
+
+	<div id="videos" class="palm-group">
+		<div class="palm-group-title" x-mojo-loc="x-mojo-loc">
+			Videos
+		</div>
+
+		<div style="margin: 0px" class="palm-body-text condensed" x-mojo-loc="x-mojo-loc">
+			<strong>Supported Videos</strong>
+			<hr>	
+			The supported audio/video types for webOS are MP4, M4A, M4V, MOV, 3GP, and 3G2.
+			<br>
+			<br>
+		
+			<strong>Converting Videos</strong>
+			<hr>
+			It is recommended that you import videos into Ampache in a format that webOS has support for.  You should convert unsupported videos on a PC or Mac and reimport them into Ampache.
+			<br>
+			<br>
+			<strong>Recommended Converter</strong>
+			<hr>
+			 To convert existing videos to a format suitable for webOS use the free h.264 encoder <a href="http://handbrake.fr/">Handbrake</a> on your PC or Mac.  The iPod Touch/iPhone profile creates files perfect for playback on webOS.
+		</div>
+	</div>
+
+
+	<div class="palm-group">
+		<div class="palm-group-title" x-mojo-loc="x-mojo-loc">
+			Preferences
+		</div>
+
+		<div style="margin: 0px" class="palm-body-text condensed" x-mojo-loc="x-mojo-loc">
+			<strong>Startup Account</strong>
+			<hr>
+			This is setting controls how Ampache Mobile starts up. If you select an Account it will automatically be connected upon loading the App. Always Ask will bring up a menu to allow you to select which account to connect to.<br>
+			<br>
+			<strong>Accounts List</strong>
+			<hr>
+			Tap "Add Account" to add a new account.<br>
+			<br>
+			Tap an existing Account to edit it.<br>
+			<br>
+			Swipe an existing Account to delete it.<br>
+			<br>
+			Tap and hold an account rearrange the order.<br>
+			<br>
+		</div>
+	</div>
+
+	<div id="account" class="palm-group">
+		<div class="palm-group-title" x-mojo-loc="x-mojo-loc">
+			Account Editor
+		</div>
+
+		<div style="margin: 0px" class="palm-body-text condensed" x-mojo-loc="x-mojo-loc">
+			<strong>Account Name</strong>
+			<hr>
+			This is the name which will show up on the login screen.  It is for display purposes only.<br>
+			<br>
+			<strong>URL</strong>
+			<hr>
+			Internet address of the server you are attempting to connect to.  If you haven't yet setup a server please go to the <a href='http://code.google.com/p/ampache-mobile/#Setup'>Ampache Mobile</a> site for more information.<br>
+			<br>
+			<b>NOTE:</b> This is the same address you would put into a web browser to access your server from the internet.<br>
+			<br>
+			<b>EXAMPLE:</b> http://myserver.dyndns.org/ampache<br>
+			<br>
+			<strong>List Fetch Size</strong>
+			<hr>
+			This configures how many items will be requested at a single time from the server. The lower the number, the faster requests will come back but the higher number of total requests to get all the requested items.<br>
+			<br>
+			<strong>Work Arounds</strong>
+			<hr>
+			<b>GStreamer %20:</b> Enable this if streaming works in other forms but not your phone. webOS Bug was introduced in 1.4.1<br>
+			<br>
+			<b>Audio Stall Detection:</b> Enable this your if music simply stops, Ampache Mobile will detect a stall and attempt to recover.<br>
+			<br>
+			<b>Apache Timeout:</b> This is the <a href="http://httpd.apache.org/docs/2.0/mod/core.html#timeout">tcp timeout</a> of your webserver.  Ampache Mobile will attempt to detect potential timeouts and circumvent them. Improper configuration of this value will result in audio stalls.  Default is 300
+		</div>
+	</div>
+</div>
