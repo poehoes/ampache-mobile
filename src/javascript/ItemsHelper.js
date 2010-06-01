@@ -54,8 +54,6 @@ ItemsHelper = Class.create({
         this.PopulateSort = params.PopulateSort;
 
         this.IndexBusted = params.IndexBusted;
-        
-        this.onFilter = params.onFilter;
 
         //this.UpdateProgress = params.UpdateProgress;
 
@@ -329,16 +327,11 @@ ItemsHelper = Class.create({
     },
 
     handleFilterChange: function(event) {
-        if (event.filterString=== "") {
+        if (event.filterString.blank()) {
             this.spacerDiv.show();
         } else {
             this.spacerDiv.hide();
         }
-        if(this.onFilter)
-        {
-            this.onFilter(event.filterString!== "");
-        }
-        
 
     },
 

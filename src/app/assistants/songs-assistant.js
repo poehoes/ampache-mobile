@@ -116,7 +116,6 @@ SongsAssistant = Class.create({
             listModel: this.listModel,
             //progressModel: this.songLoadModel,
             onLoadingFinished:this.songsLoadingFinished.bind(this),
-            onFilter:this.onFilter.bind(this),
             fetchLimit: AmpacheMobile.FetchSize,
             ExpectedItems: this.Expected_items,
             SortFunction: null,
@@ -303,19 +302,6 @@ SongsAssistant = Class.create({
             AmpacheMobile.ampacheServer.GetSongs(params);
         }
 
-    },
-
-
-    onFilter:function(filtered)
-    {
-        if(filtered)
-        {
-            this.controller.get('listContainer').style.top = "160px";
-        }
-        else
-        {
-            this.controller.get('listContainer').style.top = "110px";
-        }
     },
 
     IsMatch: function(item, filterString) {

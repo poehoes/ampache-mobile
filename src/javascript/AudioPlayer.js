@@ -452,7 +452,7 @@ AudioPlayer = Class.create({
         this.setAudioToPlayer(this.player);
         this.UIInvalidateSong(this.player.song);
 
-        if(((AmpacheMobile.focus === false) || this.UIHandler===null) && (AmpacheMobile.webos.displayOff === false) && (this.displayBanners===true) && (AmpacheMobile.dashBoardDisplayed===false))
+        if(((AmpacheMobile.focus === false) || this.UIHandler===null) && (AmpacheMobile.webos.displayOff === false) && (this.displayBanners===true))
         {
             Mojo.Controller.getAppController().showBanner(this.player.song.title + ": " + this.player.song.artist, {
                     source: 'notification'
@@ -713,6 +713,7 @@ AudioPlayer = Class.create({
                 this.rebufferSong(this.player);
             } else {
                 this.player.play();
+                this.UIStartPlaybackTimer();
             }
 
         }
@@ -758,7 +759,7 @@ AudioPlayer = Class.create({
                 
                 if (clicked) {
                     this.kill_play_change_interval();
-                    this.play_change_interval = setInterval(this.do_play.bind(this), 200);
+                    this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
                 } else {
                     this.do_play();
                 }
@@ -802,7 +803,7 @@ AudioPlayer = Class.create({
                
                 if (clicked) {
                     this.kill_play_change_interval();
-                    this.play_change_interval = setInterval(this.do_play.bind(this), 200);
+                    this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
                 } else {
                     this.do_play();
                 }
@@ -839,7 +840,7 @@ AudioPlayer = Class.create({
                     
                     
                     this.kill_play_change_interval();
-                    this.play_change_interval = setInterval(this.do_play.bind(this), 200);
+                    this.play_change_interval = window.setInterval(this.do_play.bind(this), 200);
                 }
             }
         }
@@ -863,7 +864,7 @@ AudioPlayer = Class.create({
 
     kill_play_change_interval: function() {
         if (this.play_change_interval) {
-            clearInterval(this.play_change_interval);
+            window.clearInterval(this.play_change_interval);
             this.play_change_interval = null;
         }
     },
@@ -903,14 +904,14 @@ AudioPlayer = Class.create({
 
     stopBufferRecovery: function() {
         if (this.buffer_recovery_interval) {
-            clearInterval(this.buffer_recovery_interval);
+            window.clearInterval(this.buffer_recovery_interval);
             this.buffer_recovery_interval = null;
         }
     },
 
     startBufferRecovery: function() {
         if (!this.buffer_recovery_interval) {
-            this.buffer_recovery_interval = setInterval(this.runBufferRecoveryWorker.bind(this), 10000);
+            this.buffer_recovery_interval = window.setInterval(this.runBufferRecoveryWorker.bind(this), 10000);
         }
     },
 
@@ -1109,12 +1110,14 @@ AudioPlayer = Class.create({
         
         case "timeupdate":
             this.ticksUnchanged = 0;
+            //this.UIStartPlaybackTimer();
+            //this.UIUpdatePlaybackTime();
             break;
         case "play":
             if (event.currentTarget.song.amtBuffered !== 0) {
                 this.UIShowPause();
             }
-            //this.UIUpdatePlaybackTime();
+            this.UIUpdatePlaybackTime();
             this.UIStartPlaybackTimer();
             break;
         case "pause":
@@ -1366,23 +1369,15 @@ AudioPlayer = Class.create({
     
 
     UIStartPlaybackTimer: function() {
-        if (!this.timeInterval) {
-            this.timeInterval = setInterval(this.UIUpdatePlaybackTime.bind(this), PLAYBACK_TIMERTICK);
-            
-            //Mojo.Controller.getAppController().showBanner("Started Timer", {
-            //        source: 'notification'
-            //});
+        if (this.UIHandler && !this.timeInterval) {
+            this.timeInterval = this.UIHandler.controller.window.setInterval(this.UIUpdatePlaybackTime.bind(this), PLAYBACK_TIMERTICK);
         }
     },
 
     UIStopPlaybackTimer: function() {
-        if ((this.timeInterval)) {
-            clearInterval(this.timeInterval);
+        if ((this.UIHandler) && (this.timeInterval)) {
+            this.UIHandler.controller.window.clearInterval(this.timeInterval);
             this.timeInterval = null;
-            
-            //Mojo.Controller.getAppController().showBanner("Stopped Timer", {
-            //        source: 'notification'
-            //});
         }
     },
 
@@ -1409,7 +1404,6 @@ AudioPlayer = Class.create({
             if(this.player.paused)
             {
                 this.UIStopPlaybackTimer();
-                
             }
             var duration = 0;
             var currentTime = 0;
@@ -1430,24 +1424,8 @@ AudioPlayer = Class.create({
 
             if(this.StallDetection===true)
             {
-                
-                
-                
                 if (this.timePercentage === this.lastTickValue) {
-                    if(this.timeInterval!==null)
-                    {
-                    
-                        this.ticksUnchanged++;
-                    
-                        
-                        //if(this.ticksUnchanged>15){
-                        //    var onOff = (this.timeInterval!==null) ? "On" : "Off";
-                        //
-                        //    Mojo.Controller.getAppController().showBanner(onOff + " Ticks: " + this.ticksUnchanged, {
-                        //        source: 'notification'
-                        //    });
-                        //}
-                    }
+                    this.ticksUnchanged++;
                 
                 } else {
                 this.lastTickValue = this.timePercentage;
@@ -1540,21 +1518,20 @@ AudioPlayer = Class.create({
     //},
     UISetBufferWait: function(song, state) {
         node = this.UIGetSongNode(song);
-        if(node)
-        {
-            if (state === true) {
-                song.plIcon = "images/icons/loading.png";
+
+        if (state === true) {
+            song.plIcon = "images/icons/loading.png";
+        } else {
+            if ((song.index - 1) !== this.playList.current) {
+                song.plIcon = "images/player/blank.png";
             } else {
-                if ((song.index - 1) !== this.playList.current) {
-                    song.plIcon = "images/player/blank.png";
-                } else {
-                    song.plIcon = "images/player/play.png";
-                }
-            }
-            if (node) {
-                node.getElementsByClassName("npListIcon")[0].src = song.plIcon;
+                song.plIcon = "images/player/play.png";
             }
         }
+        if (node) {
+            node.getElementsByClassName("npListIcon")[0].src = song.plIcon;
+        }
+
     },
 
     UIGetSongNode: function(song) {
@@ -1610,8 +1587,6 @@ AudioPlayer = Class.create({
 
     setNowPlaying: function(UIHandler) {
         this.UIHandler = UIHandler;
-        
-        this.ticksUnchanged = 0;
 
         if (this.player && this.player.song) {
             this.UIUpdateSongInfo(this.player.song);
@@ -1630,7 +1605,6 @@ AudioPlayer = Class.create({
     },
 
     cleanup: function() {
-        this.clearNowPlaying();
         this.stop();
         this.player = null;
         while (this.audioBuffers.length !== 0) {

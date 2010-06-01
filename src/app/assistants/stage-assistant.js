@@ -35,9 +35,6 @@ AmpacheMobile.loadingPreferences = false;
 AmpacheMobile.AclErrorHelp = "You are so close! You likely need to configure an ACL rule to allow Remote Program Control (RPC).  You can do this thru the Ampache web interface";
 AmpacheMobile.EmptyResponseErrorHelp = "Phone not connecting to Ampache." + "<br>" + "<ul>" + "<li>Can you connect to Ampache with a PC?</li>" + "<li>Server URL (Must include http://)</li>" + "<li>Firewall Port Forwarding</li>" + "<li>DNS or IP Address (192.168.x.x will not work on EVDO)</li>" + "<li>Does your ISP  block port 80?</li>" + "</ul>";
 
-AmpacheMobile.dashBoardDisplayed = false;
-
-
 
 SortOrder = {
     "descending": 1,
@@ -152,11 +149,6 @@ StageAssistant.prototype.onBlurHandler = function() {
         this.foregroundVolumeMarker = null;
     }
     AmpacheMobile.focus = false;
-    
-    if(AmpacheMobile.settingsManager.settings.UseDashBoard===true)
-    {
-        AmpacheMobile.dashboard.showDashboard();
-    }
 };
 
 StageAssistant.prototype.onFocusHandler = function() {
@@ -175,22 +167,9 @@ StageAssistant.prototype.onFocusHandler = function() {
         }
     } catch(ex) {}
     
-    
-    
-    AmpacheMobile.focus = true;
-    
-    if(AmpacheMobile.dashboard.dashboardShown===true)
-    {
-        AmpacheMobile.dashboard.hideDashboard();
-        
-        if(AmpacheMobile.nowPlaying!== null)
-        {
-            AmpacheMobile.nowPlaying.reclaimNowPlaying();
-        }
-    }
-    
     AmpacheMobile.audioPlayer.FocusRegained();
     
+    AmpacheMobile.focus = true;
 };
 
 StageAssistant.prototype.lockVolumeKeys = function(event) {
@@ -208,9 +187,6 @@ StageAssistant.prototype.setup = function() {
     window.document.addEventListener(Mojo.Event.activate, this.onFocusHandler.bind(this));
     
     AmpacheMobile.focus = true;
-    AmpacheMobile.dashboard = new DashboardController();
-    
-    
 };
 
 GotoPreferences = function() {
@@ -377,12 +353,6 @@ StageAssistant.prototype.handleCommand = function(event) {
                     StageAssistant.nowPlayingMenu.items[j].disabled = true;
                 }
             }
-            
-            if(AmpacheMobile.webos.isWebOS ===false)
-            {
-                AmpacheMobile.dashboard.hideDashboard();
-            }
-            
             break;
         case "mojo-up":
         case "push-np-cmd":
@@ -481,60 +451,3 @@ function WhatsNew(type) {
     }
     );
 };
-
-
-
-var DashboardController = Class.create(
-{
-	
-        
-	showDashboard: function()
-	{
-		if(AmpacheMobile.audioPlayer.hasPlayList)
-		{
-                    this.dashboardShown = true;
-			var appController = Mojo.Controller.getAppController();
-			var dashboardStage = appController.getStageProxy("NowPlayingDashboard");
-			if(dashboardStage)
-			{
-				dashboardStage.delegateToSceneAssistant("updateDashboard");
-				dashboardStage.pushScene('NowPlayingDashboard');
-			}
-			else
-			{
-				var pushPopup = function(stageController)
-					{
-						this.dashboardController = stageController;
-						stageController.pushScene('NowPlayingDashboard');
-					};
-				
-				
-                                var params = {
-				name: "NowPlayingDashboard",
-				assistant: "NowPlayingDashboard",
-				clickableWhenLocked: true,
-				lightweight: true
-                                };
-                                
-				appController.createStageWithCallback(params, pushPopup, 'dashboard');
-				this.boolDashboardStageCreated = true;
-			}
-			
-		}
-		
-	},
-	
-	hideDashboard: function()
-	{
-		this.dashboardShown = false;
-                var appController = Mojo.Controller.getAppController();
-		var dashboardStage = appController.getStageProxy("NowPlayingDashboard");
-		if(dashboardStage)
-		{
-			dashboardStage.delegateToSceneAssistant("closeDashboard");
-		}
-                
-	}
-	
-	
-});
