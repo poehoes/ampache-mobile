@@ -57,7 +57,7 @@ Once you determine your internal address and external IP address you need to set
         * The building has one or more suites inside (i.e. private network address IP).
         * By default, the suites cannot be accessed from the outside: there are no hallways going from the outside doors to the suites.
         * All the suites are connected by an internal hallway (i.e. your private network) 
-        * Each suite has 100's of offices with each office having an individual door (i.e ports).
+        * Each suite has 100's of offices with each office having an individual door (i.e the ports on your music server).
         * The doors for each office are usually locked (by the firewall on your music server)
         * The Ampache server by default is occupying suite office 192.168.x.x, office 80. (where 192.168.x.x is the private IP address of the Ampache server, and port 80 by default is used for all HTML request)
         * When you set up a port forwarding rule, you are basically unlocking an outside door so everyone can come in whenever they like and building a hallway in the building that goes directly to one suite in the building. As an example: unlock door 80 and build a hallway that goes to suite 192.168.x.x, office 80 
